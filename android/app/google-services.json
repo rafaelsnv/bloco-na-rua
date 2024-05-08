@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "78691265992",
+    "project_id": "bloco-na-rua",
+    "storage_bucket": "bloco-na-rua.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:78691265992:android:d41cc19b0b6dc9affb64fd",
+        "android_client_info": {
+          "package_name": "com.example.bloco_na_rua"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMa-fp_-6Y7-5tKfnVSJyM2w9b-zU8_1U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
