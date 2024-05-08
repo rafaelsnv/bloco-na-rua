@@ -1,0 +1,87 @@
+@prefix : <http://example.com#>.
+@prefix gufo: <http://purl.org/nemo/gufo#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+<http://example.com> rdf:type owl:Ontology;
+    owl:imports gufo:.
+:CarnivalBlock rdf:type owl:Class, gufo:Kind, owl:NamedIndividual;
+    rdfs:subClassOf gufo:FunctionalComplex;
+    rdfs:label "CarnivalBlock"@en.
+:PercussionSection rdf:type owl:Class, gufo:Kind, owl:NamedIndividual;
+    rdfs:subClassOf gufo:VariableCollection;
+    rdfs:label "PercussionSection"@en.
+:DanceSection rdf:type owl:Class, gufo:Kind, owl:NamedIndividual;
+    rdfs:subClassOf gufo:VariableCollection;
+    rdfs:label "DanceSection"@en.
+:SupportSection rdf:type owl:Class, gufo:Kind, owl:NamedIndividual;
+    rdfs:subClassOf gufo:VariableCollection;
+    rdfs:label "SupportSection"@en.
+:Staff rdf:type owl:Class, gufo:Kind, owl:NamedIndividual;
+    rdfs:subClassOf gufo:VariableCollection;
+    rdfs:label "Staff"@en.
+:Person rdf:type owl:Class, gufo:Kind, owl:NamedIndividual;
+    rdfs:subClassOf gufo:FunctionalComplex;
+    rdfs:label "Person"@en.
+:SupportMember rdf:type owl:Class, gufo:SubKind, owl:NamedIndividual;
+    rdfs:label "SupportMember"@en.
+:PercussionMember rdf:type owl:Class, gufo:SubKind, owl:NamedIndividual;
+    rdfs:label "PercussionMember"@en.
+:StaffMember rdf:type owl:Class, gufo:SubKind, owl:NamedIndividual;
+    rdfs:label "StaffMember"@en.
+:DanceMember rdf:type owl:Class, gufo:SubKind, owl:NamedIndividual;
+    rdfs:label "DanceMember"@en.
+:SupportMember rdfs:subClassOf :Person.
+:PercussionMember rdfs:subClassOf :Person.
+:StaffMember rdfs:subClassOf :Person.
+:DanceMember rdfs:subClassOf :Person.
+:carnivalBlockHasPercussionSection rdf:type owl:ObjectProperty;
+    rdfs:domain :CarnivalBlock;
+    rdfs:range :PercussionSection;
+    rdf:type owl:ObjectProperty;
+    rdfs:range :CarnivalBlock;
+    rdfs:domain :PercussionSection.
+:carnivalBlockHasDanceSection rdf:type owl:ObjectProperty;
+    rdfs:domain :CarnivalBlock;
+    rdfs:range :DanceSection;
+    rdf:type owl:ObjectProperty;
+    rdfs:range :CarnivalBlock;
+    rdfs:domain :DanceSection.
+:carnivalBlockHasSupportSection rdf:type owl:ObjectProperty;
+    rdfs:domain :CarnivalBlock;
+    rdfs:range :SupportSection;
+    rdf:type owl:ObjectProperty;
+    rdfs:range :CarnivalBlock;
+    rdfs:domain :SupportSection.
+:carnivalBlockHasStaff rdf:type owl:ObjectProperty;
+    rdfs:domain :CarnivalBlock;
+    rdfs:range :Staff;
+    rdf:type owl:ObjectProperty;
+    rdfs:range :CarnivalBlock;
+    rdfs:domain :Staff.
+:percussionSectionHasPercussionMember rdf:type owl:ObjectProperty;
+    rdfs:domain :PercussionSection;
+    rdfs:range :PercussionMember;
+    rdf:type owl:ObjectProperty;
+    rdfs:range :PercussionSection;
+    rdfs:domain :PercussionMember.
+:staffHasStaffMember rdf:type owl:ObjectProperty;
+    rdfs:domain :Staff;
+    rdfs:range :StaffMember;
+    rdf:type owl:ObjectProperty;
+    rdfs:range :Staff;
+    rdfs:domain :StaffMember.
+:danceSectionHasDanceMember rdf:type owl:ObjectProperty;
+    rdfs:domain :DanceSection;
+    rdfs:range :DanceMember;
+    rdf:type owl:ObjectProperty;
+    rdfs:range :DanceSection;
+    rdfs:domain :DanceMember.
+:supportSectionHasSupportMember rdf:type owl:ObjectProperty;
+    rdfs:domain :SupportSection;
+    rdfs:range :SupportMember;
+    rdf:type owl:ObjectProperty;
+    rdfs:range :SupportSection;
+    rdfs:domain :SupportMember.

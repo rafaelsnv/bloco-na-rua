@@ -1,0 +1,21 @@
+name: bloco_na_rua
+description: "Aplicação móvel para gestão de integrantes de blocos de rua em Belo Horizonte."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.3.4 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_modular: ^6.3.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  flutterando_analysis: ^0.0.2
+
+flutter:
+  uses-material-design: true

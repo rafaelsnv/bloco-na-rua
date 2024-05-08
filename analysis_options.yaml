@@ -1,0 +1,5 @@
+# include: package:flutter_lints/flutter.yaml
+include: package:flutterando_analysis/flutter.yaml
+linter:
+  rules:
+    eol_at_end_of_file: false
