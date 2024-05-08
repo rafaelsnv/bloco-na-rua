@@ -10,6 +10,8 @@ class AppWidget extends StatelessWidget {
       title: 'Bloco na Rua',
       theme: ThemeData(primarySwatch: Colors.blue),
       routerConfig: Modular.routerConfig,
+      routerDelegate: Modular.routerDelegate,
+      routeInformationParser: Modular.routeInformationParser,
     ); //added by extension 
   }
 }
