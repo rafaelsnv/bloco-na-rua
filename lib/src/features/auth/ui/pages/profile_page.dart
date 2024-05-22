@@ -21,7 +21,12 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bloco na Rua'),
+        leading: BackButton(
+          onPressed: () {
+            Modular.to.navigate('/');
+          },
+        ),
+        title: const Text('Meu Perfil'),
       ),
       body: _buildChild(bloc: bloc, state: state),
     );

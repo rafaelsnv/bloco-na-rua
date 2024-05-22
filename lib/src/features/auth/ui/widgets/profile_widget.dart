@@ -14,7 +14,15 @@ class ProfileWidget extends StatelessWidget {
           Positioned(
             bottom: 0,
             right: 4,
-            child: buildEditIcon( ),
+            child: FloatingActionButton(
+              onPressed: () {
+                // Modular.to.navigate('/profile/edit');
+               },
+              mini: true,
+              backgroundColor: Colors.white,
+              shape: const CircleBorder(),
+              child: const Icon(Icons.edit),
+            ),
           ),
         ],
       ),
@@ -44,19 +52,6 @@ class ProfileWidget extends StatelessWidget {
     );
   }
 
-  Widget buildEditIcon() {
-    return buildCircle(
-      all: 3,
-      child: buildCircle(
-        all: 8,
-        child: const Icon(
-          Icons.edit,
-          size: 20,
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
 
   Widget buildCircle({required Widget child, required double all}) {
     return ClipOval(

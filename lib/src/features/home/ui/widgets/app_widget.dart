@@ -22,7 +22,7 @@ class _AppWidgetState extends State<AppWidget> {
     _subscription = context.read<AuthBloc>().stream.listen(
           (state) {
             if(state is LoggedAuthState){
-              Modular.to.navigate('/profile');
+              Modular.to.navigate('/');
             } else if(state is LogoutedAuthState){
               Modular.to.navigate('/login');
             }

@@ -1,6 +1,4 @@
-import 'package:bloco_na_rua/src/features/auth/interactor/blocs/auth_bloc.dart';
-import 'package:bloco_na_rua/src/features/auth/interactor/events/auth_event.dart';
-import 'package:bloco_na_rua/src/features/auth/interactor/states/auth_state.dart';
+// import 'package:bloco_na_rua/src/features/auth/interactor/blocs/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -14,35 +12,30 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final bloc = context.watch<AuthBloc>();
-    final state = bloc.state;
-
-    Widget child = const Center(
-      child: Text('Você não está logado'),
-    );
-
-    if (state is LoggedAuthState) {
-      child = Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(state.user.email),
-            ElevatedButton(
-              onPressed: () {
-                bloc.add(LogoutAuthEvent());
-              },
-              child: const Text('Sair'),
-            ),
-          ],
-        ),
-      );
-    }
+    // final bloc = context.watch<AuthBloc>();
+    // final state = bloc.state;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bloco na Rua'),
       ),
-      body: child,
+      body: ListView(
+        children: [
+          Center(
+            child: Column(
+              children: [
+                const SizedBox(height: 5),
+                ElevatedButton(
+                  onPressed: () {
+                    Modular.to.navigate('/profile');
+                  },
+                  child: const Text('Ver Perfil'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
