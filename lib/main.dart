@@ -1,6 +1,8 @@
 import 'package:bloco_na_rua/firebase_options.dart';
 import 'package:bloco_na_rua/src/app_module.dart';
 import 'package:bloco_na_rua/src/features/home/ui/widgets/app_widget.dart';
+// ignore: unused_import
+import 'package:dcdg/dcdg.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';

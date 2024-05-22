@@ -1,9 +1,9 @@
 import 'package:bloco_na_rua/src/features/auth/data/services/adapters/user_adapter.dart';
-import 'package:bloco_na_rua/src/features/auth/interactor/services/auth_service.dart';
+import 'package:bloco_na_rua/src/features/auth/interactor/services/iauth_service.dart';
 import 'package:bloco_na_rua/src/features/auth/interactor/states/auth_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class FirebaseAuthService implements AuthService {
+class FirebaseAuthService implements IAuthService {
   final FirebaseAuth firebaseAuth;
 
   FirebaseAuthService({required this.firebaseAuth});
