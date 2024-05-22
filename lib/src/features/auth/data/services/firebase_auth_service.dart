@@ -9,6 +9,34 @@ class FirebaseAuthService implements IAuthService {
   FirebaseAuthService({required this.firebaseAuth});
 
   @override
+  Future<AuthState> createUser(
+    String email,
+    String password,
+    String name,
+    String phone,
+  ) async {
+    try {
+    
+    final result = await firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    
+    if (result.user == null) {
+      return const LogoutedAuthState();
+    }
+    
+    await result.user?.updateDisplayName(name);
+    // await result.user?.updatePhoneNumber(phone as PhoneAuthCredential); // TO-DO
+    final user = UserAdapter.fromFirebaseUser(result.user!);
+    return LoggedAuthState(user: user);
+
+    } catch (e) {
+      return const LogoutedAuthState();
+    }
+  }
+
+  @override
   Future<AuthState> login(String email, String password) async {
     try {
       final result = await firebaseAuth.signInWithEmailAndPassword(

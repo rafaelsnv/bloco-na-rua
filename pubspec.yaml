@@ -23,4 +23,7 @@ dev_dependencies:
   flutterando_analysis: ^0.0.2
 
 flutter:
+  assets:
+    - assets/
+    - assets/images/
   uses-material-design: true

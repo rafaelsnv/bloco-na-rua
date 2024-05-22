@@ -10,6 +10,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>{
   AuthBloc(this.service) : super(const LogoutedAuthState()){
     on<LoginAuthEvent>(_loginAuthEvent);
     on<LogoutAuthEvent>(_logoutAuthEvent);
+    on<CreateUserAuthEvent>(_createUserAuthEvent);
   }
 
   Future<void> _loginAuthEvent(LoginAuthEvent event, emit) async {
@@ -26,6 +27,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>{
     emit(const LoadingAuthState());
     await service.logout();
     emit(const LogoutedAuthState());
+  }
+
+  Future<void> _createUserAuthEvent(CreateUserAuthEvent event, emit) async {
+    emit(const LoadingAuthState());
+
+    final newState = await service.createUser(
+      event.email, 
+      event.password,
+      event.name,
+      event.phone,
+    );
+    emit(newState);
   }
 
 }

@@ -12,3 +12,6 @@ Adriane Maria Arantes de Carvalho³s
 ³ Professora do Curso de Graduação em Sistemas de Informação, Brasil –
 adriane.arantescarvalho@gmail.com
 </span>
+
+## Arquitetura da aplicação
+![package_dependencies](out\diagrams\plant_uml\package_dependencies\bloco-na-rua.png)

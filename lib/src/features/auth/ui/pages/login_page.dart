@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../interactor/blocs/auth_bloc.dart';
-import '../interactor/events/auth_event.dart';
-import '../interactor/states/auth_state.dart';
+import '../../interactor/blocs/auth_bloc.dart';
+import '../../interactor/events/auth_event.dart';
+import '../../interactor/states/auth_state.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -64,6 +64,12 @@ class _LoginPageState extends State<LoginPage> {
                   bloc.add(event);
                 },
                 child: const Text('Entrar'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Modular.to.navigate('/sign_up');
+                },
+                child: const Text('Cadastrar'),
               ),
           ],
         ),

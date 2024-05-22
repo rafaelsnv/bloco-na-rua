@@ -8,6 +8,8 @@ class UserAdapter {
       id: user.uid,
       email: user.email ?? '',
       name: user.displayName ?? '',
+      phone: user.phoneNumber ?? '',
+      profileImage: user.photoURL ?? '',
       token: '',
     );
   }
