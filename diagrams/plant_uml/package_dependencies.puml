@@ -1,0 +1,56 @@
+@startuml bloco-na-rua
+!theme toy
+hide empty methods
+hide empty attributes
+skinparam{
+  DefaultFontName Fira Code Retina
+  DefaultMonospacedFontName Fira Code Retina
+  Nodesep 10
+}
+
+package "bloco-na-rua" {
+
+  package features{
+
+    package auth #eaeaea{
+
+      package interactor #FFB0AC{
+        package entities #FFB0AC{
+        }
+
+        package states #FFB0AC{
+        }
+
+        package blocs #FFB0AC{
+        }
+
+      }
+
+      package data #B3FFCB{
+
+        package services #B3FFCB{
+
+        }
+      }
+
+      package ui #B7E7FF{
+        package pages #B7E7FF{}
+        package widgets #B7E7FF{}
+      }
+    }
+
+    package home #eaeaea{
+
+      package ui #B7E7FF{
+
+        package pages #B7E7FF{
+        }
+
+        package widgets #B7E7FF{
+        }
+      }
+    }
+  }
+}
+
+@enduml
