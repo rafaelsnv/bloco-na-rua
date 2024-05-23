@@ -1,25 +1,26 @@
+import 'dart:async';
 import 'package:bloco_na_rua/src/features/auth/interactor/services/iauth_service.dart';
 import 'package:bloco_na_rua/src/features/auth/interactor/states/auth_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../events/auth_event.dart';
 
-class AuthBloc extends Bloc<AuthEvent, AuthState>{
+class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final IAuthService service;
 
-  AuthBloc(this.service) : super(const LogoutedAuthState()){
+  AuthBloc(this.service) : super(const LogoutedAuthState()) {
     on<LoginAuthEvent>(_loginAuthEvent);
     on<LogoutAuthEvent>(_logoutAuthEvent);
     on<CreateUserAuthEvent>(_createUserAuthEvent);
+    on<DeleteUserAuthEvent>(_deleteUserAuthEvent);
   }
 
   Future<void> _loginAuthEvent(LoginAuthEvent event, emit) async {
     emit(const LoadingAuthState());
 
     final newState = await service.login(
-      event.email, 
+      event.email,
       event.password,
-      );
+    );
     emit(newState);
   }
 
@@ -33,7 +34,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>{
     emit(const LoadingAuthState());
 
     final newState = await service.createUser(
-      event.email, 
+      event.email,
       event.password,
       event.name,
       event.phone,
@@ -41,4 +42,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>{
     emit(newState);
   }
 
+  FutureOr<void> _deleteUserAuthEvent(DeleteUserAuthEvent event, emit) async {
+    emit(const LoadingAuthState());
+    await service.deleteUser();
+    emit(const LogoutedAuthState());
+  }
 }

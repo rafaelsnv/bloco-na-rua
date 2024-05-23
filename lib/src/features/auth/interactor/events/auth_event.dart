@@ -1,3 +1,5 @@
+import 'package:bloco_na_rua/src/features/auth/interactor/entities/user_entity.dart';
+
 sealed class AuthEvent {}
 
 class LoginAuthEvent implements AuthEvent {
@@ -25,3 +27,8 @@ class CreateUserAuthEvent implements AuthEvent {
 }
 
 class LogoutAuthEvent implements AuthEvent {}
+
+class DeleteUserAuthEvent implements AuthEvent{
+  final UserEntity user;
+  DeleteUserAuthEvent({required this.user});
+}

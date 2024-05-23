@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:bloco_na_rua/src/features/auth/interactor/states/auth_state.dart';
 
 abstract interface class IAuthService {
@@ -13,6 +12,8 @@ abstract interface class IAuthService {
     String name,
     String phone,
   );
+
+  Future<AuthState> deleteUser();
 
   AuthState getUser();
 }

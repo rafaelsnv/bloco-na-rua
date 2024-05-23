@@ -16,21 +16,19 @@ class FirebaseAuthService implements IAuthService {
     String phone,
   ) async {
     try {
-    
-    final result = await firebaseAuth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    
-    if (result.user == null) {
-      return const LogoutedAuthState();
-    }
-    
-    await result.user?.updateDisplayName(name);
-    // await result.user?.updatePhoneNumber(phone as PhoneAuthCredential); // TO-DO
-    final user = UserAdapter.fromFirebaseUser(result.user!);
-    return LoggedAuthState(user: user);
+      final result = await firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
+      if (result.user == null) {
+        return const LogoutedAuthState();
+      }
+
+      await result.user?.updateDisplayName(name);
+      // await result.user?.updatePhoneNumber(phone as PhoneAuthCredential); // TO-DO
+      final user = UserAdapter.fromFirebaseUser(result.user!);
+      return LoggedAuthState(user: user);
     } catch (e) {
       return const LogoutedAuthState();
     }
@@ -69,5 +67,16 @@ class FirebaseAuthService implements IAuthService {
     }
     final userEntity = UserAdapter.fromFirebaseUser(user);
     return LoggedAuthState(user: userEntity);
+  }
+
+  @override
+  Future<AuthState> deleteUser() async {
+    final user = firebaseAuth.currentUser;
+
+    if (user != null) {
+      await user.delete();
+    }
+
+    return const LogoutedAuthState();
   }
 }

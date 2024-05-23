@@ -5,14 +5,14 @@ import 'package:bloco_na_rua/src/features/auth/interactor/states/auth_state.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-class AppWidget extends StatefulWidget {
-  const AppWidget({super.key});
+class HomeWidget extends StatefulWidget {
+  const HomeWidget({super.key});
 
   @override
-  State<AppWidget> createState() => _AppWidgetState();
+  State<HomeWidget> createState() => _HomeWidgetState();
 }
 
-class _AppWidgetState extends State<AppWidget> {
+class _HomeWidgetState extends State<HomeWidget> {
   late final StreamSubscription _subscription;
 
   @override

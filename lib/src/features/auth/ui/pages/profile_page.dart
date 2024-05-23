@@ -72,6 +72,13 @@ class _ProfilePageState extends State<ProfilePage> {
             },
             child: const Text('Sair'),
           ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () {
+              bloc.add(DeleteUserAuthEvent(user: user));
+            },
+            child: const Text('Excluir'),
+          ),
         ],
       ),
     );
