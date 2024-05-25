@@ -15,5 +15,5 @@ abstract interface class IAuthService {
 
   Future<AuthState> deleteUser();
 
-  AuthState getUser();
+  Future<AuthState> getUser();
 }

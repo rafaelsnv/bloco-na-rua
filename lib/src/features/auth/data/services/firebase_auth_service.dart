@@ -27,8 +27,8 @@ class FirebaseAuthService implements IAuthService {
 
       await result.user?.updateDisplayName(name);
       // await result.user?.updatePhoneNumber(phone as PhoneAuthCredential); // TO-DO
-      final user = UserAdapter.fromFirebaseUser(result.user!);
-      return LoggedAuthState(user: user);
+      const LoadingAuthState();
+      return await getUser();
     } catch (e) {
       return const LogoutedAuthState();
     }
@@ -59,7 +59,7 @@ class FirebaseAuthService implements IAuthService {
   }
 
   @override
-  AuthState getUser() {
+  Future<AuthState> getUser() async {
     final user = firebaseAuth.currentUser;
 
     if (user == null) {

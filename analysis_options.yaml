@@ -3,3 +3,4 @@ include: package:flutterando_analysis/flutter.yaml
 linter:
   rules:
     eol_at_end_of_file: false
+    lines_longer_than_80_chars: true
