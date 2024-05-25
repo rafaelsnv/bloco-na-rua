@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             if (isLoading) const CircularProgressIndicator(),
             if (!isLoading)
-              ElevatedButton(
+              FilledButton(
                 onPressed: () {
                   final event = LoginAuthEvent(
                     email: email,
@@ -65,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                 },
                 child: const Text('Entrar'),
               ),
-              ElevatedButton(
+              FilledButton.tonal(
                 onPressed: () {
                   Modular.to.navigate('/sign_up');
                 },

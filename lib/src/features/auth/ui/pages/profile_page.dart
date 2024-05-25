@@ -66,16 +66,43 @@ class _ProfilePageState extends State<ProfilePage> {
             user.phone,
             style: const TextStyle(color: Colors.grey),
           ),
-          ElevatedButton(
+          FilledButton(
             onPressed: () {
               bloc.add(LogoutAuthEvent());
             },
             child: const Text('Sair'),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            style: FilledButton.styleFrom(
+              backgroundColor: const Color.fromARGB(197, 244, 54, 54),
+            ),
             onPressed: () {
-              bloc.add(DeleteUserAuthEvent(user: user));
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Excluir conta'),
+                    content:
+                        const Text('Tem certeza que deseja excluir sua conta?'),
+                    actions: <Widget>[
+                      FilledButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Cancelar'),
+                      ),
+                      FilledButton.tonal(
+                        onPressed: () {
+                          bloc.add(DeleteUserAuthEvent(user: user));
+                          Navigator.of(context).pop();
+                          Modular.to.navigate('/login');
+                        },
+                        child: const Text('Excluir'),
+                      ),
+                    ],
+                  );
+                },
+              );
             },
             child: const Text('Excluir'),
           ),

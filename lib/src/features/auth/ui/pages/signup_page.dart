@@ -27,6 +27,11 @@ class _SignUpPageState extends State<SignUpPage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(
+          onPressed: () {
+            Modular.to.navigate('/login');
+          },
+        ),
         title: const Text('Cadastrar'),
       ),
       body: ListView(
@@ -81,7 +86,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 if (isLoading) const CircularProgressIndicator(),
                 if (!isLoading)
-                  ElevatedButton(
+                  FilledButton(
                     onPressed: () {
                       final event = CreateUserAuthEvent(
                         name: name,
@@ -93,12 +98,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     },
                     child: const Text('Cadastrar'),
                   ),
-                  ElevatedButton(
-                onPressed: () {
-                  Modular.to.navigate('/login');
-                },
-                child: const Text('Entrar'),
-              ),
               ],
             ),
           ),
