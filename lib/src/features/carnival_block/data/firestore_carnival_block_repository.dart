@@ -21,12 +21,17 @@ class FirestoreCarnivalBlockRepository implements ICarnivalBlockRepository {
   ) async {
     try {
       final carnivalBlock = _carnivalBlockCollection;
-      final document = await carnivalBlock.add({
+
+      final document = carnivalBlock.doc(name);
+      await document.set({
         'name': name,
         'owner': owner,
+        'managers': {
+          'manager_email': owner,
+        },
+        'percussion': {},
       });
 
-      document.id;
       final docSnap = await document.get();
       final data = docSnap.data()!;
       final carnivalBlockEntity =
@@ -34,33 +39,118 @@ class FirestoreCarnivalBlockRepository implements ICarnivalBlockRepository {
 
       return CreatedCarnivalBlockState(carnivalBlock: carnivalBlockEntity);
     } catch (e) {
-      return const FailedCarnivalBlockState();
+      return const FailedCarnivalBlockState(
+        'Erro ao criar bloco',
+      );
     }
   }
 
   @override
-  Future<CarnivalBlockState> deleteCarnivalBlock() {
-    // TODO: implement deleteCarnivalBlock
-    throw UnimplementedError();
+  Future<String> getInviteCode(
+    CarnivalBlockEntity carnivalBlock,
+  ) async {
+    final docData = await _getCarnivalDocData(blockName: carnivalBlock.name);
+    final inviteCode = docData['invite_code'];
+    return inviteCode;
+  }
+
+  Future<Map<String, dynamic>> _getCarnivalDocData({required blockName}) async {
+    final blockDoc = _carnivalBlockCollection.doc(blockName);
+    final docSnap = await blockDoc.get();
+    final docData = docSnap.data()!;
+    return docData;
   }
 
   @override
-  Future<CarnivalBlockState> getCarnivalBlock(
+  Future<CarnivalBlockState> deleteCarnivalBlock(
+    String email,
+    CarnivalBlockEntity carnivalBlock,
+  ) async {
+    final blockDoc = _carnivalBlockCollection.doc(carnivalBlock.name);
+    final docSnap = await blockDoc.get();
+    final docData = docSnap.data()!;
+
+    if (docData['owner'] != email) {
+      return const FailedCarnivalBlockState(
+        'Você não tem permissão para excluir esse bloco',
+      );
+    }
+
+    try {
+      await blockDoc.delete();
+    } catch (e) {
+      return const FailedCarnivalBlockState(
+        'Erro ao excluir bloco',
+      );
+    }
+    return const DeletedCarnivalBlockState();
+  }
+
+  @override
+  Future<List<CarnivalBlockEntity>> getCarnivalBlocksList(
     String email,
   ) async {
-    late CarnivalBlockEntity carnivalBlockEntity;
+    final blockList = await _getOwnerBlocks(email)
+      ..addAll(await _getManagerBlocks(email))
+      ..addAll(await _getPercussionBlocks(email));
 
+    return blockList;
+  }
+
+  Future<List<CarnivalBlockEntity>> _getOwnerBlocks(
+    String email,
+  ) async {
     final carnivalBlock = _carnivalBlockCollection;
     final querySnapshot =
         await carnivalBlock.where('owner', isEqualTo: email).get();
 
+    final blockList = List<CarnivalBlockEntity>.empty(growable: true);
     for (final queryDocumentSnapshot in querySnapshot.docs) {
       final data = queryDocumentSnapshot.data();
-      carnivalBlockEntity = CarnivalBlockAdapter.fromFireStoreRepository(data);
-      return CreatedCarnivalBlockState(carnivalBlock: carnivalBlockEntity);
+      final carnivalBlockEntity =
+          CarnivalBlockAdapter.fromFireStoreRepository(data);
+      blockList.add(carnivalBlockEntity);
     }
 
-    return CreatedCarnivalBlockState(carnivalBlock: carnivalBlockEntity);
+    return blockList;
+  }
+
+  Future<List<CarnivalBlockEntity>> _getManagerBlocks(
+    String email,
+  ) async {
+    final carnivalBlock = _carnivalBlockCollection;
+    final querySnapshot = await carnivalBlock
+        .where('managers.manager_email', isEqualTo: email)
+        .get();
+
+    final blockList = List<CarnivalBlockEntity>.empty(growable: true);
+    for (final queryDocumentSnapshot in querySnapshot.docs) {
+      final data = queryDocumentSnapshot.data();
+      final carnivalBlockEntity =
+          CarnivalBlockAdapter.fromFireStoreRepository(data);
+      blockList.add(carnivalBlockEntity);
+    }
+
+    return blockList;
+  }
+
+  Future<List<CarnivalBlockEntity>> _getPercussionBlocks(
+    String email,
+  ) async {
+    final carnivalBlock = _carnivalBlockCollection;
+    final querySnapshot = await carnivalBlock
+        .where('percussion.percussionist_email', isEqualTo: email)
+        .get();
+
+    final blockList = List<CarnivalBlockEntity>.empty(growable: true);
+    for (final queryDocumentSnapshot in querySnapshot.docs) {
+      final data = queryDocumentSnapshot.data();
+      final carnivalBlockEntity =
+          CarnivalBlockAdapter.fromFireStoreRepository(data);
+      blockList.add(carnivalBlockEntity);
+    }
+
+    return blockList;
   }
 
   @override

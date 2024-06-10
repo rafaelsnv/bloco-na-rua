@@ -10,6 +10,14 @@ class LoadCarnivalBlockEvent implements CarnivalBlockEvent {
   });
 }
 
+class InviteCarnivalBlockEvent implements CarnivalBlockEvent {
+  final CarnivalBlockEntity carnivalBlock;
+
+  InviteCarnivalBlockEvent({
+    required this.carnivalBlock,
+  });
+}
+
 class CreateCarnivalBlockEvent implements CarnivalBlockEvent {
   final int id;
   final String name;
@@ -22,7 +30,11 @@ class CreateCarnivalBlockEvent implements CarnivalBlockEvent {
   });
 }
 
-class DeleteCarnivalBlockEvent implements CarnivalBlockEvent{
+class DeleteCarnivalBlockEvent implements CarnivalBlockEvent {
   final CarnivalBlockEntity carnivalBlock;
-  DeleteCarnivalBlockEvent({required this.carnivalBlock});
+  final String email;
+  DeleteCarnivalBlockEvent({
+    required this.carnivalBlock,
+    required this.email,
+  });
 }

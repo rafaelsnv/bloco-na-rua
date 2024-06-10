@@ -17,6 +17,14 @@ class CreatedCarnivalBlockState implements CarnivalBlockState {
   });
 }
 
+class InvitedCarnivalBlockState implements CarnivalBlockState {
+  final String inviteCode;
+
+  const InvitedCarnivalBlockState({
+    required this.inviteCode,
+  });
+}
+
 class UpdatedCarnivalBlockState implements CarnivalBlockState {
   final CarnivalBlockEntity carnivalBlock;
 
@@ -26,5 +34,20 @@ class UpdatedCarnivalBlockState implements CarnivalBlockState {
 }
 
 class FailedCarnivalBlockState implements CarnivalBlockState {
-  const FailedCarnivalBlockState();
+  final String errorMessage;
+  const FailedCarnivalBlockState(this.errorMessage);
+}
+
+class DeletedCarnivalBlockState implements CarnivalBlockState {
+  const DeletedCarnivalBlockState();
+}
+
+class LoadedCarnivalBlockState implements CarnivalBlockState {
+  final String sessionEmail;
+  final List<CarnivalBlockEntity> blockList;
+
+  const LoadedCarnivalBlockState({
+    required this.blockList,
+    required this.sessionEmail,
+  });
 }

@@ -4,9 +4,18 @@ class CarnivalBlockAdapter {
   static CarnivalBlockEntity fromFireStoreRepository(
     Map<String, dynamic> data,
   ) {
+    final inviteCode = data['invite_code'];
+    final name = data['name'];
+    final owner = data['owner'];
+    final managers = data['managers'];
+    final percussion = data['percussion'];
+
     return CarnivalBlockEntity(
-      name: data['name'],
-      owner: data['owner'],
+      inviteCode: inviteCode,
+      name: name,
+      owner: owner,
+      managers: managers,
+      percussion: percussion,
     );
   }
 }

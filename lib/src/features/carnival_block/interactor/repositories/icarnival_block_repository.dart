@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:bloco_na_rua/src/features/carnival_block/interactor/entities/carnival_block_entity.dart';
+
 import '../states/carnival_block_state.dart';
 
 abstract interface class ICarnivalBlockRepository {
@@ -9,7 +11,11 @@ abstract interface class ICarnivalBlockRepository {
     String owner,
   );
 
-  Future<CarnivalBlockState> getCarnivalBlock(
+  Future<String> getInviteCode(
+    CarnivalBlockEntity carnivalBlock,
+  );
+
+  Future<List<CarnivalBlockEntity>> getCarnivalBlocksList(
     String email,
   );
 
@@ -19,5 +25,8 @@ abstract interface class ICarnivalBlockRepository {
     String owner,
   );
 
-  Future<CarnivalBlockState> deleteCarnivalBlock();
+  Future<CarnivalBlockState> deleteCarnivalBlock(
+    String email,
+    CarnivalBlockEntity carnivalBlock,
+  );
 }

@@ -14,14 +14,27 @@ class CarnivalBlockBloc extends Bloc<CarnivalBlockEvent, CarnivalBlockState> {
     on<LoadCarnivalBlockEvent>(_loadCarnivalBlockEvent);
     on<CreateCarnivalBlockEvent>(_createCarnivalBlockEvent);
     on<DeleteCarnivalBlockEvent>(_deleteCarnivalBlockEvent);
+    on<InviteCarnivalBlockEvent>(_inviteCarnivalBlockEvent);
   }
 
   FutureOr<void> _loadCarnivalBlockEvent(
     LoadCarnivalBlockEvent event,
     Emitter<CarnivalBlockState> emit,
   ) async {
-    final email = storage.read('email');
-    final newState = await repository.getCarnivalBlock(email);
+    final blockList = await repository.getCarnivalBlocksList(event.email);
+    final newState = LoadedCarnivalBlockState(
+      blockList: blockList,
+      sessionEmail: event.email,
+    );
+    emit(newState);
+  }
+
+  FutureOr<void> _inviteCarnivalBlockEvent(
+    InviteCarnivalBlockEvent event,
+    Emitter<CarnivalBlockState> emit,
+  ) async {
+    final inviteCode = await repository.getInviteCode(event.carnivalBlock);
+    final newState = InvitedCarnivalBlockState(inviteCode: inviteCode);
     emit(newState);
   }
 
@@ -45,7 +58,10 @@ class CarnivalBlockBloc extends Bloc<CarnivalBlockEvent, CarnivalBlockState> {
     emit,
   ) async {
     emit(LoadingCarnivalBlockState(storage: storage));
-    final newState = await repository.deleteCarnivalBlock();
+    final newState = await repository.deleteCarnivalBlock(
+      event.email,
+      event.carnivalBlock,
+    );
     emit(newState);
   }
 }
