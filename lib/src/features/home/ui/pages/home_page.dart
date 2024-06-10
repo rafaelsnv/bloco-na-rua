@@ -17,8 +17,14 @@ class _HomePageState extends State<HomePage> {
         Modular.to.navigate('/');
         break;
       case 1:
-        Modular.to.navigate('/profile');
+        Modular.to.navigate('/auth/profile');
         break;
+      case 2:
+        Modular.to.navigate('/block/view_block');
+        break;
+      // case 2:
+      //   Modular.to.navigate('/block/create_block');
+      //   break;
       default:
         Modular.to.navigate('/');
     }
@@ -47,6 +53,11 @@ class _HomePageState extends State<HomePage> {
             selectedIcon: Icon(Icons.person),
             icon: Icon(Icons.person_outline),
             label: 'Perfil',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.groups),
+            icon: Icon(Icons.groups_outlined),
+            label: 'Bloco',
           ),
         ],
       ),

@@ -29,7 +29,7 @@ class _SignUpPageState extends State<SignUpPage> {
       appBar: AppBar(
         leading: BackButton(
           onPressed: () {
-            Modular.to.navigate('/login');
+            Modular.to.navigate('/auth/login');
           },
         ),
         title: const Text('Cadastrar'),

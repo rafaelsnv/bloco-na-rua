@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class ProfileWidget extends StatelessWidget {
+class ProfileIconWidget extends StatelessWidget {
   final String imagePath;
   
-  const ProfileWidget({required this.imagePath, super.key});
+  const ProfileIconWidget({required this.imagePath, super.key});
 
   @override
   Widget build(BuildContext context) {

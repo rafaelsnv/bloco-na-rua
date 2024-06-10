@@ -2,6 +2,7 @@ import 'package:bloco_na_rua/src/features/auth/data/services/adapters/user_adapt
 import 'package:bloco_na_rua/src/features/auth/interactor/services/iauth_service.dart';
 import 'package:bloco_na_rua/src/features/auth/interactor/states/auth_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get_storage/get_storage.dart';
 
 class FirebaseAuthService implements IAuthService {
   final FirebaseAuth firebaseAuth;
@@ -24,10 +25,9 @@ class FirebaseAuthService implements IAuthService {
       if (result.user == null) {
         return const LogoutedAuthState();
       }
-
       await result.user?.updateDisplayName(name);
-      // await result.user?.updatePhoneNumber(phone as PhoneAuthCredential); // TO-DO
-      const LoadingAuthState();
+      // TODO: await result.user?.updatePhoneNumber(phone as PhoneAuthCredential);
+
       return await getUser();
     } catch (e) {
       return const LogoutedAuthState();
@@ -45,8 +45,10 @@ class FirebaseAuthService implements IAuthService {
       if (result.user == null) {
         return const LogoutedAuthState();
       }
-      final user = UserAdapter.fromFirebaseUser(result.user!);
-      return LoggedAuthState(user: user);
+      final userEntity = UserAdapter.fromFirebaseUser(result.user!);
+      final storage = GetStorage();
+      await storage.write('email', userEntity.email);
+      return LoggedAuthState(user: userEntity);
     } catch (e) {
       return const LogoutedAuthState();
     }
@@ -54,6 +56,8 @@ class FirebaseAuthService implements IAuthService {
 
   @override
   Future<AuthState> logout() async {
+    final storage = GetStorage();
+    await storage.remove('email');
     await firebaseAuth.signOut();
     return const LogoutedAuthState();
   }
@@ -66,6 +70,8 @@ class FirebaseAuthService implements IAuthService {
       return const LogoutedAuthState();
     }
     final userEntity = UserAdapter.fromFirebaseUser(user);
+    final storage = GetStorage();
+    await storage.write('email', userEntity.email);
     return LoggedAuthState(user: userEntity);
   }
 

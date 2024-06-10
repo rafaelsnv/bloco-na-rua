@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               FilledButton.tonal(
                 onPressed: () {
-                  Modular.to.navigate('/sign_up');
+                  Modular.to.navigate('/auth/sign_up');
                 },
                 child: const Text('Cadastrar'),
               ),

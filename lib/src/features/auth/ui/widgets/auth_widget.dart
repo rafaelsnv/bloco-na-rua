@@ -1,17 +1,18 @@
 import 'dart:async';
+
 import 'package:bloco_na_rua/src/features/auth/interactor/blocs/auth_bloc.dart';
 import 'package:bloco_na_rua/src/features/auth/interactor/states/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-class HomeWidget extends StatefulWidget {
-  const HomeWidget({super.key});
+class AuthWidget extends StatefulWidget {
+  const AuthWidget({super.key});
 
   @override
-  State<HomeWidget> createState() => _HomeWidgetState();
+  State<AuthWidget> createState() => _AuthWidgetState();
 }
 
-class _HomeWidgetState extends State<HomeWidget> {
+class _AuthWidgetState extends State<AuthWidget> {
   late final StreamSubscription _subscription;
 
   @override
@@ -43,5 +44,9 @@ class _HomeWidgetState extends State<HomeWidget> {
       theme: ThemeData(primarySwatch: Colors.blue),
       routerConfig: Modular.routerConfig,
     );
+  }
+
+  StreamSubscription getSubscription() {
+    return _subscription;
   }
 }

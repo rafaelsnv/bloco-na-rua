@@ -1,27 +1,28 @@
-import 'package:bloco_na_rua/src/features/auth/data/services/firebase_auth_service.dart';
-import 'package:bloco_na_rua/src/features/auth/interactor/blocs/auth_bloc.dart';
-import 'package:bloco_na_rua/src/features/auth/interactor/services/iauth_service.dart';
-import 'package:bloco_na_rua/src/features/auth/ui/pages/profile_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:bloco_na_rua/src/features/auth/auth_module.dart';
+import 'package:bloco_na_rua/src/features/carnival_block/carnival_block_module.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'features/auth/ui/pages/login_page.dart';
-import 'features/auth/ui/pages/signup_page.dart';
+import 'package:get_storage/get_storage.dart';
 import 'features/home/ui/pages/home_page.dart';
 
 class AppModule extends Module {
+
   @override
   void binds(Injector i) {
-    i..addInstance<FirebaseAuth>(FirebaseAuth.instance)
-    ..add<IAuthService>(FirebaseAuthService.new)
-    ..addSingleton<AuthBloc>(AuthBloc.new);
-  
+    super.binds(i);
+    i.addInstance(GetStorage());
   }
 
   @override
+  List<Module> get imports => [
+        AuthModule(),
+        CarnivalBlockModule(),
+      ];
+
+  @override
   void routes(RouteManager r) {
-    r..child('/', child: (context) => const HomePage())
-    ..child('/login', child: (context) => const LoginPage())
-    ..child('/profile', child: (context) => const ProfilePage())
-    ..child('/sign_up', child: (context) => const SignUpPage());
+    r
+      ..child('/', child: (context) => const HomePage())
+      ..module('/', module: AuthModule())
+      ..module('/', module: CarnivalBlockModule());
   }
 }

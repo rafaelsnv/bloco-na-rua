@@ -43,7 +43,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _deleteUserAuthEvent(DeleteUserAuthEvent event, emit) async {
-    await service.deleteUser();
-    emit(const LogoutedAuthState());
+    final newState = await service.deleteUser();
+    emit(newState);
   }
 }

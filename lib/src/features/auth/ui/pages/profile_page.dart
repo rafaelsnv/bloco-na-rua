@@ -2,7 +2,7 @@ import 'package:bloco_na_rua/src/features/auth/interactor/blocs/auth_bloc.dart';
 import 'package:bloco_na_rua/src/features/auth/interactor/entities/user_entity.dart';
 import 'package:bloco_na_rua/src/features/auth/interactor/events/auth_event.dart';
 import 'package:bloco_na_rua/src/features/auth/interactor/states/auth_state.dart';
-import 'package:bloco_na_rua/src/features/auth/ui/widgets/profile_widget.dart';
+import 'package:bloco_na_rua/src/features/auth/ui/widgets/profile_icon_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -21,12 +21,12 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
+        title: const Text('Meu Perfil'),
         leading: BackButton(
           onPressed: () {
             Modular.to.navigate('/');
           },
         ),
-        title: const Text('Meu Perfil'),
       ),
       body: _buildChild(bloc: bloc, state: state),
     );
@@ -37,10 +37,15 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Text('Você não está logado'),
     );
 
+    if (state is LogoutedAuthState) {
+      bloc.add(LogoutAuthEvent());
+      return child;
+    }
+
     if (state is LoggedAuthState) {
-      child = ListView(
+      return child = ListView(
         children: [
-          ProfileWidget(imagePath: state.user.profileImage),
+          ProfileIconWidget(imagePath: state.user.profileImage),
           const SizedBox(height: 24),
           buildName(user: state.user, bloc: bloc),
         ],
@@ -95,7 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         onPressed: () {
                           bloc.add(DeleteUserAuthEvent(user: user));
                           Navigator.of(context).pop();
-                          Modular.to.navigate('/login');
+                          Modular.to.navigate('/auth/login');
                         },
                         child: const Text('Excluir'),
                       ),
