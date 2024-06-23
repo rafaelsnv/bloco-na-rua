@@ -1,0 +1,251 @@
+@startuml bloco_na_rua
+set namespaceSeparator ::
+' left to right direction
+
+hide methods
+hide attributes
+hide classes
+
+skinparam{
+  DefaultFontName Fira Code Retina
+  DefaultMonospacedFontName Fira Code Retina
+  Nodesep 10
+}
+
+class "bloco_na_rua::features::auth::data::services::adapters::UserAdapter" {
+}
+
+class "bloco_na_rua::features::auth::data::services::FirebaseAuthService" {
+}
+
+"bloco_na_rua::features::auth::interactor::services::IAuthService" <|-- "bloco_na_rua::features::auth::data::services::FirebaseAuthService"
+
+entity "bloco_na_rua::features::auth::interactor::entities::UserEntity" {
+  +String id
+  +String name
+  +String email
+  +String phone
+  +String profileImage
+  +String token
+}
+
+class "bloco_na_rua::features::auth::interactor::events::AuthEvent" {
+}
+
+class "bloco_na_rua::features::auth::interactor::events::LoginAuthEvent" {
+  +String email
+  +String password
+}
+
+"bloco_na_rua::features::auth::interactor::events::AuthEvent" <|-- "bloco_na_rua::features::auth::interactor::events::LoginAuthEvent"
+
+class "bloco_na_rua::features::auth::interactor::events::CreateUserAuthEvent" {
+  +String email
+  +String password
+  +String name
+  +String phone
+}
+
+"bloco_na_rua::features::auth::interactor::events::AuthEvent" <|-- "bloco_na_rua::features::auth::interactor::events::CreateUserAuthEvent"
+
+class "bloco_na_rua::features::auth::interactor::events::LogoutAuthEvent" {
+}
+
+"bloco_na_rua::features::auth::interactor::events::AuthEvent" <|-- "bloco_na_rua::features::auth::interactor::events::LogoutAuthEvent"
+
+class "bloco_na_rua::features::auth::interactor::events::DeleteUserAuthEvent" {
+  +UserEntity user
+}
+
+"bloco_na_rua::features::auth::interactor::events::DeleteUserAuthEvent" o-- "bloco_na_rua::features::auth::interactor::entities::UserEntity"
+"bloco_na_rua::features::auth::interactor::events::AuthEvent" <|-- "bloco_na_rua::features::auth::interactor::events::DeleteUserAuthEvent"
+
+interface "bloco_na_rua::features::auth::interactor::services::IAuthService" {
+  +dynamic login()
+  +dynamic logout()
+  +dynamic createUser()
+  +dynamic deleteUser()
+  +dynamic getUser()
+}
+
+class "bloco_na_rua::features::auth::interactor::states::AuthState" {
+}
+
+class "bloco_na_rua::features::auth::interactor::states::LoggedAuthState" {
+  +UserEntity user
+}
+
+"bloco_na_rua::features::auth::interactor::states::LoggedAuthState" o-- "bloco_na_rua::features::auth::interactor::entities::UserEntity"
+"bloco_na_rua::features::auth::interactor::states::AuthState" <|-- "bloco_na_rua::features::auth::interactor::states::LoggedAuthState"
+
+class "bloco_na_rua::features::auth::interactor::states::LogoutedAuthState" {
+}
+
+"bloco_na_rua::features::auth::interactor::states::AuthState" <|-- "bloco_na_rua::features::auth::interactor::states::LogoutedAuthState"
+
+class "bloco_na_rua::features::auth::interactor::states::LoadingAuthState" {
+}
+
+"bloco_na_rua::features::auth::interactor::states::AuthState" <|-- "bloco_na_rua::features::auth::interactor::states::LoadingAuthState"
+
+class "bloco_na_rua::features::auth::ui::pages::LoginPage" {
+  +State<LoginPage> createState()
+}
+
+class "bloco_na_rua::features::auth::ui::pages::ProfilePage" {
+  +State<ProfilePage> createState()
+}
+
+class "bloco_na_rua::features::auth::ui::pages::SignUpPage" {
+  +State<SignUpPage> createState()
+}
+
+class "bloco_na_rua::features::auth::ui::widgets::ProfileIconWidget" {
+  +String imagePath
+  +Widget build()
+  +Widget buildImage()
+  +Widget buildCircle()
+}
+
+class "bloco_na_rua::features::carnival_block::data::adapters::CarnivalBlockAdapter" {
+  {static} +CarnivalBlockEntity fromFireStoreRepository()
+}
+
+class "bloco_na_rua::features::carnival_block::data::::FirestoreCarnivalBlockRepository" {
+  +dynamic createCarnivalBlock()
+  +dynamic getInviteCode()
+  +dynamic deleteCarnivalBlock()
+  +dynamic getCarnivalBlocksList()
+  +dynamic updateCarnivalBlock()
+  +dynamic joinCarnivalBlock()
+}
+
+"bloco_na_rua::features::carnival_block::interactor::repositories::ICarnivalBlockRepository" <|-- "bloco_na_rua::features::carnival_block::data::::FirestoreCarnivalBlockRepository"
+
+entity "bloco_na_rua::features::carnival_block::interactor::entities::CarnivalBlockEntity" {
+  +String managersCode
+  +String inviteCode
+  +String name
+  +String owner
+  +List<Map<String, dynamic>> managers
+  +List<Map<String, dynamic>> percussion
+  +int hashCode
+  +bool ==()
+}
+
+class "bloco_na_rua::features::carnival_block::interactor::events::CarnivalBlockEvent" {
+}
+
+class "bloco_na_rua::features::carnival_block::interactor::events::LoadCarnivalBlockEvent" {
+  +String email
+}
+
+"bloco_na_rua::features::carnival_block::interactor::events::CarnivalBlockEvent" <|-- "bloco_na_rua::features::carnival_block::interactor::events::LoadCarnivalBlockEvent"
+
+class "bloco_na_rua::features::carnival_block::interactor::events::InviteCarnivalBlockEvent" {
+  +CarnivalBlockEntity carnivalBlock
+}
+
+"bloco_na_rua::features::carnival_block::interactor::events::InviteCarnivalBlockEvent" o-- "bloco_na_rua::features::carnival_block::interactor::entities::CarnivalBlockEntity"
+"bloco_na_rua::features::carnival_block::interactor::events::CarnivalBlockEvent" <|-- "bloco_na_rua::features::carnival_block::interactor::events::InviteCarnivalBlockEvent"
+
+class "bloco_na_rua::features::carnival_block::interactor::events::JoinCarnivalBlockEvent" {
+  +String blockCode
+  +String sessionEmail
+}
+
+"bloco_na_rua::features::carnival_block::interactor::events::CarnivalBlockEvent" <|-- "bloco_na_rua::features::carnival_block::interactor::events::JoinCarnivalBlockEvent"
+
+class "bloco_na_rua::features::carnival_block::interactor::events::CreateCarnivalBlockEvent" {
+  +int id
+  +String name
+  +String owner
+}
+
+"bloco_na_rua::features::carnival_block::interactor::events::CarnivalBlockEvent" <|-- "bloco_na_rua::features::carnival_block::interactor::events::CreateCarnivalBlockEvent"
+
+class "bloco_na_rua::features::carnival_block::interactor::events::DeleteCarnivalBlockEvent" {
+  +CarnivalBlockEntity carnivalBlock
+  +String email
+}
+
+"bloco_na_rua::features::carnival_block::interactor::events::DeleteCarnivalBlockEvent" o-- "bloco_na_rua::features::carnival_block::interactor::entities::CarnivalBlockEntity"
+"bloco_na_rua::features::carnival_block::interactor::events::CarnivalBlockEvent" <|-- "bloco_na_rua::features::carnival_block::interactor::events::DeleteCarnivalBlockEvent"
+
+interface "bloco_na_rua::features::carnival_block::interactor::repositories::ICarnivalBlockRepository" {
+  +dynamic createCarnivalBlock()
+  +dynamic getInviteCode()
+  +dynamic getCarnivalBlocksList()
+  +dynamic updateCarnivalBlock()
+  +dynamic joinCarnivalBlock()
+  +dynamic deleteCarnivalBlock()
+}
+
+class "bloco_na_rua::features::carnival_block::interactor::states::CarnivalBlockState" {
+}
+
+class "bloco_na_rua::features::carnival_block::interactor::states::LoadingCarnivalBlockState" {
+}
+
+"bloco_na_rua::features::carnival_block::interactor::states::CarnivalBlockState" <|-- "bloco_na_rua::features::carnival_block::interactor::states::LoadingCarnivalBlockState"
+
+class "bloco_na_rua::features::carnival_block::interactor::states::CreatedCarnivalBlockState" {
+  +CarnivalBlockEntity carnivalBlock
+}
+
+"bloco_na_rua::features::carnival_block::interactor::states::CreatedCarnivalBlockState" o-- "bloco_na_rua::features::carnival_block::interactor::entities::CarnivalBlockEntity"
+"bloco_na_rua::features::carnival_block::interactor::states::CarnivalBlockState" <|-- "bloco_na_rua::features::carnival_block::interactor::states::CreatedCarnivalBlockState"
+
+class "bloco_na_rua::features::carnival_block::interactor::states::InvitedCarnivalBlockState" {
+  +String inviteCode
+}
+
+"bloco_na_rua::features::carnival_block::interactor::states::CarnivalBlockState" <|-- "bloco_na_rua::features::carnival_block::interactor::states::InvitedCarnivalBlockState"
+
+class "bloco_na_rua::features::carnival_block::interactor::states::UpdatedCarnivalBlockState" {
+  +CarnivalBlockEntity carnivalBlock
+}
+
+"bloco_na_rua::features::carnival_block::interactor::states::UpdatedCarnivalBlockState" o-- "bloco_na_rua::features::carnival_block::interactor::entities::CarnivalBlockEntity"
+"bloco_na_rua::features::carnival_block::interactor::states::CarnivalBlockState" <|-- "bloco_na_rua::features::carnival_block::interactor::states::UpdatedCarnivalBlockState"
+
+class "bloco_na_rua::features::carnival_block::interactor::states::FailedCarnivalBlockState" {
+  +String errorMessage
+}
+
+"bloco_na_rua::features::carnival_block::interactor::states::CarnivalBlockState" <|-- "bloco_na_rua::features::carnival_block::interactor::states::FailedCarnivalBlockState"
+
+class "bloco_na_rua::features::carnival_block::interactor::states::DeletedCarnivalBlockState" {
+}
+
+"bloco_na_rua::features::carnival_block::interactor::states::CarnivalBlockState" <|-- "bloco_na_rua::features::carnival_block::interactor::states::DeletedCarnivalBlockState"
+
+class "bloco_na_rua::features::carnival_block::interactor::states::LoadedCarnivalBlockState" {
+  +String sessionEmail
+  +List<CarnivalBlockEntity> blockList
+}
+
+"bloco_na_rua::features::carnival_block::interactor::states::CarnivalBlockState" <|-- "bloco_na_rua::features::carnival_block::interactor::states::LoadedCarnivalBlockState"
+
+class "bloco_na_rua::features::carnival_block::ui::pages::CreateBlockPage" {
+  +State<CreateBlockPage> createState()
+}
+
+class "bloco_na_rua::features::carnival_block::ui::pages::JoinBlockPage" {
+  +State<JoinBlockPage> createState()
+}
+
+class "bloco_na_rua::features::carnival_block::ui::pages::ViewBlockPage" {
+  +State<ViewBlockPage> createState()
+}
+
+class "bloco_na_rua::features::home::ui::pages::HomePage" {
+  +State<HomePage> createState()
+}
+
+class "bloco_na_rua::features::home::ui::widgets::AppWidget" {
+  +State<AppWidget> createState()
+}
+
+
+@enduml
