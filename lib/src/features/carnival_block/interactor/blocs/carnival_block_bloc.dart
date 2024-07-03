@@ -15,6 +15,7 @@ class CarnivalBlockBloc extends Bloc<CarnivalBlockEvent, CarnivalBlockState> {
     on<CreateCarnivalBlockEvent>(_createCarnivalBlockEvent);
     on<DeleteCarnivalBlockEvent>(_deleteCarnivalBlockEvent);
     on<InviteCarnivalBlockEvent>(_inviteCarnivalBlockEvent);
+    on<JoinCarnivalBlockEvent>(_joinCarnivalBlockEvent);
   }
 
   FutureOr<void> _loadCarnivalBlockEvent(
@@ -64,4 +65,17 @@ class CarnivalBlockBloc extends Bloc<CarnivalBlockEvent, CarnivalBlockState> {
     );
     emit(newState);
   }
+
+    Future<void> _joinCarnivalBlockEvent(
+    JoinCarnivalBlockEvent event,
+    emit,
+  ) async {
+    emit(LoadingCarnivalBlockState(storage: storage));
+    final newState = await repository.joinCarnivalBlock(
+      event.blockCode,
+      event.sessionEmail,
+    );
+    emit(newState);
+  }
+
 }

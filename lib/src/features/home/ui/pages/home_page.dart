@@ -11,35 +11,27 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int selectecIndex = 0;
 
-  void onDestinationSelected(int index) {
-    switch (index) {
-      case 0:
-        Modular.to.navigate('/');
-        break;
-      case 1:
-        Modular.to.navigate('/auth/profile');
-        break;
-      case 2:
-        Modular.to.navigate('/block/view_block');
-        break;
-      // case 2:
-      //   Modular.to.navigate('/block/create_block');
-      //   break;
-      default:
-        Modular.to.navigate('/');
-    }
-    setState(() {
-      selectecIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bloco na Rua'),
       ),
-      body: const RouterOutlet(),
+      body: ListView(
+        children: [
+          Center(
+            child: Column(
+              children: [
+                const RouterOutlet(),
+                FilledButton(
+                  onPressed: () => Modular.to.navigate('/block/join_block'),
+                  child: const Text('Ingressar em um bloco'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: selectecIndex,
         onDestinationSelected: onDestinationSelected,
@@ -62,5 +54,27 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  void onDestinationSelected(int index) {
+    switch (index) {
+      case 0:
+        Modular.to.navigate('/');
+        break;
+      case 1:
+        Modular.to.navigate('/auth/profile');
+        break;
+      case 2:
+        Modular.to.navigate('/block/view_block');
+        break;
+      // case 2:
+      //   Modular.to.navigate('/block/create_block');
+      //   break;
+      default:
+        Modular.to.navigate('/');
+    }
+    setState(() {
+      selectecIndex = index;
+    });
   }
 }

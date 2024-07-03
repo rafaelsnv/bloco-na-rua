@@ -1,6 +1,6 @@
 import 'package:bloco_na_rua/firebase_options.dart';
 import 'package:bloco_na_rua/src/app_module.dart';
-import 'package:bloco_na_rua/src/features/home/ui/widgets/home_widget.dart';
+import 'package:bloco_na_rua/src/features/home/ui/widgets/app_widget.dart';
 // ignore: unused_import
 import 'package:dcdg/dcdg.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,7 +18,7 @@ void main() async {
   runApp(
     ModularApp(
       module: AppModule(),
-      child: const HomeWidget(),
+      child: const AppWidget(),
     ),
   );
 }

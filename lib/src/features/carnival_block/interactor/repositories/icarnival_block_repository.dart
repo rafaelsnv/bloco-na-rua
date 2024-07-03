@@ -25,6 +25,11 @@ abstract interface class ICarnivalBlockRepository {
     String owner,
   );
 
+  Future<CarnivalBlockState> joinCarnivalBlock(
+    String code,
+    String email,
+  );
+
   Future<CarnivalBlockState> deleteCarnivalBlock(
     String email,
     CarnivalBlockEntity carnivalBlock,

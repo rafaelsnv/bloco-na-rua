@@ -1,37 +1,33 @@
 import 'package:bloco_na_rua/src/features/carnival_block/interactor/blocs/carnival_block_bloc.dart';
 import 'package:bloco_na_rua/src/features/carnival_block/interactor/events/carnival_block_event.dart';
-import 'package:bloco_na_rua/src/features/carnival_block/interactor/states/carnival_block_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:get_storage/get_storage.dart';
 
-class CreateBlockPage extends StatefulWidget {
-  const CreateBlockPage({super.key});
+class JoinBlockPage extends StatefulWidget {
+  const JoinBlockPage({super.key});
 
   @override
-  State<CreateBlockPage> createState() => _CreateBlockPageState();
+  State<JoinBlockPage> createState() => _JoinBlockPageState();
 }
 
-class _CreateBlockPageState extends State<CreateBlockPage> {
-  String blockName = '';
+class _JoinBlockPageState extends State<JoinBlockPage> {
+  String code = '';
 
   @override
   Widget build(BuildContext context) {
     const padding = EdgeInsets.symmetric(horizontal: 6, vertical: 4);
 
-    final bloc = context.watch<CarnivalBlockBloc>();
-    final state = bloc.state;
-    final isLoading = state is LoadingCarnivalBlockState;
-    late String sessionEmail;
-    if (state is LoadedCarnivalBlockState) {
-      sessionEmail = state.sessionEmail;
-    }
+    final bloc = Modular.get<CarnivalBlockBloc>();
+    final storage = Modular.get<GetStorage>();
+    final sessionEmail = storage.read('email');
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Criar Bloco'),
+        title: const Text('Ingressar em um Bloco'),
         leading: BackButton(
           onPressed: () {
-            Modular.to.navigate('/block/view_block');
+            Modular.to.navigate('/');
           },
         ),
       ),
@@ -45,20 +41,19 @@ class _CreateBlockPageState extends State<CreateBlockPage> {
                   padding: padding,
                   child: TextFormField(
                     autofocus: true,
-                    enabled: !isLoading,
                     onChanged: (value) {
-                      blockName = value;
+                      code = value;
                     },
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Nome do bloco*',
+                      labelText: 'Código de convite*',
                     ),
                   ),
                 ),
                 const SizedBox(height: 5),
                 FilledButton(
                   onPressed: () {
-                    if (blockName.isEmpty) {
+                    if (code.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: const Text(
@@ -79,16 +74,14 @@ class _CreateBlockPageState extends State<CreateBlockPage> {
                       );
                       return;
                     }
-                    final event = CreateCarnivalBlockEvent(
-                      id: 2,
-                      name: blockName,
-                      owner: sessionEmail,
-                      // owner: ownerEmail,
+                    final event = JoinCarnivalBlockEvent(
+                      blockCode: code,
+                      sessionEmail: sessionEmail,
                     );
                     bloc.add(event);
                     Modular.to.navigate('/block/view_block');
                   },
-                  child: const Text('Criar bloco'),
+                  child: const Text('Ingressar em um bloco'),
                 ),
               ],
             ),

@@ -100,7 +100,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         onPressed: () {
                           bloc.add(DeleteUserAuthEvent(user: user));
                           Navigator.of(context).pop();
-                          Modular.to.navigate('/auth/login');
                         },
                         child: const Text('Excluir'),
                       ),

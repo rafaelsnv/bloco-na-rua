@@ -21,15 +21,24 @@ class FirestoreCarnivalBlockRepository implements ICarnivalBlockRepository {
   ) async {
     try {
       final carnivalBlock = _carnivalBlockCollection;
-
       final document = carnivalBlock.doc(name);
+
+      final nameCode = name.toLowerCase().replaceAll(' ', '_');
+      final managerCode = 'managers_code:$nameCode';
+      final inviteCode = 'invite_code:$nameCode';
+
       await document.set({
+        'managers_code': managerCode,
+        'invite_code': inviteCode,
         'name': name,
         'owner': owner,
-        'managers': {
-          'manager_email': owner,
-        },
-        'percussion': {},
+        'managers': [
+          {
+            'email': owner,
+          }
+        ],
+        'percussion': [],
+        'meetings': [],
       });
 
       final docSnap = await document.get();
@@ -91,10 +100,10 @@ class FirestoreCarnivalBlockRepository implements ICarnivalBlockRepository {
     String email,
   ) async {
     final blockList = await _getOwnerBlocks(email)
-      ..addAll(await _getManagerBlocks(email))
+      ..addAll(await _getManagersBlocks(email))
       ..addAll(await _getPercussionBlocks(email));
 
-    return blockList;
+    return blockList.toSet().toList();
   }
 
   Future<List<CarnivalBlockEntity>> _getOwnerBlocks(
@@ -115,13 +124,15 @@ class FirestoreCarnivalBlockRepository implements ICarnivalBlockRepository {
     return blockList;
   }
 
-  Future<List<CarnivalBlockEntity>> _getManagerBlocks(
+  Future<List<CarnivalBlockEntity>> _getManagersBlocks(
     String email,
   ) async {
+    final object = {
+      'email': email,
+    };
     final carnivalBlock = _carnivalBlockCollection;
-    final querySnapshot = await carnivalBlock
-        .where('managers.manager_email', isEqualTo: email)
-        .get();
+    final querySnapshot =
+        await carnivalBlock.where('managers', arrayContains: object).get();
 
     final blockList = List<CarnivalBlockEntity>.empty(growable: true);
     for (final queryDocumentSnapshot in querySnapshot.docs) {
@@ -137,10 +148,12 @@ class FirestoreCarnivalBlockRepository implements ICarnivalBlockRepository {
   Future<List<CarnivalBlockEntity>> _getPercussionBlocks(
     String email,
   ) async {
+    final object = {
+      'email': email,
+    };
     final carnivalBlock = _carnivalBlockCollection;
-    final querySnapshot = await carnivalBlock
-        .where('percussion.percussionist_email', isEqualTo: email)
-        .get();
+    final querySnapshot =
+        await carnivalBlock.where('percussion', arrayContains: object).get();
 
     final blockList = List<CarnivalBlockEntity>.empty(growable: true);
     for (final queryDocumentSnapshot in querySnapshot.docs) {
@@ -173,5 +186,69 @@ class FirestoreCarnivalBlockRepository implements ICarnivalBlockRepository {
         CarnivalBlockAdapter.fromFireStoreRepository(data);
 
     return UpdatedCarnivalBlockState(carnivalBlock: carnivalBlockEntity);
+  }
+
+  @override
+  Future<CarnivalBlockState> joinCarnivalBlock(
+    String code,
+    String email,
+  ) async {
+    final managersBlockList = await _getBlocksFromCode('managers', code);
+
+    if (managersBlockList.isNotEmpty) {
+      for (final managerBlock in managersBlockList) {
+        final doc = _carnivalBlockCollection.doc(managerBlock.name);
+        managerBlock.managers.add({
+          'email': email,
+        });
+        await doc.update(
+          {
+            'managers': managerBlock.managers,
+          },
+        );
+      }
+    }
+
+    final percussionBlockList = await _getBlocksFromCode('invite', code);
+    if (percussionBlockList.isNotEmpty) {
+      for (final percussionBlock in percussionBlockList) {
+        percussionBlock.percussion.add({
+          'email': email,
+        });
+        final doc = _carnivalBlockCollection.doc(percussionBlock.name);
+        await doc.update(
+          {
+            'percussion': percussionBlock.percussion,
+          },
+        );
+      }
+    }
+
+    final blockList = List<CarnivalBlockEntity>.from(managersBlockList)
+      ..addAll(percussionBlockList);
+
+    return LoadedCarnivalBlockState(
+      blockList: blockList,
+      sessionEmail: email,
+    );
+  }
+
+  Future<List<CarnivalBlockEntity>> _getBlocksFromCode(
+    String section,
+    String code,
+  ) async {
+    final carnivalBlock = _carnivalBlockCollection;
+    final querySnapshot =
+        await carnivalBlock.where('${section}_code', isEqualTo: code).get();
+
+    final blockList = List<CarnivalBlockEntity>.empty(growable: true);
+    for (final queryDocumentSnapshot in querySnapshot.docs) {
+      final data = queryDocumentSnapshot.data();
+      final carnivalBlockEntity =
+          CarnivalBlockAdapter.fromFireStoreRepository(data);
+      blockList.add(carnivalBlockEntity);
+    }
+
+    return blockList;
   }
 }

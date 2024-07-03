@@ -18,6 +18,16 @@ class InviteCarnivalBlockEvent implements CarnivalBlockEvent {
   });
 }
 
+class JoinCarnivalBlockEvent implements CarnivalBlockEvent {
+  final String blockCode;
+  final String sessionEmail;
+
+  JoinCarnivalBlockEvent({
+    required this.blockCode,
+    required this.sessionEmail,
+  });
+}
+
 class CreateCarnivalBlockEvent implements CarnivalBlockEvent {
   final int id;
   final String name;

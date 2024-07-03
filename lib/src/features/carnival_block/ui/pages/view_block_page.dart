@@ -2,7 +2,9 @@ import 'package:bloco_na_rua/src/features/carnival_block/interactor/blocs/carniv
 import 'package:bloco_na_rua/src/features/carnival_block/interactor/entities/carnival_block_entity.dart';
 import 'package:bloco_na_rua/src/features/carnival_block/interactor/events/carnival_block_event.dart';
 import 'package:bloco_na_rua/src/features/carnival_block/interactor/states/carnival_block_state.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class ViewBlockPage extends StatefulWidget {
@@ -13,18 +15,9 @@ class ViewBlockPage extends StatefulWidget {
 }
 
 class _ViewBlockPageState extends State<ViewBlockPage> {
-  late final String email;
   @override
   Widget build(BuildContext context) {
-    var bloc = context.watch<CarnivalBlockBloc>();
-    var state = bloc.state;
-    if (state is LoadingCarnivalBlockState) {
-      email = state.storage.read('email');
-      bloc.add(LoadCarnivalBlockEvent(email: email));
-    }
-
-    bloc = context.watch<CarnivalBlockBloc>();
-    state = bloc.state;
+    final bloc = Modular.get<CarnivalBlockBloc>();
 
     return Scaffold(
       appBar: AppBar(
@@ -35,27 +28,32 @@ class _ViewBlockPageState extends State<ViewBlockPage> {
           },
         ),
       ),
-      body: _buildBody(
-        bloc: bloc,
-      ),
+      body: _buildBody(bloc: bloc),
     );
   }
 
   Widget _buildBody({
     required CarnivalBlockBloc bloc,
   }) {
-    Widget body = Center(
-      child: Column(
-        children: [
-          const Text('Você não possui blocos'),
-          FilledButton.tonal(
-            onPressed: () {
-              Modular.to.navigate('/block/create_block');
-            },
-            child: const Text('Criar bloco'),
+    final createBlockButton = FilledButton.tonalIcon(
+      icon: const Icon(Icons.add),
+      onPressed: () {
+        Modular.to.navigate('/block/create_block');
+      },
+      label: const Text('Criar bloco'),
+    );
+
+    var body = ListView(
+      children: [
+        Center(
+          child: Column(
+            children: [
+              const Text('Você não possui blocos'),
+              createBlockButton,
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
 
     final state = bloc.state;
@@ -64,12 +62,22 @@ class _ViewBlockPageState extends State<ViewBlockPage> {
       final blockList = state.blockList;
       final sessionEmail = state.sessionEmail;
 
-      return body = ListView(
-        children: _buildBlocksList(
+      final filledBlocks = List<Widget>.from(
+        _buildBlocksList(
           bloc: bloc,
           blockList: blockList,
           sessionEmail: sessionEmail,
         ),
+      )..add(createBlockButton);
+
+      body = ListView(
+        children: [
+          Center(
+            child: Column(
+              children: filledBlocks,
+            ),
+          ),
+        ],
       );
     }
     return body;
@@ -88,9 +96,10 @@ class _ViewBlockPageState extends State<ViewBlockPage> {
     late final widgetList = List<Widget>.empty(growable: true);
 
     for (final block in blockList) {
-      final blockName = block.name;
-      final managers = block.managers;
-      final percussion = block.percussion;
+      final isOwner = block.owner == sessionEmail;
+      final isManager = isOwner ||
+          block.managers.any((element) => element.containsValue(sessionEmail));
+
       final widget = Card(
         color: Colors.grey.shade200,
         elevation: 10,
@@ -98,7 +107,7 @@ class _ViewBlockPageState extends State<ViewBlockPage> {
           child: Column(
             children: [
               Text(
-                blockName,
+                block.name,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 24,
@@ -108,83 +117,37 @@ class _ViewBlockPageState extends State<ViewBlockPage> {
                 'Dono: ${block.owner}',
                 style: const TextStyle(fontSize: 16),
               ),
+              if (isOwner)
+                _buildExcludeButton(
+                  bloc: bloc,
+                  carnivalBlock: block,
+                  sessionEmail: sessionEmail,
+                ),
               _buildSectionList(
                 title: const Text(
                   'Organizadores',
                   style: titleStyle,
                 ),
-                sectionMap: managers,
+                sectionList: block.managers,
+              ),
+              if (isManager)
+                _buildInviteManagerButton(carnivalBlock: block, bloc: bloc),
+              _buildSectionList(
+                title: const Text(
+                  'Encontros',
+                  style: titleStyle,
+                ),
+                sectionList: block.meetings,
               ),
               _buildSectionList(
                 title: const Text(
                   'Membros da bateria',
                   style: titleStyle,
                 ),
-                sectionMap: percussion,
+                sectionList: block.percussion,
               ),
-              if (block.owner == sessionEmail)
-                // ||block.managers.containsValue(sessionEmail))
-                FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(197, 244, 54, 54),
-                  ),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Excluir bloco $blockName'),
-                          content: const Text(
-                            'Tem certeza que deseja excluir o bloco?',
-                          ),
-                          actions: <Widget>[
-                            FilledButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Cancelar'),
-                            ),
-                            FilledButton.tonal(
-                              onPressed: () {
-                                bloc.add(
-                                  DeleteCarnivalBlockEvent(
-                                    email: email,
-                                    carnivalBlock: block,
-                                  ),
-                                );
-                                Navigator.of(context).pop();
-                                Modular.to.navigate('/');
-                              },
-                              child: const Text('Excluir'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  child: const Text('Excluir'),
-                ),
-              if (block.owner == sessionEmail ||
-                  block.managers.containsValue(sessionEmail))
-                FilledButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        bloc.add(
-                          InviteCarnivalBlockEvent(
-                            carnivalBlock: block,
-                          ),
-                        );
-                        return AlertDialog(
-                          title: const Text('Código para convite'),
-                          content: Text(block.inviteCode),
-                        );
-                      },
-                    );
-                  },
-                  child: const Text('Convidar membros'),
-                ),
+              if (isManager)
+                _buildInviteMemberButton(bloc: bloc, carnivalBlock: block),
             ],
           ),
         ),
@@ -194,23 +157,213 @@ class _ViewBlockPageState extends State<ViewBlockPage> {
     return widgetList;
   }
 
-  Widget _buildSectionList({
+  Center _buildSectionList({
     required Widget title,
-    required Map<String, dynamic> sectionMap,
+    required List<Map<String, dynamic>> sectionList,
   }) {
-    final listText = sectionMap
-        .map((key, value) => MapEntry(key, Text(value)))
-        .values
-        .toList();
+    final listText = List<Text>.empty(growable: true);
+    for (final element in sectionList) {
+      late MapEntry<String, Text> mapEntry;
+      final actualList = element.map((key, value) {
+        switch (value.runtimeType) {
+          case String:
+            mapEntry = MapEntry(key, Text(value));
+            break;
+          default:
+            break;
+        }
+
+        return mapEntry;
+      }).values;
+      listText.addAll(actualList);
+    }
 
     return Center(
       child: ExpansionTile(
         dense: true,
         visualDensity: VisualDensity.comfortable,
         title: title,
-        trailing: const SizedBox(),
         children: listText,
       ),
+    );
+  }
+
+  FilledButton _buildInviteMemberButton({
+    required CarnivalBlockEntity carnivalBlock,
+    required CarnivalBlockBloc bloc,
+  }) {
+    return FilledButton.icon(
+      icon: const Icon(Icons.person_add),
+      label: const Text('Convidar membros'),
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            bloc.add(
+              InviteCarnivalBlockEvent(
+                carnivalBlock: carnivalBlock,
+              ),
+            );
+            return AlertDialog(
+              title: const Text('Código para convite de membros'),
+              content: Text(carnivalBlock.inviteCode),
+              actions: [
+                FilledButton.icon(
+                  onPressed: () async {
+                    await Clipboard.setData(
+                      ClipboardData(
+                        text: carnivalBlock.inviteCode,
+                      ),
+                    ).then((_popSnackBar) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text(
+                            'Código copiado',
+                            textAlign: TextAlign.center,
+                            textScaler: TextScaler.linear(1.2),
+                          ),
+                          duration: const Duration(milliseconds: 1500),
+                          width: 250,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                          ),
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      );
+                    });
+                  },
+                  icon: const Icon(Icons.copy),
+                  label: const Text('Copiar'),
+                ),
+                FilledButton.tonal(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancelar'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  FilledButton _buildInviteManagerButton({
+    required CarnivalBlockEntity carnivalBlock,
+    required CarnivalBlockBloc bloc,
+  }) {
+    return FilledButton.icon(
+      icon: const Icon(Icons.person_add),
+      label: const Text('Convidar organizador'),
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            bloc.add(
+              InviteCarnivalBlockEvent(
+                carnivalBlock: carnivalBlock,
+              ),
+            );
+            return AlertDialog(
+              title: const Text('Código para convidar organizadores'),
+              content: Text(carnivalBlock.managersCode),
+              actions: [
+                FilledButton.icon(
+                  onPressed: () async {
+                    await Clipboard.setData(
+                      ClipboardData(
+                        text: carnivalBlock.managersCode,
+                      ),
+                    ).then((_popSnackBar) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text(
+                            'Código copiado',
+                            textAlign: TextAlign.center,
+                            textScaler: TextScaler.linear(1.2),
+                          ),
+                          duration: const Duration(milliseconds: 1500),
+                          width: 250,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                          ),
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      );
+                    });
+                  },
+                  icon: const Icon(Icons.copy),
+                  label: const Text('Copiar'),
+                ),
+                FilledButton.tonal(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancelar'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  FilledButton _buildExcludeButton({
+    required String sessionEmail,
+    required CarnivalBlockEntity carnivalBlock,
+    required CarnivalBlockBloc bloc,
+  }) {
+    final blockName = carnivalBlock.name;
+
+    if (blockName.isEmpty) {}
+
+    return FilledButton(
+      style: FilledButton.styleFrom(
+        backgroundColor: const Color.fromARGB(197, 244, 54, 54),
+      ),
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Excluir bloco $blockName'),
+              content: const Text(
+                'Tem certeza que deseja excluir o bloco?',
+              ),
+              actions: [
+                FilledButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancelar'),
+                ),
+                FilledButton.tonal(
+                  onPressed: () {
+                    bloc.add(
+                      DeleteCarnivalBlockEvent(
+                        email: sessionEmail,
+                        carnivalBlock: carnivalBlock,
+                      ),
+                    );
+                    Navigator.of(context).pop();
+                    Modular.to.navigate('/');
+                  },
+                  child: const Text('Excluir'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+      child: const Text('Excluir'),
     );
   }
 }
