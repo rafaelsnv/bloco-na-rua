@@ -1,0 +1,151 @@
+@startuml bloco-na-rua
+!theme toy
+hide empty methods
+hide empty attributes
+skinparam{
+  DefaultFontName Fira Code Retina
+  DefaultMonospacedFontName Fira Code Retina
+  Nodesep 10
+}
+
+package "bloco-na-rua" {
+
+  class "AppModule" {
+    +void binds()
+    +void routes()
+  }
+
+  package features{
+
+    package auth #eaeaea{
+
+      package interactor #FFB0AC{
+        package entities{
+          ' Entities
+          entity "UserEntity" {
+            +String id
+            +String name
+            +String email
+            +String token
+
+          }
+        }
+
+        package states{
+          ' States
+          class "AuthState" {}
+
+          class "LoggedAuthState" implements "AuthState" {
+            +UserEntity user
+          }
+          "LoggedAuthState" *-- "UserEntity"
+
+          class "LogoutedAuthState" implements "AuthState" {}
+          class "LoadingAuthState" implements "AuthState" {}
+        }
+
+        package blocs{
+          ' AuthBloc
+          class "AuthBloc" {
+            +AuthService service
+            -dynamic _loginAuthEvent()
+            -dynamic _logoutAuthEvent()
+          }
+
+        }
+
+        package services{
+          interface "IAuthService" {
+            +dynamic login()
+            +dynamic logout()
+            +AuthState getUser()
+          }
+          "AuthBloc" *-- "IAuthService"
+        }
+
+        package events{
+          ' AuthEvents
+          class "AuthEvent" {
+          }
+
+          class "LoginAuthEvent" implements "AuthEvent" {
+            +String email
+            +String password
+          }
+
+          class "LogoutAuthEvent" implements "AuthEvent" {
+          }
+        }
+      }
+
+      package data #B3FFCB{
+
+        package services{
+          ' FirebaseAuthService
+          class "FirebaseAuthService" {
+            +FirebaseAuth firebaseAuth
+            +dynamic login()
+            +dynamic logout()
+            +AuthState getUser()
+          }
+          "IAuthService" <|-- "FirebaseAuthService"
+
+          package adapters{
+            ' User Adapter
+            class "UserAdapter" {
+              {static} +UserEntity fromFirebaseUser()
+            }
+          }
+
+        }
+      }
+
+      package ui #B7E7FF{
+        ' LoginPage
+        class "LoginPage" {
+          +State<LoginPage> createState()
+
+        }
+
+        class "_LoginPageState" extends "LoginPage" {
+          +String email
+          +String password
+          +Widget build()
+        }
+      }
+    }
+
+    package home #eaeaea{
+
+      package ui #B7E7FF{
+
+        package pages{
+          ' HomePage
+          class "HomePage" {
+            +State<HomePage> createState()
+          }
+
+          class "_HomePageState" extends "HomePage" {
+            +Widget build()
+          }
+        }
+
+        package widgets{
+          ' AppWidget
+          class "AppWidget" {
+            +State<AppWidget> createState()
+          }
+
+          class "_AppWidgetState" extends "AppWidget" {
+            -StreamSubscription<dynamic> _subscription
+            +void initState()
+            +void dispose()
+            +Widget build()
+          }
+        }
+      }
+    }
+  }
+}
+
+@enduml

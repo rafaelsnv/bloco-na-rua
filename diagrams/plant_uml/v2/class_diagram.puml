@@ -1,0 +1,246 @@
+@startuml bloco_na_rua
+set namespaceSeparator ::
+
+class "bloco_na_rua::src::features::auth::data::services::adapters::user_adapter.dart::UserAdapter" {
+  {static} +UserEntity fromFirebaseUser()
+}
+
+class "bloco_na_rua::src::features::auth::data::services::firebase_auth_service.dart::FirebaseAuthService" {
+  +dynamic createUser()
+  +dynamic login()
+  +dynamic logout()
+  +dynamic getUser()
+  +dynamic deleteUser()
+}
+
+"bloco_na_rua::src::features::auth::interactor::services::iauth_service.dart::IAuthService" <|-- "bloco_na_rua::src::features::auth::data::services::firebase_auth_service.dart::FirebaseAuthService"
+
+class "bloco_na_rua::src::features::auth::interactor::entities::user_entity.dart::UserEntity" {
+  +String id
+  +String name
+  +String email
+  +String phone
+  +String profileImage
+  +String token
+}
+
+class "bloco_na_rua::src::features::auth::interactor::events::auth_event.dart::AuthEvent" {
+}
+
+class "bloco_na_rua::src::features::auth::interactor::events::auth_event.dart::LoginAuthEvent" {
+  +String email
+  +String password
+}
+
+"bloco_na_rua::src::features::auth::interactor::events::auth_event.dart::AuthEvent" <|-- "bloco_na_rua::src::features::auth::interactor::events::auth_event.dart::LoginAuthEvent"
+
+class "bloco_na_rua::src::features::auth::interactor::events::auth_event.dart::CreateUserAuthEvent" {
+  +String email
+  +String password
+  +String name
+  +String phone
+}
+
+"bloco_na_rua::src::features::auth::interactor::events::auth_event.dart::AuthEvent" <|-- "bloco_na_rua::src::features::auth::interactor::events::auth_event.dart::CreateUserAuthEvent"
+
+class "bloco_na_rua::src::features::auth::interactor::events::auth_event.dart::LogoutAuthEvent" {
+}
+
+"bloco_na_rua::src::features::auth::interactor::events::auth_event.dart::AuthEvent" <|-- "bloco_na_rua::src::features::auth::interactor::events::auth_event.dart::LogoutAuthEvent"
+
+class "bloco_na_rua::src::features::auth::interactor::events::auth_event.dart::DeleteUserAuthEvent" {
+  +UserEntity user
+}
+
+"bloco_na_rua::src::features::auth::interactor::events::auth_event.dart::DeleteUserAuthEvent" o-- "bloco_na_rua::src::features::auth::interactor::entities::user_entity.dart::UserEntity"
+"bloco_na_rua::src::features::auth::interactor::events::auth_event.dart::AuthEvent" <|-- "bloco_na_rua::src::features::auth::interactor::events::auth_event.dart::DeleteUserAuthEvent"
+
+class "bloco_na_rua::src::features::auth::interactor::services::iauth_service.dart::IAuthService" {
+  +dynamic login()
+  +dynamic logout()
+  +dynamic createUser()
+  +dynamic deleteUser()
+  +dynamic getUser()
+}
+
+class "bloco_na_rua::src::features::auth::interactor::states::auth_state.dart::AuthState" {
+}
+
+class "bloco_na_rua::src::features::auth::interactor::states::auth_state.dart::LoggedAuthState" {
+  +UserEntity user
+}
+
+"bloco_na_rua::src::features::auth::interactor::states::auth_state.dart::LoggedAuthState" o-- "bloco_na_rua::src::features::auth::interactor::entities::user_entity.dart::UserEntity"
+"bloco_na_rua::src::features::auth::interactor::states::auth_state.dart::AuthState" <|-- "bloco_na_rua::src::features::auth::interactor::states::auth_state.dart::LoggedAuthState"
+
+class "bloco_na_rua::src::features::auth::interactor::states::auth_state.dart::LogoutedAuthState" {
+}
+
+"bloco_na_rua::src::features::auth::interactor::states::auth_state.dart::AuthState" <|-- "bloco_na_rua::src::features::auth::interactor::states::auth_state.dart::LogoutedAuthState"
+
+class "bloco_na_rua::src::features::auth::interactor::states::auth_state.dart::LoadingAuthState" {
+}
+
+"bloco_na_rua::src::features::auth::interactor::states::auth_state.dart::AuthState" <|-- "bloco_na_rua::src::features::auth::interactor::states::auth_state.dart::LoadingAuthState"
+
+class "bloco_na_rua::src::features::auth::ui::pages::login_page.dart::LoginPage" {
+  +State<LoginPage> createState()
+}
+
+class "bloco_na_rua::src::features::auth::ui::pages::profile_page.dart::ProfilePage" {
+  +State<ProfilePage> createState()
+}
+
+class "bloco_na_rua::src::features::auth::ui::pages::signup_page.dart::SignUpPage" {
+  +State<SignUpPage> createState()
+}
+
+class "bloco_na_rua::src::features::auth::ui::widgets::profile_icon_widget.dart::ProfileIconWidget" {
+  +String imagePath
+  +Widget build()
+  +Widget buildImage()
+  +Widget buildCircle()
+}
+
+class "bloco_na_rua::src::features::carnival_block::data::adapters::carnival_block_adapter.dart::CarnivalBlockAdapter" {
+  {static} +CarnivalBlockEntity fromFireStoreRepository()
+}
+
+class "bloco_na_rua::src::features::carnival_block::data::firestore_carnival_block_repository.dart::FirestoreCarnivalBlockRepository" {
+  +dynamic createCarnivalBlock()
+  +dynamic getInviteCode()
+  +dynamic deleteCarnivalBlock()
+  +dynamic getCarnivalBlocksList()
+  +dynamic updateCarnivalBlock()
+  +dynamic joinCarnivalBlock()
+}
+
+"bloco_na_rua::src::features::carnival_block::interactor::repositories::icarnival_block_repository.dart::ICarnivalBlockRepository" <|-- "bloco_na_rua::src::features::carnival_block::data::firestore_carnival_block_repository.dart::FirestoreCarnivalBlockRepository"
+
+class "bloco_na_rua::src::features::carnival_block::interactor::entities::carnival_block_entity.dart::CarnivalBlockEntity" {
+  +String managersCode
+  +String inviteCode
+  +String name
+  +String owner
+  +List<Map<String, dynamic>> managers
+  +List<Map<String, dynamic>> percussion
+  +int hashCode
+  +bool ==()
+}
+
+class "bloco_na_rua::src::features::carnival_block::interactor::events::carnival_block_event.dart::CarnivalBlockEvent" {
+}
+
+class "bloco_na_rua::src::features::carnival_block::interactor::events::carnival_block_event.dart::LoadCarnivalBlockEvent" {
+  +String email
+}
+
+"bloco_na_rua::src::features::carnival_block::interactor::events::carnival_block_event.dart::CarnivalBlockEvent" <|-- "bloco_na_rua::src::features::carnival_block::interactor::events::carnival_block_event.dart::LoadCarnivalBlockEvent"
+
+class "bloco_na_rua::src::features::carnival_block::interactor::events::carnival_block_event.dart::InviteCarnivalBlockEvent" {
+  +CarnivalBlockEntity carnivalBlock
+}
+
+"bloco_na_rua::src::features::carnival_block::interactor::events::carnival_block_event.dart::InviteCarnivalBlockEvent" o-- "bloco_na_rua::src::features::carnival_block::interactor::entities::carnival_block_entity.dart::CarnivalBlockEntity"
+"bloco_na_rua::src::features::carnival_block::interactor::events::carnival_block_event.dart::CarnivalBlockEvent" <|-- "bloco_na_rua::src::features::carnival_block::interactor::events::carnival_block_event.dart::InviteCarnivalBlockEvent"
+
+class "bloco_na_rua::src::features::carnival_block::interactor::events::carnival_block_event.dart::JoinCarnivalBlockEvent" {
+  +String blockCode
+  +String sessionEmail
+}
+
+"bloco_na_rua::src::features::carnival_block::interactor::events::carnival_block_event.dart::CarnivalBlockEvent" <|-- "bloco_na_rua::src::features::carnival_block::interactor::events::carnival_block_event.dart::JoinCarnivalBlockEvent"
+
+class "bloco_na_rua::src::features::carnival_block::interactor::events::carnival_block_event.dart::CreateCarnivalBlockEvent" {
+  +int id
+  +String name
+  +String owner
+}
+
+"bloco_na_rua::src::features::carnival_block::interactor::events::carnival_block_event.dart::CarnivalBlockEvent" <|-- "bloco_na_rua::src::features::carnival_block::interactor::events::carnival_block_event.dart::CreateCarnivalBlockEvent"
+
+class "bloco_na_rua::src::features::carnival_block::interactor::events::carnival_block_event.dart::DeleteCarnivalBlockEvent" {
+  +CarnivalBlockEntity carnivalBlock
+  +String email
+}
+
+"bloco_na_rua::src::features::carnival_block::interactor::events::carnival_block_event.dart::DeleteCarnivalBlockEvent" o-- "bloco_na_rua::src::features::carnival_block::interactor::entities::carnival_block_entity.dart::CarnivalBlockEntity"
+"bloco_na_rua::src::features::carnival_block::interactor::events::carnival_block_event.dart::CarnivalBlockEvent" <|-- "bloco_na_rua::src::features::carnival_block::interactor::events::carnival_block_event.dart::DeleteCarnivalBlockEvent"
+
+class "bloco_na_rua::src::features::carnival_block::interactor::repositories::icarnival_block_repository.dart::ICarnivalBlockRepository" {
+  +dynamic createCarnivalBlock()
+  +dynamic getInviteCode()
+  +dynamic getCarnivalBlocksList()
+  +dynamic updateCarnivalBlock()
+  +dynamic joinCarnivalBlock()
+  +dynamic deleteCarnivalBlock()
+}
+
+class "bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::CarnivalBlockState" {
+}
+
+class "bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::LoadingCarnivalBlockState" {
+}
+
+"bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::CarnivalBlockState" <|-- "bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::LoadingCarnivalBlockState"
+
+class "bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::CreatedCarnivalBlockState" {
+  +CarnivalBlockEntity carnivalBlock
+}
+
+"bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::CreatedCarnivalBlockState" o-- "bloco_na_rua::src::features::carnival_block::interactor::entities::carnival_block_entity.dart::CarnivalBlockEntity"
+"bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::CarnivalBlockState" <|-- "bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::CreatedCarnivalBlockState"
+
+class "bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::InvitedCarnivalBlockState" {
+  +String inviteCode
+}
+
+"bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::CarnivalBlockState" <|-- "bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::InvitedCarnivalBlockState"
+
+class "bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::UpdatedCarnivalBlockState" {
+  +CarnivalBlockEntity carnivalBlock
+}
+
+"bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::UpdatedCarnivalBlockState" o-- "bloco_na_rua::src::features::carnival_block::interactor::entities::carnival_block_entity.dart::CarnivalBlockEntity"
+"bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::CarnivalBlockState" <|-- "bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::UpdatedCarnivalBlockState"
+
+class "bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::FailedCarnivalBlockState" {
+  +String errorMessage
+}
+
+"bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::CarnivalBlockState" <|-- "bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::FailedCarnivalBlockState"
+
+class "bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::DeletedCarnivalBlockState" {
+}
+
+"bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::CarnivalBlockState" <|-- "bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::DeletedCarnivalBlockState"
+
+class "bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::LoadedCarnivalBlockState" {
+  +String sessionEmail
+  +List<CarnivalBlockEntity> blockList
+}
+
+"bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::CarnivalBlockState" <|-- "bloco_na_rua::src::features::carnival_block::interactor::states::carnival_block_state.dart::LoadedCarnivalBlockState"
+
+class "bloco_na_rua::src::features::carnival_block::ui::pages::create_block_page.dart::CreateBlockPage" {
+  +State<CreateBlockPage> createState()
+}
+
+class "bloco_na_rua::src::features::carnival_block::ui::pages::join_block_page.dart::JoinBlockPage" {
+  +State<JoinBlockPage> createState()
+}
+
+class "bloco_na_rua::src::features::carnival_block::ui::pages::view_block_page.dart::ViewBlockPage" {
+  +State<ViewBlockPage> createState()
+}
+
+class "bloco_na_rua::src::features::home::ui::pages::home_page.dart::HomePage" {
+  +State<HomePage> createState()
+}
+
+class "bloco_na_rua::src::features::home::ui::widgets::app_widget.dart::AppWidget" {
+  +State<AppWidget> createState()
+}
+
+
+@enduml

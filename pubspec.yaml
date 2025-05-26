@@ -7,19 +7,25 @@ environment:
   sdk: '>=3.3.4 <4.0.0'
 
 dependencies:
+  cloud_firestore: ^4.17.4
+  dcdg: ^4.1.0
   firebase_auth: ^4.19.5
   firebase_core: ^2.31.0
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.5
   flutter_modular: ^6.3.3
+  get_storage: ^2.1.1
   modular_bloc_bind: ^2.0.0-beta.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
+  flutter_lints: ^4.0.0
   flutterando_analysis: ^0.0.2
 
 flutter:
+  assets:
+    - assets/
+    - assets/images/
   uses-material-design: true

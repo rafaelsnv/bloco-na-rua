@@ -1,0 +1,110 @@
+@startuml auth
+set namespaceSeparator ::
+
+hide methods
+hide attributes
+hide classes
+
+class "bloco_na_rua::src::features::auth::data::adapters::UserAdapter" {
+  {static} +UserEntity fromFirebaseUser()
+}
+
+class "bloco_na_rua::src::features::auth::data::services::FirebaseAuthService" {
+  +dynamic createUser()
+  +dynamic login()
+  +dynamic logout()
+  +dynamic getUser()
+  +dynamic deleteUser()
+}
+
+"bloco_na_rua::src::features::auth::interactor::services::IAuthService" <|-- "bloco_na_rua::src::features::auth::data::services::FirebaseAuthService"
+
+entity "bloco_na_rua::src::features::auth::interactor::entities::UserEntity" {
+  +String id
+  +String name
+  +String email
+  +String phone
+  +String profileImage
+  +String token
+}
+
+class "bloco_na_rua::src::features::auth::interactor::events::AuthEvent" {
+}
+
+class "bloco_na_rua::src::features::auth::interactor::events::LoginAuthEvent" {
+  +String email
+  +String password
+}
+
+"bloco_na_rua::src::features::auth::interactor::events::AuthEvent" <|-- "bloco_na_rua::src::features::auth::interactor::events::LoginAuthEvent"
+
+class "bloco_na_rua::src::features::auth::interactor::events::CreateUserAuthEvent" {
+  +String email
+  +String password
+  +String name
+  +String phone
+}
+
+"bloco_na_rua::src::features::auth::interactor::events::AuthEvent" <|-- "bloco_na_rua::src::features::auth::interactor::events::CreateUserAuthEvent"
+
+class "bloco_na_rua::src::features::auth::interactor::events::LogoutAuthEvent" {
+}
+
+"bloco_na_rua::src::features::auth::interactor::events::AuthEvent" <|-- "bloco_na_rua::src::features::auth::interactor::events::LogoutAuthEvent"
+
+class "bloco_na_rua::src::features::auth::interactor::events::DeleteUserAuthEvent" {
+  +UserEntity user
+}
+
+"bloco_na_rua::src::features::auth::interactor::events::DeleteUserAuthEvent" o-- "bloco_na_rua::src::features::auth::interactor::entities::UserEntity"
+"bloco_na_rua::src::features::auth::interactor::events::AuthEvent" <|-- "bloco_na_rua::src::features::auth::interactor::events::DeleteUserAuthEvent"
+
+interface "bloco_na_rua::src::features::auth::interactor::services::IAuthService" {
+  +dynamic login()
+  +dynamic logout()
+  +dynamic createUser()
+  +dynamic deleteUser()
+  +dynamic getUser()
+}
+
+class "bloco_na_rua::src::features::auth::interactor::states::AuthState" {
+}
+
+class "bloco_na_rua::src::features::auth::interactor::states::LoggedAuthState" {
+  +UserEntity user
+}
+
+"bloco_na_rua::src::features::auth::interactor::states::LoggedAuthState" o-- "bloco_na_rua::src::features::auth::interactor::entities::UserEntity"
+"bloco_na_rua::src::features::auth::interactor::states::AuthState" <|-- "bloco_na_rua::src::features::auth::interactor::states::LoggedAuthState"
+
+class "bloco_na_rua::src::features::auth::interactor::states::LogoutedAuthState" {
+}
+
+"bloco_na_rua::src::features::auth::interactor::states::AuthState" <|-- "bloco_na_rua::src::features::auth::interactor::states::LogoutedAuthState"
+
+class "bloco_na_rua::src::features::auth::interactor::states::LoadingAuthState" {
+}
+
+"bloco_na_rua::src::features::auth::interactor::states::AuthState" <|-- "bloco_na_rua::src::features::auth::interactor::states::LoadingAuthState"
+
+class "bloco_na_rua::src::features::auth::ui::pages::LoginPage" {
+  +State<LoginPage> createState()
+}
+
+class "bloco_na_rua::src::features::auth::ui::pages::ProfilePage" {
+  +State<ProfilePage> createState()
+}
+
+class "bloco_na_rua::src::features::auth::ui::pages::SignUpPage" {
+  +State<SignUpPage> createState()
+}
+
+class "bloco_na_rua::src::features::auth::ui::widgets::ProfileIconWidget" {
+  +String imagePath
+  +Widget build()
+  +Widget buildImage()
+  +Widget buildCircle()
+}
+
+
+@enduml

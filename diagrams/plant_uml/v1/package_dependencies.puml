@@ -1,0 +1,86 @@
+@startuml bloco-na-rua
+!theme toy
+hide empty methods
+hide empty attributes
+skinparam{
+  DefaultFontName Fira Code Retina
+  DefaultMonospacedFontName Fira Code Retina
+  Nodesep 10
+}
+
+' package "bloco-na-rua" {
+
+  ' package features{
+
+    ' newpage
+    package feature #eaeaea{
+
+      package data #B3FFCB{
+        package adapters #B3FFCB{}
+
+        package services #B3FFCB{}
+      }
+
+      package interactor #FFB0AC{
+        package blocs #FFB0AC{}
+
+        package events #FFB0AC{}
+
+        package services #FFB0AC{}
+
+        package states #FFB0AC{}
+
+        package entities #FCFDB9{}
+
+      }
+
+      package ui #B7E7FF{
+        package pages #B7E7FF{}
+        package widgets #B7E7FF{}
+      }
+
+    }
+
+    newpage
+
+    package carnival_block #eaeaea{
+
+      package data #B3FFCB{
+        package adapters #B3FFCB{}
+
+        package services #B3FFCB{}
+      }
+
+      package interactor #FFB0AC{
+        package blocs #FFB0AC{}
+
+        package entities #FFB0AC{}
+
+        package events #FFB0AC{}
+
+        package services #FFB0AC{}
+
+        package states #FFB0AC{}
+      }
+
+      package ui #B7E7FF{
+        package pages #B7E7FF{}
+        package widgets #B7E7FF{}
+      }
+    }
+
+    newpage
+
+    package home #eaeaea{
+
+      package ui #B7E7FF{
+
+        package pages #B7E7FF{}
+
+        package widgets #B7E7FF{}
+      }
+    }
+  ' }
+' }
+
+@enduml

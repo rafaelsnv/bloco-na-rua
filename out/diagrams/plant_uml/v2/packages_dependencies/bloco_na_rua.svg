@@ -1,0 +1,2623 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   contentStyleType="text/css"
+   height="769px"
+   preserveAspectRatio="none"
+   style="width:6722px;height:769px;background:#FFFFFF;"
+   version="1.1"
+   viewBox="0 0 6722 769"
+   width="6722px"
+   zoomAndPan="magnify"
+   id="svg94"
+   sodipodi:docname="bloco_na_rua.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview94"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.2806547"
+     inkscape:cx="-57.009557"
+     inkscape:cy="514.86756"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g94" />
+  <defs
+     id="defs1" />
+  <g
+     id="g94">
+    <!--cluster bloco_na_rua-->
+    <g
+       id="cluster_bloco_na_rua">
+      <path
+         d="M8.5,6 L104.5,6 A3.75,3.75 0 0 1 107,8.5 L114,29.6094 L6712.5,29.6094 A2.5,2.5 0 0 1 6715,32.1094 L6715,759.5 A2.5,2.5 0 0 1 6712.5,762 L8.5,762 A2.5,2.5 0 0 1 6,759.5 L6,8.5 A2.5,2.5 0 0 1 8.5,6 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path1" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="6"
+         x2="114"
+         y1="29.6094"
+         y2="29.6094"
+         id="line1" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="95"
+         x="10"
+         y="22.5332"
+         id="text1">bloco_na_rua</text>
+    </g>
+    <!--cluster features-->
+    <g
+       id="cluster_features">
+      <path
+         d="M32.5,50 L92.5,50 A3.75,3.75 0 0 1 95,52.5 L102,73.6094 L6688.5,73.6094 A2.5,2.5 0 0 1 6691,76.1094 L6691,735.5 A2.5,2.5 0 0 1 6688.5,738 L32.5,738 A2.5,2.5 0 0 1 30,735.5 L30,52.5 A2.5,2.5 0 0 1 32.5,50 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path2" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="30"
+         x2="102"
+         y1="73.6094"
+         y2="73.6094"
+         id="line2" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="59"
+         x="34"
+         y="66.5332"
+         id="text2">features</text>
+    </g>
+    <!--cluster auth-->
+    <g
+       id="cluster_auth">
+      <path
+         d="M4261.5,94 L4293.5,94 A3.75,3.75 0 0 1 4296,96.5 L4303,117.6094 L6664.5,117.6094 A2.5,2.5 0 0 1 6667,120.1094 L6667,711.5 A2.5,2.5 0 0 1 6664.5,714 L4261.5,714 A2.5,2.5 0 0 1 4259,711.5 L4259,96.5 A2.5,2.5 0 0 1 4261.5,94 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path3" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="4259"
+         x2="4303"
+         y1="117.6094"
+         y2="117.6094"
+         id="line3" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="31"
+         x="4263"
+         y="110.5332"
+         id="text3">auth</text>
+    </g>
+    <!--cluster data-->
+    <g
+       id="cluster_data">
+      <path
+         d="M6233.5,338 L6264.5,338 A3.75,3.75 0 0 1 6267,340.5 L6274,361.6094 L6640.5,361.6094 A2.5,2.5 0 0 1 6643,364.1094 L6643,555.5 A2.5,2.5 0 0 1 6640.5,558 L6233.5,558 A2.5,2.5 0 0 1 6231,555.5 L6231,340.5 A2.5,2.5 0 0 1 6233.5,338 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path4" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="6231"
+         x2="6274"
+         y1="361.6094"
+         y2="361.6094"
+         id="line4" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="30"
+         x="6235"
+         y="354.5332"
+         id="text4">data</text>
+    </g>
+    <!--cluster services-->
+    <g
+       id="cluster_services">
+      <path
+         d="M6257.5,382 L6319.5,382 A3.75,3.75 0 0 1 6322,384.5 L6329,405.6094 L6616.5,405.6094 A2.5,2.5 0 0 1 6619,408.1094 L6619,531.5 A2.5,2.5 0 0 1 6616.5,534 L6257.5,534 A2.5,2.5 0 0 1 6255,531.5 L6255,384.5 A2.5,2.5 0 0 1 6257.5,382 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path5" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="6255"
+         x2="6329"
+         y1="405.6094"
+         y2="405.6094"
+         id="line5" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="61"
+         x="6259"
+         y="398.5332"
+         id="text5">services</text>
+    </g>
+    <!--cluster adapters-->
+    <g
+       id="cluster_adapters">
+      <path
+         d="M6453.5,426 L6516.5,426 A3.75,3.75 0 0 1 6519,428.5 L6526,449.6094 L6592.5,449.6094 A2.5,2.5 0 0 1 6595,452.1094 L6595,507.5 A2.5,2.5 0 0 1 6592.5,510 L6453.5,510 A2.5,2.5 0 0 1 6451,507.5 L6451,428.5 A2.5,2.5 0 0 1 6453.5,426 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path6" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="6451"
+         x2="6526"
+         y1="449.6094"
+         y2="449.6094"
+         id="line6" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="62"
+         x="6455"
+         y="442.5332"
+         id="text6">adapters</text>
+    </g>
+    <!--cluster interactor-->
+    <g
+       id="cluster_interactor">
+      <path
+         d="M4803.5,138 L4873.5,138 A3.75,3.75 0 0 1 4876,140.5 L4883,161.6094 L6204.5,161.6094 A2.5,2.5 0 0 1 6207,164.1094 L6207,687.5 A2.5,2.5 0 0 1 6204.5,690 L4803.5,690 A2.5,2.5 0 0 1 4801,687.5 L4801,140.5 A2.5,2.5 0 0 1 4803.5,138 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path7" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="4801"
+         x2="4883"
+         y1="161.6094"
+         y2="161.6094"
+         id="line7" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="69"
+         x="4805"
+         y="154.5332"
+         id="text7">interactor</text>
+    </g>
+    <!--cluster services-->
+    <g
+       id="g8">
+      <path
+         d="M6041.5,182 L6103.5,182 A3.75,3.75 0 0 1 6106,184.5 L6113,205.6094 L6180.5,205.6094 A2.5,2.5 0 0 1 6183,208.1094 L6183,263.5 A2.5,2.5 0 0 1 6180.5,266 L6041.5,266 A2.5,2.5 0 0 1 6039,263.5 L6039,184.5 A2.5,2.5 0 0 1 6041.5,182 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path8" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="6039"
+         x2="6113"
+         y1="205.6094"
+         y2="205.6094"
+         id="line8" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="61"
+         x="6043"
+         y="198.5332"
+         id="text8">services</text>
+    </g>
+    <!--cluster entities-->
+    <g
+       id="cluster_entities">
+      <path
+         d="M5351.5,582 L5405.5,582 A3.75,3.75 0 0 1 5408,584.5 L5415,605.6094 L5474.5,605.6094 A2.5,2.5 0 0 1 5477,608.1094 L5477,663.5 A2.5,2.5 0 0 1 5474.5,666 L5351.5,666 A2.5,2.5 0 0 1 5349,663.5 L5349,584.5 A2.5,2.5 0 0 1 5351.5,582 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path9" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="5349"
+         x2="5415"
+         y1="605.6094"
+         y2="605.6094"
+         id="line9" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="53"
+         x="5353"
+         y="598.5332"
+         id="text9">entities</text>
+    </g>
+    <!--cluster events-->
+    <g
+       id="cluster_events">
+      <path
+         d="M5345.5,182 L5395.5,182 A3.75,3.75 0 0 1 5398,184.5 L5405,205.6094 L6012.5,205.6094 A2.5,2.5 0 0 1 6015,208.1094 L6015,507.5 A2.5,2.5 0 0 1 6012.5,510 L5345.5,510 A2.5,2.5 0 0 1 5343,507.5 L5343,184.5 A2.5,2.5 0 0 1 5345.5,182 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path10" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="5343"
+         x2="5405"
+         y1="205.6094"
+         y2="205.6094"
+         id="line10" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="49"
+         x="5347"
+         y="198.5332"
+         id="text10">events</text>
+    </g>
+    <!--cluster states-->
+    <g
+       id="cluster_states">
+      <path
+         d="M4827.5,182 L4871.5,182 A3.75,3.75 0 0 1 4874,184.5 L4881,205.6094 L5316.5,205.6094 A2.5,2.5 0 0 1 5319,208.1094 L5319,507.5 A2.5,2.5 0 0 1 5316.5,510 L4827.5,510 A2.5,2.5 0 0 1 4825,507.5 L4825,184.5 A2.5,2.5 0 0 1 4827.5,182 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path11" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="4825"
+         x2="4881"
+         y1="205.6094"
+         y2="205.6094"
+         id="line11" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="43"
+         x="4829"
+         y="198.5332"
+         id="text11">states</text>
+    </g>
+    <!--cluster ui-->
+    <g
+       id="cluster_ui">
+      <path
+         d="M4285.5,138 L4299.5,138 A3.75,3.75 0 0 1 4302,140.5 L4309,161.6094 L4774.5,161.6094 A2.5,2.5 0 0 1 4777,164.1094 L4777,531.5 A2.5,2.5 0 0 1 4774.5,534 L4285.5,534 A2.5,2.5 0 0 1 4283,531.5 L4283,140.5 A2.5,2.5 0 0 1 4285.5,138 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path12" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="4283"
+         x2="4309"
+         y1="161.6094"
+         y2="161.6094"
+         id="line12" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="13"
+         x="4287"
+         y="154.5332"
+         id="text12">ui</text>
+    </g>
+    <!--cluster pages-->
+    <g
+       id="cluster_pages">
+      <path
+         d="M4507.5,182 L4551.5,182 A3.75,3.75 0 0 1 4554,184.5 L4561,205.6094 L4750.5,205.6094 A2.5,2.5 0 0 1 4753,208.1094 L4753,507.5 A2.5,2.5 0 0 1 4750.5,510 L4507.5,510 A2.5,2.5 0 0 1 4505,507.5 L4505,184.5 A2.5,2.5 0 0 1 4507.5,182 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path13" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="4505"
+         x2="4561"
+         y1="205.6094"
+         y2="205.6094"
+         id="line13" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="43"
+         x="4509"
+         y="198.5332"
+         id="text13">pages</text>
+    </g>
+    <!--cluster widgets-->
+    <g
+       id="cluster_widgets">
+      <path
+         d="M4309.5,182 L4365.5,182 A3.75,3.75 0 0 1 4368,184.5 L4375,205.6094 L4478.5,205.6094 A2.5,2.5 0 0 1 4481,208.1094 L4481,263.5 A2.5,2.5 0 0 1 4478.5,266 L4309.5,266 A2.5,2.5 0 0 1 4307,263.5 L4307,184.5 A2.5,2.5 0 0 1 4309.5,182 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path14" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="4307"
+         x2="4375"
+         y1="205.6094"
+         y2="205.6094"
+         id="line14" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="55"
+         x="4311"
+         y="198.5332"
+         id="text14">widgets</text>
+    </g>
+    <!--cluster carnival_block-->
+    <g
+       id="cluster_carnival_block">
+      <path
+         d="M468.5,94 L571.5,94 A3.75,3.75 0 0 1 574,96.5 L581,117.6094 L4232.5,117.6094 A2.5,2.5 0 0 1 4235,120.1094 L4235,711.5 A2.5,2.5 0 0 1 4232.5,714 L468.5,714 A2.5,2.5 0 0 1 466,711.5 L466,96.5 A2.5,2.5 0 0 1 468.5,94 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path15" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="466"
+         x2="581"
+         y1="117.6094"
+         y2="117.6094"
+         id="line15" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="102"
+         x="470"
+         y="110.5332"
+         id="text15">carnival_block</text>
+    </g>
+    <!--cluster data-->
+    <g
+       id="g16">
+      <path
+         d="M3713.5,382 L3744.5,382 A3.75,3.75 0 0 1 3747,384.5 L3754,405.6094 L4208.5,405.6094 A2.5,2.5 0 0 1 4211,408.1094 L4211,531.5 A2.5,2.5 0 0 1 4208.5,534 L3713.5,534 A2.5,2.5 0 0 1 3711,531.5 L3711,384.5 A2.5,2.5 0 0 1 3713.5,382 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path16" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="3711"
+         x2="3754"
+         y1="405.6094"
+         y2="405.6094"
+         id="line16" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="30"
+         x="3715"
+         y="398.5332"
+         id="text16">data</text>
+    </g>
+    <!--cluster adapters-->
+    <g
+       id="g17">
+      <path
+         d="M3989.5,426 L4052.5,426 A3.75,3.75 0 0 1 4055,428.5 L4062,449.6094 L4184.5,449.6094 A2.5,2.5 0 0 1 4187,452.1094 L4187,507.5 A2.5,2.5 0 0 1 4184.5,510 L3989.5,510 A2.5,2.5 0 0 1 3987,507.5 L3987,428.5 A2.5,2.5 0 0 1 3989.5,426 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path17" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="3987"
+         x2="4062"
+         y1="449.6094"
+         y2="449.6094"
+         id="line17" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="62"
+         x="3991"
+         y="442.5332"
+         id="text17">adapters</text>
+    </g>
+    <!--cluster interactor-->
+    <g
+       id="g18">
+      <path
+         d="M872.5,138 L942.5,138 A3.75,3.75 0 0 1 945,140.5 L952,161.6094 L3684.5,161.6094 A2.5,2.5 0 0 1 3687,164.1094 L3687,687.5 A2.5,2.5 0 0 1 3684.5,690 L872.5,690 A2.5,2.5 0 0 1 870,687.5 L870,140.5 A2.5,2.5 0 0 1 872.5,138 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path18" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="870"
+         x2="952"
+         y1="161.6094"
+         y2="161.6094"
+         id="line18" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="69"
+         x="874"
+         y="154.5332"
+         id="text18">interactor</text>
+    </g>
+    <!--cluster repositories-->
+    <g
+       id="cluster_repositories">
+      <path
+         d="M3443.5,182 L3530.5,182 A3.75,3.75 0 0 1 3533,184.5 L3540,205.6094 L3660.5,205.6094 A2.5,2.5 0 0 1 3663,208.1094 L3663,263.5 A2.5,2.5 0 0 1 3660.5,266 L3443.5,266 A2.5,2.5 0 0 1 3441,263.5 L3441,184.5 A2.5,2.5 0 0 1 3443.5,182 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path19" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="3441"
+         x2="3540"
+         y1="205.6094"
+         y2="205.6094"
+         id="line19" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="86"
+         x="3445"
+         y="198.5332"
+         id="text19">repositories</text>
+    </g>
+    <!--cluster entities-->
+    <g
+       id="g20">
+      <path
+         d="M2081.5,582 L2135.5,582 A3.75,3.75 0 0 1 2138,584.5 L2145,605.6094 L2262.5,605.6094 A2.5,2.5 0 0 1 2265,608.1094 L2265,663.5 A2.5,2.5 0 0 1 2262.5,666 L2081.5,666 A2.5,2.5 0 0 1 2079,663.5 L2079,584.5 A2.5,2.5 0 0 1 2081.5,582 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path20" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="2079"
+         x2="2145"
+         y1="605.6094"
+         y2="605.6094"
+         id="line20" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="53"
+         x="2083"
+         y="598.5332"
+         id="text20">entities</text>
+    </g>
+    <!--cluster events-->
+    <g
+       id="g21">
+      <path
+         d="M2402.5,182 L2452.5,182 A3.75,3.75 0 0 1 2455,184.5 L2462,205.6094 L3414.5,205.6094 A2.5,2.5 0 0 1 3417,208.1094 L3417,507.5 A2.5,2.5 0 0 1 3414.5,510 L2402.5,510 A2.5,2.5 0 0 1 2400,507.5 L2400,184.5 A2.5,2.5 0 0 1 2402.5,182 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path21" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="2400"
+         x2="2462"
+         y1="205.6094"
+         y2="205.6094"
+         id="line21" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="49"
+         x="2404"
+         y="198.5332"
+         id="text21">events</text>
+    </g>
+    <!--cluster states-->
+    <g
+       id="g22">
+      <path
+         d="M896.5,182 L940.5,182 A3.75,3.75 0 0 1 943,184.5 L950,205.6094 L2373.5,205.6094 A2.5,2.5 0 0 1 2376,208.1094 L2376,507.5 A2.5,2.5 0 0 1 2373.5,510 L896.5,510 A2.5,2.5 0 0 1 894,507.5 L894,184.5 A2.5,2.5 0 0 1 896.5,182 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path22" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="894"
+         x2="950"
+         y1="205.6094"
+         y2="205.6094"
+         id="line22" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="43"
+         x="898"
+         y="198.5332"
+         id="text22">states</text>
+    </g>
+    <!--cluster ui-->
+    <g
+       id="g23">
+      <path
+         d="M492.5,138 L506.5,138 A3.75,3.75 0 0 1 509,140.5 L516,161.6094 L843.5,161.6094 A2.5,2.5 0 0 1 846,164.1094 L846,531.5 A2.5,2.5 0 0 1 843.5,534 L492.5,534 A2.5,2.5 0 0 1 490,531.5 L490,140.5 A2.5,2.5 0 0 1 492.5,138 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path23" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="490"
+         x2="516"
+         y1="161.6094"
+         y2="161.6094"
+         id="line23" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="13"
+         x="494"
+         y="154.5332"
+         id="text23">ui</text>
+    </g>
+    <!--cluster pages-->
+    <g
+       id="g24">
+      <path
+         d="m 516.5,182 h 44 c 1.19853,0.36356 2.13644,1.30147 2.5,2.5 l 7,21.1094 h 100.2202 c 1.38071,0 2.5,1.11929 2.5,2.5 v 119.87692 c 0,1.38071 -1.11929,2.5 -2.5,2.5 H 516.5 c -1.38071,0 -2.5,-1.11929 -2.5,-2.5 V 184.5 c 0,-1.38071 1.11929,-2.5 2.5,-2.5"
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5"
+         id="path24"
+         sodipodi:nodetypes="ccccsssssssc" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="514"
+         x2="570"
+         y1="205.6094"
+         y2="205.6094"
+         id="line24" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="43"
+         x="518"
+         y="198.5332"
+         id="text24">pages</text>
+    </g>
+    <!--cluster home-->
+    <g
+       id="cluster_home">
+      <path
+         d="M56.5,94 L96.5,94 A3.75,3.75 0 0 1 99,96.5 L106,117.6094 L439.5,117.6094 A2.5,2.5 0 0 1 442,120.1094 L442,311.5 A2.5,2.5 0 0 1 439.5,314 L56.5,314 A2.5,2.5 0 0 1 54,311.5 L54,96.5 A2.5,2.5 0 0 1 56.5,94 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path25" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="54"
+         x2="106"
+         y1="117.6094"
+         y2="117.6094"
+         id="line25" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="39"
+         x="58"
+         y="110.5332"
+         id="text25">home</text>
+    </g>
+    <!--cluster ui-->
+    <g
+       id="g26">
+      <path
+         d="M80.5,138 L94.5,138 A3.75,3.75 0 0 1 97,140.5 L104,161.6094 L415.5,161.6094 A2.5,2.5 0 0 1 418,164.1094 L418,287.5 A2.5,2.5 0 0 1 415.5,290 L80.5,290 A2.5,2.5 0 0 1 78,287.5 L78,140.5 A2.5,2.5 0 0 1 80.5,138 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path26" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="78"
+         x2="104"
+         y1="161.6094"
+         y2="161.6094"
+         id="line26" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="13"
+         x="82"
+         y="154.5332"
+         id="text26">ui</text>
+    </g>
+    <!--cluster pages-->
+    <g
+       id="g27">
+      <path
+         d="M262.5,182 L306.5,182 A3.75,3.75 0 0 1 309,184.5 L316,205.6094 L391.5,205.6094 A2.5,2.5 0 0 1 394,208.1094 L394,263.5 A2.5,2.5 0 0 1 391.5,266 L262.5,266 A2.5,2.5 0 0 1 260,263.5 L260,184.5 A2.5,2.5 0 0 1 262.5,182 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path27" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="260"
+         x2="316"
+         y1="205.6094"
+         y2="205.6094"
+         id="line27" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="43"
+         x="264"
+         y="198.5332"
+         id="text27">pages</text>
+    </g>
+    <!--cluster widgets-->
+    <g
+       id="g28">
+      <path
+         d="M104.5,182 L160.5,182 A3.75,3.75 0 0 1 163,184.5 L170,205.6094 L233.5,205.6094 A2.5,2.5 0 0 1 236,208.1094 L236,263.5 A2.5,2.5 0 0 1 233.5,266 L104.5,266 A2.5,2.5 0 0 1 102,263.5 L102,184.5 A2.5,2.5 0 0 1 104.5,182 "
+         fill="none"
+         style="stroke:#000000;stroke-width:1.5;"
+         id="path28" />
+      <line
+         style="stroke:#000000;stroke-width:1.5;"
+         x1="102"
+         x2="170"
+         y1="205.6094"
+         y2="205.6094"
+         id="line28" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-weight="bold"
+         lengthAdjust="spacing"
+         textLength="55"
+         x="106"
+         y="198.5332"
+         id="text28">widgets</text>
+    </g>
+    <!--class FirebaseAuthService-->
+    <g
+       id="elem_FirebaseAuthService">
+      <rect
+         codeLine="17"
+         fill="#F1F1F1"
+         height="32"
+         id="FirebaseAuthService"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="164"
+         x="6271"
+         y="462" />
+      <ellipse
+         cx="6286"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse28" />
+      <path
+         d="M6288.7656,473.875 Q6288.9219,473.6563 6289.1094,473.5469 Q6289.2969,473.4375 6289.5156,473.4375 Q6289.8906,473.4375 6290.125,473.6953 Q6290.3594,473.9531 6290.3594,474.5625 L6290.3594,476.0156 Q6290.3594,476.625 6290.125,476.8906 Q6289.8906,477.1563 6289.5156,477.1563 Q6289.1719,477.1563 6288.9688,476.9531 Q6288.7656,476.7656 6288.6563,476.25 Q6288.6094,475.8906 6288.4219,475.7031 Q6288.0938,475.3281 6287.4844,475.1094 Q6286.875,474.8906 6286.25,474.8906 Q6285.4844,474.8906 6284.8516,475.2188 Q6284.2188,475.5469 6283.7266,476.2969 Q6283.2344,477.0469 6283.2344,478.0781 L6283.2344,479.1719 Q6283.2344,480.4063 6284.125,481.2266 Q6285.0156,482.0469 6286.6094,482.0469 Q6287.5469,482.0469 6288.2031,481.7969 Q6288.5938,481.6406 6289.0156,481.2031 Q6289.2813,480.9375 6289.4297,480.8594 Q6289.5781,480.7813 6289.7813,480.7813 Q6290.1094,480.7813 6290.3672,481.0391 Q6290.625,481.2969 6290.625,481.6406 Q6290.625,481.9844 6290.2813,482.3906 Q6289.7813,482.9688 6288.9844,483.2969 Q6287.9063,483.75 6286.6094,483.75 Q6285.0938,483.75 6283.8906,483.125 Q6282.9063,482.625 6282.2188,481.5547 Q6281.5313,480.4844 6281.5313,479.2031 L6281.5313,478.0469 Q6281.5313,476.7188 6282.1484,475.5703 Q6282.7656,474.4219 6283.8594,473.8047 Q6284.9531,473.1875 6286.1875,473.1875 Q6286.9219,473.1875 6287.5703,473.3516 Q6288.2188,473.5156 6288.7656,473.875 Z "
+         fill="#000000"
+         id="path29" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="132"
+         x="6300"
+         y="483.7285"
+         id="text29">FirebaseAuthService</text>
+    </g>
+    <!--class UserAdapter-->
+    <g
+       id="elem_UserAdapter">
+      <rect
+         codeLine="14"
+         fill="#F1F1F1"
+         height="32"
+         id="UserAdapter"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="111"
+         x="6467.5"
+         y="462" />
+      <ellipse
+         cx="6482.5"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse29" />
+      <path
+         d="M6485.2656,473.875 Q6485.4219,473.6563 6485.6094,473.5469 Q6485.7969,473.4375 6486.0156,473.4375 Q6486.3906,473.4375 6486.625,473.6953 Q6486.8594,473.9531 6486.8594,474.5625 L6486.8594,476.0156 Q6486.8594,476.625 6486.625,476.8906 Q6486.3906,477.1563 6486.0156,477.1563 Q6485.6719,477.1563 6485.4688,476.9531 Q6485.2656,476.7656 6485.1563,476.25 Q6485.1094,475.8906 6484.9219,475.7031 Q6484.5938,475.3281 6483.9844,475.1094 Q6483.375,474.8906 6482.75,474.8906 Q6481.9844,474.8906 6481.3516,475.2188 Q6480.7188,475.5469 6480.2266,476.2969 Q6479.7344,477.0469 6479.7344,478.0781 L6479.7344,479.1719 Q6479.7344,480.4063 6480.625,481.2266 Q6481.5156,482.0469 6483.1094,482.0469 Q6484.0469,482.0469 6484.7031,481.7969 Q6485.0938,481.6406 6485.5156,481.2031 Q6485.7813,480.9375 6485.9297,480.8594 Q6486.0781,480.7813 6486.2813,480.7813 Q6486.6094,480.7813 6486.8672,481.0391 Q6487.125,481.2969 6487.125,481.6406 Q6487.125,481.9844 6486.7813,482.3906 Q6486.2813,482.9688 6485.4844,483.2969 Q6484.4063,483.75 6483.1094,483.75 Q6481.5938,483.75 6480.3906,483.125 Q6479.4063,482.625 6478.7188,481.5547 Q6478.0313,480.4844 6478.0313,479.2031 L6478.0313,478.0469 Q6478.0313,476.7188 6478.6484,475.5703 Q6479.2656,474.4219 6480.3594,473.8047 Q6481.4531,473.1875 6482.6875,473.1875 Q6483.4219,473.1875 6484.0703,473.3516 Q6484.7188,473.5156 6485.2656,473.875 Z "
+         fill="#000000"
+         id="path30" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="79"
+         x="6496.5"
+         y="483.7285"
+         id="text30">UserAdapter</text>
+    </g>
+    <!--class IAuthService-->
+    <g
+       id="elem_IAuthService">
+      <rect
+         codeLine="62"
+         fill="#F1F1F1"
+         height="32"
+         id="IAuthService"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="111"
+         x="6055.5"
+         y="218" />
+      <ellipse
+         cx="6070.5"
+         cy="234"
+         fill="#B4A7E5"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse30" />
+      <path
+         d="M6071.4531,230.6406 L6071.4531,237.2969 L6073.1719,237.2969 Q6073.7813,237.2969 6074.0469,237.5313 Q6074.3125,237.7656 6074.3125,238.1563 Q6074.3125,238.5313 6074.0469,238.7656 Q6073.7813,239 6073.1719,239 L6068.0313,239 Q6067.4219,239 6067.1563,238.7656 Q6066.8906,238.5313 6066.8906,238.1406 Q6066.8906,237.7656 6067.1563,237.5313 Q6067.4219,237.2969 6068.0313,237.2969 L6069.75,237.2969 L6069.75,230.6406 L6068.0313,230.6406 Q6067.4219,230.6406 6067.1563,230.4063 Q6066.8906,230.1719 6066.8906,229.7813 Q6066.8906,229.4063 6067.1563,229.1719 Q6067.4219,228.9375 6068.0313,228.9375 L6073.1719,228.9375 Q6073.7813,228.9375 6074.0469,229.1719 Q6074.3125,229.4063 6074.3125,229.7813 Q6074.3125,230.1719 6074.0469,230.4063 Q6073.7813,230.6406 6073.1719,230.6406 L6071.4531,230.6406 Z "
+         fill="#000000"
+         id="path31" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="79"
+         x="6084.5"
+         y="239.7285"
+         id="text31">IAuthService</text>
+    </g>
+    <!--class UserEntity-->
+    <g
+       id="elem_UserEntity">
+      <rect
+         codeLine="22"
+         fill="#F1F1F1"
+         height="32"
+         id="UserEntity"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="96"
+         x="5365"
+         y="618" />
+      <ellipse
+         cx="5380"
+         cy="634"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse31" />
+      <path
+         d="M5378.8594,634.7969 L5378.8594,637.2969 L5383.1875,637.2969 L5383.1875,636.375 Q5383.1875,635.7656 5383.4297,635.5 Q5383.6719,635.2344 5384.0469,635.2344 Q5384.4219,635.2344 5384.6563,635.5 Q5384.8906,635.7656 5384.8906,636.375 L5384.8906,639 L5376.8906,639 Q5376.2656,639 5376.0078,638.7656 Q5375.75,638.5313 5375.75,638.1406 Q5375.75,637.7656 5376.0156,637.5313 Q5376.2813,637.2969 5376.8906,637.2969 L5377.1563,637.2969 L5377.1563,630.6406 L5376.8906,630.6406 Q5376.2656,630.6406 5376.0078,630.4063 Q5375.75,630.1719 5375.75,629.7813 Q5375.75,629.4063 5376.0078,629.1719 Q5376.2656,628.9375 5376.8906,628.9375 L5384.5156,628.9375 L5384.5156,631.5313 Q5384.5156,632.1406 5384.2891,632.3984 Q5384.0625,632.6563 5383.6719,632.6563 Q5383.2969,632.6563 5383.0625,632.3984 Q5382.8281,632.1406 5382.8281,631.5313 L5382.8281,630.6406 L5378.8594,630.6406 L5378.8594,633.0938 L5380.3438,633.0938 Q5380.3438,632.4375 5380.4688,632.25 Q5380.7344,631.8438 5381.2031,631.8438 Q5381.5781,631.8438 5381.8125,632.1016 Q5382.0469,632.3594 5382.0469,632.9688 L5382.0469,634.9375 Q5382.0469,635.4844 5381.9219,635.6719 Q5381.6563,636.0625 5381.2031,636.0625 Q5380.7344,636.0625 5380.4688,635.6563 Q5380.3438,635.4688 5380.3438,634.7969 L5378.8594,634.7969 Z "
+         fill="#000000"
+         id="path32" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="64"
+         x="5394"
+         y="639.7285"
+         id="text32">UserEntity</text>
+    </g>
+    <!--class AuthEvent-->
+    <g
+       id="elem_AuthEvent">
+      <rect
+         codeLine="31"
+         fill="#F1F1F1"
+         height="32"
+         id="AuthEvent"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="97"
+         x="5619.5"
+         y="218" />
+      <ellipse
+         cx="5634.5"
+         cy="234"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse32" />
+      <path
+         d="M5637.2656,229.875 Q5637.4219,229.6563 5637.6094,229.5469 Q5637.7969,229.4375 5638.0156,229.4375 Q5638.3906,229.4375 5638.625,229.6953 Q5638.8594,229.9531 5638.8594,230.5625 L5638.8594,232.0156 Q5638.8594,232.625 5638.625,232.8906 Q5638.3906,233.1563 5638.0156,233.1563 Q5637.6719,233.1563 5637.4688,232.9531 Q5637.2656,232.7656 5637.1563,232.25 Q5637.1094,231.8906 5636.9219,231.7031 Q5636.5938,231.3281 5635.9844,231.1094 Q5635.375,230.8906 5634.75,230.8906 Q5633.9844,230.8906 5633.3516,231.2188 Q5632.7188,231.5469 5632.2266,232.2969 Q5631.7344,233.0469 5631.7344,234.0781 L5631.7344,235.1719 Q5631.7344,236.4063 5632.625,237.2266 Q5633.5156,238.0469 5635.1094,238.0469 Q5636.0469,238.0469 5636.7031,237.7969 Q5637.0938,237.6406 5637.5156,237.2031 Q5637.7813,236.9375 5637.9297,236.8594 Q5638.0781,236.7813 5638.2813,236.7813 Q5638.6094,236.7813 5638.8672,237.0391 Q5639.125,237.2969 5639.125,237.6406 Q5639.125,237.9844 5638.7813,238.3906 Q5638.2813,238.9688 5637.4844,239.2969 Q5636.4063,239.75 5635.1094,239.75 Q5633.5938,239.75 5632.3906,239.125 Q5631.4063,238.625 5630.7188,237.5547 Q5630.0313,236.4844 5630.0313,235.2031 L5630.0313,234.0469 Q5630.0313,232.7188 5630.6484,231.5703 Q5631.2656,230.4219 5632.3594,229.8047 Q5633.4531,229.1875 5634.6875,229.1875 Q5635.4219,229.1875 5636.0703,229.3516 Q5636.7188,229.5156 5637.2656,229.875 Z "
+         fill="#000000"
+         id="path33" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="65"
+         x="5648.5"
+         y="239.7285"
+         id="text33">AuthEvent</text>
+    </g>
+    <!--class LoginAuthEvent-->
+    <g
+       id="elem_LoginAuthEvent">
+      <rect
+         codeLine="34"
+         fill="#F1F1F1"
+         height="32"
+         id="LoginAuthEvent"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="132"
+         x="5359"
+         y="462" />
+      <ellipse
+         cx="5374"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse33" />
+      <path
+         d="M5376.7656,473.875 Q5376.9219,473.6563 5377.1094,473.5469 Q5377.2969,473.4375 5377.5156,473.4375 Q5377.8906,473.4375 5378.125,473.6953 Q5378.3594,473.9531 5378.3594,474.5625 L5378.3594,476.0156 Q5378.3594,476.625 5378.125,476.8906 Q5377.8906,477.1563 5377.5156,477.1563 Q5377.1719,477.1563 5376.9688,476.9531 Q5376.7656,476.7656 5376.6563,476.25 Q5376.6094,475.8906 5376.4219,475.7031 Q5376.0938,475.3281 5375.4844,475.1094 Q5374.875,474.8906 5374.25,474.8906 Q5373.4844,474.8906 5372.8516,475.2188 Q5372.2188,475.5469 5371.7266,476.2969 Q5371.2344,477.0469 5371.2344,478.0781 L5371.2344,479.1719 Q5371.2344,480.4063 5372.125,481.2266 Q5373.0156,482.0469 5374.6094,482.0469 Q5375.5469,482.0469 5376.2031,481.7969 Q5376.5938,481.6406 5377.0156,481.2031 Q5377.2813,480.9375 5377.4297,480.8594 Q5377.5781,480.7813 5377.7813,480.7813 Q5378.1094,480.7813 5378.3672,481.0391 Q5378.625,481.2969 5378.625,481.6406 Q5378.625,481.9844 5378.2813,482.3906 Q5377.7813,482.9688 5376.9844,483.2969 Q5375.9063,483.75 5374.6094,483.75 Q5373.0938,483.75 5371.8906,483.125 Q5370.9063,482.625 5370.2188,481.5547 Q5369.5313,480.4844 5369.5313,479.2031 L5369.5313,478.0469 Q5369.5313,476.7188 5370.1484,475.5703 Q5370.7656,474.4219 5371.8594,473.8047 Q5372.9531,473.1875 5374.1875,473.1875 Q5374.9219,473.1875 5375.5703,473.3516 Q5376.2188,473.5156 5376.7656,473.875 Z "
+         fill="#000000"
+         id="path34" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="100"
+         x="5388"
+         y="483.7285"
+         id="text34">LoginAuthEvent</text>
+    </g>
+    <!--class CreateUserAuthEvent-->
+    <g
+       id="elem_CreateUserAuthEvent">
+      <rect
+         codeLine="41"
+         fill="#F1F1F1"
+         height="32"
+         id="CreateUserAuthEvent"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="169"
+         x="5501.5"
+         y="462" />
+      <ellipse
+         cx="5516.5"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse34" />
+      <path
+         d="M5519.2656,473.875 Q5519.4219,473.6563 5519.6094,473.5469 Q5519.7969,473.4375 5520.0156,473.4375 Q5520.3906,473.4375 5520.625,473.6953 Q5520.8594,473.9531 5520.8594,474.5625 L5520.8594,476.0156 Q5520.8594,476.625 5520.625,476.8906 Q5520.3906,477.1563 5520.0156,477.1563 Q5519.6719,477.1563 5519.4688,476.9531 Q5519.2656,476.7656 5519.1563,476.25 Q5519.1094,475.8906 5518.9219,475.7031 Q5518.5938,475.3281 5517.9844,475.1094 Q5517.375,474.8906 5516.75,474.8906 Q5515.9844,474.8906 5515.3516,475.2188 Q5514.7188,475.5469 5514.2266,476.2969 Q5513.7344,477.0469 5513.7344,478.0781 L5513.7344,479.1719 Q5513.7344,480.4063 5514.625,481.2266 Q5515.5156,482.0469 5517.1094,482.0469 Q5518.0469,482.0469 5518.7031,481.7969 Q5519.0938,481.6406 5519.5156,481.2031 Q5519.7813,480.9375 5519.9297,480.8594 Q5520.0781,480.7813 5520.2813,480.7813 Q5520.6094,480.7813 5520.8672,481.0391 Q5521.125,481.2969 5521.125,481.6406 Q5521.125,481.9844 5520.7813,482.3906 Q5520.2813,482.9688 5519.4844,483.2969 Q5518.4063,483.75 5517.1094,483.75 Q5515.5938,483.75 5514.3906,483.125 Q5513.4063,482.625 5512.7188,481.5547 Q5512.0313,480.4844 5512.0313,479.2031 L5512.0313,478.0469 Q5512.0313,476.7188 5512.6484,475.5703 Q5513.2656,474.4219 5514.3594,473.8047 Q5515.4531,473.1875 5516.6875,473.1875 Q5517.4219,473.1875 5518.0703,473.3516 Q5518.7188,473.5156 5519.2656,473.875 Z "
+         fill="#000000"
+         id="path35" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="137"
+         x="5530.5"
+         y="483.7285"
+         id="text35">CreateUserAuthEvent</text>
+    </g>
+    <!--class LogoutAuthEvent-->
+    <g
+       id="elem_LogoutAuthEvent">
+      <rect
+         codeLine="50"
+         fill="#F1F1F1"
+         height="32"
+         id="LogoutAuthEvent"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="141"
+         x="5680.5"
+         y="462" />
+      <ellipse
+         cx="5695.5"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse35" />
+      <path
+         d="M5698.2656,473.875 Q5698.4219,473.6563 5698.6094,473.5469 Q5698.7969,473.4375 5699.0156,473.4375 Q5699.3906,473.4375 5699.625,473.6953 Q5699.8594,473.9531 5699.8594,474.5625 L5699.8594,476.0156 Q5699.8594,476.625 5699.625,476.8906 Q5699.3906,477.1563 5699.0156,477.1563 Q5698.6719,477.1563 5698.4688,476.9531 Q5698.2656,476.7656 5698.1563,476.25 Q5698.1094,475.8906 5697.9219,475.7031 Q5697.5938,475.3281 5696.9844,475.1094 Q5696.375,474.8906 5695.75,474.8906 Q5694.9844,474.8906 5694.3516,475.2188 Q5693.7188,475.5469 5693.2266,476.2969 Q5692.7344,477.0469 5692.7344,478.0781 L5692.7344,479.1719 Q5692.7344,480.4063 5693.625,481.2266 Q5694.5156,482.0469 5696.1094,482.0469 Q5697.0469,482.0469 5697.7031,481.7969 Q5698.0938,481.6406 5698.5156,481.2031 Q5698.7813,480.9375 5698.9297,480.8594 Q5699.0781,480.7813 5699.2813,480.7813 Q5699.6094,480.7813 5699.8672,481.0391 Q5700.125,481.2969 5700.125,481.6406 Q5700.125,481.9844 5699.7813,482.3906 Q5699.2813,482.9688 5698.4844,483.2969 Q5697.4063,483.75 5696.1094,483.75 Q5694.5938,483.75 5693.3906,483.125 Q5692.4063,482.625 5691.7188,481.5547 Q5691.0313,480.4844 5691.0313,479.2031 L5691.0313,478.0469 Q5691.0313,476.7188 5691.6484,475.5703 Q5692.2656,474.4219 5693.3594,473.8047 Q5694.4531,473.1875 5695.6875,473.1875 Q5696.4219,473.1875 5697.0703,473.3516 Q5697.7188,473.5156 5698.2656,473.875 Z "
+         fill="#000000"
+         id="path36" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="109"
+         x="5709.5"
+         y="483.7285"
+         id="text36">LogoutAuthEvent</text>
+    </g>
+    <!--class DeleteUserAuthEvent-->
+    <g
+       id="elem_DeleteUserAuthEvent">
+      <rect
+         codeLine="55"
+         fill="#F1F1F1"
+         height="32"
+         id="DeleteUserAuthEvent"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="167"
+         x="5831.5"
+         y="462" />
+      <ellipse
+         cx="5846.5"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse36" />
+      <path
+         d="M5849.2656,473.875 Q5849.4219,473.6563 5849.6094,473.5469 Q5849.7969,473.4375 5850.0156,473.4375 Q5850.3906,473.4375 5850.625,473.6953 Q5850.8594,473.9531 5850.8594,474.5625 L5850.8594,476.0156 Q5850.8594,476.625 5850.625,476.8906 Q5850.3906,477.1563 5850.0156,477.1563 Q5849.6719,477.1563 5849.4688,476.9531 Q5849.2656,476.7656 5849.1563,476.25 Q5849.1094,475.8906 5848.9219,475.7031 Q5848.5938,475.3281 5847.9844,475.1094 Q5847.375,474.8906 5846.75,474.8906 Q5845.9844,474.8906 5845.3516,475.2188 Q5844.7188,475.5469 5844.2266,476.2969 Q5843.7344,477.0469 5843.7344,478.0781 L5843.7344,479.1719 Q5843.7344,480.4063 5844.625,481.2266 Q5845.5156,482.0469 5847.1094,482.0469 Q5848.0469,482.0469 5848.7031,481.7969 Q5849.0938,481.6406 5849.5156,481.2031 Q5849.7813,480.9375 5849.9297,480.8594 Q5850.0781,480.7813 5850.2813,480.7813 Q5850.6094,480.7813 5850.8672,481.0391 Q5851.125,481.2969 5851.125,481.6406 Q5851.125,481.9844 5850.7813,482.3906 Q5850.2813,482.9688 5849.4844,483.2969 Q5848.4063,483.75 5847.1094,483.75 Q5845.5938,483.75 5844.3906,483.125 Q5843.4063,482.625 5842.7188,481.5547 Q5842.0313,480.4844 5842.0313,479.2031 L5842.0313,478.0469 Q5842.0313,476.7188 5842.6484,475.5703 Q5843.2656,474.4219 5844.3594,473.8047 Q5845.4531,473.1875 5846.6875,473.1875 Q5847.4219,473.1875 5848.0703,473.3516 Q5848.7188,473.5156 5849.2656,473.875 Z "
+         fill="#000000"
+         id="path37" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="135"
+         x="5860.5"
+         y="483.7285"
+         id="text37">DeleteUserAuthEvent</text>
+    </g>
+    <!--class AuthState-->
+    <g
+       id="elem_AuthState">
+      <rect
+         codeLine="70"
+         fill="#F1F1F1"
+         height="32"
+         id="AuthState"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="94"
+         x="5023"
+         y="218" />
+      <ellipse
+         cx="5038"
+         cy="234"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse37" />
+      <path
+         d="M5040.7656,229.875 Q5040.9219,229.6563 5041.1094,229.5469 Q5041.2969,229.4375 5041.5156,229.4375 Q5041.8906,229.4375 5042.125,229.6953 Q5042.3594,229.9531 5042.3594,230.5625 L5042.3594,232.0156 Q5042.3594,232.625 5042.125,232.8906 Q5041.8906,233.1563 5041.5156,233.1563 Q5041.1719,233.1563 5040.9688,232.9531 Q5040.7656,232.7656 5040.6563,232.25 Q5040.6094,231.8906 5040.4219,231.7031 Q5040.0938,231.3281 5039.4844,231.1094 Q5038.875,230.8906 5038.25,230.8906 Q5037.4844,230.8906 5036.8516,231.2188 Q5036.2188,231.5469 5035.7266,232.2969 Q5035.2344,233.0469 5035.2344,234.0781 L5035.2344,235.1719 Q5035.2344,236.4063 5036.125,237.2266 Q5037.0156,238.0469 5038.6094,238.0469 Q5039.5469,238.0469 5040.2031,237.7969 Q5040.5938,237.6406 5041.0156,237.2031 Q5041.2813,236.9375 5041.4297,236.8594 Q5041.5781,236.7813 5041.7813,236.7813 Q5042.1094,236.7813 5042.3672,237.0391 Q5042.625,237.2969 5042.625,237.6406 Q5042.625,237.9844 5042.2813,238.3906 Q5041.7813,238.9688 5040.9844,239.2969 Q5039.9063,239.75 5038.6094,239.75 Q5037.0938,239.75 5035.8906,239.125 Q5034.9063,238.625 5034.2188,237.5547 Q5033.5313,236.4844 5033.5313,235.2031 L5033.5313,234.0469 Q5033.5313,232.7188 5034.1484,231.5703 Q5034.7656,230.4219 5035.8594,229.8047 Q5036.9531,229.1875 5038.1875,229.1875 Q5038.9219,229.1875 5039.5703,229.3516 Q5040.2188,229.5156 5040.7656,229.875 Z "
+         fill="#000000"
+         id="path38" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="62"
+         x="5052"
+         y="239.7285"
+         id="text38">AuthState</text>
+    </g>
+    <!--class LoggedAuthState-->
+    <g
+       id="elem_LoggedAuthState">
+      <rect
+         codeLine="73"
+         fill="#F1F1F1"
+         height="32"
+         id="LoggedAuthState"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="142"
+         x="4841"
+         y="462" />
+      <ellipse
+         cx="4856"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse38" />
+      <path
+         d="M4858.7656,473.875 Q4858.9219,473.6563 4859.1094,473.5469 Q4859.2969,473.4375 4859.5156,473.4375 Q4859.8906,473.4375 4860.125,473.6953 Q4860.3594,473.9531 4860.3594,474.5625 L4860.3594,476.0156 Q4860.3594,476.625 4860.125,476.8906 Q4859.8906,477.1563 4859.5156,477.1563 Q4859.1719,477.1563 4858.9688,476.9531 Q4858.7656,476.7656 4858.6563,476.25 Q4858.6094,475.8906 4858.4219,475.7031 Q4858.0938,475.3281 4857.4844,475.1094 Q4856.875,474.8906 4856.25,474.8906 Q4855.4844,474.8906 4854.8516,475.2188 Q4854.2188,475.5469 4853.7266,476.2969 Q4853.2344,477.0469 4853.2344,478.0781 L4853.2344,479.1719 Q4853.2344,480.4063 4854.125,481.2266 Q4855.0156,482.0469 4856.6094,482.0469 Q4857.5469,482.0469 4858.2031,481.7969 Q4858.5938,481.6406 4859.0156,481.2031 Q4859.2813,480.9375 4859.4297,480.8594 Q4859.5781,480.7813 4859.7813,480.7813 Q4860.1094,480.7813 4860.3672,481.0391 Q4860.625,481.2969 4860.625,481.6406 Q4860.625,481.9844 4860.2813,482.3906 Q4859.7813,482.9688 4858.9844,483.2969 Q4857.9063,483.75 4856.6094,483.75 Q4855.0938,483.75 4853.8906,483.125 Q4852.9063,482.625 4852.2188,481.5547 Q4851.5313,480.4844 4851.5313,479.2031 L4851.5313,478.0469 Q4851.5313,476.7188 4852.1484,475.5703 Q4852.7656,474.4219 4853.8594,473.8047 Q4854.9531,473.1875 4856.1875,473.1875 Q4856.9219,473.1875 4857.5703,473.3516 Q4858.2188,473.5156 4858.7656,473.875 Z "
+         fill="#000000"
+         id="path39" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="110"
+         x="4870"
+         y="483.7285"
+         id="text39">LoggedAuthState</text>
+    </g>
+    <!--class LogoutedAuthState-->
+    <g
+       id="elem_LogoutedAuthState">
+      <rect
+         codeLine="80"
+         fill="#F1F1F1"
+         height="32"
+         id="LogoutedAuthState"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="154"
+         x="4993"
+         y="462" />
+      <ellipse
+         cx="5008"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse39" />
+      <path
+         d="M5010.7656,473.875 Q5010.9219,473.6563 5011.1094,473.5469 Q5011.2969,473.4375 5011.5156,473.4375 Q5011.8906,473.4375 5012.125,473.6953 Q5012.3594,473.9531 5012.3594,474.5625 L5012.3594,476.0156 Q5012.3594,476.625 5012.125,476.8906 Q5011.8906,477.1563 5011.5156,477.1563 Q5011.1719,477.1563 5010.9688,476.9531 Q5010.7656,476.7656 5010.6563,476.25 Q5010.6094,475.8906 5010.4219,475.7031 Q5010.0938,475.3281 5009.4844,475.1094 Q5008.875,474.8906 5008.25,474.8906 Q5007.4844,474.8906 5006.8516,475.2188 Q5006.2188,475.5469 5005.7266,476.2969 Q5005.2344,477.0469 5005.2344,478.0781 L5005.2344,479.1719 Q5005.2344,480.4063 5006.125,481.2266 Q5007.0156,482.0469 5008.6094,482.0469 Q5009.5469,482.0469 5010.2031,481.7969 Q5010.5938,481.6406 5011.0156,481.2031 Q5011.2813,480.9375 5011.4297,480.8594 Q5011.5781,480.7813 5011.7813,480.7813 Q5012.1094,480.7813 5012.3672,481.0391 Q5012.625,481.2969 5012.625,481.6406 Q5012.625,481.9844 5012.2813,482.3906 Q5011.7813,482.9688 5010.9844,483.2969 Q5009.9063,483.75 5008.6094,483.75 Q5007.0938,483.75 5005.8906,483.125 Q5004.9063,482.625 5004.2188,481.5547 Q5003.5313,480.4844 5003.5313,479.2031 L5003.5313,478.0469 Q5003.5313,476.7188 5004.1484,475.5703 Q5004.7656,474.4219 5005.8594,473.8047 Q5006.9531,473.1875 5008.1875,473.1875 Q5008.9219,473.1875 5009.5703,473.3516 Q5010.2188,473.5156 5010.7656,473.875 Z "
+         fill="#000000"
+         id="path40" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="122"
+         x="5022"
+         y="483.7285"
+         id="text40">LogoutedAuthState</text>
+    </g>
+    <!--class LoadingAuthState-->
+    <g
+       id="elem_LoadingAuthState">
+      <rect
+         codeLine="85"
+         fill="#F1F1F1"
+         height="32"
+         id="LoadingAuthState"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="145"
+         x="5157.5"
+         y="462" />
+      <ellipse
+         cx="5172.5"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse40" />
+      <path
+         d="M5175.2656,473.875 Q5175.4219,473.6563 5175.6094,473.5469 Q5175.7969,473.4375 5176.0156,473.4375 Q5176.3906,473.4375 5176.625,473.6953 Q5176.8594,473.9531 5176.8594,474.5625 L5176.8594,476.0156 Q5176.8594,476.625 5176.625,476.8906 Q5176.3906,477.1563 5176.0156,477.1563 Q5175.6719,477.1563 5175.4688,476.9531 Q5175.2656,476.7656 5175.1563,476.25 Q5175.1094,475.8906 5174.9219,475.7031 Q5174.5938,475.3281 5173.9844,475.1094 Q5173.375,474.8906 5172.75,474.8906 Q5171.9844,474.8906 5171.3516,475.2188 Q5170.7188,475.5469 5170.2266,476.2969 Q5169.7344,477.0469 5169.7344,478.0781 L5169.7344,479.1719 Q5169.7344,480.4063 5170.625,481.2266 Q5171.5156,482.0469 5173.1094,482.0469 Q5174.0469,482.0469 5174.7031,481.7969 Q5175.0938,481.6406 5175.5156,481.2031 Q5175.7813,480.9375 5175.9297,480.8594 Q5176.0781,480.7813 5176.2813,480.7813 Q5176.6094,480.7813 5176.8672,481.0391 Q5177.125,481.2969 5177.125,481.6406 Q5177.125,481.9844 5176.7813,482.3906 Q5176.2813,482.9688 5175.4844,483.2969 Q5174.4063,483.75 5173.1094,483.75 Q5171.5938,483.75 5170.3906,483.125 Q5169.4063,482.625 5168.7188,481.5547 Q5168.0313,480.4844 5168.0313,479.2031 L5168.0313,478.0469 Q5168.0313,476.7188 5168.6484,475.5703 Q5169.2656,474.4219 5170.3594,473.8047 Q5171.4531,473.1875 5172.6875,473.1875 Q5173.4219,473.1875 5174.0703,473.3516 Q5174.7188,473.5156 5175.2656,473.875 Z "
+         fill="#000000"
+         id="path41" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="113"
+         x="5186.5"
+         y="483.7285"
+         id="text41">LoadingAuthState</text>
+    </g>
+    <!--class LoginPage-->
+    <g
+       id="elem_LoginPage">
+      <rect
+         codeLine="90"
+         fill="#F1F1F1"
+         height="32"
+         id="LoginPage"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="100"
+         x="4521"
+         y="218" />
+      <ellipse
+         cx="4536"
+         cy="234"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse41" />
+      <path
+         d="M4538.7656,229.875 Q4538.9219,229.6563 4539.1094,229.5469 Q4539.2969,229.4375 4539.5156,229.4375 Q4539.8906,229.4375 4540.125,229.6953 Q4540.3594,229.9531 4540.3594,230.5625 L4540.3594,232.0156 Q4540.3594,232.625 4540.125,232.8906 Q4539.8906,233.1563 4539.5156,233.1563 Q4539.1719,233.1563 4538.9688,232.9531 Q4538.7656,232.7656 4538.6563,232.25 Q4538.6094,231.8906 4538.4219,231.7031 Q4538.0938,231.3281 4537.4844,231.1094 Q4536.875,230.8906 4536.25,230.8906 Q4535.4844,230.8906 4534.8516,231.2188 Q4534.2188,231.5469 4533.7266,232.2969 Q4533.2344,233.0469 4533.2344,234.0781 L4533.2344,235.1719 Q4533.2344,236.4063 4534.125,237.2266 Q4535.0156,238.0469 4536.6094,238.0469 Q4537.5469,238.0469 4538.2031,237.7969 Q4538.5938,237.6406 4539.0156,237.2031 Q4539.2813,236.9375 4539.4297,236.8594 Q4539.5781,236.7813 4539.7813,236.7813 Q4540.1094,236.7813 4540.3672,237.0391 Q4540.625,237.2969 4540.625,237.6406 Q4540.625,237.9844 4540.2813,238.3906 Q4539.7813,238.9688 4538.9844,239.2969 Q4537.9063,239.75 4536.6094,239.75 Q4535.0938,239.75 4533.8906,239.125 Q4532.9063,238.625 4532.2188,237.5547 Q4531.5313,236.4844 4531.5313,235.2031 L4531.5313,234.0469 Q4531.5313,232.7188 4532.1484,231.5703 Q4532.7656,230.4219 4533.8594,229.8047 Q4534.9531,229.1875 4536.1875,229.1875 Q4536.9219,229.1875 4537.5703,229.3516 Q4538.2188,229.5156 4538.7656,229.875 Z "
+         fill="#000000"
+         id="path42" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="68"
+         x="4550"
+         y="239.7285"
+         id="text42">LoginPage</text>
+    </g>
+    <!--class ProfilePage-->
+    <g
+       id="elem_ProfilePage">
+      <rect
+         codeLine="94"
+         fill="#F1F1F1"
+         height="32"
+         id="ProfilePage"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="105"
+         x="4631.5"
+         y="218" />
+      <ellipse
+         cx="4646.5"
+         cy="234"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse42" />
+      <path
+         d="M4649.2656,229.875 Q4649.4219,229.6563 4649.6094,229.5469 Q4649.7969,229.4375 4650.0156,229.4375 Q4650.3906,229.4375 4650.625,229.6953 Q4650.8594,229.9531 4650.8594,230.5625 L4650.8594,232.0156 Q4650.8594,232.625 4650.625,232.8906 Q4650.3906,233.1563 4650.0156,233.1563 Q4649.6719,233.1563 4649.4688,232.9531 Q4649.2656,232.7656 4649.1563,232.25 Q4649.1094,231.8906 4648.9219,231.7031 Q4648.5938,231.3281 4647.9844,231.1094 Q4647.375,230.8906 4646.75,230.8906 Q4645.9844,230.8906 4645.3516,231.2188 Q4644.7188,231.5469 4644.2266,232.2969 Q4643.7344,233.0469 4643.7344,234.0781 L4643.7344,235.1719 Q4643.7344,236.4063 4644.625,237.2266 Q4645.5156,238.0469 4647.1094,238.0469 Q4648.0469,238.0469 4648.7031,237.7969 Q4649.0938,237.6406 4649.5156,237.2031 Q4649.7813,236.9375 4649.9297,236.8594 Q4650.0781,236.7813 4650.2813,236.7813 Q4650.6094,236.7813 4650.8672,237.0391 Q4651.125,237.2969 4651.125,237.6406 Q4651.125,237.9844 4650.7813,238.3906 Q4650.2813,238.9688 4649.4844,239.2969 Q4648.4063,239.75 4647.1094,239.75 Q4645.5938,239.75 4644.3906,239.125 Q4643.4063,238.625 4642.7188,237.5547 Q4642.0313,236.4844 4642.0313,235.2031 L4642.0313,234.0469 Q4642.0313,232.7188 4642.6484,231.5703 Q4643.2656,230.4219 4644.3594,229.8047 Q4645.4531,229.1875 4646.6875,229.1875 Q4647.4219,229.1875 4648.0703,229.3516 Q4648.7188,229.5156 4649.2656,229.875 Z "
+         fill="#000000"
+         id="path43" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="73"
+         x="4660.5"
+         y="239.7285"
+         id="text43">ProfilePage</text>
+    </g>
+    <!--class SignUpPage-->
+    <g
+       id="elem_SignUpPage">
+      <rect
+         codeLine="98"
+         fill="#F1F1F1"
+         height="32"
+         id="SignUpPage"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="110"
+         x="4521"
+         y="462" />
+      <ellipse
+         cx="4536"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse43" />
+      <path
+         d="M4538.7656,473.875 Q4538.9219,473.6563 4539.1094,473.5469 Q4539.2969,473.4375 4539.5156,473.4375 Q4539.8906,473.4375 4540.125,473.6953 Q4540.3594,473.9531 4540.3594,474.5625 L4540.3594,476.0156 Q4540.3594,476.625 4540.125,476.8906 Q4539.8906,477.1563 4539.5156,477.1563 Q4539.1719,477.1563 4538.9688,476.9531 Q4538.7656,476.7656 4538.6563,476.25 Q4538.6094,475.8906 4538.4219,475.7031 Q4538.0938,475.3281 4537.4844,475.1094 Q4536.875,474.8906 4536.25,474.8906 Q4535.4844,474.8906 4534.8516,475.2188 Q4534.2188,475.5469 4533.7266,476.2969 Q4533.2344,477.0469 4533.2344,478.0781 L4533.2344,479.1719 Q4533.2344,480.4063 4534.125,481.2266 Q4535.0156,482.0469 4536.6094,482.0469 Q4537.5469,482.0469 4538.2031,481.7969 Q4538.5938,481.6406 4539.0156,481.2031 Q4539.2813,480.9375 4539.4297,480.8594 Q4539.5781,480.7813 4539.7813,480.7813 Q4540.1094,480.7813 4540.3672,481.0391 Q4540.625,481.2969 4540.625,481.6406 Q4540.625,481.9844 4540.2813,482.3906 Q4539.7813,482.9688 4538.9844,483.2969 Q4537.9063,483.75 4536.6094,483.75 Q4535.0938,483.75 4533.8906,483.125 Q4532.9063,482.625 4532.2188,481.5547 Q4531.5313,480.4844 4531.5313,479.2031 L4531.5313,478.0469 Q4531.5313,476.7188 4532.1484,475.5703 Q4532.7656,474.4219 4533.8594,473.8047 Q4534.9531,473.1875 4536.1875,473.1875 Q4536.9219,473.1875 4537.5703,473.3516 Q4538.2188,473.5156 4538.7656,473.875 Z "
+         fill="#000000"
+         id="path44" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="78"
+         x="4550"
+         y="483.7285"
+         id="text44">SignUpPage</text>
+    </g>
+    <!--class ProfileIconWidget-->
+    <g
+       id="elem_ProfileIconWidget">
+      <rect
+         codeLine="102"
+         fill="#F1F1F1"
+         height="32"
+         id="ProfileIconWidget"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="142"
+         x="4323"
+         y="218" />
+      <ellipse
+         cx="4338"
+         cy="234"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse44" />
+      <path
+         d="M4340.7656,229.875 Q4340.9219,229.6563 4341.1094,229.5469 Q4341.2969,229.4375 4341.5156,229.4375 Q4341.8906,229.4375 4342.125,229.6953 Q4342.3594,229.9531 4342.3594,230.5625 L4342.3594,232.0156 Q4342.3594,232.625 4342.125,232.8906 Q4341.8906,233.1563 4341.5156,233.1563 Q4341.1719,233.1563 4340.9688,232.9531 Q4340.7656,232.7656 4340.6563,232.25 Q4340.6094,231.8906 4340.4219,231.7031 Q4340.0938,231.3281 4339.4844,231.1094 Q4338.875,230.8906 4338.25,230.8906 Q4337.4844,230.8906 4336.8516,231.2188 Q4336.2188,231.5469 4335.7266,232.2969 Q4335.2344,233.0469 4335.2344,234.0781 L4335.2344,235.1719 Q4335.2344,236.4063 4336.125,237.2266 Q4337.0156,238.0469 4338.6094,238.0469 Q4339.5469,238.0469 4340.2031,237.7969 Q4340.5938,237.6406 4341.0156,237.2031 Q4341.2813,236.9375 4341.4297,236.8594 Q4341.5781,236.7813 4341.7813,236.7813 Q4342.1094,236.7813 4342.3672,237.0391 Q4342.625,237.2969 4342.625,237.6406 Q4342.625,237.9844 4342.2813,238.3906 Q4341.7813,238.9688 4340.9844,239.2969 Q4339.9063,239.75 4338.6094,239.75 Q4337.0938,239.75 4335.8906,239.125 Q4334.9063,238.625 4334.2188,237.5547 Q4333.5313,236.4844 4333.5313,235.2031 L4333.5313,234.0469 Q4333.5313,232.7188 4334.1484,231.5703 Q4334.7656,230.4219 4335.8594,229.8047 Q4336.9531,229.1875 4338.1875,229.1875 Q4338.9219,229.1875 4339.5703,229.3516 Q4340.2188,229.5156 4340.7656,229.875 Z "
+         fill="#000000"
+         id="path45" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="110"
+         x="4352"
+         y="239.7285"
+         id="text45">ProfileIconWidget</text>
+    </g>
+    <!--class FirestoreCarnivalBlockRepository-->
+    <g
+       id="elem_FirestoreCarnivalBlockRepository">
+      <rect
+         codeLine="113"
+         fill="#F1F1F1"
+         height="32"
+         id="FirestoreCarnivalBlockRepository"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="243"
+         x="3727.5"
+         y="462" />
+      <ellipse
+         cx="3742.5"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse45" />
+      <path
+         d="M3745.2656,473.875 Q3745.4219,473.6563 3745.6094,473.5469 Q3745.7969,473.4375 3746.0156,473.4375 Q3746.3906,473.4375 3746.625,473.6953 Q3746.8594,473.9531 3746.8594,474.5625 L3746.8594,476.0156 Q3746.8594,476.625 3746.625,476.8906 Q3746.3906,477.1563 3746.0156,477.1563 Q3745.6719,477.1563 3745.4688,476.9531 Q3745.2656,476.7656 3745.1563,476.25 Q3745.1094,475.8906 3744.9219,475.7031 Q3744.5938,475.3281 3743.9844,475.1094 Q3743.375,474.8906 3742.75,474.8906 Q3741.9844,474.8906 3741.3516,475.2188 Q3740.7188,475.5469 3740.2266,476.2969 Q3739.7344,477.0469 3739.7344,478.0781 L3739.7344,479.1719 Q3739.7344,480.4063 3740.625,481.2266 Q3741.5156,482.0469 3743.1094,482.0469 Q3744.0469,482.0469 3744.7031,481.7969 Q3745.0938,481.6406 3745.5156,481.2031 Q3745.7813,480.9375 3745.9297,480.8594 Q3746.0781,480.7813 3746.2813,480.7813 Q3746.6094,480.7813 3746.8672,481.0391 Q3747.125,481.2969 3747.125,481.6406 Q3747.125,481.9844 3746.7813,482.3906 Q3746.2813,482.9688 3745.4844,483.2969 Q3744.4063,483.75 3743.1094,483.75 Q3741.5938,483.75 3740.3906,483.125 Q3739.4063,482.625 3738.7188,481.5547 Q3738.0313,480.4844 3738.0313,479.2031 L3738.0313,478.0469 Q3738.0313,476.7188 3738.6484,475.5703 Q3739.2656,474.4219 3740.3594,473.8047 Q3741.4531,473.1875 3742.6875,473.1875 Q3743.4219,473.1875 3744.0703,473.3516 Q3744.7188,473.5156 3745.2656,473.875 Z "
+         fill="#000000"
+         id="path46" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="211"
+         x="3756.5"
+         y="483.7285"
+         id="text46">FirestoreCarnivalBlockRepository</text>
+    </g>
+    <!--class CarnivalBlockAdapter-->
+    <g
+       id="elem_CarnivalBlockAdapter">
+      <rect
+         codeLine="109"
+         fill="#F1F1F1"
+         height="32"
+         id="CarnivalBlockAdapter"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="168"
+         x="4003"
+         y="462" />
+      <ellipse
+         cx="4018"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse46" />
+      <path
+         d="M4020.7656,473.875 Q4020.9219,473.6563 4021.1094,473.5469 Q4021.2969,473.4375 4021.5156,473.4375 Q4021.8906,473.4375 4022.125,473.6953 Q4022.3594,473.9531 4022.3594,474.5625 L4022.3594,476.0156 Q4022.3594,476.625 4022.125,476.8906 Q4021.8906,477.1563 4021.5156,477.1563 Q4021.1719,477.1563 4020.9688,476.9531 Q4020.7656,476.7656 4020.6563,476.25 Q4020.6094,475.8906 4020.4219,475.7031 Q4020.0938,475.3281 4019.4844,475.1094 Q4018.875,474.8906 4018.25,474.8906 Q4017.4844,474.8906 4016.8516,475.2188 Q4016.2188,475.5469 4015.7266,476.2969 Q4015.2344,477.0469 4015.2344,478.0781 L4015.2344,479.1719 Q4015.2344,480.4063 4016.125,481.2266 Q4017.0156,482.0469 4018.6094,482.0469 Q4019.5469,482.0469 4020.2031,481.7969 Q4020.5938,481.6406 4021.0156,481.2031 Q4021.2813,480.9375 4021.4297,480.8594 Q4021.5781,480.7813 4021.7813,480.7813 Q4022.1094,480.7813 4022.3672,481.0391 Q4022.625,481.2969 4022.625,481.6406 Q4022.625,481.9844 4022.2813,482.3906 Q4021.7813,482.9688 4020.9844,483.2969 Q4019.9063,483.75 4018.6094,483.75 Q4017.0938,483.75 4015.8906,483.125 Q4014.9063,482.625 4014.2188,481.5547 Q4013.5313,480.4844 4013.5313,479.2031 L4013.5313,478.0469 Q4013.5313,476.7188 4014.1484,475.5703 Q4014.7656,474.4219 4015.8594,473.8047 Q4016.9531,473.1875 4018.1875,473.1875 Q4018.9219,473.1875 4019.5703,473.3516 Q4020.2188,473.5156 4020.7656,473.875 Z "
+         fill="#000000"
+         id="path47" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="136"
+         x="4032"
+         y="483.7285"
+         id="text47">CarnivalBlockAdapter</text>
+    </g>
+    <!--class ICarnivalBlockRepository-->
+    <g
+       id="elem_ICarnivalBlockRepository">
+      <rect
+         codeLine="174"
+         fill="#F1F1F1"
+         height="32"
+         id="ICarnivalBlockRepository"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="190"
+         x="3457"
+         y="218" />
+      <ellipse
+         cx="3472"
+         cy="234"
+         fill="#B4A7E5"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse47" />
+      <path
+         d="M3472.9531,230.6406 L3472.9531,237.2969 L3474.6719,237.2969 Q3475.2813,237.2969 3475.5469,237.5313 Q3475.8125,237.7656 3475.8125,238.1563 Q3475.8125,238.5313 3475.5469,238.7656 Q3475.2813,239 3474.6719,239 L3469.5313,239 Q3468.9219,239 3468.6563,238.7656 Q3468.3906,238.5313 3468.3906,238.1406 Q3468.3906,237.7656 3468.6563,237.5313 Q3468.9219,237.2969 3469.5313,237.2969 L3471.25,237.2969 L3471.25,230.6406 L3469.5313,230.6406 Q3468.9219,230.6406 3468.6563,230.4063 Q3468.3906,230.1719 3468.3906,229.7813 Q3468.3906,229.4063 3468.6563,229.1719 Q3468.9219,228.9375 3469.5313,228.9375 L3474.6719,228.9375 Q3475.2813,228.9375 3475.5469,229.1719 Q3475.8125,229.4063 3475.8125,229.7813 Q3475.8125,230.1719 3475.5469,230.4063 Q3475.2813,230.6406 3474.6719,230.6406 L3472.9531,230.6406 Z "
+         fill="#000000"
+         id="path48" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         font-style="italic"
+         lengthAdjust="spacing"
+         textLength="158"
+         x="3486"
+         y="239.7285"
+         id="text48">ICarnivalBlockRepository</text>
+    </g>
+    <!--class CarnivalBlockEntity-->
+    <g
+       id="elem_CarnivalBlockEntity">
+      <rect
+         codeLine="124"
+         fill="#F1F1F1"
+         height="32"
+         id="CarnivalBlockEntity"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="153"
+         x="2095.5"
+         y="618" />
+      <ellipse
+         cx="2110.5"
+         cy="634"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse48" />
+      <path
+         d="M2109.3594,634.7969 L2109.3594,637.2969 L2113.6875,637.2969 L2113.6875,636.375 Q2113.6875,635.7656 2113.9297,635.5 Q2114.1719,635.2344 2114.5469,635.2344 Q2114.9219,635.2344 2115.1563,635.5 Q2115.3906,635.7656 2115.3906,636.375 L2115.3906,639 L2107.3906,639 Q2106.7656,639 2106.5078,638.7656 Q2106.25,638.5313 2106.25,638.1406 Q2106.25,637.7656 2106.5156,637.5313 Q2106.7813,637.2969 2107.3906,637.2969 L2107.6563,637.2969 L2107.6563,630.6406 L2107.3906,630.6406 Q2106.7656,630.6406 2106.5078,630.4063 Q2106.25,630.1719 2106.25,629.7813 Q2106.25,629.4063 2106.5078,629.1719 Q2106.7656,628.9375 2107.3906,628.9375 L2115.0156,628.9375 L2115.0156,631.5313 Q2115.0156,632.1406 2114.7891,632.3984 Q2114.5625,632.6563 2114.1719,632.6563 Q2113.7969,632.6563 2113.5625,632.3984 Q2113.3281,632.1406 2113.3281,631.5313 L2113.3281,630.6406 L2109.3594,630.6406 L2109.3594,633.0938 L2110.8438,633.0938 Q2110.8438,632.4375 2110.9688,632.25 Q2111.2344,631.8438 2111.7031,631.8438 Q2112.0781,631.8438 2112.3125,632.1016 Q2112.5469,632.3594 2112.5469,632.9688 L2112.5469,634.9375 Q2112.5469,635.4844 2112.4219,635.6719 Q2112.1563,636.0625 2111.7031,636.0625 Q2111.2344,636.0625 2110.9688,635.6563 Q2110.8438,635.4688 2110.8438,634.7969 L2109.3594,634.7969 Z "
+         fill="#000000"
+         id="path49" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="121"
+         x="2124.5"
+         y="639.7285"
+         id="text49">CarnivalBlockEntity</text>
+    </g>
+    <!--class CarnivalBlockEvent-->
+    <g
+       id="elem_CarnivalBlockEvent">
+      <rect
+         codeLine="135"
+         fill="#F1F1F1"
+         height="32"
+         id="CarnivalBlockEvent"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="154"
+         x="2822"
+         y="218" />
+      <ellipse
+         cx="2837"
+         cy="234"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse49" />
+      <path
+         d="M2839.7656,229.875 Q2839.9219,229.6563 2840.1094,229.5469 Q2840.2969,229.4375 2840.5156,229.4375 Q2840.8906,229.4375 2841.125,229.6953 Q2841.3594,229.9531 2841.3594,230.5625 L2841.3594,232.0156 Q2841.3594,232.625 2841.125,232.8906 Q2840.8906,233.1563 2840.5156,233.1563 Q2840.1719,233.1563 2839.9688,232.9531 Q2839.7656,232.7656 2839.6563,232.25 Q2839.6094,231.8906 2839.4219,231.7031 Q2839.0938,231.3281 2838.4844,231.1094 Q2837.875,230.8906 2837.25,230.8906 Q2836.4844,230.8906 2835.8516,231.2188 Q2835.2188,231.5469 2834.7266,232.2969 Q2834.2344,233.0469 2834.2344,234.0781 L2834.2344,235.1719 Q2834.2344,236.4063 2835.125,237.2266 Q2836.0156,238.0469 2837.6094,238.0469 Q2838.5469,238.0469 2839.2031,237.7969 Q2839.5938,237.6406 2840.0156,237.2031 Q2840.2813,236.9375 2840.4297,236.8594 Q2840.5781,236.7813 2840.7813,236.7813 Q2841.1094,236.7813 2841.3672,237.0391 Q2841.625,237.2969 2841.625,237.6406 Q2841.625,237.9844 2841.2813,238.3906 Q2840.7813,238.9688 2839.9844,239.2969 Q2838.9063,239.75 2837.6094,239.75 Q2836.0938,239.75 2834.8906,239.125 Q2833.9063,238.625 2833.2188,237.5547 Q2832.5313,236.4844 2832.5313,235.2031 L2832.5313,234.0469 Q2832.5313,232.7188 2833.1484,231.5703 Q2833.7656,230.4219 2834.8594,229.8047 Q2835.9531,229.1875 2837.1875,229.1875 Q2837.9219,229.1875 2838.5703,229.3516 Q2839.2188,229.5156 2839.7656,229.875 Z "
+         fill="#000000"
+         id="path50" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="122"
+         x="2851"
+         y="239.7285"
+         id="text50">CarnivalBlockEvent</text>
+    </g>
+    <!--class LoadCarnivalBlockEvent-->
+    <g
+       id="elem_LoadCarnivalBlockEvent">
+      <rect
+         codeLine="138"
+         fill="#F1F1F1"
+         height="32"
+         id="LoadCarnivalBlockEvent"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="186"
+         x="2416"
+         y="462" />
+      <ellipse
+         cx="2431"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse50" />
+      <path
+         d="M2433.7656,473.875 Q2433.9219,473.6563 2434.1094,473.5469 Q2434.2969,473.4375 2434.5156,473.4375 Q2434.8906,473.4375 2435.125,473.6953 Q2435.3594,473.9531 2435.3594,474.5625 L2435.3594,476.0156 Q2435.3594,476.625 2435.125,476.8906 Q2434.8906,477.1563 2434.5156,477.1563 Q2434.1719,477.1563 2433.9688,476.9531 Q2433.7656,476.7656 2433.6563,476.25 Q2433.6094,475.8906 2433.4219,475.7031 Q2433.0938,475.3281 2432.4844,475.1094 Q2431.875,474.8906 2431.25,474.8906 Q2430.4844,474.8906 2429.8516,475.2188 Q2429.2188,475.5469 2428.7266,476.2969 Q2428.2344,477.0469 2428.2344,478.0781 L2428.2344,479.1719 Q2428.2344,480.4063 2429.125,481.2266 Q2430.0156,482.0469 2431.6094,482.0469 Q2432.5469,482.0469 2433.2031,481.7969 Q2433.5938,481.6406 2434.0156,481.2031 Q2434.2813,480.9375 2434.4297,480.8594 Q2434.5781,480.7813 2434.7813,480.7813 Q2435.1094,480.7813 2435.3672,481.0391 Q2435.625,481.2969 2435.625,481.6406 Q2435.625,481.9844 2435.2813,482.3906 Q2434.7813,482.9688 2433.9844,483.2969 Q2432.9063,483.75 2431.6094,483.75 Q2430.0938,483.75 2428.8906,483.125 Q2427.9063,482.625 2427.2188,481.5547 Q2426.5313,480.4844 2426.5313,479.2031 L2426.5313,478.0469 Q2426.5313,476.7188 2427.1484,475.5703 Q2427.7656,474.4219 2428.8594,473.8047 Q2429.9531,473.1875 2431.1875,473.1875 Q2431.9219,473.1875 2432.5703,473.3516 Q2433.2188,473.5156 2433.7656,473.875 Z "
+         fill="#000000"
+         id="path51" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="154"
+         x="2445"
+         y="483.7285"
+         id="text51">LoadCarnivalBlockEvent</text>
+    </g>
+    <!--class InviteCarnivalBlockEvent-->
+    <g
+       id="elem_InviteCarnivalBlockEvent">
+      <rect
+         codeLine="144"
+         fill="#F1F1F1"
+         height="32"
+         id="InviteCarnivalBlockEvent"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="187"
+         x="2612.5"
+         y="462" />
+      <ellipse
+         cx="2627.5"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse51" />
+      <path
+         d="M2630.2656,473.875 Q2630.4219,473.6563 2630.6094,473.5469 Q2630.7969,473.4375 2631.0156,473.4375 Q2631.3906,473.4375 2631.625,473.6953 Q2631.8594,473.9531 2631.8594,474.5625 L2631.8594,476.0156 Q2631.8594,476.625 2631.625,476.8906 Q2631.3906,477.1563 2631.0156,477.1563 Q2630.6719,477.1563 2630.4688,476.9531 Q2630.2656,476.7656 2630.1563,476.25 Q2630.1094,475.8906 2629.9219,475.7031 Q2629.5938,475.3281 2628.9844,475.1094 Q2628.375,474.8906 2627.75,474.8906 Q2626.9844,474.8906 2626.3516,475.2188 Q2625.7188,475.5469 2625.2266,476.2969 Q2624.7344,477.0469 2624.7344,478.0781 L2624.7344,479.1719 Q2624.7344,480.4063 2625.625,481.2266 Q2626.5156,482.0469 2628.1094,482.0469 Q2629.0469,482.0469 2629.7031,481.7969 Q2630.0938,481.6406 2630.5156,481.2031 Q2630.7813,480.9375 2630.9297,480.8594 Q2631.0781,480.7813 2631.2813,480.7813 Q2631.6094,480.7813 2631.8672,481.0391 Q2632.125,481.2969 2632.125,481.6406 Q2632.125,481.9844 2631.7813,482.3906 Q2631.2813,482.9688 2630.4844,483.2969 Q2629.4063,483.75 2628.1094,483.75 Q2626.5938,483.75 2625.3906,483.125 Q2624.4063,482.625 2623.7188,481.5547 Q2623.0313,480.4844 2623.0313,479.2031 L2623.0313,478.0469 Q2623.0313,476.7188 2623.6484,475.5703 Q2624.2656,474.4219 2625.3594,473.8047 Q2626.4531,473.1875 2627.6875,473.1875 Q2628.4219,473.1875 2629.0703,473.3516 Q2629.7188,473.5156 2630.2656,473.875 Z "
+         fill="#000000"
+         id="path52" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="155"
+         x="2641.5"
+         y="483.7285"
+         id="text52">InviteCarnivalBlockEvent</text>
+    </g>
+    <!--class JoinCarnivalBlockEvent-->
+    <g
+       id="elem_JoinCarnivalBlockEvent">
+      <rect
+         codeLine="151"
+         fill="#F1F1F1"
+         height="32"
+         id="JoinCarnivalBlockEvent"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="179"
+         x="2809.5"
+         y="462" />
+      <ellipse
+         cx="2824.5"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse52" />
+      <path
+         d="M2827.2656,473.875 Q2827.4219,473.6563 2827.6094,473.5469 Q2827.7969,473.4375 2828.0156,473.4375 Q2828.3906,473.4375 2828.625,473.6953 Q2828.8594,473.9531 2828.8594,474.5625 L2828.8594,476.0156 Q2828.8594,476.625 2828.625,476.8906 Q2828.3906,477.1563 2828.0156,477.1563 Q2827.6719,477.1563 2827.4688,476.9531 Q2827.2656,476.7656 2827.1563,476.25 Q2827.1094,475.8906 2826.9219,475.7031 Q2826.5938,475.3281 2825.9844,475.1094 Q2825.375,474.8906 2824.75,474.8906 Q2823.9844,474.8906 2823.3516,475.2188 Q2822.7188,475.5469 2822.2266,476.2969 Q2821.7344,477.0469 2821.7344,478.0781 L2821.7344,479.1719 Q2821.7344,480.4063 2822.625,481.2266 Q2823.5156,482.0469 2825.1094,482.0469 Q2826.0469,482.0469 2826.7031,481.7969 Q2827.0938,481.6406 2827.5156,481.2031 Q2827.7813,480.9375 2827.9297,480.8594 Q2828.0781,480.7813 2828.2813,480.7813 Q2828.6094,480.7813 2828.8672,481.0391 Q2829.125,481.2969 2829.125,481.6406 Q2829.125,481.9844 2828.7813,482.3906 Q2828.2813,482.9688 2827.4844,483.2969 Q2826.4063,483.75 2825.1094,483.75 Q2823.5938,483.75 2822.3906,483.125 Q2821.4063,482.625 2820.7188,481.5547 Q2820.0313,480.4844 2820.0313,479.2031 L2820.0313,478.0469 Q2820.0313,476.7188 2820.6484,475.5703 Q2821.2656,474.4219 2822.3594,473.8047 Q2823.4531,473.1875 2824.6875,473.1875 Q2825.4219,473.1875 2826.0703,473.3516 Q2826.7188,473.5156 2827.2656,473.875 Z "
+         fill="#000000"
+         id="path53" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="147"
+         x="2838.5"
+         y="483.7285"
+         id="text53">JoinCarnivalBlockEvent</text>
+    </g>
+    <!--class CreateCarnivalBlockEvent-->
+    <g
+       id="elem_CreateCarnivalBlockEvent">
+      <rect
+         codeLine="158"
+         fill="#F1F1F1"
+         height="32"
+         id="CreateCarnivalBlockEvent"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="197"
+         x="2998.5"
+         y="462" />
+      <ellipse
+         cx="3013.5"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse53" />
+      <path
+         d="M3016.2656,473.875 Q3016.4219,473.6563 3016.6094,473.5469 Q3016.7969,473.4375 3017.0156,473.4375 Q3017.3906,473.4375 3017.625,473.6953 Q3017.8594,473.9531 3017.8594,474.5625 L3017.8594,476.0156 Q3017.8594,476.625 3017.625,476.8906 Q3017.3906,477.1563 3017.0156,477.1563 Q3016.6719,477.1563 3016.4688,476.9531 Q3016.2656,476.7656 3016.1563,476.25 Q3016.1094,475.8906 3015.9219,475.7031 Q3015.5938,475.3281 3014.9844,475.1094 Q3014.375,474.8906 3013.75,474.8906 Q3012.9844,474.8906 3012.3516,475.2188 Q3011.7188,475.5469 3011.2266,476.2969 Q3010.7344,477.0469 3010.7344,478.0781 L3010.7344,479.1719 Q3010.7344,480.4063 3011.625,481.2266 Q3012.5156,482.0469 3014.1094,482.0469 Q3015.0469,482.0469 3015.7031,481.7969 Q3016.0938,481.6406 3016.5156,481.2031 Q3016.7813,480.9375 3016.9297,480.8594 Q3017.0781,480.7813 3017.2813,480.7813 Q3017.6094,480.7813 3017.8672,481.0391 Q3018.125,481.2969 3018.125,481.6406 Q3018.125,481.9844 3017.7813,482.3906 Q3017.2813,482.9688 3016.4844,483.2969 Q3015.4063,483.75 3014.1094,483.75 Q3012.5938,483.75 3011.3906,483.125 Q3010.4063,482.625 3009.7188,481.5547 Q3009.0313,480.4844 3009.0313,479.2031 L3009.0313,478.0469 Q3009.0313,476.7188 3009.6484,475.5703 Q3010.2656,474.4219 3011.3594,473.8047 Q3012.4531,473.1875 3013.6875,473.1875 Q3014.4219,473.1875 3015.0703,473.3516 Q3015.7188,473.5156 3016.2656,473.875 Z "
+         fill="#000000"
+         id="path54" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="165"
+         x="3027.5"
+         y="483.7285"
+         id="text54">CreateCarnivalBlockEvent</text>
+    </g>
+    <!--class DeleteCarnivalBlockEvent-->
+    <g
+       id="elem_DeleteCarnivalBlockEvent">
+      <rect
+         codeLine="166"
+         fill="#F1F1F1"
+         height="32"
+         id="DeleteCarnivalBlockEvent"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="195"
+         x="3205.5"
+         y="462" />
+      <ellipse
+         cx="3220.5"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse54" />
+      <path
+         d="M3223.2656,473.875 Q3223.4219,473.6563 3223.6094,473.5469 Q3223.7969,473.4375 3224.0156,473.4375 Q3224.3906,473.4375 3224.625,473.6953 Q3224.8594,473.9531 3224.8594,474.5625 L3224.8594,476.0156 Q3224.8594,476.625 3224.625,476.8906 Q3224.3906,477.1563 3224.0156,477.1563 Q3223.6719,477.1563 3223.4688,476.9531 Q3223.2656,476.7656 3223.1563,476.25 Q3223.1094,475.8906 3222.9219,475.7031 Q3222.5938,475.3281 3221.9844,475.1094 Q3221.375,474.8906 3220.75,474.8906 Q3219.9844,474.8906 3219.3516,475.2188 Q3218.7188,475.5469 3218.2266,476.2969 Q3217.7344,477.0469 3217.7344,478.0781 L3217.7344,479.1719 Q3217.7344,480.4063 3218.625,481.2266 Q3219.5156,482.0469 3221.1094,482.0469 Q3222.0469,482.0469 3222.7031,481.7969 Q3223.0938,481.6406 3223.5156,481.2031 Q3223.7813,480.9375 3223.9297,480.8594 Q3224.0781,480.7813 3224.2813,480.7813 Q3224.6094,480.7813 3224.8672,481.0391 Q3225.125,481.2969 3225.125,481.6406 Q3225.125,481.9844 3224.7813,482.3906 Q3224.2813,482.9688 3223.4844,483.2969 Q3222.4063,483.75 3221.1094,483.75 Q3219.5938,483.75 3218.3906,483.125 Q3217.4063,482.625 3216.7188,481.5547 Q3216.0313,480.4844 3216.0313,479.2031 L3216.0313,478.0469 Q3216.0313,476.7188 3216.6484,475.5703 Q3217.2656,474.4219 3218.3594,473.8047 Q3219.4531,473.1875 3220.6875,473.1875 Q3221.4219,473.1875 3222.0703,473.3516 Q3222.7188,473.5156 3223.2656,473.875 Z "
+         fill="#000000"
+         id="path55" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="163"
+         x="3234.5"
+         y="483.7285"
+         id="text55">DeleteCarnivalBlockEvent</text>
+    </g>
+    <!--class CarnivalBlockState-->
+    <g
+       id="elem_CarnivalBlockState">
+      <rect
+         codeLine="183"
+         fill="#F1F1F1"
+         height="32"
+         id="CarnivalBlockState"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="151"
+         x="1562.5"
+         y="218" />
+      <ellipse
+         cx="1577.5"
+         cy="234"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse55" />
+      <path
+         d="M1580.2656,229.875 Q1580.4219,229.6563 1580.6094,229.5469 Q1580.7969,229.4375 1581.0156,229.4375 Q1581.3906,229.4375 1581.625,229.6953 Q1581.8594,229.9531 1581.8594,230.5625 L1581.8594,232.0156 Q1581.8594,232.625 1581.625,232.8906 Q1581.3906,233.1563 1581.0156,233.1563 Q1580.6719,233.1563 1580.4688,232.9531 Q1580.2656,232.7656 1580.1563,232.25 Q1580.1094,231.8906 1579.9219,231.7031 Q1579.5938,231.3281 1578.9844,231.1094 Q1578.375,230.8906 1577.75,230.8906 Q1576.9844,230.8906 1576.3516,231.2188 Q1575.7188,231.5469 1575.2266,232.2969 Q1574.7344,233.0469 1574.7344,234.0781 L1574.7344,235.1719 Q1574.7344,236.4063 1575.625,237.2266 Q1576.5156,238.0469 1578.1094,238.0469 Q1579.0469,238.0469 1579.7031,237.7969 Q1580.0938,237.6406 1580.5156,237.2031 Q1580.7813,236.9375 1580.9297,236.8594 Q1581.0781,236.7813 1581.2813,236.7813 Q1581.6094,236.7813 1581.8672,237.0391 Q1582.125,237.2969 1582.125,237.6406 Q1582.125,237.9844 1581.7813,238.3906 Q1581.2813,238.9688 1580.4844,239.2969 Q1579.4063,239.75 1578.1094,239.75 Q1576.5938,239.75 1575.3906,239.125 Q1574.4063,238.625 1573.7188,237.5547 Q1573.0313,236.4844 1573.0313,235.2031 L1573.0313,234.0469 Q1573.0313,232.7188 1573.6484,231.5703 Q1574.2656,230.4219 1575.3594,229.8047 Q1576.4531,229.1875 1577.6875,229.1875 Q1578.4219,229.1875 1579.0703,229.3516 Q1579.7188,229.5156 1580.2656,229.875 Z "
+         fill="#000000"
+         id="path56" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="119"
+         x="1591.5"
+         y="239.7285"
+         id="text56">CarnivalBlockState</text>
+    </g>
+    <!--class LoadingCarnivalBlockState-->
+    <g
+       id="elem_LoadingCarnivalBlockState">
+      <rect
+         codeLine="186"
+         fill="#F1F1F1"
+         height="32"
+         id="LoadingCarnivalBlockState"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="202"
+         x="910"
+         y="462" />
+      <ellipse
+         cx="925"
+         cy="478"
+         fill="#ADD1B2"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse56"
+         ry="11"
+         rx="11" />
+      <path
+         d="M927.7656,473.875 Q927.9219,473.6563 928.1094,473.5469 Q928.2969,473.4375 928.5156,473.4375 Q928.8906,473.4375 929.125,473.6953 Q929.3594,473.9531 929.3594,474.5625 L929.3594,476.0156 Q929.3594,476.625 929.125,476.8906 Q928.8906,477.1563 928.5156,477.1563 Q928.1719,477.1563 927.9688,476.9531 Q927.7656,476.7656 927.6563,476.25 Q927.6094,475.8906 927.4219,475.7031 Q927.0938,475.3281 926.4844,475.1094 Q925.875,474.8906 925.25,474.8906 Q924.4844,474.8906 923.8516,475.2188 Q923.2188,475.5469 922.7266,476.2969 Q922.2344,477.0469 922.2344,478.0781 L922.2344,479.1719 Q922.2344,480.4063 923.125,481.2266 Q924.0156,482.0469 925.6094,482.0469 Q926.5469,482.0469 927.2031,481.7969 Q927.5938,481.6406 928.0156,481.2031 Q928.2813,480.9375 928.4297,480.8594 Q928.5781,480.7813 928.7813,480.7813 Q929.1094,480.7813 929.3672,481.0391 Q929.625,481.2969 929.625,481.6406 Q929.625,481.9844 929.2813,482.3906 Q928.7813,482.9688 927.9844,483.2969 Q926.9063,483.75 925.6094,483.75 Q924.0938,483.75 922.8906,483.125 Q921.9063,482.625 921.2188,481.5547 Q920.5313,480.4844 920.5313,479.2031 L920.5313,478.0469 Q920.5313,476.7188 921.1484,475.5703 Q921.7656,474.4219 922.8594,473.8047 Q923.9531,473.1875 925.1875,473.1875 Q925.9219,473.1875 926.5703,473.3516 Q927.2188,473.5156 927.7656,473.875 Z "
+         fill="#000000"
+         id="path57" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="170"
+         x="939"
+         y="483.7285"
+         id="text57">LoadingCarnivalBlockState</text>
+    </g>
+    <!--class CreatedCarnivalBlockState-->
+    <g
+       id="elem_CreatedCarnivalBlockState">
+      <rect
+         codeLine="191"
+         fill="#F1F1F1"
+         height="32"
+         id="CreatedCarnivalBlockState"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="202"
+         x="1122"
+         y="462" />
+      <ellipse
+         cx="1137"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse57" />
+      <path
+         d="M1139.7656,473.875 Q1139.9219,473.6563 1140.1094,473.5469 Q1140.2969,473.4375 1140.5156,473.4375 Q1140.8906,473.4375 1141.125,473.6953 Q1141.3594,473.9531 1141.3594,474.5625 L1141.3594,476.0156 Q1141.3594,476.625 1141.125,476.8906 Q1140.8906,477.1563 1140.5156,477.1563 Q1140.1719,477.1563 1139.9688,476.9531 Q1139.7656,476.7656 1139.6563,476.25 Q1139.6094,475.8906 1139.4219,475.7031 Q1139.0938,475.3281 1138.4844,475.1094 Q1137.875,474.8906 1137.25,474.8906 Q1136.4844,474.8906 1135.8516,475.2188 Q1135.2188,475.5469 1134.7266,476.2969 Q1134.2344,477.0469 1134.2344,478.0781 L1134.2344,479.1719 Q1134.2344,480.4063 1135.125,481.2266 Q1136.0156,482.0469 1137.6094,482.0469 Q1138.5469,482.0469 1139.2031,481.7969 Q1139.5938,481.6406 1140.0156,481.2031 Q1140.2813,480.9375 1140.4297,480.8594 Q1140.5781,480.7813 1140.7813,480.7813 Q1141.1094,480.7813 1141.3672,481.0391 Q1141.625,481.2969 1141.625,481.6406 Q1141.625,481.9844 1141.2813,482.3906 Q1140.7813,482.9688 1139.9844,483.2969 Q1138.9063,483.75 1137.6094,483.75 Q1136.0938,483.75 1134.8906,483.125 Q1133.9063,482.625 1133.2188,481.5547 Q1132.5313,480.4844 1132.5313,479.2031 L1132.5313,478.0469 Q1132.5313,476.7188 1133.1484,475.5703 Q1133.7656,474.4219 1134.8594,473.8047 Q1135.9531,473.1875 1137.1875,473.1875 Q1137.9219,473.1875 1138.5703,473.3516 Q1139.2188,473.5156 1139.7656,473.875 Z "
+         fill="#000000"
+         id="path58" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="170"
+         x="1151"
+         y="483.7285"
+         id="text58">CreatedCarnivalBlockState</text>
+    </g>
+    <!--class InvitedCarnivalBlockState-->
+    <g
+       id="elem_InvitedCarnivalBlockState">
+      <rect
+         codeLine="198"
+         fill="#F1F1F1"
+         height="32"
+         id="InvitedCarnivalBlockState"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="192"
+         x="1334"
+         y="462" />
+      <ellipse
+         cx="1349"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse58" />
+      <path
+         d="M1351.7656,473.875 Q1351.9219,473.6563 1352.1094,473.5469 Q1352.2969,473.4375 1352.5156,473.4375 Q1352.8906,473.4375 1353.125,473.6953 Q1353.3594,473.9531 1353.3594,474.5625 L1353.3594,476.0156 Q1353.3594,476.625 1353.125,476.8906 Q1352.8906,477.1563 1352.5156,477.1563 Q1352.1719,477.1563 1351.9688,476.9531 Q1351.7656,476.7656 1351.6563,476.25 Q1351.6094,475.8906 1351.4219,475.7031 Q1351.0938,475.3281 1350.4844,475.1094 Q1349.875,474.8906 1349.25,474.8906 Q1348.4844,474.8906 1347.8516,475.2188 Q1347.2188,475.5469 1346.7266,476.2969 Q1346.2344,477.0469 1346.2344,478.0781 L1346.2344,479.1719 Q1346.2344,480.4063 1347.125,481.2266 Q1348.0156,482.0469 1349.6094,482.0469 Q1350.5469,482.0469 1351.2031,481.7969 Q1351.5938,481.6406 1352.0156,481.2031 Q1352.2813,480.9375 1352.4297,480.8594 Q1352.5781,480.7813 1352.7813,480.7813 Q1353.1094,480.7813 1353.3672,481.0391 Q1353.625,481.2969 1353.625,481.6406 Q1353.625,481.9844 1353.2813,482.3906 Q1352.7813,482.9688 1351.9844,483.2969 Q1350.9063,483.75 1349.6094,483.75 Q1348.0938,483.75 1346.8906,483.125 Q1345.9063,482.625 1345.2188,481.5547 Q1344.5313,480.4844 1344.5313,479.2031 L1344.5313,478.0469 Q1344.5313,476.7188 1345.1484,475.5703 Q1345.7656,474.4219 1346.8594,473.8047 Q1347.9531,473.1875 1349.1875,473.1875 Q1349.9219,473.1875 1350.5703,473.3516 Q1351.2188,473.5156 1351.7656,473.875 Z "
+         fill="#000000"
+         id="path59" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="160"
+         x="1363"
+         y="483.7285"
+         id="text59">InvitedCarnivalBlockState</text>
+    </g>
+    <!--class UpdatedCarnivalBlockState-->
+    <g
+       id="elem_UpdatedCarnivalBlockState">
+      <rect
+         codeLine="204"
+         fill="#F1F1F1"
+         height="32"
+         id="UpdatedCarnivalBlockState"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="204"
+         x="1536"
+         y="462" />
+      <ellipse
+         cx="1551"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse59" />
+      <path
+         d="M1553.7656,473.875 Q1553.9219,473.6563 1554.1094,473.5469 Q1554.2969,473.4375 1554.5156,473.4375 Q1554.8906,473.4375 1555.125,473.6953 Q1555.3594,473.9531 1555.3594,474.5625 L1555.3594,476.0156 Q1555.3594,476.625 1555.125,476.8906 Q1554.8906,477.1563 1554.5156,477.1563 Q1554.1719,477.1563 1553.9688,476.9531 Q1553.7656,476.7656 1553.6563,476.25 Q1553.6094,475.8906 1553.4219,475.7031 Q1553.0938,475.3281 1552.4844,475.1094 Q1551.875,474.8906 1551.25,474.8906 Q1550.4844,474.8906 1549.8516,475.2188 Q1549.2188,475.5469 1548.7266,476.2969 Q1548.2344,477.0469 1548.2344,478.0781 L1548.2344,479.1719 Q1548.2344,480.4063 1549.125,481.2266 Q1550.0156,482.0469 1551.6094,482.0469 Q1552.5469,482.0469 1553.2031,481.7969 Q1553.5938,481.6406 1554.0156,481.2031 Q1554.2813,480.9375 1554.4297,480.8594 Q1554.5781,480.7813 1554.7813,480.7813 Q1555.1094,480.7813 1555.3672,481.0391 Q1555.625,481.2969 1555.625,481.6406 Q1555.625,481.9844 1555.2813,482.3906 Q1554.7813,482.9688 1553.9844,483.2969 Q1552.9063,483.75 1551.6094,483.75 Q1550.0938,483.75 1548.8906,483.125 Q1547.9063,482.625 1547.2188,481.5547 Q1546.5313,480.4844 1546.5313,479.2031 L1546.5313,478.0469 Q1546.5313,476.7188 1547.1484,475.5703 Q1547.7656,474.4219 1548.8594,473.8047 Q1549.9531,473.1875 1551.1875,473.1875 Q1551.9219,473.1875 1552.5703,473.3516 Q1553.2188,473.5156 1553.7656,473.875 Z "
+         fill="#000000"
+         id="path60" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="172"
+         x="1565"
+         y="483.7285"
+         id="text60">UpdatedCarnivalBlockState</text>
+    </g>
+    <!--class FailedCarnivalBlockState-->
+    <g
+       id="elem_FailedCarnivalBlockState">
+      <rect
+         codeLine="211"
+         fill="#F1F1F1"
+         height="32"
+         id="FailedCarnivalBlockState"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="190"
+         x="1750"
+         y="462" />
+      <ellipse
+         cx="1765"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse60" />
+      <path
+         d="M1767.7656,473.875 Q1767.9219,473.6563 1768.1094,473.5469 Q1768.2969,473.4375 1768.5156,473.4375 Q1768.8906,473.4375 1769.125,473.6953 Q1769.3594,473.9531 1769.3594,474.5625 L1769.3594,476.0156 Q1769.3594,476.625 1769.125,476.8906 Q1768.8906,477.1563 1768.5156,477.1563 Q1768.1719,477.1563 1767.9688,476.9531 Q1767.7656,476.7656 1767.6563,476.25 Q1767.6094,475.8906 1767.4219,475.7031 Q1767.0938,475.3281 1766.4844,475.1094 Q1765.875,474.8906 1765.25,474.8906 Q1764.4844,474.8906 1763.8516,475.2188 Q1763.2188,475.5469 1762.7266,476.2969 Q1762.2344,477.0469 1762.2344,478.0781 L1762.2344,479.1719 Q1762.2344,480.4063 1763.125,481.2266 Q1764.0156,482.0469 1765.6094,482.0469 Q1766.5469,482.0469 1767.2031,481.7969 Q1767.5938,481.6406 1768.0156,481.2031 Q1768.2813,480.9375 1768.4297,480.8594 Q1768.5781,480.7813 1768.7813,480.7813 Q1769.1094,480.7813 1769.3672,481.0391 Q1769.625,481.2969 1769.625,481.6406 Q1769.625,481.9844 1769.2813,482.3906 Q1768.7813,482.9688 1767.9844,483.2969 Q1766.9063,483.75 1765.6094,483.75 Q1764.0938,483.75 1762.8906,483.125 Q1761.9063,482.625 1761.2188,481.5547 Q1760.5313,480.4844 1760.5313,479.2031 L1760.5313,478.0469 Q1760.5313,476.7188 1761.1484,475.5703 Q1761.7656,474.4219 1762.8594,473.8047 Q1763.9531,473.1875 1765.1875,473.1875 Q1765.9219,473.1875 1766.5703,473.3516 Q1767.2188,473.5156 1767.7656,473.875 Z "
+         fill="#000000"
+         id="path61" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="158"
+         x="1779"
+         y="483.7285"
+         id="text61">FailedCarnivalBlockState</text>
+    </g>
+    <!--class DeletedCarnivalBlockState-->
+    <g
+       id="elem_DeletedCarnivalBlockState">
+      <rect
+         codeLine="217"
+         fill="#F1F1F1"
+         height="32"
+         id="DeletedCarnivalBlockState"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="200"
+         x="1950"
+         y="462" />
+      <ellipse
+         cx="1965"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse61" />
+      <path
+         d="M1967.7656,473.875 Q1967.9219,473.6563 1968.1094,473.5469 Q1968.2969,473.4375 1968.5156,473.4375 Q1968.8906,473.4375 1969.125,473.6953 Q1969.3594,473.9531 1969.3594,474.5625 L1969.3594,476.0156 Q1969.3594,476.625 1969.125,476.8906 Q1968.8906,477.1563 1968.5156,477.1563 Q1968.1719,477.1563 1967.9688,476.9531 Q1967.7656,476.7656 1967.6563,476.25 Q1967.6094,475.8906 1967.4219,475.7031 Q1967.0938,475.3281 1966.4844,475.1094 Q1965.875,474.8906 1965.25,474.8906 Q1964.4844,474.8906 1963.8516,475.2188 Q1963.2188,475.5469 1962.7266,476.2969 Q1962.2344,477.0469 1962.2344,478.0781 L1962.2344,479.1719 Q1962.2344,480.4063 1963.125,481.2266 Q1964.0156,482.0469 1965.6094,482.0469 Q1966.5469,482.0469 1967.2031,481.7969 Q1967.5938,481.6406 1968.0156,481.2031 Q1968.2813,480.9375 1968.4297,480.8594 Q1968.5781,480.7813 1968.7813,480.7813 Q1969.1094,480.7813 1969.3672,481.0391 Q1969.625,481.2969 1969.625,481.6406 Q1969.625,481.9844 1969.2813,482.3906 Q1968.7813,482.9688 1967.9844,483.2969 Q1966.9063,483.75 1965.6094,483.75 Q1964.0938,483.75 1962.8906,483.125 Q1961.9063,482.625 1961.2188,481.5547 Q1960.5313,480.4844 1960.5313,479.2031 L1960.5313,478.0469 Q1960.5313,476.7188 1961.1484,475.5703 Q1961.7656,474.4219 1962.8594,473.8047 Q1963.9531,473.1875 1965.1875,473.1875 Q1965.9219,473.1875 1966.5703,473.3516 Q1967.2188,473.5156 1967.7656,473.875 Z "
+         fill="#000000"
+         id="path62" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="168"
+         x="1979"
+         y="483.7285"
+         id="text62">DeletedCarnivalBlockState</text>
+    </g>
+    <!--class LoadedCarnivalBlockState-->
+    <g
+       id="elem_LoadedCarnivalBlockState">
+      <rect
+         codeLine="222"
+         fill="#F1F1F1"
+         height="32"
+         id="LoadedCarnivalBlockState"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="199"
+         x="2160.5"
+         y="462" />
+      <ellipse
+         cx="2175.5"
+         cy="478"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse62" />
+      <path
+         d="M2178.2656,473.875 Q2178.4219,473.6563 2178.6094,473.5469 Q2178.7969,473.4375 2179.0156,473.4375 Q2179.3906,473.4375 2179.625,473.6953 Q2179.8594,473.9531 2179.8594,474.5625 L2179.8594,476.0156 Q2179.8594,476.625 2179.625,476.8906 Q2179.3906,477.1563 2179.0156,477.1563 Q2178.6719,477.1563 2178.4688,476.9531 Q2178.2656,476.7656 2178.1563,476.25 Q2178.1094,475.8906 2177.9219,475.7031 Q2177.5938,475.3281 2176.9844,475.1094 Q2176.375,474.8906 2175.75,474.8906 Q2174.9844,474.8906 2174.3516,475.2188 Q2173.7188,475.5469 2173.2266,476.2969 Q2172.7344,477.0469 2172.7344,478.0781 L2172.7344,479.1719 Q2172.7344,480.4063 2173.625,481.2266 Q2174.5156,482.0469 2176.1094,482.0469 Q2177.0469,482.0469 2177.7031,481.7969 Q2178.0938,481.6406 2178.5156,481.2031 Q2178.7813,480.9375 2178.9297,480.8594 Q2179.0781,480.7813 2179.2813,480.7813 Q2179.6094,480.7813 2179.8672,481.0391 Q2180.125,481.2969 2180.125,481.6406 Q2180.125,481.9844 2179.7813,482.3906 Q2179.2813,482.9688 2178.4844,483.2969 Q2177.4063,483.75 2176.1094,483.75 Q2174.5938,483.75 2173.3906,483.125 Q2172.4063,482.625 2171.7188,481.5547 Q2171.0313,480.4844 2171.0313,479.2031 L2171.0313,478.0469 Q2171.0313,476.7188 2171.6484,475.5703 Q2172.2656,474.4219 2173.3594,473.8047 Q2174.4531,473.1875 2175.6875,473.1875 Q2176.4219,473.1875 2177.0703,473.3516 Q2177.7188,473.5156 2178.2656,473.875 Z "
+         fill="#000000"
+         id="path63" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="167"
+         x="2189.5"
+         y="483.7285"
+         id="text63">LoadedCarnivalBlockState</text>
+    </g>
+    <!--class CreateBlockPage-->
+    <g
+       id="g95"
+       transform="translate(-10.392897,-46.61057)">
+      <g
+         id="elem_CreateBlockPage"
+         transform="translate(-1.2597451,116.84136)">
+        <rect
+           codeLine="229"
+           fill="#f1f1f1"
+           height="32"
+           id="CreateBlockPage"
+           rx="2.5"
+           ry="2.5"
+           style="stroke:#181818;stroke-width:0.5"
+           width="142"
+           x="530"
+           y="218" />
+        <circle
+           cx="545"
+           cy="234"
+           fill="#add1b2"
+           style="stroke:#181818;stroke-width:1"
+           id="ellipse63"
+           r="11" />
+        <path
+           d="m 547.7656,229.875 q 0.1563,-0.2187 0.3438,-0.3281 0.1875,-0.1094 0.4062,-0.1094 0.375,0 0.6094,0.2578 0.2344,0.2578 0.2344,0.8672 v 1.4531 q 0,0.6094 -0.2344,0.875 -0.2344,0.2657 -0.6094,0.2657 -0.3437,0 -0.5468,-0.2032 -0.2032,-0.1875 -0.3125,-0.7031 -0.0469,-0.3594 -0.2344,-0.5469 -0.3281,-0.375 -0.9375,-0.5937 -0.6094,-0.2188 -1.2344,-0.2188 -0.7656,0 -1.3984,0.3282 -0.6328,0.3281 -1.125,1.0781 -0.4922,0.75 -0.4922,1.7812 v 1.0938 q 0,1.2344 0.8906,2.0547 0.8906,0.8203 2.4844,0.8203 0.9375,0 1.5937,-0.25 0.3907,-0.1563 0.8125,-0.5938 0.2657,-0.2656 0.4141,-0.3437 0.1484,-0.0781 0.3516,-0.0781 0.3281,0 0.5859,0.2578 0.2578,0.2578 0.2578,0.6015 0,0.3438 -0.3437,0.75 -0.5,0.5782 -1.2969,0.9063 -1.0781,0.4531 -2.375,0.4531 -1.5156,0 -2.7188,-0.625 -0.9843,-0.5 -1.6718,-1.5703 -0.6875,-1.0703 -0.6875,-2.3516 v -1.1562 q 0,-1.3281 0.6171,-2.4766 0.6172,-1.1484 1.711,-1.7656 1.0937,-0.6172 2.3281,-0.6172 0.7344,0 1.3828,0.1641 0.6485,0.164 1.1953,0.5234 z"
+           fill="#000000"
+           id="path64" />
+        <text
+           fill="#000000"
+           font-family="'Fira Code Retina'"
+           font-size="14px"
+           lengthAdjust="spacing"
+           textLength="110"
+           x="559"
+           y="239.7285"
+           id="text64">CreateBlockPage</text>
+      </g>
+    </g>
+    <!--class JoinBlockPage-->
+    <g
+       id="elem_JoinBlockPage"
+       transform="translate(-162.19219,-6.6136618)">
+      <rect
+         codeLine="233"
+         fill="#f1f1f1"
+         height="32"
+         id="JoinBlockPage"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5"
+         width="124"
+         x="682"
+         y="218" />
+      <circle
+         cx="697"
+         cy="234"
+         fill="#add1b2"
+         style="stroke:#181818;stroke-width:1"
+         id="ellipse64"
+         r="11" />
+      <path
+         d="m 699.7656,229.875 q 0.1563,-0.2187 0.3438,-0.3281 0.1875,-0.1094 0.4062,-0.1094 0.375,0 0.6094,0.2578 0.2344,0.2578 0.2344,0.8672 v 1.4531 q 0,0.6094 -0.2344,0.875 -0.2344,0.2657 -0.6094,0.2657 -0.3437,0 -0.5468,-0.2032 -0.2032,-0.1875 -0.3125,-0.7031 -0.0469,-0.3594 -0.2344,-0.5469 -0.3281,-0.375 -0.9375,-0.5937 -0.6094,-0.2188 -1.2344,-0.2188 -0.7656,0 -1.3984,0.3282 -0.6328,0.3281 -1.125,1.0781 -0.4922,0.75 -0.4922,1.7812 v 1.0938 q 0,1.2344 0.8906,2.0547 0.8906,0.8203 2.4844,0.8203 0.9375,0 1.5937,-0.25 0.3907,-0.1563 0.8125,-0.5938 0.2657,-0.2656 0.4141,-0.3437 0.1484,-0.0781 0.3516,-0.0781 0.3281,0 0.5859,0.2578 0.2578,0.2578 0.2578,0.6015 0,0.3438 -0.3437,0.75 -0.5,0.5782 -1.2969,0.9063 -1.0781,0.4531 -2.375,0.4531 -1.5156,0 -2.7188,-0.625 -0.9843,-0.5 -1.6718,-1.5703 -0.6875,-1.0703 -0.6875,-2.3516 v -1.1562 q 0,-1.3281 0.6171,-2.4766 0.6172,-1.1484 1.711,-1.7656 1.0937,-0.6172 2.3281,-0.6172 0.7344,0 1.3828,0.1641 0.6485,0.164 1.1953,0.5234 z"
+         fill="#000000"
+         id="path65" />
+      <text
+         fill="#000000"
+         font-family="'Fira Code Retina'"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="92"
+         x="711"
+         y="239.7285"
+         id="text65">JoinBlockPage</text>
+    </g>
+    <!--class ViewBlockPage-->
+    <g
+       id="elem_ViewBlockPage"
+       transform="translate(-10.392897,-46.61057)">
+      <rect
+         codeLine="237"
+         fill="#f1f1f1"
+         height="32"
+         id="ViewBlockPage"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5"
+         width="128"
+         x="529.12659"
+         y="297.60327" />
+      <circle
+         cx="544.12659"
+         cy="313.60327"
+         fill="#add1b2"
+         style="stroke:#181818;stroke-width:1"
+         id="ellipse65"
+         r="11" />
+      <path
+         d="m 546.89219,309.47826 q 0.1563,-0.2187 0.3438,-0.3281 0.1875,-0.1094 0.4062,-0.1094 0.375,0 0.6094,0.2578 0.2344,0.2578 0.2344,0.8672 v 1.4531 q 0,0.6094 -0.2344,0.875 -0.2344,0.2657 -0.6094,0.2657 -0.3437,0 -0.5468,-0.2032 -0.2032,-0.1875 -0.3125,-0.7031 -0.0469,-0.3594 -0.2344,-0.5469 -0.3281,-0.375 -0.9375,-0.5937 -0.6094,-0.2188 -1.2344,-0.2188 -0.7656,0 -1.3984,0.3282 -0.6328,0.3281 -1.125,1.0781 -0.4922,0.75 -0.4922,1.7812 v 1.0938 q 0,1.2344 0.8906,2.0547 0.8906,0.8203 2.4844,0.8203 0.9375,0 1.5937,-0.25 0.3907,-0.1563 0.8125,-0.5938 0.2657,-0.2656 0.4141,-0.3437 0.1484,-0.0781 0.3516,-0.0781 0.3281,0 0.5859,0.2578 0.2578,0.2578 0.2578,0.6015 0,0.3438 -0.3437,0.75 -0.5,0.5782 -1.2969,0.9063 -1.0781,0.4531 -2.375,0.4531 -1.5156,0 -2.7188,-0.625 -0.9843,-0.5 -1.6718,-1.5703 -0.6875,-1.0703 -0.6875,-2.3516 v -1.1562 q 0,-1.3281 0.6171,-2.4766 0.6172,-1.1484 1.711,-1.7656 1.0937,-0.6172 2.3281,-0.6172 0.7344,0 1.3828,0.1641 0.6485,0.164 1.1953,0.5234 z"
+         fill="#000000"
+         id="path66" />
+      <text
+         fill="#000000"
+         font-family="'Fira Code Retina'"
+         font-size="14px"
+         lengthAdjust="spacing"
+         textLength="96"
+         x="566"
+         y="483.72849"
+         id="text66"
+         transform="translate(-7.8734071,-164.39674)">ViewBlockPage</text>
+    </g>
+    <!--class HomePage-->
+    <g
+       id="elem_HomePage">
+      <rect
+         codeLine="241"
+         fill="#F1F1F1"
+         height="32"
+         id="HomePage"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="101"
+         x="276.5"
+         y="218" />
+      <ellipse
+         cx="291.5"
+         cy="234"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse66" />
+      <path
+         d="M294.2656,229.875 Q294.4219,229.6563 294.6094,229.5469 Q294.7969,229.4375 295.0156,229.4375 Q295.3906,229.4375 295.625,229.6953 Q295.8594,229.9531 295.8594,230.5625 L295.8594,232.0156 Q295.8594,232.625 295.625,232.8906 Q295.3906,233.1563 295.0156,233.1563 Q294.6719,233.1563 294.4688,232.9531 Q294.2656,232.7656 294.1563,232.25 Q294.1094,231.8906 293.9219,231.7031 Q293.5938,231.3281 292.9844,231.1094 Q292.375,230.8906 291.75,230.8906 Q290.9844,230.8906 290.3516,231.2188 Q289.7188,231.5469 289.2266,232.2969 Q288.7344,233.0469 288.7344,234.0781 L288.7344,235.1719 Q288.7344,236.4063 289.625,237.2266 Q290.5156,238.0469 292.1094,238.0469 Q293.0469,238.0469 293.7031,237.7969 Q294.0938,237.6406 294.5156,237.2031 Q294.7813,236.9375 294.9297,236.8594 Q295.0781,236.7813 295.2813,236.7813 Q295.6094,236.7813 295.8672,237.0391 Q296.125,237.2969 296.125,237.6406 Q296.125,237.9844 295.7813,238.3906 Q295.2813,238.9688 294.4844,239.2969 Q293.4063,239.75 292.1094,239.75 Q290.5938,239.75 289.3906,239.125 Q288.4063,238.625 287.7188,237.5547 Q287.0313,236.4844 287.0313,235.2031 L287.0313,234.0469 Q287.0313,232.7188 287.6484,231.5703 Q288.2656,230.4219 289.3594,229.8047 Q290.4531,229.1875 291.6875,229.1875 Q292.4219,229.1875 293.0703,229.3516 Q293.7188,229.5156 294.2656,229.875 Z "
+         fill="#000000"
+         id="path67" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="69"
+         x="305.5"
+         y="239.7285"
+         id="text67">HomePage</text>
+    </g>
+    <!--class AppWidget-->
+    <g
+       id="elem_AppWidget">
+      <rect
+         codeLine="245"
+         fill="#F1F1F1"
+         height="32"
+         id="AppWidget"
+         rx="2.5"
+         ry="2.5"
+         style="stroke:#181818;stroke-width:0.5;"
+         width="101"
+         x="118.5"
+         y="218" />
+      <ellipse
+         cx="133.5"
+         cy="234"
+         fill="#ADD1B2"
+         rx="11"
+         ry="11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="ellipse67" />
+      <path
+         d="M136.2656,229.875 Q136.4219,229.6563 136.6094,229.5469 Q136.7969,229.4375 137.0156,229.4375 Q137.3906,229.4375 137.625,229.6953 Q137.8594,229.9531 137.8594,230.5625 L137.8594,232.0156 Q137.8594,232.625 137.625,232.8906 Q137.3906,233.1563 137.0156,233.1563 Q136.6719,233.1563 136.4688,232.9531 Q136.2656,232.7656 136.1563,232.25 Q136.1094,231.8906 135.9219,231.7031 Q135.5938,231.3281 134.9844,231.1094 Q134.375,230.8906 133.75,230.8906 Q132.9844,230.8906 132.3516,231.2188 Q131.7188,231.5469 131.2266,232.2969 Q130.7344,233.0469 130.7344,234.0781 L130.7344,235.1719 Q130.7344,236.4063 131.625,237.2266 Q132.5156,238.0469 134.1094,238.0469 Q135.0469,238.0469 135.7031,237.7969 Q136.0938,237.6406 136.5156,237.2031 Q136.7813,236.9375 136.9297,236.8594 Q137.0781,236.7813 137.2813,236.7813 Q137.6094,236.7813 137.8672,237.0391 Q138.125,237.2969 138.125,237.6406 Q138.125,237.9844 137.7813,238.3906 Q137.2813,238.9688 136.4844,239.2969 Q135.4063,239.75 134.1094,239.75 Q132.5938,239.75 131.3906,239.125 Q130.4063,238.625 129.7188,237.5547 Q129.0313,236.4844 129.0313,235.2031 L129.0313,234.0469 Q129.0313,232.7188 129.6484,231.5703 Q130.2656,230.4219 131.3594,229.8047 Q132.4531,229.1875 133.6875,229.1875 Q134.4219,229.1875 135.0703,229.3516 Q135.7188,229.5156 136.2656,229.875 Z "
+         fill="#000000"
+         id="path68" />
+      <text
+         fill="#000000"
+         font-family="Fira Code Retina"
+         font-size="14"
+         lengthAdjust="spacing"
+         textLength="69"
+         x="147.5"
+         y="239.7285"
+         id="text68">AppWidget</text>
+    </g>
+    <!--reverse link IAuthService to FirebaseAuthService-->
+    <g
+       id="link_IAuthService_FirebaseAuthService">
+      <path
+         codeLine="20"
+         d="M6138.8679,262.8679 C6182.3279,306.3279 6294.41,418.41 6337.87,461.87 "
+         fill="none"
+         id="IAuthService-backto-FirebaseAuthService"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="6126.14,250.14,6134.6253,267.1106,6143.1106,258.6253,6126.14,250.14"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon68" />
+    </g>
+    <!--reverse link AuthEvent to LoginAuthEvent-->
+    <g
+       id="link_AuthEvent_LoginAuthEvent">
+      <path
+         codeLine="39"
+         d="M5608.3202,256.7268 C5570.3002,271.8868 5532.12,291.85 5496,330 C5458.39,369.72 5437.14,433.1 5428.95,461.89 "
+         fill="none"
+         id="AuthEvent-backto-LoginAuthEvent"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="5625.04,250.06,5606.0979,251.1535,5610.5424,262.3001,5625.04,250.06"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon69" />
+    </g>
+    <!--reverse link AuthEvent to CreateUserAuthEvent-->
+    <g
+       id="link_AuthEvent_CreateUserAuthEvent">
+      <path
+         codeLine="48"
+         d="M5657.0921,267.1874 C5642.3621,310.6474 5605.85,418.41 5591.13,461.87 "
+         fill="none"
+         id="AuthEvent-backto-CreateUserAuthEvent"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="5662.87,250.14,5651.4096,265.2615,5662.7746,269.1134,5662.87,250.14"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon70" />
+    </g>
+    <!--reverse link AuthEvent to LogoutAuthEvent-->
+    <g
+       id="link_AuthEvent_LogoutAuthEvent">
+      <path
+         codeLine="53"
+         d="M5679.0311,267.1659 C5693.9411,310.6259 5730.91,418.41 5745.81,461.87 "
+         fill="none"
+         id="AuthEvent-backto-LogoutAuthEvent"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="5673.19,250.14,5673.3558,269.1129,5684.7064,265.2188,5673.19,250.14"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon71" />
+    </g>
+    <!--reverse link DeleteUserAuthEvent to UserEntity-->
+    <g
+       id="link_DeleteUserAuthEvent_UserEntity">
+      <path
+         codeLine="59"
+         d="M5897.0962,503.7571 C5882.0762,523.7671 5859.95,548.86 5826,566 C5762.69,597.95 5555.71,620.14 5461.04,628.87 "
+         fill="none"
+         id="DeleteUserAuthEvent-backto-UserEntity"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="5904.3,494.16,5897.499,496.5573,5897.0962,503.7571,5903.8971,501.3598,5904.3,494.16"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon72" />
+    </g>
+    <!--reverse link AuthEvent to DeleteUserAuthEvent-->
+    <g
+       id="link_AuthEvent_DeleteUserAuthEvent">
+      <path
+         codeLine="60"
+         d="M5719.6592,257.7051 C5754.0592,273.7151 5789.96,294.07 5826,330 C5866.57,370.44 5896.35,432.91 5908.7,461.61 "
+         fill="none"
+         id="AuthEvent-backto-DeleteUserAuthEvent"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="5703.34,250.11,5717.1275,263.1448,5722.1908,252.2653,5703.34,250.11"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon73" />
+    </g>
+    <!--reverse link LoggedAuthState to UserEntity-->
+    <g
+       id="link_LoggedAuthState_UserEntity">
+      <path
+         codeLine="77"
+         d="M4926.8123,504.4286 C4939.0123,524.4586 4957.1,548.94 4988,566 C5052.16,601.43 5267.71,621.91 5364.84,629.54 "
+         fill="none"
+         id="LoggedAuthState-backto-UserEntity"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="4920.57,494.18,4920.2749,501.3851,4926.8123,504.4286,4927.1073,497.2235,4920.57,494.18"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon74" />
+    </g>
+    <!--reverse link AuthState to LoggedAuthState-->
+    <g
+       id="link_AuthState_LoggedAuthState">
+      <path
+         codeLine="78"
+         d="M5042.3418,263.1443 C5024.8918,281.1743 5008.5,299.68 4988,330 C4957.42,375.22 4930.37,434.29 4918.45,461.74 "
+         fill="none"
+         id="AuthState-backto-LoggedAuthState"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="5054.86,250.21,5038.0304,258.9715,5046.6532,267.317,5054.86,250.21"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon75" />
+    </g>
+    <!--reverse link AuthState to LogoutedAuthState-->
+    <g
+       id="link_AuthState_LogoutedAuthState">
+      <path
+         codeLine="83"
+         d="M5070,268.14 C5070,311.6 5070,418.41 5070,461.87 "
+         fill="none"
+         id="AuthState-backto-LogoutedAuthState"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="5070,250.14,5064,268.14,5076,268.14,5070,250.14"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon76" />
+    </g>
+    <!--reverse link AuthState to LoadingAuthState-->
+    <g
+       id="link_AuthState_LoadingAuthState">
+      <path
+         codeLine="88"
+         d="M5097.5653,263.216 C5114.9653,281.286 5131.33,299.79 5152,330 C5182.99,375.31 5210.95,434.33 5223.3,461.76 "
+         fill="none"
+         id="AuthState-backto-LoadingAuthState"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="5085.08,250.25,5093.2433,267.3778,5101.8873,259.0543,5085.08,250.25"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon77" />
+    </g>
+    <!--reverse link ICarnivalBlockRepository to FirestoreCarnivalBlockRepository-->
+    <g
+       id="link_ICarnivalBlockRepository_FirestoreCarnivalBlockRepository">
+      <path
+         codeLine="122"
+         d="M3584.5345,261.5098 C3637.8745,304.9698 3777.1,418.41 3830.43,461.87 "
+         fill="none"
+         id="ICarnivalBlockRepository-backto-FirestoreCarnivalBlockRepository"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="3570.58,250.14,3580.7446,266.1613,3588.3244,256.8583,3570.58,250.14"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon78" />
+    </g>
+    <!--reverse link CarnivalBlockEvent to LoadCarnivalBlockEvent-->
+    <g
+       id="link_CarnivalBlockEvent_LoadCarnivalBlockEvent">
+      <path
+         codeLine="142"
+         d="M2804.0948,249.1216 C2741.1448,261.0516 2670.3,282.01 2607,330 C2559.58,365.95 2527.75,431.83 2515.12,461.64 "
+         fill="none"
+         id="CarnivalBlockEvent-backto-LoadCarnivalBlockEvent"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="2821.78,245.77,2802.9776,243.2266,2805.212,255.0167,2821.78,245.77"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon79" />
+    </g>
+    <!--reverse link InviteCarnivalBlockEvent to CarnivalBlockEntity-->
+    <g
+       id="link_InviteCarnivalBlockEvent_CarnivalBlockEntity">
+      <path
+         codeLine="148"
+         d="M2685.9329,503.3117 C2668.8029,523.3517 2643.49,548.96 2607,566 C2544.86,595.02 2356,616.28 2248.67,626.4 "
+         fill="none"
+         id="InviteCarnivalBlockEvent-backto-CarnivalBlockEntity"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="2693.73,494.19,2686.7909,496.1518,2685.9329,503.3117,2692.872,501.3499,2693.73,494.19"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon80" />
+    </g>
+    <!--reverse link CarnivalBlockEvent to InviteCarnivalBlockEvent-->
+    <g
+       id="link_CarnivalBlockEvent_InviteCarnivalBlockEvent">
+      <path
+         codeLine="149"
+         d="M2868.5229,262.3191 C2848.6629,280.3491 2828.84,299.7 2804,330 C2767.05,375.07 2730.97,434.21 2714.82,461.71 "
+         fill="none"
+         id="CarnivalBlockEvent-backto-InviteCarnivalBlockEvent"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="2881.85,250.22,2864.4899,257.8767,2872.5559,266.7615,2881.85,250.22"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon81" />
+    </g>
+    <!--reverse link CarnivalBlockEvent to JoinCarnivalBlockEvent-->
+    <g
+       id="link_CarnivalBlockEvent_JoinCarnivalBlockEvent">
+      <path
+         codeLine="156"
+         d="M2899,268.14 C2899,311.6 2899,418.41 2899,461.87 "
+         fill="none"
+         id="CarnivalBlockEvent-backto-JoinCarnivalBlockEvent"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="2899,250.14,2893,268.14,2905,268.14,2899,250.14"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon82" />
+    </g>
+    <!--reverse link CarnivalBlockEvent to CreateCarnivalBlockEvent-->
+    <g
+       id="link_CarnivalBlockEvent_CreateCarnivalBlockEvent">
+      <path
+         codeLine="164"
+         d="M2928.6269,262.3233 C2948.0769,280.4533 2967.8,299.96 2993,330 C3031.17,375.51 3069.97,434.44 3087.44,461.8 "
+         fill="none"
+         id="CarnivalBlockEvent-backto-CreateCarnivalBlockEvent"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="2915.46,250.05,2924.5358,266.7122,2932.718,257.9343,2915.46,250.05"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon83" />
+    </g>
+    <!--reverse link DeleteCarnivalBlockEvent to CarnivalBlockEntity-->
+    <g
+       id="link_DeleteCarnivalBlockEvent_CarnivalBlockEntity">
+      <path
+         codeLine="171"
+         d="M3282.7845,503.4173 C3265.1245,523.9473 3238.43,550.51 3200,566 C3112.6,601.24 2472.4,623.86 2248.81,630.76 "
+         fill="none"
+         id="DeleteCarnivalBlockEvent-backto-CarnivalBlockEntity"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="3290.61,494.32,3283.6648,496.2601,3282.7845,503.4173,3289.7297,501.4772,3290.61,494.32"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon84" />
+    </g>
+    <!--reverse link CarnivalBlockEvent to DeleteCarnivalBlockEvent-->
+    <g
+       id="link_CarnivalBlockEvent_DeleteCarnivalBlockEvent">
+      <path
+         codeLine="172"
+         d="M2993.7343,248.3942 C3058.5643,260.0842 3133.38,281.15 3200,330 C3248.75,365.75 3282.77,431.73 3296.38,461.6 "
+         fill="none"
+         id="CarnivalBlockEvent-backto-DeleteCarnivalBlockEvent"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="2976.02,245.2,2992.6696,254.299,2994.7991,242.4894,2976.02,245.2"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon85" />
+    </g>
+    <!--reverse link CarnivalBlockState to LoadingCarnivalBlockState-->
+    <g
+       id="link_CarnivalBlockState_LoadingCarnivalBlockState">
+      <path
+         codeLine="189"
+         d="M1544.5576,243.5842 C1418.5576,256.0642 1190.03,283.89 1117,330 C1064.86,362.93 1030.42,431.6 1017.15,461.99 "
+         fill="none"
+         id="CarnivalBlockState-backto-LoadingCarnivalBlockState"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="1562.47,241.81,1543.9663,237.6134,1545.149,249.555,1562.47,241.81"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon86" />
+    </g>
+    <!--reverse link CreatedCarnivalBlockState to CarnivalBlockEntity-->
+    <g
+       id="link_CreatedCarnivalBlockState_CarnivalBlockEntity">
+      <path
+         codeLine="195"
+         d="M1243.8992,503.176 C1262.2192,523.616 1289.92,550.24 1329,566 C1466.95,621.63 1914.65,631.17 2095.33,632.73 "
+         fill="none"
+         id="CreatedCarnivalBlockState-backto-CarnivalBlockEntity"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="1235.89,494.24,1236.9159,501.3778,1243.8992,503.176,1242.8733,496.0383,1235.89,494.24"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon87" />
+    </g>
+    <!--reverse link CarnivalBlockState to CreatedCarnivalBlockState-->
+    <g
+       id="link_CarnivalBlockState_CreatedCarnivalBlockState">
+      <path
+         codeLine="196"
+         d="M1544.6548,247.418 C1478.0948,258.738 1398.89,279.87 1329,330 C1279.4,365.57 1244.1,431.65 1229.91,461.57 "
+         fill="none"
+         id="CarnivalBlockState-backto-CreatedCarnivalBlockState"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="1562.4,244.4,1543.6488,241.5029,1545.6608,253.333,1562.4,244.4"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon88" />
+    </g>
+    <!--reverse link CarnivalBlockState to InvitedCarnivalBlockState-->
+    <g
+       id="link_CarnivalBlockState_InvitedCarnivalBlockState">
+      <path
+         codeLine="202"
+         d="M1604.0163,261.3363 C1581.4963,279.0963 1558.46,298.9 1531,330 C1491.85,374.33 1454.9,434.34 1438.66,461.96 "
+         fill="none"
+         id="CarnivalBlockState-backto-InvitedCarnivalBlockState"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="1618.15,250.19,1600.3009,256.625,1607.7318,266.0475,1618.15,250.19"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon89" />
+    </g>
+    <!--reverse link UpdatedCarnivalBlockState to CarnivalBlockEntity-->
+    <g
+       id="link_UpdatedCarnivalBlockState_CarnivalBlockEntity">
+      <path
+         codeLine="208"
+         d="M1659.7637,502.889 C1678.5937,522.899 1706.51,548.85 1745,566 C1859.81,617.15 2007.18,630.05 2095.35,632.86 "
+         fill="none"
+         id="UpdatedCarnivalBlockState-backto-CarnivalBlockEntity"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="1651.54,494.15,1652.7388,501.2608,1659.7637,502.889,1658.5649,495.7783,1651.54,494.15"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon90" />
+    </g>
+    <!--reverse link CarnivalBlockState to UpdatedCarnivalBlockState-->
+    <g
+       id="link_CarnivalBlockState_UpdatedCarnivalBlockState">
+      <path
+         codeLine="209"
+         d="M1638,268.14 C1638,311.6 1638,418.41 1638,461.87 "
+         fill="none"
+         id="CarnivalBlockState-backto-UpdatedCarnivalBlockState"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="1638,250.14,1632,268.14,1644,268.14,1638,250.14"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon91" />
+    </g>
+    <!--reverse link CarnivalBlockState to FailedCarnivalBlockState-->
+    <g
+       id="link_CarnivalBlockState_FailedCarnivalBlockState">
+      <path
+         codeLine="215"
+         d="M1672.0139,261.2932 C1694.5639,279.0432 1717.61,298.84 1745,330 C1783.92,374.28 1820.43,434.32 1836.46,461.95 "
+         fill="none"
+         id="CarnivalBlockState-backto-FailedCarnivalBlockState"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="1657.87,250.16,1668.3028,266.0079,1675.725,256.5786,1657.87,250.16"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon92" />
+    </g>
+    <!--reverse link CarnivalBlockState to DeletedCarnivalBlockState-->
+    <g
+       id="link_CarnivalBlockState_DeletedCarnivalBlockState">
+      <path
+         codeLine="220"
+         d="M1731.549,247.6044 C1797.699,258.9944 1875.9,280.11 1945,330 C1994.33,365.62 2029.19,431.67 2043.19,461.58 "
+         fill="none"
+         id="CarnivalBlockState-backto-DeletedCarnivalBlockState"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="1713.81,244.55,1730.5308,253.5174,1732.5671,241.6914,1713.81,244.55"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon93" />
+    </g>
+    <!--reverse link CarnivalBlockState to LoadedCarnivalBlockState-->
+    <g
+       id="link_CarnivalBlockState_LoadedCarnivalBlockState">
+      <path
+         codeLine="227"
+         d="M1731.6401,243.7069 C1856.9301,256.2769 2082.79,284.11 2155,330 C2206.88,362.97 2240.87,431.62 2253.95,461.99 "
+         fill="none"
+         id="CarnivalBlockState-backto-LoadedCarnivalBlockState"
+         style="stroke:#181818;stroke-width:1.0;" />
+      <polygon
+         fill="none"
+         points="1713.73,241.91,1731.0411,249.6769,1732.239,237.7368,1713.73,241.91"
+         style="stroke:#181818;stroke-width:1.0;"
+         id="polygon94" />
+    </g>
+    <!--SRC=[vLdRRzCy57_FNs7n0WYGu3KQayOkeeYXYMhVzpYvYTkOfNPaEvkcmV_ESPAsSMAdkNYiYBVus3sNtxdQbKGXXjT4PZWYSv9XWHKNA0o3boWbIuKKHuAk4eLYAaYaA6T1aD2Oe3LH2OzbkS1A2Rh85QdMKOgbX4KWRodJJDUF0K9dP8dpL5rmfhw1J7H11KQd7Cv_9ueol3jooHalL8gx3d-3bIGP-l0- -1K4XKpqOf7oYDymV2Do78PBWbKkY0n3dAia36EiW2g9kADHGOrnfeY0hsiWdfIh5-XnD4DGaoom92UmEo-f5RizZ2W3oJW2zEliPWQVev_ltlbGA0W8KrGze04w5R-Wf4BglFYzjWoXDtDmFbiX6jSMEgXgIxB6DAsjiuIp-duc-9AcPBR6gpfPyLl2Ull2KFSE58OTRVQv_XxYL1kZhtn5cS6jmpgGSSz5FD3j5ftxUBo7jXFiFXLmY1JPCT1uPp2KpdysR6mMJGiCdgjcd3sRsmrT9fXrHb9Yz_ik_r4EdoEjjVBd0yssrQHdWjvcJn0K9vVGo927yb-W7pz0Dj48fJh3NxrkaC3x9YtQ1hj9ZxVgclGLKHLnJB6K2eHLUCxrzzYgks440RqYiS5kSWGwUV_fwBEWDJJwNBPCWnoYg07wE8Jz6DRGPf9fE8O6T2YMDPJfQLXEmp23CMdJvQ_WUzkHWS_HbdfSPNz17f3HDGbNvLpMab6ZUv0ofojsdRM4xCXJPDpJ68hQpfPPnDd_1QqnlkhPymghHDFA0sYHqpGk2sITKeofRV8f5L7QJxq82qRlS7gZ3znkflRTRUIqsl-ajslN4eGUTVpGw1TwOvofok5IyBMU-ESGQkGxoRYayFKmGQVo1Y4rFqFWZdcZCPMUCiwsMioCtL4u0_StMrVg_gsnAxzIsUXuUHPto__1AMjkTrM19YxrP1OR58e-C7CYr5qaHYE__oBNfVokWLb2oKoEDMOGya9gbzLpPkj7zxJFxncqQ5XhLnrTukoet7YBAeSS7s_PxpcM4H7bKkf723W8fg04osGZVi5vYZv-71Nhrdk20Kh_EsGVthhus_atBrPZ8xFBYc7HE41_BzXKnS65ZgtiHNNQPCZS2l3Hk7McsY5ws0c25nz_QTPWI_mNFs_K5acAz3y_uDHmcEQd9BLxQnquNH6xNk7AKdoOi3bDymBSMNkm65PJV9TbjqB_K8rnWj3huSJ7NEPjSdsgmNJlS3nj7jbSHWsk0rvk-l2kBhfE4TuL7n-O-rNsWtOHQB4TaISTSNfeS53rvsdTx4R1YvlBMk5sS_iITPZPuBR32qpNHLrypcpeqE0VoWOt2bxSV05Zq_va849mSGbJlluZ-33JmMc85vZAcIZ-cxgbMsLlyyF-m35kXfjd94lg7PVtIhrzmCE77pHhJ-nbgokOjTxP6tl37zixvEhRi5sgiUDLvd-KtDjb6Zl3PIPyJGn9du7G4h8XJk6__TFY9CiQVrPe4LkgHSPl]-->
+  </g>
+</svg>
