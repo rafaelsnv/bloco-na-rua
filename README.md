@@ -1,5 +1,6 @@
 # Bloco na Rua
-## _Aplicação móvel para gestão de integrantes de blocos de rua em Belo Horizonte*_
+
+## _Aplicação móvel para gestão de integrantes de blocos de rua em Belo Horizonte\*_
 
 Gabriel Araújo Sousa Andrade¹ \
 Rafael Santos Nunes Vieira² \
@@ -14,4 +15,5 @@ adriane.arantescarvalho@gmail.com
 </span>
 
 ## Arquitetura da aplicação
+
 ![package_dependencies](out\diagrams\plant_uml\package_dependencies\bloco-na-rua.png)
