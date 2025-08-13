@@ -1,19 +1,16 @@
-# Bloco na Rua
+# bloco_na_rua
 
-## _Aplicação móvel para gestão de integrantes de blocos de rua em Belo Horizonte\*_
+A new Flutter project.
 
-Gabriel Araújo Sousa Andrade¹ \
-Rafael Santos Nunes Vieira² \
-Adriane Maria Arantes de Carvalho³s
+## Getting Started
 
-<span style="font-size:0.8em;">
-* Trabalho de conclusão de curso, Sistemas de Informação, Unidade São Gabriel.<br>
-¹ Aluno do Curso de Graduação em Sistemas de Informação, Brasil – gabriel.andrade@sga.pucminas.br<br>
-² Aluno do Curso de Graduação em Sistemas de Informação, Brasil – rsnvieira@sga.pucminas.br<br>
-³ Professora do Curso de Graduação em Sistemas de Informação, Brasil –
-adriane.arantescarvalho@gmail.com
-</span>
+This project is a starting point for a Flutter application.
 
-## Arquitetura da aplicação
+A few resources to get you started if this is your first Flutter project:
 
-![package_dependencies](out\diagrams\plant_uml\package_dependencies\bloco-na-rua.png)
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
