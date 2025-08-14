@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:bloco_na_rua/data/services/api/api_service.dart';
-import 'package:bloco_na_rua/domain/models/api/roles_enum/roles_enum.dart';
+import 'package:bloco_na_rua/data/services/api/models/roles_enum/roles_enum.dart';
 
 /// Exemplo de uso da API do Bloco na Rua
 class ApiUsageExample {

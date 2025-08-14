@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:bloco_na_rua/domain/models/api/member/member_create.dart';
-import 'package:bloco_na_rua/domain/models/api/member/member_update.dart';
+import 'package:bloco_na_rua/data/services/api/models/member/create/member_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/member/update/member_update.dart';
 import 'package:bloco_na_rua/utils/result.dart';
 
 /// Interface do repository para gerenciamento de membros

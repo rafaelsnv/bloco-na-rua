@@ -4,8 +4,8 @@
 
 import 'package:bloco_na_rua/data/repositories/member_repository.dart';
 import 'package:bloco_na_rua/data/services/api/api_service.dart';
-import 'package:bloco_na_rua/domain/models/api/member/member_create.dart';
-import 'package:bloco_na_rua/domain/models/api/member/member_update.dart';
+import 'package:bloco_na_rua/data/services/api/models/member/create/member_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/member/update/member_update.dart';
 import 'package:bloco_na_rua/utils/result.dart';
 
 /// Implementação do repository para gerenciamento de membros
@@ -52,9 +52,6 @@ class MemberRepositoryImpl implements MemberRepository {
 
   @override
   Future<Result<void>> deleteMember(int id, int loggedMemberId) {
-    return _apiService.deleteMember(
-      id: id,
-      loggedMemberId: loggedMemberId,
-    );
+    return _apiService.deleteMember(id: id, loggedMemberId: loggedMemberId);
   }
 }

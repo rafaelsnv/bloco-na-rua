@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:bloco_na_rua/data/repositories/carnival_block_member_repository.dart';
+import 'package:bloco_na_rua/data/repositories/carnival_block_repository.dart';
+import 'package:bloco_na_rua/data/repositories/meeting_presence_repository.dart';
+import 'package:bloco_na_rua/data/repositories/meeting_repository.dart';
+import 'package:bloco_na_rua/data/repositories/member_repository.dart';
 import 'package:bloco_na_rua/data/repositories/repository_factory.dart';
 import 'package:bloco_na_rua/data/services/api/api_service.dart';
 
@@ -14,10 +19,7 @@ class Dependencies {
   static late final RepositoryCollection _repositories;
 
   /// Inicializa as dependências da aplicação
-  static void initialize({
-    String host = 'localhost',
-    int port = 8080,
-  }) {
+  static void initialize({String host = 'localhost', int port = 8080}) {
     _apiService = ApiService(host: host, port: port);
     _repositoryFactory = RepositoryFactory(host: host, port: port);
     _repositories = _repositoryFactory.createAllRepositories();
@@ -33,17 +35,22 @@ class Dependencies {
   static RepositoryCollection get repositories => _repositories;
 
   /// Retorna o repository de blocos de carnaval
-  static get carnivalBlockRepository => _repositories.carnivalBlockRepository;
+  static CarnivalBlockRepository get carnivalBlockRepository =>
+      _repositories.carnivalBlockRepository;
 
   /// Retorna o repository de membros de blocos
-  static get carnivalBlockMemberRepository => _repositories.carnivalBlockMemberRepository;
+  static CarnivalBlockMemberRepository get carnivalBlockMemberRepository =>
+      _repositories.carnivalBlockMemberRepository;
 
   /// Retorna o repository de membros
-  static get memberRepository => _repositories.memberRepository;
+  static MemberRepository get memberRepository =>
+      _repositories.memberRepository;
 
   /// Retorna o repository de reuniões
-  static get meetingRepository => _repositories.meetingRepository;
+  static MeetingRepository get meetingRepository =>
+      _repositories.meetingRepository;
 
   /// Retorna o repository de presenças em reuniões
-  static get meetingPresenceRepository => _repositories.meetingPresenceRepository;
+  static MeetingPresenceRepository get meetingPresenceRepository =>
+      _repositories.meetingPresenceRepository;
 }

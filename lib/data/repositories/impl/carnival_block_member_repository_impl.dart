@@ -4,13 +4,14 @@
 
 import 'package:bloco_na_rua/data/repositories/carnival_block_member_repository.dart';
 import 'package:bloco_na_rua/data/services/api/api_service.dart';
-import 'package:bloco_na_rua/domain/models/api/carnival_block_member/carnival_block_member_create.dart';
-import 'package:bloco_na_rua/domain/models/api/carnival_block_member/carnival_block_member_update.dart';
-import 'package:bloco_na_rua/domain/models/api/roles_enum/roles_enum.dart';
+import 'package:bloco_na_rua/data/services/api/models/carnival_block_member/create/carnival_block_member_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/carnival_block_member/update/carnival_block_member_update.dart';
+import 'package:bloco_na_rua/data/services/api/models/roles_enum/roles_enum.dart';
 import 'package:bloco_na_rua/utils/result.dart';
 
 /// Implementação do repository para gerenciamento de membros de blocos de carnaval
-class CarnivalBlockMemberRepositoryImpl implements CarnivalBlockMemberRepository {
+class CarnivalBlockMemberRepositoryImpl
+    implements CarnivalBlockMemberRepository {
   CarnivalBlockMemberRepositoryImpl(this._apiService);
 
   final ApiService _apiService;
@@ -21,7 +22,9 @@ class CarnivalBlockMemberRepositoryImpl implements CarnivalBlockMemberRepository
   }
 
   @override
-  Future<Result<List<Map<String, dynamic>>>> getCarnivalBlockMembersByBlock(int blockId) {
+  Future<Result<List<Map<String, dynamic>>>> getCarnivalBlockMembersByBlock(
+    int blockId,
+  ) {
     return _apiService.getCarnivalBlockMembersByBlock(blockId);
   }
 

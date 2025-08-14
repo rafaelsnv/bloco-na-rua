@@ -3,17 +3,17 @@
 // found in the LICENSE file.
 
 import 'package:bloco_na_rua/data/services/api/api_client.dart';
-import 'package:bloco_na_rua/domain/models/api/carnival_block/carnival_block_create.dart';
-import 'package:bloco_na_rua/domain/models/api/carnival_block/carnival_block_update.dart';
-import 'package:bloco_na_rua/domain/models/api/carnival_block_member/carnival_block_member_create.dart';
-import 'package:bloco_na_rua/domain/models/api/carnival_block_member/carnival_block_member_update.dart';
-import 'package:bloco_na_rua/domain/models/api/meeting/meeting_create.dart';
-import 'package:bloco_na_rua/domain/models/api/meeting/meeting_update.dart';
-import 'package:bloco_na_rua/domain/models/api/meeting_presence/meeting_presence_create.dart';
-import 'package:bloco_na_rua/domain/models/api/meeting_presence/meeting_presence_update.dart';
-import 'package:bloco_na_rua/domain/models/api/member/member_create.dart';
-import 'package:bloco_na_rua/domain/models/api/member/member_update.dart';
-import 'package:bloco_na_rua/domain/models/api/roles_enum/roles_enum.dart';
+import 'package:bloco_na_rua/data/services/api/models/carnival_block/create/carnival_block_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/carnival_block/update/carnival_block_update.dart';
+import 'package:bloco_na_rua/data/services/api/models/carnival_block_member/create/carnival_block_member_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/carnival_block_member/update/carnival_block_member_update.dart';
+import 'package:bloco_na_rua/data/services/api/models/meeting/create/meeting_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/meeting/update/meeting_update.dart';
+import 'package:bloco_na_rua/data/services/api/models/meeting_presence/create/meeting_presence_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/meeting_presence/update/meeting_presence_update.dart';
+import 'package:bloco_na_rua/data/services/api/models/member/create/member_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/member/update/member_update.dart';
+import 'package:bloco_na_rua/data/services/api/models/roles_enum/roles_enum.dart';
 import 'package:bloco_na_rua/utils/result.dart';
 
 /// Serviço de API que encapsula o ApiClient e fornece uma interface mais amigável
@@ -70,7 +70,9 @@ class ApiService {
     return _apiClient.getCarnivalBlockMembers();
   }
 
-  Future<Result<List<Map<String, dynamic>>>> getCarnivalBlockMembersByBlock(int blockId) {
+  Future<Result<List<Map<String, dynamic>>>> getCarnivalBlockMembersByBlock(
+    int blockId,
+  ) {
     return _apiClient.getCarnivalBlockMembersByBlock(blockId);
   }
 
@@ -239,9 +241,7 @@ class ApiService {
     required bool isPresent,
     required int loggedMemberId,
   }) {
-    final presence = MeetingPresenceUpdate(
-      isPresent: isPresent,
-    );
+    final presence = MeetingPresenceUpdate(isPresent: isPresent);
     return _apiClient.updateMeetingPresence(id, presence, loggedMemberId);
   }
 

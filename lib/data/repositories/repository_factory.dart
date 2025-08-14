@@ -2,16 +2,16 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:bloco_na_rua/data/repositories/carnival_block_repository.dart';
 import 'package:bloco_na_rua/data/repositories/carnival_block_member_repository.dart';
-import 'package:bloco_na_rua/data/repositories/member_repository.dart';
-import 'package:bloco_na_rua/data/repositories/meeting_repository.dart';
-import 'package:bloco_na_rua/data/repositories/meeting_presence_repository.dart';
-import 'package:bloco_na_rua/data/repositories/impl/carnival_block_repository_impl.dart';
+import 'package:bloco_na_rua/data/repositories/carnival_block_repository.dart';
 import 'package:bloco_na_rua/data/repositories/impl/carnival_block_member_repository_impl.dart';
-import 'package:bloco_na_rua/data/repositories/impl/member_repository_impl.dart';
-import 'package:bloco_na_rua/data/repositories/impl/meeting_repository_impl.dart';
+import 'package:bloco_na_rua/data/repositories/impl/carnival_block_repository_impl.dart';
 import 'package:bloco_na_rua/data/repositories/impl/meeting_presence_repository_impl.dart';
+import 'package:bloco_na_rua/data/repositories/impl/meeting_repository_impl.dart';
+import 'package:bloco_na_rua/data/repositories/impl/member_repository_impl.dart';
+import 'package:bloco_na_rua/data/repositories/meeting_presence_repository.dart';
+import 'package:bloco_na_rua/data/repositories/meeting_repository.dart';
+import 'package:bloco_na_rua/data/repositories/member_repository.dart';
 import 'package:bloco_na_rua/data/services/api/api_service.dart';
 
 /// Factory para criação de repositories

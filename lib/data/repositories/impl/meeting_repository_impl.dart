@@ -4,8 +4,8 @@
 
 import 'package:bloco_na_rua/data/repositories/meeting_repository.dart';
 import 'package:bloco_na_rua/data/services/api/api_service.dart';
-import 'package:bloco_na_rua/domain/models/api/meeting/meeting_create.dart';
-import 'package:bloco_na_rua/domain/models/api/meeting/meeting_update.dart';
+import 'package:bloco_na_rua/data/services/api/models/meeting/create/meeting_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/meeting/update/meeting_update.dart';
 import 'package:bloco_na_rua/utils/result.dart';
 
 /// Implementação do repository para gerenciamento de reuniões
@@ -57,9 +57,6 @@ class MeetingRepositoryImpl implements MeetingRepository {
 
   @override
   Future<Result<void>> deleteMeeting(int id, int loggedMemberId) {
-    return _apiService.deleteMeeting(
-      id: id,
-      loggedMemberId: loggedMemberId,
-    );
+    return _apiService.deleteMeeting(id: id, loggedMemberId: loggedMemberId);
   }
 }

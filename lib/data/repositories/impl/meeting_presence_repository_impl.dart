@@ -4,8 +4,8 @@
 
 import 'package:bloco_na_rua/data/repositories/meeting_presence_repository.dart';
 import 'package:bloco_na_rua/data/services/api/api_service.dart';
-import 'package:bloco_na_rua/domain/models/api/meeting_presence/meeting_presence_create.dart';
-import 'package:bloco_na_rua/domain/models/api/meeting_presence/meeting_presence_update.dart';
+import 'package:bloco_na_rua/data/services/api/models/meeting_presence/create/meeting_presence_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/meeting_presence/update/meeting_presence_update.dart';
 import 'package:bloco_na_rua/utils/result.dart';
 
 /// Implementação do repository para gerenciamento de presenças em reuniões

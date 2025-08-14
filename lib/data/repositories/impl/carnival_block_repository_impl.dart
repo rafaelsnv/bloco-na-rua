@@ -4,8 +4,8 @@
 
 import 'package:bloco_na_rua/data/repositories/carnival_block_repository.dart';
 import 'package:bloco_na_rua/data/services/api/api_service.dart';
-import 'package:bloco_na_rua/domain/models/api/carnival_block/carnival_block_create.dart';
-import 'package:bloco_na_rua/domain/models/api/carnival_block/carnival_block_update.dart';
+import 'package:bloco_na_rua/data/services/api/models/carnival_block/create/carnival_block_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/carnival_block/update/carnival_block_update.dart';
 import 'package:bloco_na_rua/utils/result.dart';
 
 /// Implementação do repository para gerenciamento de blocos de carnaval

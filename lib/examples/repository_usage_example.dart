@@ -3,12 +3,12 @@
 // found in the LICENSE file.
 
 import 'package:bloco_na_rua/data/repositories/repository_factory.dart';
-import 'package:bloco_na_rua/domain/models/api/carnival_block/carnival_block_create.dart';
-import 'package:bloco_na_rua/domain/models/api/carnival_block/carnival_block_update.dart';
-import 'package:bloco_na_rua/domain/models/api/carnival_block_member/carnival_block_member_create.dart';
-import 'package:bloco_na_rua/domain/models/api/member/member_create.dart';
-import 'package:bloco_na_rua/domain/models/api/meeting/meeting_create.dart';
-import 'package:bloco_na_rua/domain/models/api/meeting_presence/meeting_presence_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/carnival_block/create/carnival_block_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/carnival_block/update/carnival_block_update.dart';
+import 'package:bloco_na_rua/data/services/api/models/carnival_block_member/create/carnival_block_member_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/meeting/create/meeting_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/meeting_presence/create/meeting_presence_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/member/create/member_create.dart';
 
 /// Exemplo de uso dos repositories do Bloco na Rua
 class RepositoryUsageExample {
@@ -29,7 +29,8 @@ class RepositoryUsageExample {
       carnivalBlockImage: 'https://example.com/image.jpg',
     );
 
-    final result = await _repositories.carnivalBlockRepository.createCarnivalBlock(carnivalBlock);
+    final result = await _repositories.carnivalBlockRepository
+        .createCarnivalBlock(carnivalBlock);
 
     result.when(
       ok: (_) => print('Bloco criado com sucesso via repository!'),
@@ -41,7 +42,8 @@ class RepositoryUsageExample {
   Future<void> listCarnivalBlocksExample() async {
     print('Listando blocos de carnaval via repository...');
 
-    final result = await _repositories.carnivalBlockRepository.getAllCarnivalBlocks();
+    final result = await _repositories.carnivalBlockRepository
+        .getAllCarnivalBlocks();
 
     result.when(
       ok: (blocks) {
@@ -83,14 +85,17 @@ class RepositoryUsageExample {
       role: 0, // member
     );
 
-    final result = await _repositories.carnivalBlockMemberRepository.createCarnivalBlockMember(
-      member,
-      1, // loggedMemberId
-    );
+    final result = await _repositories.carnivalBlockMemberRepository
+        .createCarnivalBlockMember(
+          member,
+          1, // loggedMemberId
+        );
 
     result.when(
-      ok: (_) => print('Membro adicionado ao bloco com sucesso via repository!'),
-      error: (error) => print('Erro ao adicionar membro via repository: $error'),
+      ok: (_) =>
+          print('Membro adicionado ao bloco com sucesso via repository!'),
+      error: (error) =>
+          print('Erro ao adicionar membro via repository: $error'),
     );
   }
 
@@ -106,7 +111,10 @@ class RepositoryUsageExample {
       carnivalBlockId: 1,
     );
 
-    final result = await _repositories.meetingRepository.createMeeting(meeting, 1);
+    final result = await _repositories.meetingRepository.createMeeting(
+      meeting,
+      1,
+    );
 
     result.when(
       ok: (_) => print('Reunião criada com sucesso via repository!'),
@@ -125,14 +133,16 @@ class RepositoryUsageExample {
       isPresent: true,
     );
 
-    final result = await _repositories.meetingPresenceRepository.createMeetingPresence(
-      presence,
-      1, // loggedMemberId
-    );
+    final result = await _repositories.meetingPresenceRepository
+        .createMeetingPresence(
+          presence,
+          1, // loggedMemberId
+        );
 
     result.when(
       ok: (_) => print('Presença registrada com sucesso via repository!'),
-      error: (error) => print('Erro ao registrar presença via repository: $error'),
+      error: (error) =>
+          print('Erro ao registrar presença via repository: $error'),
     );
   }
 
@@ -157,7 +167,8 @@ class RepositoryUsageExample {
   Future<void> getBlockMembersExample() async {
     print('Buscando membros do bloco via repository...');
 
-    final result = await _repositories.carnivalBlockMemberRepository.getCarnivalBlockMembersByBlock(1);
+    final result = await _repositories.carnivalBlockMemberRepository
+        .getCarnivalBlockMembersByBlock(1);
 
     result.when(
       ok: (members) {
@@ -179,11 +190,12 @@ class RepositoryUsageExample {
       carnivalBlockImage: 'https://example.com/new-image.jpg',
     );
 
-    final result = await _repositories.carnivalBlockRepository.updateCarnivalBlock(
-      1, // id
-      update,
-      1, // loggedMemberId
-    );
+    final result = await _repositories.carnivalBlockRepository
+        .updateCarnivalBlock(
+          1, // id
+          update,
+          1, // loggedMemberId
+        );
 
     result.when(
       ok: (_) => print('Bloco atualizado com sucesso via repository!'),

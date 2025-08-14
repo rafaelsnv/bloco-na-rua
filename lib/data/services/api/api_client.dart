@@ -5,16 +5,16 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:bloco_na_rua/domain/models/api/carnival_block/carnival_block_create.dart';
-import 'package:bloco_na_rua/domain/models/api/carnival_block/carnival_block_update.dart';
-import 'package:bloco_na_rua/domain/models/api/carnival_block_member/carnival_block_member_create.dart';
-import 'package:bloco_na_rua/domain/models/api/carnival_block_member/carnival_block_member_update.dart';
-import 'package:bloco_na_rua/domain/models/api/meeting/meeting_create.dart';
-import 'package:bloco_na_rua/domain/models/api/meeting/meeting_update.dart';
-import 'package:bloco_na_rua/domain/models/api/meeting_presence/meeting_presence_create.dart';
-import 'package:bloco_na_rua/domain/models/api/meeting_presence/meeting_presence_update.dart';
-import 'package:bloco_na_rua/domain/models/api/member/member_create.dart';
-import 'package:bloco_na_rua/domain/models/api/member/member_update.dart';
+import 'package:bloco_na_rua/data/services/api/models/carnival_block/create/carnival_block_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/carnival_block/update/carnival_block_update.dart';
+import 'package:bloco_na_rua/data/services/api/models/carnival_block_member/create/carnival_block_member_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/carnival_block_member/update/carnival_block_member_update.dart';
+import 'package:bloco_na_rua/data/services/api/models/meeting/create/meeting_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/meeting/update/meeting_update.dart';
+import 'package:bloco_na_rua/data/services/api/models/meeting_presence/create/meeting_presence_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/meeting_presence/update/meeting_presence_update.dart';
+import 'package:bloco_na_rua/data/services/api/models/member/create/member_create.dart';
+import 'package:bloco_na_rua/data/services/api/models/member/update/member_update.dart';
 import 'package:bloco_na_rua/utils/result.dart';
 
 class ApiClient {
@@ -36,10 +36,16 @@ class ApiClient {
       if (response.statusCode == 200) {
         final responseBody = await response.transform(utf8.decoder).join();
         final List<dynamic> jsonList = jsonDecode(responseBody);
-        final List<Map<String, dynamic>> blocks = jsonList.cast<Map<String, dynamic>>();
+        final List<Map<String, dynamic>> blocks = jsonList
+            .cast<Map<String, dynamic>>();
         return Result.ok(blocks);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to get carnival blocks: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -51,14 +57,23 @@ class ApiClient {
   Future<Result<Map<String, dynamic>>> getCarnivalBlock(int id) async {
     final client = _clientFactory();
     try {
-      final request = await client.get(_host, _port, '/api/v1/CarnivalBlocks/$id');
+      final request = await client.get(
+        _host,
+        _port,
+        '/api/v1/CarnivalBlocks/$id',
+      );
       final response = await request.close();
       if (response.statusCode == 200) {
         final responseBody = await response.transform(utf8.decoder).join();
         final Map<String, dynamic> block = jsonDecode(responseBody);
         return Result.ok(block);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to get carnival block: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -79,7 +94,12 @@ class ApiClient {
       if (response.statusCode == 200) {
         return const Result.ok(null);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to create carnival block: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -107,7 +127,12 @@ class ApiClient {
       if (response.statusCode == 200) {
         return const Result.ok(null);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to update carnival block: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -129,7 +154,12 @@ class ApiClient {
       if (response.statusCode == 200) {
         return const Result.ok(null);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to delete carnival block: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -142,15 +172,25 @@ class ApiClient {
   Future<Result<List<Map<String, dynamic>>>> getCarnivalBlockMembers() async {
     final client = _clientFactory();
     try {
-      final request = await client.get(_host, _port, '/api/v1/CarnivalBlockMembers');
+      final request = await client.get(
+        _host,
+        _port,
+        '/api/v1/CarnivalBlockMembers',
+      );
       final response = await request.close();
       if (response.statusCode == 200) {
         final responseBody = await response.transform(utf8.decoder).join();
         final List<dynamic> jsonList = jsonDecode(responseBody);
-        final List<Map<String, dynamic>> members = jsonList.cast<Map<String, dynamic>>();
+        final List<Map<String, dynamic>> members = jsonList
+            .cast<Map<String, dynamic>>();
         return Result.ok(members);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to get carnival block members: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -159,18 +199,30 @@ class ApiClient {
     }
   }
 
-  Future<Result<List<Map<String, dynamic>>>> getCarnivalBlockMembersByBlock(int blockId) async {
+  Future<Result<List<Map<String, dynamic>>>> getCarnivalBlockMembersByBlock(
+    int blockId,
+  ) async {
     final client = _clientFactory();
     try {
-      final request = await client.get(_host, _port, '/api/v1/CarnivalBlockMembers/block/$blockId');
+      final request = await client.get(
+        _host,
+        _port,
+        '/api/v1/CarnivalBlockMembers/block/$blockId',
+      );
       final response = await request.close();
       if (response.statusCode == 200) {
         final responseBody = await response.transform(utf8.decoder).join();
         final List<dynamic> jsonList = jsonDecode(responseBody);
-        final List<Map<String, dynamic>> members = jsonList.cast<Map<String, dynamic>>();
+        final List<Map<String, dynamic>> members = jsonList
+            .cast<Map<String, dynamic>>();
         return Result.ok(members);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to get carnival block members by block: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -185,7 +237,11 @@ class ApiClient {
   ) async {
     final client = _clientFactory();
     try {
-      final request = await client.post(_host, _port, '/api/v1/CarnivalBlockMembers');
+      final request = await client.post(
+        _host,
+        _port,
+        '/api/v1/CarnivalBlockMembers',
+      );
       request.headers.contentType = ContentType.json;
       request.headers.add('X-Logged-Member', loggedMemberId.toString());
       request.write(jsonEncode(member.toJson()));
@@ -193,7 +249,12 @@ class ApiClient {
       if (response.statusCode == 200) {
         return const Result.ok(null);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to create carnival block member: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -221,7 +282,12 @@ class ApiClient {
       if (response.statusCode == 200) {
         return const Result.ok(null);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to update carnival block member: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -230,7 +296,10 @@ class ApiClient {
     }
   }
 
-  Future<Result<void>> deleteCarnivalBlockMember(int id, int loggedMemberId) async {
+  Future<Result<void>> deleteCarnivalBlockMember(
+    int id,
+    int loggedMemberId,
+  ) async {
     final client = _clientFactory();
     try {
       final request = await client.delete(
@@ -243,7 +312,12 @@ class ApiClient {
       if (response.statusCode == 200) {
         return const Result.ok(null);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to delete carnival block member: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -261,10 +335,16 @@ class ApiClient {
       if (response.statusCode == 200) {
         final responseBody = await response.transform(utf8.decoder).join();
         final List<dynamic> jsonList = jsonDecode(responseBody);
-        final List<Map<String, dynamic>> members = jsonList.cast<Map<String, dynamic>>();
+        final List<Map<String, dynamic>> members = jsonList
+            .cast<Map<String, dynamic>>();
         return Result.ok(members);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to get members: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -283,7 +363,12 @@ class ApiClient {
         final Map<String, dynamic> member = jsonDecode(responseBody);
         return Result.ok(member);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to get member: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -302,7 +387,12 @@ class ApiClient {
       if (response.statusCode == 200) {
         return const Result.ok(null);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to create member: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -318,11 +408,7 @@ class ApiClient {
   ) async {
     final client = _clientFactory();
     try {
-      final request = await client.put(
-        _host,
-        _port,
-        '/api/v1/Members/$id',
-      );
+      final request = await client.put(_host, _port, '/api/v1/Members/$id');
       request.headers.contentType = ContentType.json;
       request.headers.add('X-Logged-Member', loggedMemberId.toString());
       request.write(jsonEncode(member.toJson()));
@@ -330,7 +416,12 @@ class ApiClient {
       if (response.statusCode == 200) {
         return const Result.ok(null);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to update member: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -342,17 +433,18 @@ class ApiClient {
   Future<Result<void>> deleteMember(int id, int loggedMemberId) async {
     final client = _clientFactory();
     try {
-      final request = await client.delete(
-        _host,
-        _port,
-        '/api/v1/Members/$id',
-      );
+      final request = await client.delete(_host, _port, '/api/v1/Members/$id');
       request.headers.add('X-Logged-Member', loggedMemberId.toString());
       final response = await request.close();
       if (response.statusCode == 200) {
         return const Result.ok(null);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to delete member: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -370,10 +462,16 @@ class ApiClient {
       if (response.statusCode == 200) {
         final responseBody = await response.transform(utf8.decoder).join();
         final List<dynamic> jsonList = jsonDecode(responseBody);
-        final List<Map<String, dynamic>> meetings = jsonList.cast<Map<String, dynamic>>();
+        final List<Map<String, dynamic>> meetings = jsonList
+            .cast<Map<String, dynamic>>();
         return Result.ok(meetings);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to get meetings: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -382,18 +480,30 @@ class ApiClient {
     }
   }
 
-  Future<Result<List<Map<String, dynamic>>>> getMeetingsByBlock(int blockId) async {
+  Future<Result<List<Map<String, dynamic>>>> getMeetingsByBlock(
+    int blockId,
+  ) async {
     final client = _clientFactory();
     try {
-      final request = await client.get(_host, _port, '/api/v1/Meetings/block/$blockId');
+      final request = await client.get(
+        _host,
+        _port,
+        '/api/v1/Meetings/block/$blockId',
+      );
       final response = await request.close();
       if (response.statusCode == 200) {
         final responseBody = await response.transform(utf8.decoder).join();
         final List<dynamic> jsonList = jsonDecode(responseBody);
-        final List<Map<String, dynamic>> meetings = jsonList.cast<Map<String, dynamic>>();
+        final List<Map<String, dynamic>> meetings = jsonList
+            .cast<Map<String, dynamic>>();
         return Result.ok(meetings);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to get meetings by block: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -416,7 +526,12 @@ class ApiClient {
       if (response.statusCode == 200) {
         return const Result.ok(null);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to create meeting: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -432,11 +547,7 @@ class ApiClient {
   ) async {
     final client = _clientFactory();
     try {
-      final request = await client.put(
-        _host,
-        _port,
-        '/api/v1/Meetings/$id',
-      );
+      final request = await client.put(_host, _port, '/api/v1/Meetings/$id');
       request.headers.contentType = ContentType.json;
       request.headers.add('X-Logged-Member', loggedMemberId.toString());
       request.write(jsonEncode(meeting.toJson()));
@@ -444,7 +555,12 @@ class ApiClient {
       if (response.statusCode == 200) {
         return const Result.ok(null);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to update meeting: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -456,17 +572,18 @@ class ApiClient {
   Future<Result<void>> deleteMeeting(int id, int loggedMemberId) async {
     final client = _clientFactory();
     try {
-      final request = await client.delete(
-        _host,
-        _port,
-        '/api/v1/Meetings/$id',
-      );
+      final request = await client.delete(_host, _port, '/api/v1/Meetings/$id');
       request.headers.add('X-Logged-Member', loggedMemberId.toString());
       final response = await request.close();
       if (response.statusCode == 200) {
         return const Result.ok(null);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to delete meeting: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -479,15 +596,25 @@ class ApiClient {
   Future<Result<List<Map<String, dynamic>>>> getMeetingPresences() async {
     final client = _clientFactory();
     try {
-      final request = await client.get(_host, _port, '/api/v1/MeetingPresences');
+      final request = await client.get(
+        _host,
+        _port,
+        '/api/v1/MeetingPresences',
+      );
       final response = await request.close();
       if (response.statusCode == 200) {
         final responseBody = await response.transform(utf8.decoder).join();
         final List<dynamic> jsonList = jsonDecode(responseBody);
-        final List<Map<String, dynamic>> presences = jsonList.cast<Map<String, dynamic>>();
+        final List<Map<String, dynamic>> presences = jsonList
+            .cast<Map<String, dynamic>>();
         return Result.ok(presences);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to get meeting presences: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -499,14 +626,23 @@ class ApiClient {
   Future<Result<Map<String, dynamic>>> getMeetingPresence(int id) async {
     final client = _clientFactory();
     try {
-      final request = await client.get(_host, _port, '/api/v1/MeetingPresences/$id');
+      final request = await client.get(
+        _host,
+        _port,
+        '/api/v1/MeetingPresences/$id',
+      );
       final response = await request.close();
       if (response.statusCode == 200) {
         final responseBody = await response.transform(utf8.decoder).join();
         final Map<String, dynamic> presence = jsonDecode(responseBody);
         return Result.ok(presence);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to get meeting presence: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -521,7 +657,11 @@ class ApiClient {
   ) async {
     final client = _clientFactory();
     try {
-      final request = await client.post(_host, _port, '/api/v1/MeetingPresences');
+      final request = await client.post(
+        _host,
+        _port,
+        '/api/v1/MeetingPresences',
+      );
       request.headers.contentType = ContentType.json;
       request.headers.add('X-Logged-Member', loggedMemberId.toString());
       request.write(jsonEncode(presence.toJson()));
@@ -529,7 +669,12 @@ class ApiClient {
       if (response.statusCode == 200) {
         return const Result.ok(null);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to create meeting presence: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -557,7 +702,12 @@ class ApiClient {
       if (response.statusCode == 200) {
         return const Result.ok(null);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to update meeting presence: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);
@@ -579,7 +729,12 @@ class ApiClient {
       if (response.statusCode == 200) {
         return const Result.ok(null);
       } else {
-        return const Result.error(HttpException("Invalid response"));
+        final errorBody = await response.transform(utf8.decoder).join();
+        return Result.error(
+          HttpException(
+            'Failed to delete meeting presence: ${response.statusCode} - $errorBody',
+          ),
+        );
       }
     } on Exception catch (error) {
       return Result.error(error);

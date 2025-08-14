@@ -11,8 +11,11 @@ part 'carnival_block_create.g.dart';
 class CarnivalBlockCreate with _$CarnivalBlockCreate {
   const factory CarnivalBlockCreate({
     String? name,
-    required int ownerId,
+
     String? carnivalBlockImage,
+
+    required int ownerId,
+
   }) = _CarnivalBlockCreate;
 
   factory CarnivalBlockCreate.fromJson(Map<String, Object?> json) =>

@@ -2,17 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/material.dart';
 import 'package:bloco_na_rua/config/dependencies.dart';
 import 'package:bloco_na_rua/routing/router.dart';
+import 'package:flutter/material.dart';
 
 /// Widget principal da aplicação
 class BlocoNaRuaApp extends StatelessWidget {
-  const BlocoNaRuaApp({
-    super.key,
-    this.host = 'localhost',
-    this.port = 8080,
-  });
+  const BlocoNaRuaApp({super.key, this.host = 'localhost', this.port = 8080});
 
   final String host;
   final int port;
