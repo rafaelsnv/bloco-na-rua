@@ -8,7 +8,7 @@ part 'carnival_block_member_update.freezed.dart';
 part 'carnival_block_member_update.g.dart';
 
 @freezed
-class CarnivalBlockMemberUpdate with _$CarnivalBlockMemberUpdate {
+abstract class CarnivalBlockMemberUpdate with _$CarnivalBlockMemberUpdate {
   const factory CarnivalBlockMemberUpdate({
     required int carnivalBlockId,
     required int memberId,

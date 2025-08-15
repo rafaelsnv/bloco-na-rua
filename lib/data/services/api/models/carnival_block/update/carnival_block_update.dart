@@ -8,7 +8,7 @@ part 'carnival_block_update.freezed.dart';
 part 'carnival_block_update.g.dart';
 
 @freezed
-class CarnivalBlockUpdate with _$CarnivalBlockUpdate {
+abstract class CarnivalBlockUpdate with _$CarnivalBlockUpdate {
   const factory CarnivalBlockUpdate({
     String? name,
     String? carnivalBlockImage,

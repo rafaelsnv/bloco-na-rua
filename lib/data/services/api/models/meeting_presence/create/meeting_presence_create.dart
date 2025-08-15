@@ -8,7 +8,7 @@ part 'meeting_presence_create.freezed.dart';
 part 'meeting_presence_create.g.dart';
 
 @freezed
-class MeetingPresenceCreate with _$MeetingPresenceCreate {
+abstract class MeetingPresenceCreate with _$MeetingPresenceCreate {
   const factory MeetingPresenceCreate({
     required int memberId,
     required int meetingId,

@@ -8,7 +8,7 @@ part 'meeting_create.freezed.dart';
 part 'meeting_create.g.dart';
 
 @freezed
-class MeetingCreate with _$MeetingCreate {
+abstract class MeetingCreate with _$MeetingCreate {
   const factory MeetingCreate({
     String? name,
     String? description,

@@ -8,7 +8,7 @@ part 'carnival_block_member_create.freezed.dart';
 part 'carnival_block_member_create.g.dart';
 
 @freezed
-class CarnivalBlockMemberCreate with _$CarnivalBlockMemberCreate {
+abstract class CarnivalBlockMemberCreate with _$CarnivalBlockMemberCreate {
   const factory CarnivalBlockMemberCreate({
     required int carnivalBlockId,
     required int memberId,

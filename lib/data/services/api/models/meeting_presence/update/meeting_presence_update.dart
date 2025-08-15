@@ -8,7 +8,7 @@ part 'meeting_presence_update.freezed.dart';
 part 'meeting_presence_update.g.dart';
 
 @freezed
-class MeetingPresenceUpdate with _$MeetingPresenceUpdate {
+abstract class MeetingPresenceUpdate with _$MeetingPresenceUpdate {
   const factory MeetingPresenceUpdate({required bool isPresent}) =
       _MeetingPresenceUpdate;
 

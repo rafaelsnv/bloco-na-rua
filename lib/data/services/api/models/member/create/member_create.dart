@@ -8,7 +8,7 @@ part 'member_create.freezed.dart';
 part 'member_create.g.dart';
 
 @freezed
-class MemberCreate with _$MemberCreate {
+abstract class MemberCreate with _$MemberCreate {
   const factory MemberCreate({
     String? name,
     String? email,

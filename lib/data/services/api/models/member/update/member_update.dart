@@ -8,7 +8,7 @@ part 'member_update.freezed.dart';
 part 'member_update.g.dart';
 
 @freezed
-class MemberUpdate with _$MemberUpdate {
+abstract class MemberUpdate with _$MemberUpdate {
   const factory MemberUpdate({
     String? name,
     String? email,
