@@ -4,7 +4,6 @@
 
 import 'package:bloco_na_rua/data/repositories/members_repository.dart';
 import 'package:bloco_na_rua/data/services/api/api_client.dart';
-import 'package:bloco_na_rua/data/services/api/api_client_dio.dart';
 import 'package:bloco_na_rua/ui/members/view_models/members_viewmodel.dart';
 import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
@@ -17,8 +16,7 @@ var baseOptions = BaseOptions(
 
 List<SingleChildWidget> get providers {
   return [
-    Provider(create: (context) => ApiClient()),
-    Provider(create: (context) => ApiClientDio(options: baseOptions)),
+    Provider(create: (context) => ApiClient(options: baseOptions)),
     Provider(create: (context) => MembersRepository(apiClient: context.read())),
     ChangeNotifierProvider(
       create: (context) => MembersViewModel(membersRepository: context.read()),
