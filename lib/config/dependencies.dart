@@ -2,55 +2,26 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:bloco_na_rua/data/repositories/carnival_block_member_repository.dart';
-import 'package:bloco_na_rua/data/repositories/carnival_block_repository.dart';
-import 'package:bloco_na_rua/data/repositories/meeting_presence_repository.dart';
-import 'package:bloco_na_rua/data/repositories/meeting_repository.dart';
-import 'package:bloco_na_rua/data/repositories/member_repository.dart';
-import 'package:bloco_na_rua/data/repositories/repository_factory.dart';
-import 'package:bloco_na_rua/data/services/api/api_service.dart';
+import 'package:bloco_na_rua/data/repositories/members_repository.dart';
+import 'package:bloco_na_rua/data/services/api/api_client.dart';
+import 'package:bloco_na_rua/data/services/api/api_client_dio.dart';
+import 'package:bloco_na_rua/ui/members/view_models/members_viewmodel.dart';
+import 'package:dio/dio.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
-/// Configuração de dependências da aplicação
-class Dependencies {
-  Dependencies._();
+var baseOptions = BaseOptions(
+  baseUrl: 'https://bloconarua-dev.azurewebsites.net',
+  receiveDataWhenStatusError: true,
+);
 
-  static late final ApiService _apiService;
-  static late final RepositoryFactory _repositoryFactory;
-  static late final RepositoryCollection _repositories;
-
-  /// Inicializa as dependências da aplicação
-  static void initialize({String host = 'localhost', int port = 8080}) {
-    _apiService = ApiService(host: host, port: port);
-    _repositoryFactory = RepositoryFactory(host: host, port: port);
-    _repositories = _repositoryFactory.createAllRepositories();
-  }
-
-  /// Retorna a instância do ApiService
-  static ApiService get apiService => _apiService;
-
-  /// Retorna a instância do RepositoryFactory
-  static RepositoryFactory get repositoryFactory => _repositoryFactory;
-
-  /// Retorna a coleção de repositories
-  static RepositoryCollection get repositories => _repositories;
-
-  /// Retorna o repository de blocos de carnaval
-  static CarnivalBlockRepository get carnivalBlockRepository =>
-      _repositories.carnivalBlockRepository;
-
-  /// Retorna o repository de membros de blocos
-  static CarnivalBlockMemberRepository get carnivalBlockMemberRepository =>
-      _repositories.carnivalBlockMemberRepository;
-
-  /// Retorna o repository de membros
-  static MemberRepository get memberRepository =>
-      _repositories.memberRepository;
-
-  /// Retorna o repository de reuniões
-  static MeetingRepository get meetingRepository =>
-      _repositories.meetingRepository;
-
-  /// Retorna o repository de presenças em reuniões
-  static MeetingPresenceRepository get meetingPresenceRepository =>
-      _repositories.meetingPresenceRepository;
+List<SingleChildWidget> get providers {
+  return [
+    Provider(create: (context) => ApiClient()),
+    Provider(create: (context) => ApiClientDio(options: baseOptions)),
+    Provider(create: (context) => MembersRepository(apiClient: context.read())),
+    ChangeNotifierProvider(
+      create: (context) => MembersViewModel(membersRepository: context.read()),
+    ),
+  ];
 }
