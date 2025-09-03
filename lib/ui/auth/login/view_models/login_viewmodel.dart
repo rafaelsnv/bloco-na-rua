@@ -6,9 +6,8 @@ import 'package:result_dart/result_dart.dart';
 class LoginViewModel {
   LoginViewModel({required AuthRepository authRepository})
     : _authRepository = authRepository {
-    login = Command.createAsync<(String email, String password), void>(
+    login = Command.createAsyncNoResult<(String email, String password)>(
       _login,
-      initialValue: null,
     );
   }
 

@@ -1,23 +1,14 @@
+import 'package:bloco_na_rua/ui/auth/login/view_models/login_viewmodel.dart';
+import 'package:bloco_na_rua/ui/auth/login/widgets/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:bloco_na_rua/data/repositories/auth_repository.dart';
 import 'package:bloco_na_rua/routing/routes.dart';
-import 'package:bloco_na_rua/ui/members_list_screen.dart';
 import 'package:provider/provider.dart';
 
-final router = GoRouter(
-  initialLocation: Routes.members,
-  routes: [
-    GoRoute(
-      path: Routes.members,
-      builder: (context, state) => const MembersListScreen(),
-    ),
-  ],
-);
-
-GoRouter routerAuth(AuthRepository authRepository) => GoRouter(
-  initialLocation: Routes.home,
+GoRouter router(AuthRepository authRepository) => GoRouter(
+  initialLocation: Routes.login,
   debugLogDiagnostics: true,
   redirect: _redirect,
   refreshListenable: authRepository,
@@ -25,7 +16,9 @@ GoRouter routerAuth(AuthRepository authRepository) => GoRouter(
     GoRoute(
       path: Routes.login,
       builder: (context, state) {
-        return const MembersListScreen();
+        return LoginScreen(
+          viewModel: LoginViewModel(authRepository: context.read()),
+        );
       },
     ),
   ],
