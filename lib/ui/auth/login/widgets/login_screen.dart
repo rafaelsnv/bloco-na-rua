@@ -1,7 +1,6 @@
 import 'package:bloco_na_rua/routing/routes.dart';
 import 'package:bloco_na_rua/ui/auth/login/view_models/login_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -15,11 +14,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _email = TextEditingController(
-    text: 'email@example.com',
+    text: 'teste@teste.com',
   );
-  final TextEditingController _password = TextEditingController(
-    text: 'password',
-  );
+  final TextEditingController _password = TextEditingController(text: '123456');
 
   @override
   void initState() {
@@ -41,25 +38,24 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onResult() {
-    if (widget.viewModel.login.results.value.isSuccess) {
-      context.go(Routes.home);
+    final result = widget.viewModel.login.results.value.data;
+
+    if (result == null) {
+      return;
     }
 
-    if (widget.viewModel.login.results.value.hasError) {
+    if (result.isError()) {
       widget.viewModel.login.clearErrors();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("error login"),
-          action: SnackBarAction(
-            label: "Tente Novamente",
-            onPressed: () => widget.viewModel.login.execute((
-              _email.value.text,
-              _password.value.text,
-            )),
-          ),
+          content: Text(result.exceptionOrNull().toString()),
+          showCloseIcon: true,
         ),
       );
+      return;
     }
+
+    context.go(Routes.home);
   }
 
   @override
@@ -72,28 +68,31 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             TextField(
               controller: _email,
-              decoration: const InputDecoration(labelText: 'Email'),
+              decoration: const InputDecoration(labelText: 'E-mail'),
             ),
             TextField(
               controller: _password,
-              decoration: const InputDecoration(labelText: 'Password'),
+              decoration: const InputDecoration(labelText: 'Senha'),
               obscureText: true,
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                widget.viewModel.login.execute((
-                  _email.value.text,
-                  _password.value.text,
-                ));
+            ListenableBuilder(
+              listenable: widget.viewModel.login,
+              builder: (context, _) {
+                if (widget.viewModel.login.isExecuting.value) {
+                  return const CircularProgressIndicator();
+                }
+
+                return ElevatedButton(
+                  onPressed: () {
+                    widget.viewModel.login.execute((
+                      _email.value.text,
+                      _password.value.text,
+                    ));
+                  },
+                  child: const Text('Login'),
+                );
               },
-              child: const Text('Login'),
             ),
-            if (widget.viewModel.login.isExecuting.value)
-              const Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: CircularProgressIndicator(),
-              ),
           ],
         ),
       ),

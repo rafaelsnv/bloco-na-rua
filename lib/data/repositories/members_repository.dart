@@ -5,5 +5,5 @@ import 'package:bloco_na_rua/domain/entities/members_entity.dart';
 class MembersRepository extends RepositoryBase<MembersEntity>
     implements IMembersRepository {
   MembersRepository({required super.apiClient})
-      : super(fromJsonFactory: MembersEntity.fromJson);
+    : super(fromJsonFactory: MembersEntity.fromJson);
 }

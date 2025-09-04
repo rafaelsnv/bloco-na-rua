@@ -10,7 +10,9 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Bloco na Rua',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      themeMode: ThemeMode.system,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
       routerConfig: router(context.read()),
     );
   }

@@ -11,9 +11,12 @@ Future<void> main() async {
   await Supabase.initialize(
     url: 'https://mqlxlytsgzzzzkndmowo.supabase.co',
     anonKey: 'sb_publishable_naPZw0mnQoMJj1PaUZur3w_a9sk6lcx',
+    realtimeClientOptions: RealtimeClientOptions(
+      logLevel: RealtimeLogLevel.error,
+    ),
   );
 
-  Logger.root.level = Level.ALL;
+  Logger.root.level = Level.INFO;
 
   runApp(MultiProvider(providers: providers, child: const MainApp()));
 }

@@ -19,8 +19,8 @@ dependencies:
   dio: ^5.9.0
   supabase_flutter: ^2.10.0
   shared_preferences: ^2.5.3
-  supabase_auth_ui: ^0.5.5
   command_it: ^8.0.0
+  gotrue: ^2.14.0
 
 dev_dependencies:
   flutter_test:

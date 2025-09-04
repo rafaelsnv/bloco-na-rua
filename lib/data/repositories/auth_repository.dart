@@ -4,6 +4,7 @@ import 'package:bloco_na_rua/data/services/auth/auth_api_client.dart';
 import 'package:bloco_na_rua/data/services/auth/models/login_request/login_request.dart';
 import 'package:bloco_na_rua/data/services/shared_preferencies_service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gotrue/gotrue.dart';
 import 'package:logging/logging.dart';
 import 'package:result_dart/result_dart.dart';
 
@@ -20,7 +21,7 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
   final AuthApiClient _authApiClient;
   final SharedPreferencesService _sharedPreferencesService;
 
-  bool? _isAuthenticated; //TODO: inicializar como false?
+  bool? _isAuthenticated;
   String? _authToken;
   final _log = Logger('AuthRepositoryRemote');
 
@@ -61,16 +62,25 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
 
       final result = await _authApiClient.logIn(loginRequest);
       if (result.isError()) {
-        _log.warning('Failed to login', result.exceptionOrNull());
-        return Failure(
-          result.exceptionOrNull() ?? Exception('Failed to login'),
+        var exString = result.exceptionOrNull().toString();
+        var apiExRegex = RegExp(
+          r'AuthApiException\(message: (.*?), statusCode: (\d+), code: (\w+)\)',
         );
+
+        var match = apiExRegex.firstMatch(exString);
+        if (match != null) {
+          var message = match.group(1);
+          _log.warning(exString);
+          return Failure(Exception(message));
+        }
+        _log.warning('Failed to login: $exString');
+        return result;
       }
 
       final loginResponse = result.getOrNull();
       if (loginResponse == null) {
         _log.warning('Login response is null');
-        return Failure(Exception('Login response is null'));
+        return result;
       }
 
       _log.info('Login successful');

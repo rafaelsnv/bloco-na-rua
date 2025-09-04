@@ -43,7 +43,7 @@ class AuthApiClient {
       );
       return Success(loginResponse);
     } catch (error) {
-      return Failure(Exception('An error occurred: $error'));
+      return Failure(Exception(error));
     }
   }
 }
