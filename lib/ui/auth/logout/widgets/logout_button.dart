@@ -1,6 +1,5 @@
 import 'package:bloco_na_rua/ui/auth/logout/view_model/logout_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class LogoutButton extends StatefulWidget {
   const LogoutButton({super.key, required this.viewModel});

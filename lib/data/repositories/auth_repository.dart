@@ -2,9 +2,9 @@ import 'package:bloco_na_rua/data/repositories/interfaces/iauth_repository.dart'
 import 'package:bloco_na_rua/data/services/api/api_client.dart';
 import 'package:bloco_na_rua/data/services/auth/auth_api_client.dart';
 import 'package:bloco_na_rua/data/services/auth/models/login_request/login_request.dart';
+import 'package:bloco_na_rua/data/services/auth/models/signup_request/signup_request.dart';
 import 'package:bloco_na_rua/data/services/shared_preferencies_service.dart';
 import 'package:flutter/foundation.dart';
-import 'package:gotrue/gotrue.dart';
 import 'package:logging/logging.dart';
 import 'package:result_dart/result_dart.dart';
 
@@ -23,15 +23,12 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
 
   bool? _isAuthenticated;
   String? _authToken;
-  final _log = Logger('AuthRepositoryRemote');
+  final _log = Logger('AuthRepository');
 
   Future<void> _fetchToken() async {
     final result = await _sharedPreferencesService.fetchToken();
     if (result.isError()) {
-      _log.severe(
-        'Failed to fetch Token from SharedPreferences',
-        result.exceptionOrNull(),
-      );
+      _log.severe('Failed to fetch Token from SharedPreferences');
       return;
     }
     _authToken = result.getOrNull();
@@ -54,11 +51,7 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
     String? phone = '',
   }) async {
     try {
-      final loginRequest = LoginRequest(
-        email: email,
-        password: password,
-        phone: phone.toString(),
-      );
+      final loginRequest = LoginRequest(email: email, password: password);
 
       final result = await _authApiClient.logIn(loginRequest);
       if (result.isError()) {
@@ -95,6 +88,42 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
   }
 
   @override
+  AsyncResult<void> signUp({
+    required String email,
+    required String password,
+    required String phone,
+  }) async {
+    try {
+      final signUpRequest = SignUpRequest(
+        email: email,
+        password: password,
+        phone: phone,
+      );
+
+      final result = await _authApiClient.signUp(signUpRequest);
+      if (result.isError()) {
+        _log.severe('Failed to sign up', result.exceptionOrNull());
+        return result;
+      }
+
+      final signUpResponse = result.getOrNull();
+      if (signUpResponse == null) {
+        _log.warning('Sign up response is null');
+        return result;
+      }
+
+      _log.info('Sign up successful');
+      _isAuthenticated = true;
+      _authToken = signUpResponse.accessToken;
+      return await _sharedPreferencesService.saveToken(
+        signUpResponse.accessToken,
+      );
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  @override
   AsyncResult<void> logout() async {
     _log.info('Logging out');
     try {
@@ -108,11 +137,5 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
     } finally {
       notifyListeners();
     }
-  }
-
-  @override
-  AsyncResult<void> signUp({required String email, required String password}) {
-    // TODO: implement signIn
-    throw UnimplementedError();
   }
 }

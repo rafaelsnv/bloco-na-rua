@@ -6,9 +6,13 @@ part 'members_entity.g.dart';
 
 @freezed
 sealed class MembersEntity extends EntityBase with _$MembersEntity {
+  @override
   final String? name;
+  @override
   final String? email;
+  @override
   final String? phone;
+  @override
   final String? profileImage;
 
   MembersEntity._({

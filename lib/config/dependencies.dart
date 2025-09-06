@@ -10,6 +10,7 @@ import 'package:bloco_na_rua/data/services/api/api_client.dart';
 import 'package:bloco_na_rua/data/services/auth/auth_api_client.dart';
 import 'package:bloco_na_rua/data/services/shared_preferencies_service.dart';
 import 'package:dio/dio.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -19,7 +20,7 @@ var baseOptions = BaseOptions(
   receiveDataWhenStatusError: true,
 );
 
-final supabaseClient = Supabase.instance.client;
+var supabaseClient = Supabase.instance.client;
 
 List<SingleChildWidget> get providers {
   return [
@@ -27,7 +28,16 @@ List<SingleChildWidget> get providers {
     Provider(
       create: (context) => AuthApiClient(supabaseClient: supabaseClient),
     ),
-    Provider(create: (context) => ApiClient(options: baseOptions)),
+    Provider(
+      create: (context) => ApiClient(
+        clientFactory: (options) {
+          final client = Dio(options);
+          client.interceptors.add(PrettyDioLogger());
+          return client;
+        },
+        options: baseOptions,
+      ),
+    ),
     Provider(create: (context) => SharedPreferencesService()),
     Provider(
       create: (context) =>

@@ -21,6 +21,9 @@ dependencies:
   shared_preferences: ^2.5.3
   command_it: ^8.0.0
   gotrue: ^2.14.0
+  brasil_fields: ^1.14.0
+  pretty_dio_logger: ^1.4.0
+  flutter_dotenv: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -32,3 +35,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - .env

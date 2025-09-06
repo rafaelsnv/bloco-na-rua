@@ -2,7 +2,6 @@ import 'package:bloco_na_rua/ui/auth/logout/view_model/logout_viewmodel.dart';
 import 'package:bloco_na_rua/ui/auth/logout/widgets/logout_button.dart';
 import 'package:bloco_na_rua/ui/home/view_model/home_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {

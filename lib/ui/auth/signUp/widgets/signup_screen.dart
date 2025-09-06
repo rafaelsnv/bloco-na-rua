@@ -1,45 +1,49 @@
 import 'package:bloco_na_rua/routing/routes.dart';
-import 'package:bloco_na_rua/ui/auth/login/view_models/login_viewmodel.dart';
+import 'package:bloco_na_rua/ui/auth/signUp/view_model/signup_viewmodel.dart';
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key, required this.viewModel});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key, required this.viewModel});
 
-  final LoginViewModel viewModel;
+  final SignUpViewModel viewModel;
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
+  final TextEditingController _phone = TextEditingController();
   final ValueNotifier<bool> _isFormValidNotifier = ValueNotifier<bool>(false);
-  bool _obscurePassword = true; // State variable for password visibility
 
   @override
   void initState() {
     super.initState();
-    widget.viewModel.login.addListener(_onResult);
+    widget.viewModel.signUp.addListener(_onResult);
     _email.addListener(_validateForm);
     _password.addListener(_validateForm);
+    _phone.addListener(_validateForm);
     _validateForm(); // Initial validation
   }
 
   @override
-  void didUpdateWidget(covariant LoginScreen oldWidget) {
+  void didUpdateWidget(covariant SignUpScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    oldWidget.viewModel.login.removeListener(_onResult);
-    widget.viewModel.login.addListener(_onResult);
+    oldWidget.viewModel.signUp.removeListener(_onResult);
+    widget.viewModel.signUp.addListener(_onResult);
   }
 
   @override
   void dispose() {
-    widget.viewModel.login.removeListener(_onResult);
+    widget.viewModel.signUp.removeListener(_onResult);
     _email.removeListener(_validateForm);
     _password.removeListener(_validateForm);
+    _phone.removeListener(_validateForm);
     _isFormValidNotifier.dispose();
     super.dispose();
   }
@@ -49,14 +53,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onResult() {
-    final result = widget.viewModel.login.results.value.data;
+    final result = widget.viewModel.signUp.results.value.data;
 
     if (result == null) {
       return;
     }
 
     if (result.isError()) {
-      widget.viewModel.login.clearErrors();
+      widget.viewModel.signUp.clearErrors();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(result.exceptionOrNull().toString()),
@@ -93,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Bem vindo',
+                    'Crie sua conta',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 24,
@@ -125,26 +129,42 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: _password,
                     keyboardType: TextInputType.visiblePassword,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Senha',
                       border: OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
-                      ),
                     ),
-                    obscureText: _obscurePassword,
+                    obscureText: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Por favor, insira uma senha';
                       }
-                      // Removed password length validation as per user request
+                      if (value.length < 6) {
+                        return 'A senha deve ter no mínimo 6 caracteres';
+                      }
+                      return null;
+                    },
+                    onChanged: (_) => _validateForm(),
+                  ),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: _phone,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    decoration: const InputDecoration(
+                      labelText: 'Telefone',
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.phone,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      TelefoneInputFormatter(),
+                    ],
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, insira um telefone';
+                      }
+                      if (value.length < 14) {
+                        return 'Telefone inválido';
+                      }
                       return null;
                     },
                     onChanged: (_) => _validateForm(),
@@ -154,9 +174,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: double.infinity,
                     height: 49,
                     child: ListenableBuilder(
-                      listenable: widget.viewModel.login,
+                      listenable: widget.viewModel.signUp,
                       builder: (context, _) {
-                        if (widget.viewModel.login.isExecuting.value) {
+                        if (widget.viewModel.signUp.isExecuting.value) {
                           return const CircularProgressIndicator();
                         }
 
@@ -175,17 +195,20 @@ class _LoginScreenState extends State<LoginScreen> {
                               onPressed: isFormValid
                                   ? () {
                                       if (_formKey.currentState!.validate()) {
-                                        widget.viewModel.login.execute((
+                                        widget.viewModel.signUp.execute((
                                           _email.value.text,
                                           _password.value.text,
+                                          _phone.value.text,
                                         ));
                                       }
                                     }
                                   : null,
                               child: Text(
-                                'Login',
+                                'Cadastrar',
                                 style: TextStyle(
-                                  color: Theme.of(context).colorScheme.surfaceBright,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.surfaceBright,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
                                 ),
@@ -198,21 +221,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 26),
                   Center(
-                    child: Text(
-                      'Esqueceu a senha?',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Theme.of(context).colorScheme.primaryFixedDim,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Center(
                     child: GestureDetector(
-                      onTap: () => context.go(Routes.register),
+                      onTap: () => context.go(Routes.login),
                       child: Text(
-                        "Não tem uma conta? Cadastre-se",
+                        "Já tem uma conta? Faça login",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,

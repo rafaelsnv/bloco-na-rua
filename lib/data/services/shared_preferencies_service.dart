@@ -11,10 +11,10 @@ class SharedPreferencesService {
       final sharedPreferences = await SharedPreferences.getInstance();
       final token = sharedPreferences.getString(_tokenKey);
       if (token == null) {
-        _logger.finer('Token not found');
+        _logger.info('Token not found');
         return Failure(Exception('Token not found'));
       }
-      _logger.finer('Got token from SharedPreferences');
+      _logger.info('Got token from SharedPreferences');
       return Success(token);
     } on Exception catch (e) {
       _logger.warning('Failed to get token', e);
@@ -32,7 +32,7 @@ class SharedPreferencesService {
           _logger.warning('Failed to remove token');
           return Failure(Exception('Failed to remove token'));
         }
-        _logger.finer('Removed token');
+        _logger.info('Removed token');
         return Success(true);
       }
 
@@ -42,7 +42,7 @@ class SharedPreferencesService {
         return Failure(Exception('Failed to replace token'));
       }
 
-      _logger.finer('Replaced token');
+      _logger.info('Replaced token');
       return Success(true);
     } on Exception catch (e) {
       _logger.warning('Failed to set token', e);

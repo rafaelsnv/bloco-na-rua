@@ -7,7 +7,6 @@ part 'login_request.g.dart';
 sealed class LoginRequest with _$LoginRequest {
   const factory LoginRequest({
     required String email,
-    required String phone,
     required String password,
   }) = _LoginRequest;
 

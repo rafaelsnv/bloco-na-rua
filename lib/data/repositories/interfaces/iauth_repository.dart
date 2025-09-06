@@ -12,5 +12,9 @@ abstract interface class IAuthRepository extends ChangeNotifier {
 
   AsyncResult<void> logout();
 
-  AsyncResult<void> signUp({required String email, required String password});
+  AsyncResult<void> signUp({
+    required String email,
+    required String password,
+    required String phone,
+  });
 }
