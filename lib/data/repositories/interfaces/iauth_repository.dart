@@ -17,4 +17,6 @@ abstract interface class IAuthRepository extends ChangeNotifier {
     required String password,
     required String phone,
   });
+
+  AsyncResult<void> resetPassword(String email);
 }

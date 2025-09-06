@@ -54,19 +54,9 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
       final loginRequest = LoginRequest(email: email, password: password);
 
       final result = await _authApiClient.logIn(loginRequest);
-      if (result.isError()) {
-        var exString = result.exceptionOrNull().toString();
-        var apiExRegex = RegExp(
-          r'AuthApiException\(message: (.*?), statusCode: (\d+), code: (\w+)\)',
-        );
 
-        var match = apiExRegex.firstMatch(exString);
-        if (match != null) {
-          var message = match.group(1);
-          _log.warning(exString);
-          return Failure(Exception(message));
-        }
-        _log.warning('Failed to login: $exString');
+      if (result.isError()) {
+        _log.severe('Failed to login', result.exceptionOrNull());
         return result;
       }
 
@@ -133,6 +123,22 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
       }
       _authToken = null;
       _isAuthenticated = false;
+      return result;
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  @override
+  AsyncResult<void> resetPassword(String email) async {
+    try {
+      final result = await _authApiClient.resetPassword(email);
+      if (result.isError()) {
+        _log.severe('Failed to reset password');
+        return result;
+      }
+
+      _log.info('Password reset email sent');
       return result;
     } finally {
       notifyListeners();

@@ -2,7 +2,6 @@ import 'package:bloco_na_rua/routing/router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// Widget principal da aplicação
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 

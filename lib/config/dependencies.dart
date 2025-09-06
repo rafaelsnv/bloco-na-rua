@@ -10,13 +10,14 @@ import 'package:bloco_na_rua/data/services/api/api_client.dart';
 import 'package:bloco_na_rua/data/services/auth/auth_api_client.dart';
 import 'package:bloco_na_rua/data/services/shared_preferencies_service.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 var baseOptions = BaseOptions(
-  baseUrl: 'https://bloconarua-dev.azurewebsites.net',
+  baseUrl: dotenv.env['SUPABASE_URL']!,
   receiveDataWhenStatusError: true,
 );
 

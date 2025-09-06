@@ -25,14 +25,22 @@ class LoginViewModel {
     );
 
     if (result.isError()) {
-      var exception = result.exceptionOrNull();
-      if (exception == null) {
-        _log.warning('Login failed', exception);
-        return Failure(Exception('Unknown error'));
-      }
-      var errorMessage = exception.toString();
-      _log.warning('Login failed: $errorMessage');
+      _log.warning('Login failed: ${result.exceptionOrNull()}');
+      return result;
     }
+
+    _log.info('Login successful');
+    return result;
+  }
+
+  AsyncResult<void> resetPassword(String email) async {
+    var result = await _authRepository.resetPassword(email);
+    if (result.isError()) {
+      _log.warning('Failed to reset password', result.exceptionOrNull());
+      return result;
+    }
+
+    _log.info('Password reset email sent');
     return result;
   }
 }

@@ -7,33 +7,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthApiClient {
   AuthApiClient({required SupabaseClient supabaseClient})
-    : _supabaseClient = supabaseClient {
-    _supabaseClient.realtime.logger = _realtimeLogger;
-  }
+    : _supabaseClient = supabaseClient;
 
   final SupabaseClient _supabaseClient;
 
   final _logger = Logger('AuthApiClient');
-
-  void _realtimeLogger(String? level, String? message, dynamic data) {
-    // Use the _logger directly based on the level string
-    switch (level?.toLowerCase()) {
-      case 'info':
-        _logger.info('$message - Data: $data');
-        break;
-      case 'warning':
-        _logger.warning('$message - Data: $data');
-        break;
-      case 'severe':
-        _logger.severe('$message - Data: $data');
-        break;
-      case 'shout':
-        _logger.shout('$message - Data: $data');
-        break;
-      default:
-        _logger.fine('$message - Data: $data'); // Default to fine
-    }
-  }
 
   AsyncResult<LoginResponse> logIn(LoginRequest loginRequest) async {
     try {
@@ -52,8 +30,11 @@ class AuthApiClient {
         refreshToken: response.session!.refreshToken,
       );
       return Success(result);
-    } catch (error) {
-      return Failure(Exception(error));
+    } on AuthException catch (ex) {
+      _logger.warning(ex.message);
+      return Failure(Exception("${ex.message} - ${ex.statusCode}"));
+    } catch (ex) {
+      return Failure(Exception(ex));
     }
   }
 
@@ -76,8 +57,23 @@ class AuthApiClient {
       );
 
       return Success(result);
-    } catch (error) {
-      return Failure(Exception(error));
+    } on AuthException catch (ex) {
+      _logger.warning(ex.message);
+      return Failure(Exception("${ex.message} - ${ex.statusCode}"));
+    } catch (ex) {
+      return Failure(Exception(ex));
+    }
+  }
+
+  AsyncResult<void> resetPassword(String email) async {
+    try {
+      await _supabaseClient.auth.resetPasswordForEmail(email);
+      return Success.unit();
+    } on AuthException catch (ex) {
+      _logger.warning(ex.message);
+      return Failure(Exception("${ex.message} - ${ex.statusCode}"));
+    } catch (ex) {
+      return Failure(Exception(ex));
     }
   }
 }

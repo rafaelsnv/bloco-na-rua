@@ -17,7 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final ValueNotifier<bool> _isFormValidNotifier = ValueNotifier<bool>(false);
-  bool _obscurePassword = true; // State variable for password visibility
+  bool _obscurePassword = true;
 
   @override
   void initState() {
@@ -25,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
     widget.viewModel.login.addListener(_onResult);
     _email.addListener(_validateForm);
     _password.addListener(_validateForm);
-    _validateForm(); // Initial validation
+    _validateForm();
   }
 
   @override
@@ -57,16 +57,24 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (result.isError()) {
       widget.viewModel.login.clearErrors();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(result.exceptionOrNull().toString()),
-          showCloseIcon: true,
-        ),
-      );
-      return;
+      // Guard BuildContext use with a mounted check on the BuildContext
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              result.exceptionOrNull().toString().replaceAll("Exception: ", ""),
+            ),
+            showCloseIcon: true,
+          ),
+        );
+        return;
+      }
     }
 
-    context.go(Routes.home);
+    // Guard BuildContext use with a mounted check on the BuildContext
+    if (context.mounted) {
+      context.go(Routes.home);
+    }
   }
 
   @override
@@ -130,7 +138,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       border: OutlineInputBorder(),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                         ),
                         onPressed: () {
                           setState(() {
@@ -144,7 +154,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Por favor, insira uma senha';
                       }
-                      // Removed password length validation as per user request
                       return null;
                     },
                     onChanged: (_) => _validateForm(),
@@ -185,7 +194,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Text(
                                 'Login',
                                 style: TextStyle(
-                                  color: Theme.of(context).colorScheme.surfaceBright,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.surfaceBright,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
                                 ),
@@ -198,12 +209,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 26),
                   Center(
-                    child: Text(
-                      'Esqueceu a senha?',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Theme.of(context).colorScheme.primaryFixedDim,
+                    child: GestureDetector(
+                      onTap: _showForgotPasswordDialog,
+                      child: Text(
+                        'Esqueceu a senha?',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).colorScheme.primaryFixedDim,
+                        ),
                       ),
                     ),
                   ),
@@ -227,6 +241,84 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showForgotPasswordDialog() {
+    final TextEditingController emailController = TextEditingController();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+    bool isFormValid = false;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            void validateForm() {
+              setState(() {
+                isFormValid = formKey.currentState?.validate() ?? false;
+              });
+            }
+
+            return AlertDialog(
+              title: const Text('Esqueceu a senha?'),
+              content: Form(
+                key: formKey,
+                child: TextFormField(
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    labelText: 'E-mail',
+                    border: OutlineInputBorder(),
+                  ),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, insira um e-mail';
+                    }
+                    if (!value.contains('@')) {
+                      return 'E-mail inválido';
+                    }
+                    return null;
+                  },
+                  onChanged: (_) => validateForm(),
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  onPressed: !isFormValid
+                      ? null
+                      : () async {
+                          if (formKey.currentState!.validate()) {
+                            final email = emailController.text;
+                            await widget.viewModel.resetPassword(email);
+
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'E-mail de redefinição de senha enviado!',
+                                  ),
+                                  showCloseIcon: true,
+                                ),
+                              );
+                              Navigator.of(context).pop();
+                            }
+                          }
+                        },
+                  child: const Text('Enviar'),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }
