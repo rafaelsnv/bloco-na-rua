@@ -260,61 +260,94 @@ class _LoginScreenState extends State<LoginScreen> {
               });
             }
 
-            return AlertDialog(
-              title: const Text('Esqueceu a senha?'),
-              content: Form(
-                key: formKey,
-                child: TextFormField(
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'E-mail',
-                    border: OutlineInputBorder(),
+            return Scaffold(
+              body: SizedBox(
+                width: double.infinity,
+                child: AlertDialog(
+                  title: const Text('Esqueceu a senha?'),
+                  content: Form(
+                    key: formKey,
+                    child: TextFormField(
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                        labelText: 'E-mail',
+                        border: OutlineInputBorder(),
+                      ),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, insira um e-mail';
+                        }
+                        if (!value.contains('@')) {
+                          return 'E-mail inválido';
+                        }
+                        return null;
+                      },
+                      onChanged: (_) => validateForm(),
+                    ),
                   ),
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira um e-mail';
-                    }
-                    if (!value.contains('@')) {
-                      return 'E-mail inválido';
-                    }
-                    return null;
-                  },
-                  onChanged: (_) => validateForm(),
+                  actions: <Widget>[
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.tertiary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        'Cancelar',
+                        style: TextStyle(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.surfaceContainerHigh,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: !isFormValid
+                          ? null
+                          : () async {
+                              if (formKey.currentState!.validate()) {
+                                final email = emailController.text;
+                                await widget.viewModel.resetPassword(email);
+
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'E-mail de redefinição de senha enviado!',
+                                      ),
+                                      showCloseIcon: true,
+                                    ),
+                                  );
+                                  Navigator.of(context).pop();
+                                }
+                              }
+                            },
+                      child: Text(
+                        'Enviar',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.surfaceBright,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Cancelar'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  onPressed: !isFormValid
-                      ? null
-                      : () async {
-                          if (formKey.currentState!.validate()) {
-                            final email = emailController.text;
-                            await widget.viewModel.resetPassword(email);
-
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'E-mail de redefinição de senha enviado!',
-                                  ),
-                                  showCloseIcon: true,
-                                ),
-                              );
-                              Navigator.of(context).pop();
-                            }
-                          }
-                        },
-                  child: const Text('Enviar'),
-                ),
-              ],
             );
           },
         );

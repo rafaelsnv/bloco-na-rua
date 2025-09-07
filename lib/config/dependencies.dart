@@ -17,7 +17,7 @@ import 'package:provider/single_child_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 var baseOptions = BaseOptions(
-  baseUrl: dotenv.env['SUPABASE_URL']!,
+  baseUrl: dotenv.env['API_URL']!,
   receiveDataWhenStatusError: true,
 );
 
