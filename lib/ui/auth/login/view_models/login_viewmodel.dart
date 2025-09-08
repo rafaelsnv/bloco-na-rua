@@ -1,20 +1,21 @@
-import 'package:bloco_na_rua/data/repositories/auth_repository.dart';
+import 'package:bloco_na_rua/data/repositories/interfaces/iauth_repository.dart';
 import 'package:command_it/command_it.dart';
 import 'package:logging/logging.dart';
 import 'package:result_dart/result_dart.dart';
 
 class LoginViewModel {
-  LoginViewModel({required AuthRepository authRepository})
+  LoginViewModel({required IAuthRepository authRepository})
     : _authRepository = authRepository {
-    login = Command.createAsyncNoResult<(String email, String password)>(
+    login = Command.createAsync<(String email, String password), Result<void>>(
+      initialValue: Failure(Exception('Not executed')),
       _login,
     );
   }
 
-  final AuthRepository _authRepository;
+  final IAuthRepository _authRepository;
   final _log = Logger('LoginViewmodel');
 
-  late Command login;
+  late Command<(String email, String password), Result<void>> login;
 
   AsyncResult<void> _login((String, String) credentials) async {
     final (email, password) = credentials;
@@ -24,8 +25,22 @@ class LoginViewModel {
     );
 
     if (result.isError()) {
-      _log.warning('Login failed', result.exceptionOrNull());
+      _log.warning('Login failed: ${result.exceptionOrNull()}');
+      return result;
     }
+
+    _log.info('Login successful');
+    return result;
+  }
+
+  AsyncResult<void> resetPassword(String email) async {
+    var result = await _authRepository.resetPassword(email);
+    if (result.isError()) {
+      _log.warning('Failed to reset password', result.exceptionOrNull());
+      return result;
+    }
+
+    _log.info('Password reset email sent');
     return result;
   }
 }

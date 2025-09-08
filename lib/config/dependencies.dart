@@ -3,22 +3,25 @@
 // found in the LICENSE file.
 
 import 'package:bloco_na_rua/data/repositories/auth_repository.dart';
+import 'package:bloco_na_rua/data/repositories/interfaces/iauth_repository.dart';
+import 'package:bloco_na_rua/data/repositories/interfaces/imembers_repository.dart';
 import 'package:bloco_na_rua/data/repositories/members_repository.dart';
 import 'package:bloco_na_rua/data/services/api/api_client.dart';
 import 'package:bloco_na_rua/data/services/auth/auth_api_client.dart';
 import 'package:bloco_na_rua/data/services/shared_preferencies_service.dart';
-import 'package:bloco_na_rua/ui/members/view_models/members_viewmodel.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 var baseOptions = BaseOptions(
-  baseUrl: 'https://bloconarua-dev.azurewebsites.net',
+  baseUrl: dotenv.env['API_URL']!,
   receiveDataWhenStatusError: true,
 );
 
-final supabaseClient = Supabase.instance.client;
+var supabaseClient = Supabase.instance.client;
 
 List<SingleChildWidget> get providers {
   return [
@@ -26,22 +29,30 @@ List<SingleChildWidget> get providers {
     Provider(
       create: (context) => AuthApiClient(supabaseClient: supabaseClient),
     ),
-    Provider(create: (context) => ApiClient(options: baseOptions)),
+    Provider(
+      create: (context) => ApiClient(
+        clientFactory: (options) {
+          final client = Dio(options);
+          client.interceptors.add(PrettyDioLogger());
+          return client;
+        },
+        options: baseOptions,
+      ),
+    ),
     Provider(create: (context) => SharedPreferencesService()),
     Provider(
       create: (context) =>
           AuthApiClient(supabaseClient: context.read<SupabaseClient>()),
     ),
-    Provider(create: (context) => MembersRepository(apiClient: context.read())),
-    ChangeNotifierProvider(
+    Provider<IMembersRepository>(
+      create: (context) => MembersRepository(apiClient: context.read()),
+    ),
+    ChangeNotifierProvider<IAuthRepository>(
       create: (context) => AuthRepository(
         apiClient: context.read(),
         authApiClient: context.read(),
         sharedPreferencesService: context.read(),
       ),
-    ),
-    Provider(
-      create: (context) => MembersViewModel(membersRepository: context.read()),
     ),
   ];
 }

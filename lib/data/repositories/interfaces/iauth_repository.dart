@@ -1,6 +1,7 @@
+import 'package:flutter/widgets.dart';
 import 'package:result_dart/result_dart.dart';
 
-abstract interface class IAuthRepository {
+abstract interface class IAuthRepository extends ChangeNotifier {
   Future<bool> get isAuthenticated;
 
   AsyncResult<void> login({
@@ -11,5 +12,11 @@ abstract interface class IAuthRepository {
 
   AsyncResult<void> logout();
 
-  AsyncResult<void> signUp({required String email, required String password});
+  AsyncResult<void> signUp({
+    required String email,
+    required String password,
+    required String phone,
+  });
+
+  AsyncResult<void> resetPassword(String email);
 }
