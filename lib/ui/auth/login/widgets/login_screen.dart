@@ -1,7 +1,6 @@
 import 'package:bloco_na_rua/routing/routes.dart';
 import 'package:bloco_na_rua/ui/auth/login/view_models/login_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
