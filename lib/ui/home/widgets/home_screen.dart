@@ -51,6 +51,16 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          context.go(Routes.createBlock);
+        },
+        label: const Text('Criar Bloco'),
+        icon: const Icon(Icons.add),
+        backgroundColor: Colors.purpleAccent.shade100,
+        foregroundColor: Colors.black,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

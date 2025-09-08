@@ -13,6 +13,7 @@ class Routes {
 
   // Rotas de blocos de carnaval
   static const String carnivalBlock = '/carnival-block';
+  static const String createBlock = '/create-block';
 
   // Rotas de membros
   static const String members = '/members';
