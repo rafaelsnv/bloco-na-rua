@@ -8,7 +8,7 @@ class CarnivalBlockPage extends StatefulWidget {
 }
 
 class _CarnivalBlockPageState extends State<CarnivalBlockPage> {
-  final String _blockName = 'Etnão Brilha'; // Mock block name
+  final String _blockName = 'Então Brilha'; // Mock block name
   List<Map<String, String>> _members = [
     {'firstName': 'João', 'lastName': 'Silva'},
     {'firstName': 'Maria', 'lastName': 'Santos'},
@@ -24,11 +24,11 @@ class _CarnivalBlockPageState extends State<CarnivalBlockPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_blockName, style: const TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
+        title: Text(_blockName, style: const TextStyle(color: Colors.white)),
+        backgroundColor: Colors.grey[850],
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit, color: Colors.deepPurple),
+            icon: Icon(Icons.edit, color: Colors.purpleAccent.shade100),
             onPressed: () {
               // Handle edit action
             },
@@ -43,15 +43,21 @@ class _CarnivalBlockPageState extends State<CarnivalBlockPage> {
               final member = _members[index];
               final isSelected = _selectedMembers.contains(index);
               return Card(
-                color: Colors.deepPurple.shade50, // Purple hue background
-                elevation: isSelected ? 8.0 : 0.0, // Add shadow if selected
+                color: Colors.grey[800], // Darker card background
+                elevation: isSelected
+                    ? 8.0
+                    : 2.0, // Adjust shadow for dark mode
                 margin: const EdgeInsets.symmetric(
                   vertical: 4.0,
                   horizontal: 8.0,
                 ),
                 child: ListTile(
-                  title: Text('${member['firstName']} ${member['lastName']}'),
+                  title: Text(
+                    '${member['firstName']} ${member['lastName']}',
+                    style: const TextStyle(color: Colors.white),
+                  ),
                   selected: isSelected,
+                  selectedTileColor: Colors.purple.withOpacity(0.3),
                   onTap: () {
                     setState(() {
                       if (isSelected) {
@@ -76,7 +82,7 @@ class _CarnivalBlockPageState extends State<CarnivalBlockPage> {
                     _selectedMembers.clear();
                   });
                 },
-                backgroundColor: Colors.red,
+                backgroundColor: Colors.red.shade800,
                 child: const Icon(Icons.delete, color: Colors.white),
               ),
             ),
@@ -87,8 +93,8 @@ class _CarnivalBlockPageState extends State<CarnivalBlockPage> {
         onPressed: () {
           // Handle add member action
         },
-        backgroundColor: Colors.deepPurple,
-        child: const Icon(Icons.add, color: Colors.white),
+        backgroundColor: Colors.purpleAccent.shade100,
+        child: const Icon(Icons.add, color: Colors.black),
       ),
     );
   }
