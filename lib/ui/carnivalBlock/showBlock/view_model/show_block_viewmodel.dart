@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
 
-class CarnivalBlockViewModel extends ChangeNotifier {
+class ShowBlockViewModel extends ChangeNotifier {
   // Add your view model logic here
 }

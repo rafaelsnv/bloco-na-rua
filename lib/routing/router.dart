@@ -4,10 +4,12 @@ import 'package:bloco_na_rua/ui/auth/login/view_models/login_viewmodel.dart';
 import 'package:bloco_na_rua/ui/auth/login/widgets/login_screen.dart';
 import 'package:bloco_na_rua/ui/auth/signUp/view_model/signup_viewmodel.dart';
 import 'package:bloco_na_rua/ui/auth/signUp/widgets/signup_screen.dart';
-import 'package:bloco_na_rua/ui/carnivalBlock/carnival_block.dart';
-import 'package:bloco_na_rua/ui/carnivalBlock/createBlock/create_block.dart';
+import 'package:bloco_na_rua/ui/carnivalBlock/showBlock/widgets/show_block_screen.dart';
+import 'package:bloco_na_rua/ui/carnivalBlock/createBlock/widgets/create_block_screen.dart';
 import 'package:bloco_na_rua/ui/home/view_model/home_viewmodel.dart';
 import 'package:bloco_na_rua/ui/home/widgets/home_screen.dart';
+import 'package:bloco_na_rua/ui/members/view_models/members_viewmodel.dart';
+import 'package:bloco_na_rua/ui/members/widgets/members_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -45,13 +47,21 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
     GoRoute(
       path: Routes.carnivalBlock,
       builder: (context, state) {
-        return const CarnivalBlockPage();
+        return const ShowBlockScreen();
       },
     ),
     GoRoute(
       path: Routes.createBlock,
       builder: (context, state) {
-        return const CreateBlock();
+        return const CreateBlockScreen();
+      },
+    ),
+    GoRoute(
+      path: Routes.members,
+      builder: (context, state) {
+        return MembersScreen(
+          viewModel: MembersViewModel(membersRepository: context.read()),
+        );
       },
     ),
   ],

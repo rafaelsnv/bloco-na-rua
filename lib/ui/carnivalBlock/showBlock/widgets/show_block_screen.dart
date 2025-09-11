@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class CarnivalBlockPage extends StatefulWidget {
-  const CarnivalBlockPage({super.key});
+class ShowBlockScreen extends StatefulWidget {
+  const ShowBlockScreen({super.key});
 
   @override
-  State<CarnivalBlockPage> createState() => _CarnivalBlockPageState();
+  State<ShowBlockScreen> createState() => _ShowBlockScreenState();
 }
 
-class _CarnivalBlockPageState extends State<CarnivalBlockPage> {
+class _ShowBlockScreenState extends State<ShowBlockScreen> {
   final String _blockName = 'Então Brilha'; // Mock block name
   List<Map<String, String>> _members = [
     {'firstName': 'João', 'lastName': 'Silva'},

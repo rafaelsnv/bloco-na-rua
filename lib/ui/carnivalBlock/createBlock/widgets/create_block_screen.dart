@@ -2,8 +2,8 @@ import 'package:bloco_na_rua/routing/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class CreateBlock extends StatelessWidget {
-  const CreateBlock({super.key});
+class CreateBlockScreen extends StatelessWidget {
+  const CreateBlockScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

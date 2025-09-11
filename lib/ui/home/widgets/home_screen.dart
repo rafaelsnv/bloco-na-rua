@@ -41,26 +41,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
             return child!;
           },
-          child: Center(
-            child: ElevatedButton(
-              onPressed: () {
-                context.go(Routes.carnivalBlock);
-              },
-              child: const Text('toBlockPage'),
-            ),
+          child: Column(
+            children: [
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    context.go(Routes.carnivalBlock);
+                  },
+                  child: const Text('Block Page'),
+                ),
+              ),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    context.go(Routes.members);
+                  },
+                  child: const Text('Members Page'),
+                ),
+              ),
+            ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          context.go(Routes.createBlock);
-        },
-        label: const Text('Criar Bloco'),
-        icon: const Icon(Icons.add),
-        backgroundColor: Colors.purpleAccent.shade100,
-        foregroundColor: Colors.black,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
