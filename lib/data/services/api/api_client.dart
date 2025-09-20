@@ -19,16 +19,59 @@ class ApiClient {
       String endpoint = TEntity.toString().replaceAll('Entity', '');
       final request = await client.get('/api/v1/$endpoint');
       if (request.statusCode != 200) {
-        return Failure(Exception('Failed to load data: ${request.statusCode}'));
+        return Failure(Exception('Request failed: ${request.statusCode}'));
+      }
+
+      final response = await request.data as List<dynamic>;
+
+      return Success(
+        response
+            .map((element) => fromJsonFactory(element as Map<String, dynamic>))
+            .toList(),
+      );
+    } catch (error) {
+      client.close();
+      return Failure(Exception('An error occurred: $error'));
+    }
+  }
+
+  AsyncResult<TEntity> getByIdAsync<TEntity extends EntityBase>(
+    int id,
+    JsonFactory<TEntity> fromJsonFactory,
+  ) async {
+    var client = _clientFactory(_options);
+    try {
+      String endpoint = TEntity.toString().replaceAll('Entity', '');
+      final request = await client.get('/api/v1/$endpoint/${id.toString()}');
+      if (request.statusCode != 200) {
+        return Failure(Exception('Request failed: ${request.statusCode}'));
+      }
+
+      final response = await request.data;
+      return Success(fromJsonFactory(response as Map<String, dynamic>));
+    } catch (error) {
+      client.close();
+      return Failure(Exception('An error occurred: $error'));
+    }
+  }
+
+  AsyncResult<TEntity> deleteByIdAsync<TEntity extends EntityBase>(
+    int id,
+    JsonFactory<TEntity> fromJsonFactory,
+  ) async {
+    var client = _clientFactory(_options);
+    try {
+      String endpoint = TEntity.toString().replaceAll('Entity', '');
+      final request = await client.delete('/api/v1/$endpoint/${id.toString()}');
+      if (request.statusCode != 204) {
+        return Failure(Exception('Request failed: ${request.statusCode}'));
       }
 
       final response = await request.data;
       final responseBody = jsonEncode(response);
       final json = jsonDecode(responseBody) as List<dynamic>;
 
-      return Success(
-        json.map((e) => fromJsonFactory(e as Map<String, dynamic>)).toList(),
-      );
+      return Success(fromJsonFactory(json as Map<String, dynamic>));
     } catch (error) {
       client.close();
       return Failure(Exception('An error occurred: $error'));

@@ -17,8 +17,8 @@ class HomeViewModel extends ChangeNotifier {
 
   AsyncResult<void> _load() async {
     try {
-      final member = await _membersRepository.getAllAsync();
-      return member;
+      final membersList = await _membersRepository.getAllAsync();
+      return membersList;
     } finally {
       notifyListeners();
     }

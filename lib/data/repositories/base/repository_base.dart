@@ -15,7 +15,17 @@ class RepositoryBase<TEntity extends EntityBase>
   final JsonFactory<TEntity> _fromJsonFactory;
 
   @override
-  AsyncResult<List<TEntity>> getAllAsync() {
-    return _apiClient.getAllAsync<TEntity>(_fromJsonFactory);
+  AsyncResult<List<TEntity>> getAllAsync() async {
+    return await _apiClient.getAllAsync<TEntity>(_fromJsonFactory);
+  }
+
+  @override
+  AsyncResult<TEntity> getByIdAsync(int id) async {
+    return await _apiClient.getByIdAsync<TEntity>(id, _fromJsonFactory);
+  }
+
+  @override
+  AsyncResult deleteByIdAsync(int id) async {
+    return await _apiClient.deleteByIdAsync<TEntity>(id, _fromJsonFactory);
   }
 }

@@ -1,8 +1,11 @@
 import 'package:bloco_na_rua/routing/routes.dart';
+import 'package:bloco_na_rua/ui/auth/logout/view_model/logout_viewmodel.dart';
+import 'package:bloco_na_rua/ui/auth/logout/widgets/logout_button.dart';
 import 'package:bloco_na_rua/ui/core/widgets/profile_button.dart';
 import 'package:bloco_na_rua/ui/home/view_model/home_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.viewModel});
@@ -20,6 +23,11 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         leading: ProfileButton(),
         title: const Text('Bloco Na Rua'),
+        actions: [
+          LogoutButton(
+            viewModel: LogoutViewModel(authRepository: context.read()),
+          ),
+        ],
       ),
       body: SafeArea(
         child: ListenableBuilder(

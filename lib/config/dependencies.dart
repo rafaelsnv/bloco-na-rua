@@ -19,6 +19,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 var baseOptions = BaseOptions(
   baseUrl: dotenv.env['API_URL']!,
   receiveDataWhenStatusError: true,
+  validateStatus: (status) => status! < 500,
 );
 
 var supabaseClient = Supabase.instance.client;
