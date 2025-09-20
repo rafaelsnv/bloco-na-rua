@@ -1,6 +1,5 @@
 import 'package:bloco_na_rua/domain/entities/members_entity.dart';
 import 'package:bloco_na_rua/ui/members/view_models/members_viewmodel.dart';
-import 'package:command_it/command_it.dart';
 import 'package:flutter/material.dart';
 
 class MembersScreen extends StatefulWidget {
@@ -82,9 +81,11 @@ class _MembersScreenState extends State<MembersScreen> {
               itemCount: membersList.length,
               itemBuilder: (context, index) {
                 MembersEntity member = membersList[index];
-                return ListTile(
-                  title: Text(member.name.toString()),
-                  subtitle: Text(member.email.toString()),
+                return Card(
+                  child: ListTile(
+                    title: Text(member.name.toString()),
+                    subtitle: Text(member.email.toString()),
+                  ),
                 );
               },
             );

@@ -8,8 +8,7 @@ class ShowBlockScreen extends StatefulWidget {
 }
 
 class _ShowBlockScreenState extends State<ShowBlockScreen> {
-  final String _blockName = 'Então Brilha'; // Mock block name
-  List<Map<String, String>> _members = [
+  final List<Map<String, String>> _members = [
     {'firstName': 'João', 'lastName': 'Silva'},
     {'firstName': 'Maria', 'lastName': 'Santos'},
     {'firstName': 'Pedro', 'lastName': 'Almeida'},
@@ -18,23 +17,12 @@ class _ShowBlockScreenState extends State<ShowBlockScreen> {
     {'firstName': 'Sofia', 'lastName': 'Costa'},
     {'firstName': 'Ricardo', 'lastName': 'Martins'},
   ];
-  Set<int> _selectedMembers = {};
+  final Set<int> _selectedMembers = {};
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_blockName, style: const TextStyle(color: Colors.white)),
-        backgroundColor: Colors.grey[850],
-        actions: [
-          IconButton(
-            icon: Icon(Icons.edit, color: Colors.purpleAccent.shade100),
-            onPressed: () {
-              // Handle edit action
-            },
-          ),
-        ],
-      ),
+      appBar: AppBar(title: Text("Blocos")),
       body: Stack(
         children: [
           ListView.builder(
@@ -57,7 +45,6 @@ class _ShowBlockScreenState extends State<ShowBlockScreen> {
                     style: const TextStyle(color: Colors.white),
                   ),
                   selected: isSelected,
-                  selectedTileColor: Colors.purple.withOpacity(0.3),
                   onTap: () {
                     setState(() {
                       if (isSelected) {

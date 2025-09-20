@@ -1,10 +1,8 @@
 import 'package:bloco_na_rua/routing/routes.dart';
-import 'package:bloco_na_rua/ui/auth/logout/view_model/logout_viewmodel.dart';
-import 'package:bloco_na_rua/ui/auth/logout/widgets/logout_button.dart';
+import 'package:bloco_na_rua/ui/core/widgets/profile_button.dart';
 import 'package:bloco_na_rua/ui/home/view_model/home_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.viewModel});
@@ -20,12 +18,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('MainScreen'),
-        actions: [
-          LogoutButton(
-            viewModel: LogoutViewModel(authRepository: context.read()),
-          ),
-        ],
+        leading: ProfileButton(),
+        title: const Text('Bloco Na Rua'),
       ),
       body: SafeArea(
         child: ListenableBuilder(
@@ -44,18 +38,17 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               Center(
+                // child: ,
+              ),
+              Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    context.go(Routes.carnivalBlock);
-                  },
+                  onPressed: () => context.push(Routes.carnivalBlock),
                   child: const Text('Block Page'),
                 ),
               ),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    context.go(Routes.members);
-                  },
+                  onPressed: () => context.push(Routes.members),
                   child: const Text('Members Page'),
                 ),
               ),
