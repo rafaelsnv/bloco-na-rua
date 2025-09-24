@@ -16,6 +16,7 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _name = TextEditingController();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController _phone = TextEditingController();
@@ -25,10 +26,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void initState() {
     super.initState();
     widget.viewModel.signUp.addListener(_onResult);
+    _name.addListener(_validateForm);
     _email.addListener(_validateForm);
     _password.addListener(_validateForm);
     _phone.addListener(_validateForm);
-    _validateForm(); // Initial validation
+    _validateForm();
   }
 
   @override
@@ -105,6 +107,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   SizedBox(height: 26),
+                  TextFormField(
+                    controller: _name,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      labelText: 'Nome',
+                      border: OutlineInputBorder(),
+                    ),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, insira seu nome';
+                      }
+                      return null;
+                    },
+                    onChanged: (_) => _validateForm(),
+                  ),
+                  SizedBox(height: 16),
                   TextFormField(
                     controller: _email,
                     keyboardType: TextInputType.emailAddress,
@@ -196,6 +215,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   ? () {
                                       if (_formKey.currentState!.validate()) {
                                         widget.viewModel.signUp.execute((
+                                          _name.value.text,
                                           _email.value.text,
                                           _password.value.text,
                                           _phone.value.text,
