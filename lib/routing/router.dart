@@ -32,10 +32,7 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
       path: Routes.register,
       builder: (context, state) {
         return SignUpScreen(
-          viewModel: SignUpViewModel(
-            authRepository: context.read(),
-            membersRepository: context.read(),
-          ),
+          viewModel: SignUpViewModel(authRepository: context.read()),
         );
       },
     ),
