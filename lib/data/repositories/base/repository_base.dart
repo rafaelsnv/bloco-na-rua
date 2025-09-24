@@ -1,31 +1,31 @@
 import 'package:bloco_na_rua/core/entity_base.dart';
 import 'package:bloco_na_rua/core/irepository_base.dart';
-import 'package:bloco_na_rua/data/services/api/api_client.dart';
+import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
 import 'package:result_dart/result_dart.dart';
 
 class RepositoryBase<TEntity extends EntityBase>
     implements IRepositoryBase<TEntity> {
   RepositoryBase({
-    required ApiClient apiClient,
+    required IBaseApiClient client,
     required JsonFactory<TEntity> fromJsonFactory,
-  }) : _apiClient = apiClient,
+  }) : apiClient = client,
        _fromJsonFactory = fromJsonFactory;
 
-  final ApiClient _apiClient;
+  final IBaseApiClient apiClient;
   final JsonFactory<TEntity> _fromJsonFactory;
 
   @override
   AsyncResult<List<TEntity>> getAllAsync() async {
-    return await _apiClient.getAllAsync<TEntity>(_fromJsonFactory);
+    return await apiClient.getAllAsync<TEntity>(_fromJsonFactory);
   }
 
   @override
   AsyncResult<TEntity> getByIdAsync(int id) async {
-    return await _apiClient.getByIdAsync<TEntity>(id, _fromJsonFactory);
+    return await apiClient.getByIdAsync<TEntity>(id, _fromJsonFactory);
   }
 
   @override
   AsyncResult deleteByIdAsync(int id) async {
-    return await _apiClient.deleteByIdAsync<TEntity>(id, _fromJsonFactory);
+    return await apiClient.deleteByIdAsync<TEntity>(id);
   }
 }

@@ -1,23 +1,32 @@
-import 'dart:convert';
 import 'package:bloco_na_rua/core/entity_base.dart';
+import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
 import 'package:dio/dio.dart';
 import 'package:result_dart/result_dart.dart';
 
-class ApiClient {
-  ApiClient({BaseOptions? options, Dio Function(BaseOptions?)? clientFactory})
-    : _clientFactory = clientFactory ?? Dio.new,
-      _options = options;
+class BaseApiClient implements IBaseApiClient {
+  BaseApiClient({this.options, this.clientFactory}) {
+    client = (clientFactory ?? Dio.new)(options);
+  }
 
-  final Dio Function(BaseOptions?) _clientFactory;
-  final BaseOptions? _options;
+  @override
+  final Dio Function(BaseOptions?)? clientFactory;
+  @override
+  final BaseOptions? options;
+  @override
+  late final Dio client;
+  @override
+  final String basePath = '/api/v1/';
 
+  @override
   AsyncResult<List<TEntity>> getAllAsync<TEntity extends EntityBase>(
     JsonFactory<TEntity> fromJsonFactory,
   ) async {
-    var client = _clientFactory(_options);
     try {
-      String endpoint = TEntity.toString().replaceAll('Entity', '');
-      final request = await client.get('/api/v1/$endpoint');
+      String endpoint = TEntity.toString()
+          .replaceAll('Entity', '')
+          .toLowerCase();
+      // final request = await client.get('/api/v1/$endpoint');
+      final request = await client.get('$basePath$endpoint');
       if (request.statusCode != 200) {
         return Failure(Exception('Request failed: ${request.statusCode}'));
       }
@@ -35,16 +44,20 @@ class ApiClient {
     }
   }
 
+  @override
   AsyncResult<TEntity> getByIdAsync<TEntity extends EntityBase>(
     int id,
     JsonFactory<TEntity> fromJsonFactory,
   ) async {
-    var client = _clientFactory(_options);
     try {
       String endpoint = TEntity.toString().replaceAll('Entity', '');
-      final request = await client.get('/api/v1/$endpoint/${id.toString()}');
+      final request = await client.get('$basePath$endpoint/${id.toString()}');
       if (request.statusCode != 200) {
-        return Failure(Exception('Request failed: ${request.statusCode}'));
+        return Failure(
+          Exception(
+            'Request failed: ${request.statusCode} - ${request.statusMessage}',
+          ),
+        );
       }
 
       final response = await request.data;
@@ -55,23 +68,21 @@ class ApiClient {
     }
   }
 
-  AsyncResult<TEntity> deleteByIdAsync<TEntity extends EntityBase>(
-    int id,
-    JsonFactory<TEntity> fromJsonFactory,
-  ) async {
-    var client = _clientFactory(_options);
+  @override
+  AsyncResult deleteByIdAsync<TEntity extends EntityBase>(int id) async {
     try {
       String endpoint = TEntity.toString().replaceAll('Entity', '');
-      final request = await client.delete('/api/v1/$endpoint/${id.toString()}');
+      final request = await client.delete(
+        '$basePath$endpoint/${id.toString()}',
+      );
       if (request.statusCode != 204) {
-        return Failure(Exception('Request failed: ${request.statusCode}'));
+        return Failure(
+          Exception(
+            'Request failed: ${request.statusCode} - ${request.statusMessage}',
+          ),
+        );
       }
-
-      final response = await request.data;
-      final responseBody = jsonEncode(response);
-      final json = jsonDecode(responseBody) as List<dynamic>;
-
-      return Success(fromJsonFactory(json as Map<String, dynamic>));
+      return Success(request.statusCode.toString());
     } catch (error) {
       client.close();
       return Failure(Exception('An error occurred: $error'));

@@ -6,9 +6,11 @@ part 'signup_request.g.dart';
 @freezed
 sealed class SignUpRequest with _$SignUpRequest {
   const factory SignUpRequest({
+    required String name,
     required String email,
     required String phone,
     required String password,
+    required String profileImage,
   }) = _SignUpRequest;
 
   factory SignUpRequest.fromJson(Map<String, dynamic> json) =>

@@ -6,7 +6,10 @@ import 'package:bloco_na_rua/data/repositories/auth_repository.dart';
 import 'package:bloco_na_rua/data/repositories/interfaces/iauth_repository.dart';
 import 'package:bloco_na_rua/data/repositories/interfaces/imembers_repository.dart';
 import 'package:bloco_na_rua/data/repositories/members_repository.dart';
-import 'package:bloco_na_rua/data/services/api/api_client.dart';
+import 'package:bloco_na_rua/data/services/api/base/base_api_client.dart';
+import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
+import 'package:bloco_na_rua/data/services/api/members/imembers_api_client.dart';
+import 'package:bloco_na_rua/data/services/api/members/members_api_client.dart';
 import 'package:bloco_na_rua/data/services/auth/auth_api_client.dart';
 import 'package:bloco_na_rua/data/services/shared_preferencies_service.dart';
 import 'package:dio/dio.dart';
@@ -30,8 +33,8 @@ List<SingleChildWidget> get providers {
     Provider(
       create: (context) => AuthApiClient(supabaseClient: supabaseClient),
     ),
-    Provider(
-      create: (context) => ApiClient(
+    Provider<IBaseApiClient>(
+      create: (context) => BaseApiClient(
         clientFactory: (options) {
           final client = Dio(options);
           client.interceptors.add(PrettyDioLogger());
@@ -40,17 +43,20 @@ List<SingleChildWidget> get providers {
         options: baseOptions,
       ),
     ),
+    Provider<IMembersApiClient>(
+      create: (context) => MembersApiClient(context.read<IBaseApiClient>()),
+    ),
     Provider(create: (context) => SharedPreferencesService()),
     Provider(
       create: (context) =>
           AuthApiClient(supabaseClient: context.read<SupabaseClient>()),
     ),
     Provider<IMembersRepository>(
-      create: (context) => MembersRepository(apiClient: context.read()),
+      create: (context) => MembersRepository(membersApiClient: context.read()),
     ),
     ChangeNotifierProvider<IAuthRepository>(
       create: (context) => AuthRepository(
-        apiClient: context.read(),
+        membersRepository: context.read(),
         authApiClient: context.read(),
         sharedPreferencesService: context.read(),
       ),

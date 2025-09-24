@@ -10,10 +10,11 @@ part 'member_create.g.dart';
 @freezed
 sealed class MemberCreate with _$MemberCreate {
   const factory MemberCreate({
-    String? name,
-    String? email,
-    String? phone,
-    String? profileImage,
+    required String name,
+    required String email,
+    required String phone,
+    required String profileImage,
+    required String uuid,
   }) = _MemberCreate;
 
   factory MemberCreate.fromJson(Map<String, Object?> json) =>

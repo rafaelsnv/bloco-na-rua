@@ -1,10 +1,12 @@
+import 'package:bloco_na_rua/data/services/auth/models/login_response/login_response.dart';
+import 'package:bloco_na_rua/data/services/auth/models/signup_request/signup_request.dart';
 import 'package:flutter/widgets.dart';
 import 'package:result_dart/result_dart.dart';
 
 abstract interface class IAuthRepository extends ChangeNotifier {
   Future<bool> get isAuthenticated;
 
-  AsyncResult<void> login({
+  AsyncResult<LoginResponse> login({
     required String email,
     required String password,
     String? phone,
@@ -12,11 +14,7 @@ abstract interface class IAuthRepository extends ChangeNotifier {
 
   AsyncResult<void> logout();
 
-  AsyncResult<void> signUp({
-    required String email,
-    required String password,
-    required String phone,
-  });
+  AsyncResult<LoginResponse> signUp(SignUpRequest signUpRequest);
 
   AsyncResult<void> resetPassword(String email);
 }

@@ -14,12 +14,15 @@ sealed class MembersEntity extends EntityBase with _$MembersEntity {
   final String? phone;
   @override
   final String? profileImage;
+  @override
+  final String? uuid;
 
   MembersEntity._({
     this.name,
     this.email,
     this.phone,
     this.profileImage,
+    this.uuid,
     required super.id,
     super.createdAt,
     super.updatedAt,
@@ -31,6 +34,7 @@ sealed class MembersEntity extends EntityBase with _$MembersEntity {
     String? email,
     String? phone,
     String? profileImage,
+    String? uuid,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) = _MembersEntity;

@@ -1,23 +1,26 @@
 import 'package:bloco_na_rua/data/repositories/interfaces/iauth_repository.dart';
-import 'package:bloco_na_rua/data/services/api/api_client.dart';
+import 'package:bloco_na_rua/data/repositories/interfaces/imembers_repository.dart';
+import 'package:bloco_na_rua/data/services/api/members/create/member_create.dart';
 import 'package:bloco_na_rua/data/services/auth/auth_api_client.dart';
 import 'package:bloco_na_rua/data/services/auth/models/login_request/login_request.dart';
+import 'package:bloco_na_rua/data/services/auth/models/login_response/login_response.dart';
 import 'package:bloco_na_rua/data/services/auth/models/signup_request/signup_request.dart';
 import 'package:bloco_na_rua/data/services/shared_preferencies_service.dart';
+import 'package:bloco_na_rua/domain/entities/members_entity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:result_dart/result_dart.dart';
 
 class AuthRepository extends ChangeNotifier implements IAuthRepository {
   AuthRepository({
-    required ApiClient apiClient,
+    required IMembersRepository membersRepository,
     required AuthApiClient authApiClient,
     required SharedPreferencesService sharedPreferencesService,
-  }) : _apiClient = apiClient,
+  }) : _membersRepository = membersRepository,
        _authApiClient = authApiClient,
        _sharedPreferencesService = sharedPreferencesService;
 
-  final ApiClient _apiClient;
+  final IMembersRepository _membersRepository;
   final AuthApiClient _authApiClient;
   final SharedPreferencesService _sharedPreferencesService;
 
@@ -45,7 +48,7 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
   }
 
   @override
-  AsyncResult<void> login({
+  AsyncResult<LoginResponse> login({
     required String email,
     required String password,
     String? phone = '',
@@ -53,61 +56,75 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
     try {
       final loginRequest = LoginRequest(email: email, password: password);
 
-      final result = await _authApiClient.logIn(loginRequest);
+      final loginResult = await _authApiClient.logIn(loginRequest);
 
-      if (result.isError()) {
-        _log.severe('Failed to login', result.exceptionOrNull());
-        return result;
+      if (loginResult.isError()) {
+        _log.severe('Failed to login', loginResult.exceptionOrNull());
+        return loginResult;
       }
 
-      final loginResponse = result.getOrNull();
+      final loginResponse = loginResult.getOrNull();
       if (loginResponse == null) {
         _log.warning('Login response is null');
-        return result;
+        return loginResult;
       }
 
       _log.info('Login successful');
       _isAuthenticated = true;
       _authToken = loginResponse.accessToken;
-      return await _sharedPreferencesService.saveToken(
+
+      var tokenResult = await _sharedPreferencesService.saveToken(
         loginResponse.accessToken,
       );
+      if (tokenResult.isError()) {
+        _log.warning('Failed to login', loginResult.exceptionOrNull());
+        return Failure(tokenResult.exceptionOrNull()!);
+      }
+
+      return loginResult;
     } finally {
       notifyListeners();
     }
   }
 
   @override
-  AsyncResult<void> signUp({
-    required String email,
-    required String password,
-    required String phone,
-  }) async {
+  AsyncResult<LoginResponse> signUp(SignUpRequest signUpRequest) async {
     try {
-      final signUpRequest = SignUpRequest(
-        email: email,
-        password: password,
-        phone: phone,
-      );
+      final authResult = await _authApiClient.signUp(signUpRequest);
+      if (authResult.isError() || authResult.getOrNull() == null) {
+        _log.severe(
+          'Failed to sign up',
+          authResult.exceptionOrNull() ?? authResult.getOrNull(),
+        );
 
-      final result = await _authApiClient.signUp(signUpRequest);
-      if (result.isError()) {
-        _log.severe('Failed to sign up', result.exceptionOrNull());
-        return result;
+        return authResult;
       }
 
-      final signUpResponse = result.getOrNull();
-      if (signUpResponse == null) {
-        _log.warning('Sign up response is null');
-        return result;
+      var userData = authResult.getOrNull();
+      if (userData == null) {
+        return Failure(Exception('User data is null'));
+      }
+
+      var membersResult = await _registerMember(
+        signUpRequest,
+        userData.userUuid,
+      );
+      if (membersResult.isError()) {
+        return Failure(membersResult.exceptionOrNull()!);
       }
 
       _log.info('Sign up successful');
       _isAuthenticated = true;
-      _authToken = signUpResponse.accessToken;
-      return await _sharedPreferencesService.saveToken(
-        signUpResponse.accessToken,
+      _authToken = userData.accessToken;
+      var tokenResult = await _sharedPreferencesService.saveToken(
+        userData.accessToken,
       );
+      if (tokenResult.isError()) {
+        _log.severe('Failed to save token', tokenResult.exceptionOrNull());
+        return Failure(tokenResult.exceptionOrNull()!);
+      }
+      _log.info('Token saved successfully');
+      return authResult;
     } finally {
       notifyListeners();
     }
@@ -143,5 +160,31 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
     } finally {
       notifyListeners();
     }
+  }
+
+  AsyncResult<MembersEntity> _registerMember(
+    SignUpRequest signUpData,
+    String uuid,
+  ) async {
+    final model = MemberCreate(
+      uuid: uuid,
+      name: signUpData.name,
+      email: signUpData.email,
+      phone: signUpData.phone,
+      profileImage: 'TODO', //TO-DO
+    );
+    _log.info('Registering member');
+    var membersResult = await _membersRepository.createAsync(model);
+    if (membersResult.isError() || membersResult.getOrNull() == null) {
+      _log.severe(
+        'Failed to register member',
+        membersResult.exceptionOrNull() ?? membersResult.getOrNull(),
+      );
+      _authApiClient.deleteUser(model.uuid);
+      await _sharedPreferencesService.saveToken(null);
+      return Failure(membersResult.exceptionOrNull()!);
+    }
+    _log.info('Member registered successfully');
+    return membersResult;
   }
 }

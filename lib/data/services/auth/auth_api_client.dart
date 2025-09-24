@@ -25,7 +25,7 @@ class AuthApiClient {
       }
 
       final result = LoginResponse(
-        userId: response.user!.id,
+        userUuid: response.user!.id,
         accessToken: response.session!.accessToken,
         refreshToken: response.session!.refreshToken,
       );
@@ -51,7 +51,7 @@ class AuthApiClient {
       }
 
       final result = LoginResponse(
-        userId: response.user!.id,
+        userUuid: response.user!.id,
         accessToken: response.session!.accessToken,
         refreshToken: response.session!.refreshToken,
       );
@@ -68,6 +68,18 @@ class AuthApiClient {
   AsyncResult<void> resetPassword(String email) async {
     try {
       await _supabaseClient.auth.resetPasswordForEmail(email);
+      return Success.unit();
+    } on AuthException catch (ex) {
+      _logger.warning(ex.message);
+      return Failure(Exception("${ex.message} - ${ex.statusCode}"));
+    } catch (ex) {
+      return Failure(Exception(ex));
+    }
+  }
+
+  AsyncResult<void> deleteUser(String id) async {
+    try {
+      await _supabaseClient.auth.admin.deleteUser(id);
       return Success.unit();
     } on AuthException catch (ex) {
       _logger.warning(ex.message);
