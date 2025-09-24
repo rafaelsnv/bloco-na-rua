@@ -1,3 +1,4 @@
+import 'package:bloco_na_rua/data/services/auth/models/signup_request/signup_request.dart';
 import 'package:bloco_na_rua/routing/routes.dart';
 import 'package:bloco_na_rua/ui/auth/signUp/view_model/signup_viewmodel.dart';
 import 'package:brasil_fields/brasil_fields.dart';
@@ -214,12 +215,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               onPressed: isFormValid
                                   ? () {
                                       if (_formKey.currentState!.validate()) {
-                                        widget.viewModel.signUp.execute((
-                                          _name.value.text,
-                                          _email.value.text,
-                                          _password.value.text,
-                                          _phone.value.text,
-                                        ));
+                                        var signUpData = SignUpRequest(
+                                          name: _name.text,
+                                          email: _email.text,
+                                          password: _password.text,
+                                          phone: _phone.text,
+                                          profileImage: 'TODO', //TO-DO
+                                        );
+                                        widget.viewModel.signUp.execute(
+                                          signUpData,
+                                        );
                                       }
                                     }
                                   : null,

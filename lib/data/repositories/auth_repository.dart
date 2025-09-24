@@ -26,16 +26,27 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
 
   bool? _isAuthenticated;
   String? _authToken;
+  String? _currentUserId;
   final _log = Logger('AuthRepository');
 
-  Future<void> _fetchToken() async {
-    final result = await _sharedPreferencesService.fetchToken();
-    if (result.isError()) {
+  Future<void> _fetchTokenAndUserId() async {
+    final tokenResult = await _sharedPreferencesService.fetchToken();
+    if (tokenResult.isError()) {
       _log.severe('Failed to fetch Token from SharedPreferences');
-      return;
+      _authToken = null;
+    } else {
+      _authToken = tokenResult.getOrNull();
     }
-    _authToken = result.getOrNull();
-    _isAuthenticated = _authToken != null;
+
+    final userIdResult = await _sharedPreferencesService.fetchUserId();
+    if (userIdResult.isError()) {
+      _log.severe('Failed to fetch User ID from SharedPreferences');
+      _currentUserId = null;
+    } else {
+      _currentUserId = userIdResult.getOrNull();
+    }
+
+    _isAuthenticated = _authToken != null && _currentUserId != null;
   }
 
   @override
@@ -43,8 +54,17 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
     if (_isAuthenticated != null) {
       return _isAuthenticated!;
     }
-    await _fetchToken();
+    await _fetchTokenAndUserId();
     return _isAuthenticated ?? false;
+  }
+
+  @override
+  Future<String?> get currentUserId async {
+    if (_currentUserId != null) {
+      return _currentUserId;
+    }
+    await _fetchTokenAndUserId();
+    return _currentUserId;
   }
 
   @override
@@ -72,6 +92,14 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
       _log.info('Login successful');
       _isAuthenticated = true;
       _authToken = loginResponse.accessToken;
+      _currentUserId = loginResponse.userUuid;
+
+      var userIdResult = await _sharedPreferencesService.saveUserId(
+        loginResponse.userUuid,
+      );
+      if (userIdResult.isError()) {
+        _log.severe('Failed to save User ID', userIdResult.exceptionOrNull());
+      }
 
       var tokenResult = await _sharedPreferencesService.saveToken(
         loginResponse.accessToken,
@@ -116,6 +144,15 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
       _log.info('Sign up successful');
       _isAuthenticated = true;
       _authToken = userData.accessToken;
+      _currentUserId = userData.userUuid;
+
+      var userIdResult = await _sharedPreferencesService.saveUserId(
+        userData.userUuid,
+      );
+      if (userIdResult.isError()) {
+        _log.severe('Failed to save User ID', userIdResult.exceptionOrNull());
+      }
+
       var tokenResult = await _sharedPreferencesService.saveToken(
         userData.accessToken,
       );
@@ -134,13 +171,19 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
   AsyncResult<void> logout() async {
     _log.info('Logging out');
     try {
-      final result = await _sharedPreferencesService.saveToken(null);
-      if (result.isError()) {
+      final userIdResult = await _sharedPreferencesService.saveUserId(null);
+      if (userIdResult.isError()) {
+        _log.severe('Failed to clear stored User ID');
+      }
+
+      final tokenResult = await _sharedPreferencesService.saveToken(null);
+      if (tokenResult.isError()) {
         _log.severe('Failed to clear stored auth token');
       }
       _authToken = null;
+      _currentUserId = null;
       _isAuthenticated = false;
-      return result;
+      return tokenResult;
     } finally {
       notifyListeners();
     }
