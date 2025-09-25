@@ -1,5 +1,5 @@
 import 'package:bloco_na_rua/data/repositories/interfaces/imembers_repository.dart';
-import 'package:bloco_na_rua/domain/entities/members_entity.dart';
+import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';
 import 'package:command_it/command_it.dart';
 import 'package:logging/logging.dart';
 import 'package:result_dart/result_dart.dart';

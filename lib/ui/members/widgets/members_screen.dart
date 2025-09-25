@@ -1,4 +1,4 @@
-import 'package:bloco_na_rua/domain/entities/members_entity.dart';
+import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';
 import 'package:bloco_na_rua/ui/members/view_models/members_viewmodel.dart';
 import 'package:flutter/material.dart';
 

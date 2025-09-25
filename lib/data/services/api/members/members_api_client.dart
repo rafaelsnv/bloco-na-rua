@@ -1,7 +1,7 @@
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/members/create/member_create.dart';
 import 'package:bloco_na_rua/data/services/api/members/imembers_api_client.dart';
-import 'package:bloco_na_rua/domain/entities/members_entity.dart';
+import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';
 import 'package:result_dart/result_dart.dart';
 
 class MembersApiClient implements IMembersApiClient {

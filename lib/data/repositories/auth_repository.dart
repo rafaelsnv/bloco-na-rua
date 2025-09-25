@@ -6,7 +6,7 @@ import 'package:bloco_na_rua/data/services/auth/models/login_request/login_reque
 import 'package:bloco_na_rua/data/services/auth/models/login_response/login_response.dart';
 import 'package:bloco_na_rua/data/services/auth/models/signup_request/signup_request.dart';
 import 'package:bloco_na_rua/data/services/shared_preferencies_service.dart';
-import 'package:bloco_na_rua/domain/entities/members_entity.dart';
+import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:result_dart/result_dart.dart';
