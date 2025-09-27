@@ -12,6 +12,7 @@ import 'package:bloco_na_rua/data/services/api/members/imembers_api_client.dart'
 import 'package:bloco_na_rua/data/services/api/members/members_api_client.dart';
 import 'package:bloco_na_rua/data/services/auth/auth_api_client.dart';
 import 'package:bloco_na_rua/data/services/shared_preferencies_service.dart';
+import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_id_use_case.dart'; // New import
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
@@ -60,6 +61,10 @@ List<SingleChildWidget> get providers {
         authApiClient: context.read(),
         sharedPreferencesService: context.read(),
       ),
+    ),
+    Provider<GetCurrentUserIdUseCase>(
+      create: (context) =>
+          GetCurrentUserIdUseCase(authRepository: context.read()),
     ),
   ];
 }
