@@ -8,6 +8,8 @@ abstract class IBaseApiClient {
   BaseOptions? get options;
   Dio Function(BaseOptions?)? get clientFactory;
 
+  Exception formatError(Response<dynamic> response);
+
   AsyncResult<List<TEntity>> getAllAsync<TEntity extends EntityBase>(
     JsonFactory<TEntity> fromJsonFactory,
   );

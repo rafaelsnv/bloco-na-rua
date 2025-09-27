@@ -19,16 +19,12 @@ class MembersApiClient implements IMembersApiClient {
   AsyncResult<MembersEntity> createAsync(MemberCreate model) async {
     try {
       final body = model.toJson();
-      final request = await baseApiClient.client.post(_basePath, data: body);
-      if (request.statusCode != 201) {
-        return Failure(
-          Exception(
-            'Request failed: ${request.statusCode} - ${request.statusMessage}',
-          ),
-        );
+      final response = await baseApiClient.client.post(_basePath, data: body);
+      if (response.statusCode != 201) {
+        return Failure(baseApiClient.formatError(response));
       }
-      final response = await request.data;
-      final result = MembersEntity.fromJson(response as Map<String, dynamic>);
+      final data = await response.data;
+      final result = MembersEntity.fromJson(data as Map<String, dynamic>);
       return Success(result);
     } catch (error) {
       baseApiClient.client.close();

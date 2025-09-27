@@ -26,15 +26,15 @@ class BaseApiClient implements IBaseApiClient {
           .replaceAll('Entity', '')
           .toLowerCase();
       // final request = await client.get('/api/v1/$endpoint');
-      final request = await client.get('$basePath$endpoint');
-      if (request.statusCode != 200) {
-        return Failure(Exception('Request failed: ${request.statusCode}'));
+      final response = await client.get('$basePath$endpoint');
+      if (response.statusCode != 200) {
+        return Failure(formatError(response));
       }
 
-      final response = await request.data as List<dynamic>;
+      final data = await response.data as List<dynamic>;
 
       return Success(
-        response
+        data
             .map((element) => fromJsonFactory(element as Map<String, dynamic>))
             .toList(),
       );
@@ -51,17 +51,13 @@ class BaseApiClient implements IBaseApiClient {
   ) async {
     try {
       String endpoint = TEntity.toString().replaceAll('Entity', '');
-      final request = await client.get('$basePath$endpoint/${id.toString()}');
-      if (request.statusCode != 200) {
-        return Failure(
-          Exception(
-            'Request failed: ${request.statusCode} - ${request.statusMessage}',
-          ),
-        );
+      final response = await client.get('$basePath$endpoint/${id.toString()}');
+      if (response.statusCode != 200) {
+        return Failure(formatError(response));
       }
 
-      final response = await request.data;
-      return Success(fromJsonFactory(response as Map<String, dynamic>));
+      final data = await response.data;
+      return Success(fromJsonFactory(data as Map<String, dynamic>));
     } catch (error) {
       client.close();
       return Failure(Exception('An error occurred: $error'));
@@ -72,20 +68,23 @@ class BaseApiClient implements IBaseApiClient {
   AsyncResult deleteByIdAsync<TEntity extends EntityBase>(int id) async {
     try {
       String endpoint = TEntity.toString().replaceAll('Entity', '');
-      final request = await client.delete(
+      final response = await client.delete(
         '$basePath$endpoint/${id.toString()}',
       );
-      if (request.statusCode != 204) {
-        return Failure(
-          Exception(
-            'Request failed: ${request.statusCode} - ${request.statusMessage}',
-          ),
-        );
+      if (response.statusCode != 204) {
+        return Failure(formatError(response));
       }
-      return Success(request.statusCode.toString());
+      return Success(response.statusCode.toString());
     } catch (error) {
       client.close();
       return Failure(Exception('An error occurred: $error'));
     }
+  }
+
+  @override
+  Exception formatError(Response response) {
+    return Exception(
+      'Request failed: ${response.statusCode} - ${response.statusMessage}',
+    );
   }
 }
