@@ -17,6 +17,49 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  void _onResult() {
+    final result = widget.viewModel.load.results.value.data;
+
+    if (result == null) {
+      return;
+    }
+
+    if (result.isError()) {
+      widget.viewModel.load.clearErrors();
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              result.exceptionOrNull().toString().replaceAll("Exception: ", ""),
+            ),
+            showCloseIcon: true,
+          ),
+        );
+        return;
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.viewModel.load.addListener(_onResult);
+    widget.viewModel.load();
+  }
+
+  @override
+  void didUpdateWidget(covariant HomeScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    oldWidget.viewModel.load.removeListener(_onResult);
+    widget.viewModel.load.addListener(_onResult);
+  }
+
+  @override
+  void dispose() {
+    widget.viewModel.load.removeListener(_onResult);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,38 +73,75 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: SafeArea(
-        child: ListenableBuilder(
-          listenable: widget.viewModel.load,
-          builder: (context, child) {
-            if (widget.viewModel.load.isExecuting.value) {
-              return const Center(child: CircularProgressIndicator());
-            }
+        child: Column(
+          children: [
+            ListenableBuilder(
+              listenable: widget.viewModel.load,
+              builder: (context, child) {
+                if (widget.viewModel.load.isExecuting.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-            if (widget.viewModel.load.results.value.hasError) {
-              return ErrorWidget(widget.viewModel.load.results.value.error!);
-            }
+                if (widget.viewModel.load.results.value.hasError) {
+                  return ErrorWidget(
+                    widget.viewModel.load.results.value.error!,
+                  );
+                }
 
-            return child!;
-          },
-          child: Column(
-            children: [
-              Center(
-                // child: ,
-              ),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () => context.push(Routes.carnivalBlock),
-                  child: const Text('Block Page'),
+                var blockMembersList = widget.viewModel.load.results.value.data
+                    ?.getOrNull();
+                if (blockMembersList == null || blockMembersList.isEmpty) {
+                  return const Center(child: Text('Nenhum bloco encontrado'));
+                }
+
+                return Column(
+                  children: [
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxHeight: 100),
+                      child: CarouselView.weighted(
+                        flexWeights: const <int>[3, 3, 3, 2, 1],
+                        children: blockMembersList.map((blockMember) {
+                          return ColoredBox(
+                            color: Colors.grey,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Icon(Icons.casino, size: 50.0),
+                                  Text(
+                                    blockMember.carnivalBlock!.name,
+                                    overflow: TextOverflow.clip,
+                                    softWrap: false,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+            Column(
+              children: [
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () => context.push(Routes.carnivalBlock),
+                    child: const Text('Block Page'),
+                  ),
                 ),
-              ),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () => context.push(Routes.members),
-                  child: const Text('Members Page'),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () => context.push(Routes.members),
+                    child: const Text('Members Page'),
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ),
       ),
     );
