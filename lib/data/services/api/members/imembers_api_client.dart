@@ -6,4 +6,5 @@ import 'package:result_dart/result_dart.dart';
 abstract class IMembersApiClient {
   IBaseApiClient get client;
   AsyncResult<MembersEntity> createAsync(MemberCreate model);
+  AsyncResult<MembersEntity> getByUuidAsync(String uuid);
 }

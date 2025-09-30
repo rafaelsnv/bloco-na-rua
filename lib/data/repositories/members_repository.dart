@@ -19,4 +19,9 @@ class MembersRepository extends RepositoryBase<MembersEntity>
   AsyncResult<MembersEntity> createAsync(MemberCreate model) async {
     return await membersApiClient.createAsync(model);
   }
+
+  @override
+  AsyncResult<MembersEntity> getByUuidAsync(String uuid) async {
+    return await membersApiClient.getByUuidAsync(uuid);
+  }
 }

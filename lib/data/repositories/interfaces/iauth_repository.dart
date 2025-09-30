@@ -5,7 +5,7 @@ import 'package:result_dart/result_dart.dart';
 
 abstract interface class IAuthRepository extends ChangeNotifier {
   Future<bool> get isAuthenticated;
-  Future<String?> get currentUserId;
+  Future<String?> get currentUuid;
 
   AsyncResult<LoginResponse> login({
     required String email,

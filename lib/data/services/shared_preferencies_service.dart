@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesService {
   static const _tokenKey = 'TOKEN';
-  static const _userIdKey = 'USER_ID';
+  static const _uuidKey = 'UUID';
   final _logger = Logger('SharedPreferencesService');
 
   AsyncResult<String> fetchToken() async {
@@ -23,19 +23,18 @@ class SharedPreferencesService {
     }
   }
 
-  // New method to fetch user ID
-  AsyncResult<String> fetchUserId() async {
+  AsyncResult<String> fetchUuid() async {
     try {
       final sharedPreferences = await SharedPreferences.getInstance();
-      final userId = sharedPreferences.getString(_userIdKey);
-      if (userId == null) {
-        _logger.info('User ID not found');
-        return Failure(Exception('User ID not found'));
+      final uuid = sharedPreferences.getString(_uuidKey);
+      if (uuid == null) {
+        _logger.info('User UUID not found');
+        return Failure(Exception('User UUID not found'));
       }
-      _logger.info('Got User ID from SharedPreferences');
-      return Success(userId);
+      _logger.info('Got User UUID from SharedPreferences');
+      return Success(uuid);
     } on Exception catch (e) {
-      _logger.warning('Failed to get User ID', e);
+      _logger.warning('Failed to get User UUID', e);
       return Failure(e);
     }
   }
@@ -68,30 +67,30 @@ class SharedPreferencesService {
     }
   }
 
-  AsyncResult<bool> saveUserId(String? userId) async {
+  AsyncResult<bool> saveUuid(String? uuid) async {
     try {
       final sharedPreferences = await SharedPreferences.getInstance();
 
-      if (userId == null || userId.isEmpty) {
-        final removed = await sharedPreferences.remove(_userIdKey);
+      if (uuid == null || uuid.isEmpty) {
+        final removed = await sharedPreferences.remove(_uuidKey);
         if (removed == false) {
-          _logger.warning('Failed to remove User ID');
-          return Failure(Exception('Failed to remove User ID'));
+          _logger.warning('Failed to remove User UUID');
+          return Failure(Exception('Failed to remove User UUID'));
         }
-        _logger.info('Removed User ID');
+        _logger.info('Removed User UUID');
         return Success(true);
       }
 
-      final replaced = await sharedPreferences.setString(_userIdKey, userId);
+      final replaced = await sharedPreferences.setString(_uuidKey, uuid);
       if (replaced == false) {
-        _logger.warning('Failed to replace User ID');
-        return Failure(Exception('Failed to replace User ID'));
+        _logger.warning('Failed to replace User UUID');
+        return Failure(Exception('Failed to replace User UUID'));
       }
 
-      _logger.info('Replaced User ID');
+      _logger.info('Replaced User UUID');
       return Success(true);
     } on Exception catch (e) {
-      _logger.warning('Failed to set User ID', e);
+      _logger.warning('Failed to set User UUID', e);
       return Failure(e);
     }
   }

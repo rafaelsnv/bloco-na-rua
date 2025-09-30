@@ -31,4 +31,20 @@ class MembersApiClient implements IMembersApiClient {
       return Failure(Exception('An error occurred: $error'));
     }
   }
+
+  @override
+  AsyncResult<MembersEntity> getByUuidAsync(String uuid) async {
+    try {
+      final response = await baseApiClient.client.get('$_basePath/uuid/$uuid');
+      if (response.statusCode != 200) {
+        return Failure(baseApiClient.formatError(response));
+      }
+      final data = await response.data;
+      final result = MembersEntity.fromJson(data as Map<String, dynamic>);
+      return Success(result);
+    } on Exception catch (e) {
+      baseApiClient.client.close();
+      return Failure(Exception('An error occurred: $e'));
+    }
+  }
 }

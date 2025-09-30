@@ -6,4 +6,5 @@ import 'package:result_dart/result_dart.dart';
 abstract interface class IMembersRepository
     implements IRepositoryBase<MembersEntity> {
   AsyncResult<MembersEntity> createAsync(MemberCreate model);
+  AsyncResult<MembersEntity> getByUuidAsync(String uuid);
 }
