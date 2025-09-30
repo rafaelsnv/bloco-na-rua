@@ -23,7 +23,8 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
       if (response.statusCode != 200) {
         return Failure(baseApiClient.formatError(response));
       }
-      final data = (response.data as List)
+      var jsonData = response.data as List<dynamic>;
+      final data = jsonData
           .map((e) => CarnivalBlockMembersEntity.fromJson(e))
           .toList();
       return Success(data);
