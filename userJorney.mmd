@@ -1,0 +1,35 @@
+flowchart LR
+
+	n1@{ shape: "circle", label: "Start" }
+	n2["auth"]
+	
+	n1
+	n1 --- n2
+	n2 --- n3["MainPage"]
+	n3 --- n4["BlockPage"]
+	n3
+	n5@{ shape: "diam", label: "Meeting<br>Interaction?" }
+	style n5 fill:#FFDE59,stroke:#FF914D
+	style n1 color:#000000,fill:#C1FF72,stroke:#00BF63
+	n3 --- n5@{ shape: "diam", label: "Meeting<br>Interact?" }
+	n5 --- n6["UserMeetingsPage"]
+	n5 --- n7["MeetingModal"]
+	n6 --- n7
+	n3 --- n8@{ shape: "diam", label: "Block<br>Interact?" }
+	style n8 fill:#FFDE59,stroke:#FF914D
+	n8 --- n9["JoinBlockModal"]
+	n8 --- n10["CreateBlockPage"]
+	n9 --- n4
+	n10 --- n4
+	n11@{ shape: "diam", label: "Create<br>Meeting?" }
+	style n11 fill:#FFDE59,stroke:#FF914D
+	n4 --- n11
+	n11 --- n12["CreateMeetingPage"]
+	n12 --- n4
+	n4 --- n13@{ shape: "diam", label: "Edit<br>Block?" }
+	style n13 fill:#FFDE59,stroke:#FF914D
+	n13 --- n14["EditBlockPage"]
+	n7 --- n15@{ shape: "diam", label: "Confirm or Deny<br>Presence?" }
+	style n15 fill:#FFDE59,stroke:#FF914D
+	n15 --- n16["Presence Confirmed"]
+	n15 --- n17["Presence Denied"]

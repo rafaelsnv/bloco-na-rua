@@ -3,6 +3,7 @@ import 'package:bloco_na_rua/ui/auth/logout/view_model/logout_viewmodel.dart';
 import 'package:bloco_na_rua/ui/auth/logout/widgets/logout_button.dart';
 import 'package:bloco_na_rua/ui/core/widgets/profile_button.dart';
 import 'package:bloco_na_rua/ui/home/view_model/home_viewmodel.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -18,45 +19,59 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   void _onResult() {
-    final result = widget.viewModel.load.results.value.data;
+    final resultBlocks = widget.viewModel.loadCarnivalBlocks.results.value.data;
+    final resultMeetings = widget.viewModel.loadMeetings.results.value.data;
 
-    if (result == null) {
+    if (resultMeetings == null || resultBlocks == null) {
       return;
     }
 
-    if (result.isError()) {
-      widget.viewModel.load.clearErrors();
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              result.exceptionOrNull().toString().replaceAll("Exception: ", ""),
-            ),
-            showCloseIcon: true,
-          ),
-        );
-        return;
-      }
+    final errors = <String>[];
+    if (resultMeetings.isError()) {
+      errors.add(
+        resultMeetings.exceptionOrNull().toString().replaceAll(
+          "Exception: ",
+          "",
+        ),
+      );
+      widget.viewModel.loadMeetings.clearErrors();
+    }
+
+    if (resultBlocks.isError()) {
+      errors.add(
+        resultBlocks.exceptionOrNull().toString().replaceAll("Exception: ", ""),
+      );
+      widget.viewModel.loadCarnivalBlocks.clearErrors();
+    }
+
+    if (errors.isNotEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(errors.join('\n'))));
     }
   }
 
   @override
   void initState() {
     super.initState();
-    widget.viewModel.load.addListener(_onResult);
-    widget.viewModel.load();
+    widget.viewModel.loadCarnivalBlocks.addListener(_onResult);
+    widget.viewModel.loadMeetings.addListener(_onResult);
   }
 
   @override
   void didUpdateWidget(covariant HomeScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    oldWidget.viewModel.load.removeListener(_onResult);
-    widget.viewModel.load.addListener(_onResult);
+    oldWidget.viewModel.loadCarnivalBlocks.removeListener(_onResult);
+    widget.viewModel.loadCarnivalBlocks.addListener(_onResult);
+
+    oldWidget.viewModel.loadMeetings.removeListener(_onResult);
+    widget.viewModel.loadMeetings.addListener(_onResult);
   }
 
   @override
   void dispose() {
-    widget.viewModel.load.removeListener(_onResult);
+    widget.viewModel.loadCarnivalBlocks.removeListener(_onResult);
+    widget.viewModel.loadMeetings.removeListener(_onResult);
     super.dispose();
   }
 
@@ -64,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: ProfileButton(),
+        leading: const ProfileButton(),
         title: const Text('Bloco Na Rua'),
         actions: [
           LogoutButton(
@@ -73,77 +88,120 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            ListenableBuilder(
-              listenable: widget.viewModel.load,
-              builder: (context, child) {
-                if (widget.viewModel.load.isExecuting.value) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (widget.viewModel.load.results.value.hasError) {
-                  return ErrorWidget(
-                    widget.viewModel.load.results.value.error!,
-                  );
-                }
-
-                var blockMembersList = widget.viewModel.load.results.value.data
-                    ?.getOrNull();
-                if (blockMembersList == null || blockMembersList.isEmpty) {
-                  return const Center(child: Text('Nenhum bloco encontrado'));
-                }
-
-                return Column(
-                  children: [
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(maxHeight: 100),
-                      child: CarouselView.weighted(
-                        flexWeights: const <int>[3, 3, 3, 2, 1],
-                        children: blockMembersList.map((blockMember) {
-                          return ColoredBox(
-                            color: Colors.grey,
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Icon(Icons.casino, size: 50.0),
-                                  Text(
-                                    blockMember.carnivalBlock!.name,
-                                    overflow: TextOverflow.clip,
-                                    softWrap: false,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-            Column(
-              children: [
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () => context.push(Routes.carnivalBlock),
-                    child: const Text('Block Page'),
-                  ),
-                ),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () => context.push(Routes.members),
-                    child: const Text('Members Page'),
-                  ),
-                ),
-              ],
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              _buildCarnivalBlockCarousel(),
+              _buildMeetingsList(),
+              _buildNavigationButtons(),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildCarnivalBlockCarousel() {
+    return ListenableBuilder(
+      listenable: widget.viewModel.loadCarnivalBlocks,
+      builder: (context, child) {
+        if (widget.viewModel.loadCarnivalBlocks.isExecuting.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (widget.viewModel.loadCarnivalBlocks.results.value.hasError) {
+          return ErrorWidget(
+            widget.viewModel.loadCarnivalBlocks.results.value.error!,
+          );
+        }
+
+        var carnivalBlockList = widget
+            .viewModel
+            .loadCarnivalBlocks
+            .results
+            .value
+            .data
+            ?.getOrNull();
+        if (carnivalBlockList == null || carnivalBlockList.isEmpty) {
+          return const Center(child: Text('Nenhum bloco encontrado'));
+        }
+
+        return CarouselSlider(
+          options: CarouselOptions(height: 200.0),
+          items: carnivalBlockList.map((block) {
+            return Builder(
+              builder: (BuildContext context) {
+                return Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                  decoration: const BoxDecoration(color: Colors.amber),
+                  child: Center(
+                    child: Text(
+                      block.name,
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
+                  ),
+                );
+              },
+            );
+          }).toList(),
+        );
+      },
+    );
+  }
+
+  Widget _buildMeetingsList() {
+    return ListenableBuilder(
+      listenable: widget.viewModel.loadMeetings,
+      builder: (context, child) {
+        if (widget.viewModel.loadMeetings.isExecuting.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (widget.viewModel.loadMeetings.results.value.hasError) {
+          return ErrorWidget(
+            widget.viewModel.loadMeetings.results.value.error!,
+          );
+        }
+
+        var meetingsList = widget.viewModel.loadMeetings.results.value.data
+            ?.getOrNull();
+        if (meetingsList == null || meetingsList.isEmpty) {
+          return const Center(child: Text('Nenhuma reunião encontrada'));
+        }
+
+        return ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: meetingsList.length,
+          itemBuilder: (context, index) {
+            final meeting = meetingsList[index];
+            return ListTile(
+              title: Text(meeting.name ?? ''),
+              subtitle: Text(meeting.description ?? ''),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildNavigationButtons() {
+    return Column(
+      children: [
+        Center(
+          child: ElevatedButton(
+            onPressed: () => context.push(Routes.carnivalBlock),
+            child: const Text('Block Page'),
+          ),
+        ),
+        Center(
+          child: ElevatedButton(
+            onPressed: () => context.push(Routes.members),
+            child: const Text('Members Page'),
+          ),
+        ),
+      ],
     );
   }
 }

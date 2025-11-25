@@ -20,7 +20,8 @@ import 'package:bloco_na_rua/data/services/api/members/imembers_api_client.dart'
 import 'package:bloco_na_rua/data/services/api/members/members_api_client.dart';
 import 'package:bloco_na_rua/data/services/auth/auth_api_client.dart';
 import 'package:bloco_na_rua/data/services/shared_preferencies_service.dart';
-import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart'; // New import
+import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart';
+import 'package:bloco_na_rua/domain/use_cases/home/get_home_data_use_case.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
@@ -102,6 +103,12 @@ List<SingleChildWidget> get providers {
       create: (context) => GetCurrentUserData(
         authRepository: context.read(),
         memberRepository: context.read(),
+      ),
+    ),
+    Provider<GetHomeDataUseCase>(
+      create: (context) => GetHomeDataUseCase(
+        getCurrentUserData: context.read(),
+        membersRepo: context.read(),
       ),
     ),
   ];

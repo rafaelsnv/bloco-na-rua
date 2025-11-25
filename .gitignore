@@ -82,3 +82,5 @@ pids/
 *.pid
 *.seed
 *.pid.lock
+/swagger.json
+/architecture_summary.md

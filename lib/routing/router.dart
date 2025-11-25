@@ -40,10 +40,7 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
       path: Routes.home,
       builder: (context, state) {
         return HomeScreen(
-          viewModel: HomeViewModel(
-            blockMembersRepo: context.read(),
-            getCurrentUserData: context.read(),
-          ),
+          viewModel: HomeViewModel(getHomeDataUseCase: context.read()),
         );
       },
     ),
