@@ -1,4 +1,4 @@
-import 'package:bloco_na_rua/data/repositories/interfaces/imembers_repository.dart';
+import 'package:bloco_na_rua/data/repositories/members/imembers_repository.dart';
 import 'package:bloco_na_rua/domain/entities/carnivalBlock/carnival_block_entity.dart';
 import 'package:bloco_na_rua/domain/entities/meetings/meeting_entity.dart';
 import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';

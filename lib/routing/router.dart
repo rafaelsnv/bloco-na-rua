@@ -1,4 +1,4 @@
-import 'package:bloco_na_rua/data/repositories/interfaces/iauth_repository.dart';
+import 'package:bloco_na_rua/data/repositories/auth/iauth_repository.dart';
 import 'package:bloco_na_rua/routing/routes.dart';
 import 'package:bloco_na_rua/ui/auth/login/view_models/login_viewmodel.dart';
 import 'package:bloco_na_rua/ui/auth/login/widgets/login_screen.dart';

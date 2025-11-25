@@ -1,5 +1,5 @@
-import 'package:bloco_na_rua/data/repositories/interfaces/iauth_repository.dart';
-import 'package:bloco_na_rua/data/repositories/interfaces/imembers_repository.dart';
+import 'package:bloco_na_rua/data/repositories/auth/iauth_repository.dart';
+import 'package:bloco_na_rua/data/repositories/members/imembers_repository.dart';
 import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';
 import 'package:result_dart/result_dart.dart';
 

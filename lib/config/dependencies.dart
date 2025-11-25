@@ -2,14 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:bloco_na_rua/data/repositories/auth_repository.dart';
-import 'package:bloco_na_rua/data/repositories/carnival_block_members_repository.dart';
-import 'package:bloco_na_rua/data/repositories/carnival_blocks_repository.dart';
-import 'package:bloco_na_rua/data/repositories/interfaces/iauth_repository.dart';
-import 'package:bloco_na_rua/data/repositories/interfaces/icarnival_block_members_repository.dart';
-import 'package:bloco_na_rua/data/repositories/interfaces/icarnival_blocks_repository.dart';
-import 'package:bloco_na_rua/data/repositories/interfaces/imembers_repository.dart';
-import 'package:bloco_na_rua/data/repositories/members_repository.dart';
+import 'package:bloco_na_rua/data/repositories/auth/auth_repository.dart';
+import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/carnival_block_members_repository.dart';
+import 'package:bloco_na_rua/data/repositories/carnivalBlocks/carnival_blocks_repository.dart';
+import 'package:bloco_na_rua/data/repositories/auth/iauth_repository.dart';
+import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart';
+import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
+import 'package:bloco_na_rua/data/repositories/members/imembers_repository.dart';
+import 'package:bloco_na_rua/data/repositories/members/members_repository.dart';
 import 'package:bloco_na_rua/data/services/api/base/base_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/carnivalBlockMembers/carnival_block_members_api_client.dart';
