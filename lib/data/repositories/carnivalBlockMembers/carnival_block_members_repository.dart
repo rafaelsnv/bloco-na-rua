@@ -19,6 +19,6 @@ class CarnivalBlockMembersRepository
   AsyncResult<List<CarnivalBlockMembersEntity>> getByMemberIdAsync(
     int id,
   ) async {
-    return await carnivalBlockMembersApiClient.getByMemberIdAsync(id);
+    return await carnivalBlockMembersApiClient.getByBlockIdAsync(id);
   }
 }

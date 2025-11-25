@@ -6,7 +6,4 @@ abstract class IMeetingsApiClient {
   IBaseApiClient get client;
 
   AsyncResult<List<MeetingEntity>> getAllByBlockId(int blockId);
-  AsyncResult<List<MeetingEntity>> getAllByMemberId(String memberId);
-  AsyncResult<void> confirmPresence(int meetingId, String memberId);
-  AsyncResult<void> denyPresence(int meetingId, String memberId);
 }

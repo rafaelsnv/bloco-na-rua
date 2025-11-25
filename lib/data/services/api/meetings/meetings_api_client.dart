@@ -8,7 +8,7 @@ class MeetingsApiClient implements IMeetingsApiClient {
   late final String _basePath;
 
   MeetingsApiClient(this.baseApiClient) {
-    _basePath = '${baseApiClient.basePath}meetings';
+    _basePath = '${baseApiClient.basePath}Meetings';
   }
 
   @override
@@ -26,56 +26,6 @@ class MeetingsApiClient implements IMeetingsApiClient {
       final data = await response.data as List;
       final result = data.map((e) => MeetingEntity.fromJson(e)).toList();
       return Success(result);
-    } on Exception catch (e) {
-      baseApiClient.client.close();
-      return Failure(Exception('An error occurred: $e'));
-    }
-  }
-
-  @override
-  AsyncResult<List<MeetingEntity>> getAllByMemberId(String memberId) async {
-    try {
-      final response = await baseApiClient.client.get(
-        '$_basePath/member/$memberId',
-      );
-      if (response.statusCode != 200) {
-        return Failure(baseApiClient.formatError(response));
-      }
-      final data = await response.data as List;
-      final result = data.map((e) => MeetingEntity.fromJson(e)).toList();
-      return Success(result);
-    } on Exception catch (e) {
-      baseApiClient.client.close();
-      return Failure(Exception('An error occurred: $e'));
-    }
-  }
-
-  @override
-  AsyncResult<void> confirmPresence(int meetingId, String memberId) async {
-    try {
-      final response = await baseApiClient.client.post(
-        '$_basePath/$meetingId/confirm-presence/$memberId',
-      );
-      if (response.statusCode != 200) {
-        return Failure(baseApiClient.formatError(response));
-      }
-      return Success(unit);
-    } on Exception catch (e) {
-      baseApiClient.client.close();
-      return Failure(Exception('An error occurred: $e'));
-    }
-  }
-
-  @override
-  AsyncResult<void> denyPresence(int meetingId, String memberId) async {
-    try {
-      final response = await baseApiClient.client.post(
-        '$_basePath/$meetingId/deny-presence/$memberId',
-      );
-      if (response.statusCode != 200) {
-        return Failure(baseApiClient.formatError(response));
-      }
-      return Success(unit);
     } on Exception catch (e) {
       baseApiClient.client.close();
       return Failure(Exception('An error occurred: $e'));

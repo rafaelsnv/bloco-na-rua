@@ -15,11 +15,11 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
   IBaseApiClient get client => baseApiClient;
 
   @override
-  AsyncResult<List<CarnivalBlockMembersEntity>> getByMemberIdAsync(
+  AsyncResult<List<CarnivalBlockMembersEntity>> getByBlockIdAsync(
     int id,
   ) async {
     try {
-      final response = await baseApiClient.client.get('$_basePath/member/$id');
+      final response = await baseApiClient.client.get('$_basePath/block/$id');
       if (response.statusCode != 200) {
         return Failure(baseApiClient.formatError(response));
       }

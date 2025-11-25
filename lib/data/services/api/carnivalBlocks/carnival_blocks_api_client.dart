@@ -3,6 +3,8 @@ import 'package:bloco_na_rua/data/services/api/carnivalBlocks/icarnival_blocks_a
 
 class CarnivalBlocksApiClient implements ICarnivalBlocksApiClient {
   final IBaseApiClient baseApiClient;
+
+  // ignore: unused_field
   late final String _basePath;
 
   CarnivalBlocksApiClient(this.baseApiClient) {

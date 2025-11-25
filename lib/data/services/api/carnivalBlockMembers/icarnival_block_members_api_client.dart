@@ -4,5 +4,5 @@ import 'package:result_dart/result_dart.dart';
 
 abstract interface class ICarnivalBlockMembersApiClient {
   IBaseApiClient get client;
-  AsyncResult<List<CarnivalBlockMembersEntity>> getByMemberIdAsync(int id);
+  AsyncResult<List<CarnivalBlockMembersEntity>> getByBlockIdAsync(int id);
 }

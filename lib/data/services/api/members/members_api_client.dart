@@ -11,7 +11,7 @@ class MembersApiClient implements IMembersApiClient {
   late final String _basePath;
 
   MembersApiClient(this.baseApiClient) {
-    _basePath = '${baseApiClient.basePath}members';
+    _basePath = '${baseApiClient.basePath}Members';
   }
 
   @override
