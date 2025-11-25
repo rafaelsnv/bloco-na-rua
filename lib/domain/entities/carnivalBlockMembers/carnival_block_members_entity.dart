@@ -1,5 +1,5 @@
 import 'package:bloco_na_rua/core/entity_base.dart';
-import 'package:bloco_na_rua/domain/entities/carnivalBlock/carnival_block_entity.dart';
+import 'package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'carnival_block_members_entity.freezed.dart';
@@ -15,7 +15,7 @@ sealed class CarnivalBlockMembersEntity extends EntityBase
   @override
   final int role;
   @override
-  final CarnivalBlockEntity? carnivalBlock;
+  final CarnivalBlocksEntity? carnivalBlock;
 
   CarnivalBlockMembersEntity._({
     required this.carnivalBlockId,
@@ -32,7 +32,7 @@ sealed class CarnivalBlockMembersEntity extends EntityBase
     required int carnivalBlockId,
     required int memberId,
     required int role,
-    CarnivalBlockEntity? carnivalBlock,
+    CarnivalBlocksEntity? carnivalBlock,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) = _CarnivalBlockMembersEntity;

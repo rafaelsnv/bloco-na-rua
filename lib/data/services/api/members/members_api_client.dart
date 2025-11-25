@@ -1,7 +1,7 @@
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/members/create/member_create.dart';
 import 'package:bloco_na_rua/data/services/api/members/imembers_api_client.dart';
-import 'package:bloco_na_rua/domain/entities/carnivalBlock/carnival_block_entity.dart';
+import 'package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart';
 import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';
 import 'package:bloco_na_rua/domain/entities/meetings/meeting_entity.dart';
 import 'package:result_dart/result_dart.dart';
@@ -51,7 +51,7 @@ class MembersApiClient implements IMembersApiClient {
   }
 
   @override
-  AsyncResult<List<CarnivalBlockEntity>> getBlocksByMemberId(
+  AsyncResult<List<CarnivalBlocksEntity>> getBlocksByMemberId(
     int memberId,
   ) async {
     try {
@@ -62,7 +62,7 @@ class MembersApiClient implements IMembersApiClient {
         return Failure(baseApiClient.formatError(response));
       }
       final data = await response.data as List;
-      final result = data.map((e) => CarnivalBlockEntity.fromJson(e)).toList();
+      final result = data.map((e) => CarnivalBlocksEntity.fromJson(e)).toList();
       return Success(result);
     } on Exception catch (e) {
       baseApiClient.client.close();

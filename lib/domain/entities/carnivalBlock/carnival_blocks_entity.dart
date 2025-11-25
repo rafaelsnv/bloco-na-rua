@@ -1,11 +1,12 @@
 import 'package:bloco_na_rua/core/entity_base.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'carnival_block_entity.freezed.dart';
-part 'carnival_block_entity.g.dart';
+part 'carnival_blocks_entity.freezed.dart';
+part 'carnival_blocks_entity.g.dart';
 
 @freezed
-sealed class CarnivalBlockEntity extends EntityBase with _$CarnivalBlockEntity {
+sealed class CarnivalBlocksEntity extends EntityBase
+    with _$CarnivalBlocksEntity {
   @override
   final int ownerId;
   @override
@@ -17,7 +18,7 @@ sealed class CarnivalBlockEntity extends EntityBase with _$CarnivalBlockEntity {
   @override
   final String carnivalBlockImage;
 
-  CarnivalBlockEntity._({
+  CarnivalBlocksEntity._({
     required this.ownerId,
     required this.name,
     required this.inviteCode,
@@ -28,7 +29,7 @@ sealed class CarnivalBlockEntity extends EntityBase with _$CarnivalBlockEntity {
     super.updatedAt,
   }) : super();
 
-  factory CarnivalBlockEntity({
+  factory CarnivalBlocksEntity({
     required int id,
     required int ownerId,
     required String name,
@@ -37,8 +38,8 @@ sealed class CarnivalBlockEntity extends EntityBase with _$CarnivalBlockEntity {
     required String inviteCode,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) = _CarnivalBlockEntity;
+  }) = _CarnivalBlocksEntity;
 
-  factory CarnivalBlockEntity.fromJson(Map<String, dynamic> json) =>
-      _$CarnivalBlockEntityFromJson(json);
+  factory CarnivalBlocksEntity.fromJson(Map<String, dynamic> json) =>
+      _$CarnivalBlocksEntityFromJson(json);
 }

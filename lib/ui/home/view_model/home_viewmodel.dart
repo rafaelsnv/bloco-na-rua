@@ -1,4 +1,4 @@
-import 'package:bloco_na_rua/domain/entities/carnivalBlock/carnival_block_entity.dart';
+import 'package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart';
 import 'package:bloco_na_rua/domain/entities/meetings/meeting_entity.dart';
 import 'package:bloco_na_rua/domain/use_cases/home/get_home_data_use_case.dart';
 import 'package:command_it/command_it.dart';
@@ -22,7 +22,7 @@ class HomeViewModel extends ChangeNotifier {
   final GetHomeDataUseCase _getHomeDataUseCase;
   final _log = Logger('HomeViewModel');
 
-  late Command<void, Result<List<CarnivalBlockEntity>>> loadCarnivalBlocks;
+  late Command<void, Result<List<CarnivalBlocksEntity>>> loadCarnivalBlocks;
   late Command<void, Result<List<MeetingEntity>>> loadMeetings;
 
   AsyncResult<List<MeetingEntity>> _loadMeetings() async {
@@ -35,7 +35,7 @@ class HomeViewModel extends ChangeNotifier {
     return result;
   }
 
-  AsyncResult<List<CarnivalBlockEntity>> _loadBlocks() async {
+  AsyncResult<List<CarnivalBlocksEntity>> _loadBlocks() async {
     final result = await _getHomeDataUseCase.getCarnivalBlocks();
 
     if (result.isError()) {
