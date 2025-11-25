@@ -131,14 +131,19 @@ class _HomeScreenState extends State<HomeScreen> {
           items: carnivalBlockList.map((block) {
             return Builder(
               builder: (BuildContext context) {
-                return Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                  decoration: const BoxDecoration(color: Colors.amber),
-                  child: Center(
-                    child: Text(
-                      block.name,
-                      style: const TextStyle(fontSize: 16.0),
+                return InkWell(
+                  onTap: () {
+                    context.push('${Routes.carnivalBlock}/${block.id}');
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                    decoration: const BoxDecoration(color: Colors.amber),
+                    child: Center(
+                      child: Text(
+                        block.name,
+                        style: const TextStyle(fontSize: 16.0),
+                      ),
                     ),
                   ),
                 );

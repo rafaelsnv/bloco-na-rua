@@ -4,6 +4,8 @@ import 'package:bloco_na_rua/ui/auth/login/view_models/login_viewmodel.dart';
 import 'package:bloco_na_rua/ui/auth/login/widgets/login_screen.dart';
 import 'package:bloco_na_rua/ui/auth/signUp/view_model/signup_viewmodel.dart';
 import 'package:bloco_na_rua/ui/auth/signUp/widgets/signup_screen.dart';
+import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
+import 'package:bloco_na_rua/ui/carnivalBlock/showBlock/view_model/show_block_viewmodel.dart';
 import 'package:bloco_na_rua/ui/carnivalBlock/showBlock/widgets/show_block_screen.dart';
 import 'package:bloco_na_rua/ui/carnivalBlock/createBlock/widgets/create_block_screen.dart';
 import 'package:bloco_na_rua/ui/home/view_model/home_viewmodel.dart';
@@ -45,9 +47,16 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
       },
     ),
     GoRoute(
-      path: Routes.carnivalBlock,
+      path: '${Routes.carnivalBlock}/:id',
       builder: (context, state) {
-        return const ShowBlockScreen();
+        final carnivalBlockId = state.pathParameters['id']!;
+        return ShowBlockScreen(
+          carnivalBlockId: carnivalBlockId,
+          viewModel: ShowBlockViewModel(
+            carnivalBlocksRepository: context.read<ICarnivalBlocksRepository>(),
+            carnivalBlockId: carnivalBlockId,
+          ),
+        );
       },
     ),
     GoRoute(
