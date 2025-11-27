@@ -1,5 +1,5 @@
 import 'package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart';
-import 'package:bloco_na_rua/domain/entities/meetings/meeting_entity.dart';
+import 'package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart';
 import 'package:bloco_na_rua/domain/use_cases/home/get_home_data_use_case.dart';
 import 'package:command_it/command_it.dart';
 import 'package:flutter/widgets.dart';
@@ -23,9 +23,9 @@ class HomeViewModel extends ChangeNotifier {
   final _log = Logger('HomeViewModel');
 
   late Command<void, Result<List<CarnivalBlocksEntity>>> loadCarnivalBlocks;
-  late Command<void, Result<List<MeetingEntity>>> loadMeetings;
+  late Command<void, Result<List<MeetingsEntity>>> loadMeetings;
 
-  AsyncResult<List<MeetingEntity>> _loadMeetings() async {
+  AsyncResult<List<MeetingsEntity>> _loadMeetings() async {
     final result = await _getHomeDataUseCase.getMeetings();
 
     if (result.isError()) {

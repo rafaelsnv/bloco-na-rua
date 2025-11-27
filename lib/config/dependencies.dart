@@ -8,6 +8,8 @@ import 'package:bloco_na_rua/data/repositories/carnivalBlocks/carnival_blocks_re
 import 'package:bloco_na_rua/data/repositories/auth/iauth_repository.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
+import 'package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart';
+import 'package:bloco_na_rua/data/repositories/meetings/meetings_repository.dart';
 import 'package:bloco_na_rua/data/repositories/members/imembers_repository.dart';
 import 'package:bloco_na_rua/data/repositories/members/members_repository.dart';
 import 'package:bloco_na_rua/data/services/api/base/base_api_client.dart';
@@ -16,6 +18,8 @@ import 'package:bloco_na_rua/data/services/api/carnivalBlockMembers/carnival_blo
 import 'package:bloco_na_rua/data/services/api/carnivalBlockMembers/icarnival_block_members_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/carnivalBlocks/carnival_blocks_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/carnivalBlocks/icarnival_blocks_api_client.dart';
+import 'package:bloco_na_rua/data/services/api/meetings/imeetings_api_client.dart';
+import 'package:bloco_na_rua/data/services/api/meetings/meetings_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/members/imembers_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/members/members_api_client.dart';
 import 'package:bloco_na_rua/data/services/auth/auth_api_client.dart';
@@ -55,6 +59,15 @@ List<SingleChildWidget> get providers {
         },
         options: baseOptions,
       ),
+    ),
+
+    // Meetings
+    Provider<IMeetingsApiClient>(
+      create: (context) => MeetingsApiClient(context.read<IBaseApiClient>()),
+    ),
+    Provider<IMeetingsRepository>(
+      create: (context) =>
+          MeetingsRepository(meetingsApiClient: context.read()),
     ),
 
     // Members

@@ -1,6 +1,6 @@
 import 'package:bloco_na_rua/data/repositories/members/imembers_repository.dart';
 import 'package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart';
-import 'package:bloco_na_rua/domain/entities/meetings/meeting_entity.dart';
+import 'package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart';
 import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';
 import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart';
 import 'package:logging/logging.dart';
@@ -49,7 +49,7 @@ class GetHomeDataUseCase {
     }
   }
 
-  AsyncResult<List<MeetingEntity>> getMeetings() async {
+  AsyncResult<List<MeetingsEntity>> getMeetings() async {
     try {
       final userDataResult = await _getUserData();
 

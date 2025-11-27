@@ -25,7 +25,6 @@ class BaseApiClient implements IBaseApiClient {
       String endpoint = TEntity.toString()
           .replaceAll('Entity', '')
           .toLowerCase();
-      // final request = await client.get('/api/v1/$endpoint');
       final response = await client.get('$basePath$endpoint');
       if (response.statusCode != 200) {
         return Failure(formatError(response));
@@ -51,7 +50,7 @@ class BaseApiClient implements IBaseApiClient {
   ) async {
     try {
       String endpoint = TEntity.toString().replaceAll('Entity', '');
-      final response = await client.get('$basePath$endpoint/${id.toString()}');
+      final response = await client.get('$basePath/$endpoint/${id.toString()}');
       if (response.statusCode != 200) {
         return Failure(formatError(response));
       }

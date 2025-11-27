@@ -1,21 +1,21 @@
-import 'package:bloco_na_rua/ui/carnivalBlock/showBlock/view_model/show_block_viewmodel.dart';
+import 'package:bloco_na_rua/ui/carnivalBlock/blockDetails/view_model/block_details_viewmodel.dart';
 import 'package:flutter/material.dart';
 
-class ShowBlockScreen extends StatefulWidget {
-  const ShowBlockScreen({
+class BlockDetailsScreen extends StatefulWidget {
+  const BlockDetailsScreen({
     super.key,
     required this.viewModel,
     required this.carnivalBlockId,
   });
 
-  final ShowBlockViewModel viewModel;
+  final BlockDetailsViewModel viewModel;
   final String carnivalBlockId;
 
   @override
-  State<ShowBlockScreen> createState() => _ShowBlockScreenState();
+  State<BlockDetailsScreen> createState() => _BlockDetailsScreenState();
 }
 
-class _ShowBlockScreenState extends State<ShowBlockScreen> {
+class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
   void _onResult() {
     final result = widget.viewModel.loadCarnivalBlocks.results.value.data;
 
@@ -42,7 +42,7 @@ class _ShowBlockScreenState extends State<ShowBlockScreen> {
   }
 
   @override
-  void didUpdateWidget(covariant ShowBlockScreen oldWidget) {
+  void didUpdateWidget(covariant BlockDetailsScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     oldWidget.viewModel.loadCarnivalBlocks.removeListener(_onResult);
     widget.viewModel.loadCarnivalBlocks.addListener(_onResult);

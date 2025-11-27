@@ -5,8 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:result_dart/result_dart.dart';
 
-class ShowBlockViewModel extends ChangeNotifier {
-  ShowBlockViewModel({
+class BlockDetailsViewModel extends ChangeNotifier {
+  BlockDetailsViewModel({
     required ICarnivalBlocksRepository carnivalBlocksRepository,
     required this.carnivalBlockId,
   }) : _carnivalBlocksRepository = carnivalBlocksRepository {
@@ -28,7 +28,7 @@ class ShowBlockViewModel extends ChangeNotifier {
     );
 
     if (result.isError()) {
-      _log.warning('Load carnival blocks failed', result.exceptionOrNull());
+      _log.warning('Load carnival block failed', result.exceptionOrNull());
       return result;
     }
     return result;

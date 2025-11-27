@@ -19,7 +19,7 @@ class Routes {
   static const String members = '/members';
 
   // Rotas de reuniões
-  static const String meetings = '/meetings';
+  static const String meeting = '/meeting';
 
   // Rotas de presenças
   static const String meetingPresences = '/meeting-presences';

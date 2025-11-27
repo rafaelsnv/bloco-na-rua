@@ -1,6 +1,6 @@
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/meetings/imeetings_api_client.dart';
-import 'package:bloco_na_rua/domain/entities/meetings/meeting_entity.dart';
+import 'package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart';
 import 'package:result_dart/result_dart.dart';
 
 class MeetingsApiClient implements IMeetingsApiClient {
@@ -15,7 +15,7 @@ class MeetingsApiClient implements IMeetingsApiClient {
   IBaseApiClient get client => baseApiClient;
 
   @override
-  AsyncResult<List<MeetingEntity>> getAllByBlockId(int blockId) async {
+  AsyncResult<List<MeetingsEntity>> getAllByBlockId(int blockId) async {
     try {
       final response = await baseApiClient.client.get(
         '$_basePath/block/$blockId',
@@ -24,7 +24,7 @@ class MeetingsApiClient implements IMeetingsApiClient {
         return Failure(baseApiClient.formatError(response));
       }
       final data = await response.data as List;
-      final result = data.map((e) => MeetingEntity.fromJson(e)).toList();
+      final result = data.map((e) => MeetingsEntity.fromJson(e)).toList();
       return Success(result);
     } on Exception catch (e) {
       baseApiClient.client.close();

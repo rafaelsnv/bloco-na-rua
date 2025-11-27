@@ -1,11 +1,11 @@
 import 'package:bloco_na_rua/core/entity_base.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'meeting_entity.freezed.dart';
-part 'meeting_entity.g.dart';
+part 'meetings_entity.freezed.dart';
+part 'meetings_entity.g.dart';
 
 @freezed
-sealed class MeetingEntity extends EntityBase with _$MeetingEntity {
+sealed class MeetingsEntity extends EntityBase with _$MeetingsEntity {
   @override
   final String? name;
   @override
@@ -19,7 +19,7 @@ sealed class MeetingEntity extends EntityBase with _$MeetingEntity {
   @override
   final int? carnivalBlockId;
 
-  MeetingEntity._({
+  MeetingsEntity._({
     this.name,
     this.description,
     this.location,
@@ -31,7 +31,7 @@ sealed class MeetingEntity extends EntityBase with _$MeetingEntity {
     super.updatedAt,
   }) : super();
 
-  factory MeetingEntity({
+  factory MeetingsEntity({
     required int id,
     String? name,
     String? description,
@@ -41,8 +41,8 @@ sealed class MeetingEntity extends EntityBase with _$MeetingEntity {
     int? carnivalBlockId,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) = _MeetingEntity;
+  }) = _MeetingsEntity;
 
-  factory MeetingEntity.fromJson(Map<String, dynamic> json) =>
-      _$MeetingEntityFromJson(json);
+  factory MeetingsEntity.fromJson(Map<String, dynamic> json) =>
+      _$MeetingsEntityFromJson(json);
 }

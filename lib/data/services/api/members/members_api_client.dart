@@ -3,7 +3,7 @@ import 'package:bloco_na_rua/data/services/api/members/create/member_create.dart
 import 'package:bloco_na_rua/data/services/api/members/imembers_api_client.dart';
 import 'package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart';
 import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';
-import 'package:bloco_na_rua/domain/entities/meetings/meeting_entity.dart';
+import 'package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart';
 import 'package:result_dart/result_dart.dart';
 
 class MembersApiClient implements IMembersApiClient {
@@ -71,7 +71,7 @@ class MembersApiClient implements IMembersApiClient {
   }
 
   @override
-  AsyncResult<List<MeetingEntity>> getMeetingsByMemberId(int memberId) async {
+  AsyncResult<List<MeetingsEntity>> getMeetingsByMemberId(int memberId) async {
     try {
       final response = await baseApiClient.client.get(
         '$_basePath/$memberId/meetings',
@@ -80,7 +80,7 @@ class MembersApiClient implements IMembersApiClient {
         return Failure(baseApiClient.formatError(response));
       }
       final data = await response.data as List;
-      final result = data.map((e) => MeetingEntity.fromJson(e)).toList();
+      final result = data.map((e) => MeetingsEntity.fromJson(e)).toList();
       return Success(result);
     } on Exception catch (e) {
       baseApiClient.client.close();

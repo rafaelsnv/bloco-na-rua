@@ -184,6 +184,9 @@ class _HomeScreenState extends State<HomeScreen> {
             return ListTile(
               title: Text(meeting.name ?? ''),
               subtitle: Text(meeting.description ?? ''),
+              onTap: () {
+                context.push('${Routes.meeting}/${meeting.id}');
+              },
             );
           },
         );
