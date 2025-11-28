@@ -6,6 +6,7 @@ import 'package:bloco_na_rua/ui/home/view_model/home_viewmodel.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -89,9 +90,21 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.all(10),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 15,
             children: [
+              Text(
+                "Meus blocos",
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
               _buildCarnivalBlockCarousel(),
+              Text(
+                "Encontros da semana",
+                style: Theme.of(context).textTheme.headlineSmall,
+                textAlign: TextAlign.left,
+              ),
               _buildMeetingsList(),
               _buildNavigationButtons(),
             ],
@@ -127,7 +140,12 @@ class _HomeScreenState extends State<HomeScreen> {
         }
 
         return CarouselSlider(
-          options: CarouselOptions(height: 200.0),
+          options: CarouselOptions(
+            viewportFraction: 0.4,
+            height: MediaQuery.of(context).size.height * 0.20,
+            enableInfiniteScroll: false,
+            enlargeCenterPage: true,
+          ),
           items: carnivalBlockList.map((block) {
             return Builder(
               builder: (BuildContext context) {
@@ -135,10 +153,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     context.push('${Routes.carnivalBlock}/${block.id}');
                   },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                    decoration: const BoxDecoration(color: Colors.amber),
+                  child: Card(
+                    color: Colors.blueAccent,
                     child: Center(
                       child: Text(
                         block.name,
@@ -177,16 +193,69 @@ class _HomeScreenState extends State<HomeScreen> {
 
         return ListView.builder(
           shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
           itemCount: meetingsList.length,
           itemBuilder: (context, index) {
             final meeting = meetingsList[index];
-            return ListTile(
-              title: Text(meeting.name ?? ''),
-              subtitle: Text(meeting.description ?? ''),
-              onTap: () {
-                context.push('${Routes.meeting}/${meeting.id}');
-              },
+            var meetingDateTime = DateTime.parse(meeting.meetingDateTime ?? '');
+
+            return Card(
+              child: ListTile(
+                leading: Text(
+                  DateFormat.E('pt_BR').format(meetingDateTime),
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                title: Text(
+                  meeting.name ?? '',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                subtitle: Text(
+                  meeting.location ?? '',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                trailing: Text(
+                  DateFormat('dd/MM/yy HH:mm', 'pt_BR').format(meetingDateTime),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                onTap: () {
+                  showModalBottomSheet<void>(
+                    context: context,
+                    builder: (context) => SizedBox(
+                      height: 200,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              meeting.name ?? '',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            Text(
+                              meeting.description ?? '',
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                            Text(
+                              'Local: ${meeting.location}',
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                            Text(
+                              DateFormat(
+                                'E dd/MM/yy HH:mm',
+                                'pt_BR',
+                              ).format(meetingDateTime),
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                            ElevatedButton(
+                              child: const Text('Fechar'),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                  // context.push('${Routes.meeting}/${meeting.id}');
+                },
+              ),
             );
           },
         );
@@ -195,7 +264,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildNavigationButtons() {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      spacing: 20,
       children: [
         Center(
           child: ElevatedButton(

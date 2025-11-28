@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   cupertino_icons: ^1.0.8
   freezed_annotation: ^3.1.0
   json_annotation: ^4.9.0
@@ -25,6 +27,7 @@ dependencies:
   pretty_dio_logger: ^1.4.0
   flutter_dotenv: ^6.0.0
   carousel_slider: ^5.1.1
+  intl: any
 
 dev_dependencies:
   flutter_test:

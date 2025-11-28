@@ -1,5 +1,6 @@
 import 'package:bloco_na_rua/routing/router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 class MainApp extends StatelessWidget {
@@ -13,6 +14,12 @@ class MainApp extends StatelessWidget {
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       routerConfig: router(context.read()),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [const Locale('pt', 'BR'), const Locale('en', '')],
     );
   }
 }
