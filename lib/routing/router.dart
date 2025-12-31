@@ -1,23 +1,21 @@
 import 'package:bloco_na_rua/data/repositories/auth/iauth_repository.dart';
 import 'package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart';
 import 'package:bloco_na_rua/routing/routes.dart';
-import 'package:bloco_na_rua/ui/auth/login/view_models/login_viewmodel.dart';
 import 'package:bloco_na_rua/ui/auth/login/widgets/login_screen.dart';
-import 'package:bloco_na_rua/ui/auth/signUp/view_model/signup_viewmodel.dart';
 import 'package:bloco_na_rua/ui/auth/signUp/widgets/signup_screen.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
+import 'package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_cubit.dart';
 import 'package:bloco_na_rua/ui/carnivalBlock/blockDetails/widgets/block_details_screen.dart';
 import 'package:bloco_na_rua/ui/carnivalBlock/createBlock/widgets/create_block_screen.dart';
-import 'package:bloco_na_rua/ui/carnivalBlock/blockDetails/view_model/block_details_viewmodel.dart';
-import 'package:bloco_na_rua/ui/home/view_model/home_viewmodel.dart';
+import 'package:bloco_na_rua/ui/home/cubit/home_cubit.dart';
 import 'package:bloco_na_rua/ui/home/widgets/home_screen.dart';
-import 'package:bloco_na_rua/ui/meetings/meetingDetails/view_model/meeting_details_viewmodel.dart';
+import 'package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_cubit.dart';
 import 'package:bloco_na_rua/ui/meetings/meetingDetails/widgets/meeting_details_screen.dart';
-import 'package:bloco_na_rua/ui/members/view_models/members_viewmodel.dart';
+import 'package:bloco_na_rua/ui/members/cubit/members_cubit.dart';
 import 'package:bloco_na_rua/ui/members/widgets/members_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 GoRouter router(IAuthRepository authRepository) => GoRouter(
   initialLocation: Routes.login,
@@ -28,24 +26,23 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
     GoRoute(
       path: Routes.login,
       builder: (context, state) {
-        return LoginScreen(
-          viewModel: LoginViewModel(authRepository: context.read()),
-        );
+        return const LoginScreen();
       },
     ),
     GoRoute(
       path: Routes.register,
       builder: (context, state) {
-        return SignUpScreen(
-          viewModel: SignUpViewModel(authRepository: context.read()),
-        );
+        return const SignUpScreen();
       },
     ),
     GoRoute(
       path: Routes.home,
       builder: (context, state) {
-        return HomeScreen(
-          viewModel: HomeViewModel(getHomeDataUseCase: context.read()),
+        return BlocProvider(
+          create: (context) => HomeCubit(
+            getHomeDataUseCase: context.read(),
+          )..loadHomeData(),
+          child: const HomeScreen(),
         );
       },
     ),
@@ -53,10 +50,12 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
       path: '${Routes.carnivalBlock}/:id',
       builder: (context, state) {
         final carnivalBlockId = state.pathParameters['id']!;
-        return BlockDetailsScreen(
-          carnivalBlockId: carnivalBlockId,
-          viewModel: BlockDetailsViewModel(
+        return BlocProvider(
+          create: (context) => BlockDetailsCubit(
             carnivalBlocksRepository: context.read<ICarnivalBlocksRepository>(),
+            carnivalBlockId: carnivalBlockId,
+          ),
+          child: BlockDetailsScreen(
             carnivalBlockId: carnivalBlockId,
           ),
         );
@@ -66,10 +65,12 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
       path: '${Routes.meeting}/:id',
       builder: (context, state) {
         final meetingId = state.pathParameters['id']!;
-        return MeetingDetailsScreen(
-          meetingId: meetingId,
-          viewModel: MeetingDetailsViewModel(
+        return BlocProvider(
+          create: (context) => MeetingDetailsCubit(
             meetingsRepository: context.read<IMeetingsRepository>(),
+            meetingId: meetingId,
+          ),
+          child: MeetingDetailsScreen(
             meetingId: meetingId,
           ),
         );
@@ -84,8 +85,11 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
     GoRoute(
       path: Routes.members,
       builder: (context, state) {
-        return MembersScreen(
-          viewModel: MembersViewModel(membersRepository: context.read()),
+        return BlocProvider(
+          create: (context) => MembersCubit(
+            membersRepository: context.read(),
+          )..loadMembers(),
+          child: const MembersScreen(),
         );
       },
     ),

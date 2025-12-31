@@ -1,93 +1,59 @@
 import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';
-import 'package:bloco_na_rua/ui/members/view_models/members_viewmodel.dart';
+import 'package:bloco_na_rua/ui/members/cubit/members_cubit.dart';
+import 'package:bloco_na_rua/ui/members/cubit/members_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MembersScreen extends StatefulWidget {
-  const MembersScreen({super.key, required this.viewModel});
-
-  final MembersViewModel viewModel;
-
-  @override
-  State<MembersScreen> createState() => _MembersScreenState();
-}
-
-class _MembersScreenState extends State<MembersScreen> {
-  void _onResult() {
-    final result = widget.viewModel.loadMembers.results.value.data;
-
-    if (result == null) {
-      return;
-    }
-
-    if (result.isError()) {
-      widget.viewModel.loadMembers.clearErrors();
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              result.exceptionOrNull().toString().replaceAll("Exception: ", ""),
-            ),
-            showCloseIcon: true,
-          ),
-        );
-        return;
-      }
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    widget.viewModel.loadMembers.addListener(_onResult);
-    widget.viewModel.loadMembers();
-  }
-
-  @override
-  void didUpdateWidget(covariant MembersScreen oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    oldWidget.viewModel.loadMembers.removeListener(_onResult);
-    widget.viewModel.loadMembers.addListener(_onResult);
-  }
-
-  @override
-  void dispose() {
-    widget.viewModel.loadMembers.removeListener(_onResult);
-    super.dispose();
-  }
+class MembersScreen extends StatelessWidget {
+  const MembersScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Membros')),
       body: SafeArea(
-        child: ListenableBuilder(
-          listenable: widget.viewModel.loadMembers,
-          builder: (context, child) {
-            if (widget.viewModel.loadMembers.isExecuting.value) {
+        child: BlocConsumer<MembersCubit, MembersState>(
+          listener: (context, state) {
+            if (state.status == MembersStatus.error &&
+                state.errorMessage != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    state.errorMessage!.replaceAll("Exception: ", ""),
+                  ),
+                  showCloseIcon: true,
+                ),
+              );
+            }
+          },
+          builder: (context, state) {
+            if (state.status == MembersStatus.loading && state.members.isEmpty) {
               return const Center(child: CircularProgressIndicator());
             }
 
-            final result = widget.viewModel.loadMembers.results.value.data;
-            if (result == null || result.isError()) {
+            if (state.status == MembersStatus.error && state.members.isEmpty) {
               return const Center(child: Text('Erro ao carregar membros'));
             }
 
-            final membersList = result.getOrNull();
-            if (membersList == null || membersList.isEmpty) {
+            final membersList = state.members;
+            if (membersList.isEmpty && state.status == MembersStatus.success) {
               return const Center(child: Text('Nenhum membro encontrado'));
             }
 
-            return ListView.builder(
-              itemCount: membersList.length,
-              itemBuilder: (context, index) {
-                MembersEntity member = membersList[index];
-                return Card(
-                  child: ListTile(
-                    title: Text(member.name.toString()),
-                    subtitle: Text(member.email.toString()),
-                  ),
-                );
-              },
+            return RefreshIndicator(
+              onRefresh: () => context.read<MembersCubit>().loadMembers(),
+              child: ListView.builder(
+                itemCount: membersList.length,
+                itemBuilder: (context, index) {
+                  MembersEntity member = membersList[index];
+                  return Card(
+                    child: ListTile(
+                      title: Text(member.name.toString()),
+                      subtitle: Text(member.email.toString()),
+                    ),
+                  );
+                },
+              ),
             );
           },
         ),

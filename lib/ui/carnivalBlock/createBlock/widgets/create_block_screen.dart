@@ -1,5 +1,8 @@
 import 'package:bloco_na_rua/routing/routes.dart';
+import 'package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_cubit.dart';
+import 'package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class CreateBlockScreen extends StatelessWidget {
@@ -7,79 +10,108 @@ class CreateBlockScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Crie um novo bloco',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.grey[850],
-        leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.white),
-          onPressed: () {
+    return BlocProvider(
+      create: (context) => CreateBlockCubit(),
+      child: BlocConsumer<CreateBlockCubit, CreateBlockState>(
+        listener: (context, state) {
+          if (state is CreateBlockSuccess) {
             context.go(Routes.home);
-          },
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Nome do bloco',
-                labelStyle: const TextStyle(color: Colors.white70),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey[700]!),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.purpleAccent),
-                ),
+          } else if (state is CreateBlockError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
+        },
+        builder: (context, state) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text(
+                'Crie um novo bloco',
+                style: TextStyle(color: Colors.white),
               ),
-              style: const TextStyle(color: Colors.white),
+              backgroundColor: Colors.grey[850],
+              leading: IconButton(
+                icon: const Icon(Icons.close, color: Colors.white),
+                onPressed: () {
+                  context.go(Routes.home);
+                },
+              ),
             ),
-            const SizedBox(height: 20),
-            Center(
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
-                    Icons.account_circle,
-                    size: 100,
-                    color: Colors.grey,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Handle image selection
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.purpleAccent.shade100,
-                      foregroundColor: Colors.black,
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Nome do bloco',
+                      labelStyle: const TextStyle(color: Colors.white70),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey[700]!),
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.purpleAccent),
+                      ),
                     ),
-                    child: const Text('Imagem de perfil'),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  const SizedBox(height: 20),
+                  Center(
+                    child: Column(
+                      children: [
+                        const Icon(
+                          Icons.account_circle,
+                          size: 100,
+                          color: Colors.grey,
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Handle image selection
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.purpleAccent.shade100,
+                            foregroundColor: Colors.black,
+                          ),
+                          child: const Text('Imagem de perfil'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: ElevatedButton(
+                      onPressed: state is CreateBlockLoading
+                          ? null
+                          : () {
+                              context
+                                  .read<CreateBlockCubit>()
+                                  .createBlock("Novo Bloco");
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.purpleAccent.shade100,
+                        foregroundColor: Colors.black,
+                        minimumSize: const Size(150, 50),
+                      ),
+                      child: state is CreateBlockLoading
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.black,
+                              ),
+                            )
+                          : const Text('Criar bloco'),
+                    ),
                   ),
                 ],
               ),
             ),
-            const Spacer(),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Handle create block action
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purpleAccent.shade100,
-                  foregroundColor: Colors.black,
-                  minimumSize: const Size(150, 50), // Adjust size as needed
-                ),
-                child: const Text('Criar bloco'),
-              ),
-            ),
-          ],
-        ),
+            backgroundColor: Colors.grey[900],
+          );
+        },
       ),
-      backgroundColor: Colors.grey[900],
     );
   }
 }

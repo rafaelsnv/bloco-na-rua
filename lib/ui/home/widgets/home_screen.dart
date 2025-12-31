@@ -1,113 +1,62 @@
 import 'package:bloco_na_rua/routing/routes.dart';
-import 'package:bloco_na_rua/ui/auth/logout/view_model/logout_viewmodel.dart';
 import 'package:bloco_na_rua/ui/auth/logout/widgets/logout_button.dart';
 import 'package:bloco_na_rua/ui/core/widgets/profile_button.dart';
-import 'package:bloco_na_rua/ui/home/view_model/home_viewmodel.dart';
+import 'package:bloco_na_rua/ui/home/cubit/home_cubit.dart';
+import 'package:bloco_na_rua/ui/home/cubit/home_state.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.viewModel});
-
-  final HomeViewModel viewModel;
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  void _onResult() {
-    final resultBlocks = widget.viewModel.loadCarnivalBlocks.results.value.data;
-    final resultMeetings = widget.viewModel.loadMeetings.results.value.data;
-
-    if (resultMeetings == null || resultBlocks == null) {
-      return;
-    }
-
-    final errors = <String>[];
-    if (resultMeetings.isError()) {
-      errors.add(
-        resultMeetings.exceptionOrNull().toString().replaceAll(
-          "Exception: ",
-          "",
-        ),
-      );
-      widget.viewModel.loadMeetings.clearErrors();
-    }
-
-    if (resultBlocks.isError()) {
-      errors.add(
-        resultBlocks.exceptionOrNull().toString().replaceAll("Exception: ", ""),
-      );
-      widget.viewModel.loadCarnivalBlocks.clearErrors();
-    }
-
-    if (errors.isNotEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(errors.join('\n'))));
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    widget.viewModel.loadCarnivalBlocks.addListener(_onResult);
-    widget.viewModel.loadMeetings.addListener(_onResult);
-  }
-
-  @override
-  void didUpdateWidget(covariant HomeScreen oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    oldWidget.viewModel.loadCarnivalBlocks.removeListener(_onResult);
-    widget.viewModel.loadCarnivalBlocks.addListener(_onResult);
-
-    oldWidget.viewModel.loadMeetings.removeListener(_onResult);
-    widget.viewModel.loadMeetings.addListener(_onResult);
-  }
-
-  @override
-  void dispose() {
-    widget.viewModel.loadCarnivalBlocks.removeListener(_onResult);
-    widget.viewModel.loadMeetings.removeListener(_onResult);
-    super.dispose();
-  }
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: const ProfileButton(),
-        title: const Text('Bloco Na Rua'),
-        actions: [
-          LogoutButton(
-            viewModel: LogoutViewModel(authRepository: context.read()),
+    return BlocListener<HomeCubit, HomeState>(
+      listenWhen: (previous, current) =>
+          current.status == HomeStatus.failure &&
+          previous.status != HomeStatus.failure,
+      listener: (context, state) {
+        if (state.errorMessage != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.errorMessage!)),
+          );
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: const ProfileButton(),
+          title: const Text(
+            'Bloco Na Rua',
+            overflow: TextOverflow.ellipsis,
           ),
-        ],
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 15,
-            children: [
-              Text(
-                "Meus blocos",
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              _buildCarnivalBlockCarousel(),
-              Text(
-                "Encontros da semana",
-                style: Theme.of(context).textTheme.headlineSmall,
-                textAlign: TextAlign.left,
-              ),
-              _buildMeetingsList(),
-              _buildNavigationButtons(),
-            ],
+          actions: const [
+            LogoutButton(),
+          ],
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 15,
+              children: [
+                Text(
+                  "Meus blocos",
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                _buildCarnivalBlockCarousel(),
+                Text(
+                  "Encontros da semana",
+                  style: Theme.of(context).textTheme.headlineSmall,
+                  textAlign: TextAlign.left,
+                ),
+                _buildMeetingsList(),
+                _buildNavigationButtons(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -115,27 +64,20 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildCarnivalBlockCarousel() {
-    return ListenableBuilder(
-      listenable: widget.viewModel.loadCarnivalBlocks,
-      builder: (context, child) {
-        if (widget.viewModel.loadCarnivalBlocks.isExecuting.value) {
+    return BlocBuilder<HomeCubit, HomeState>(
+      buildWhen: (previous, current) =>
+          previous.status != current.status || previous.blocks != current.blocks,
+      builder: (context, state) {
+        if (state.status == HomeStatus.loading) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (widget.viewModel.loadCarnivalBlocks.results.value.hasError) {
-          return ErrorWidget(
-            widget.viewModel.loadCarnivalBlocks.results.value.error!,
-          );
+        if (state.status == HomeStatus.failure && state.blocks.isEmpty) {
+          return const Center(child: Text('Erro ao carregar blocos'));
         }
 
-        var carnivalBlockList = widget
-            .viewModel
-            .loadCarnivalBlocks
-            .results
-            .value
-            .data
-            ?.getOrNull();
-        if (carnivalBlockList == null || carnivalBlockList.isEmpty) {
+        final blocks = state.blocks;
+        if (blocks.isEmpty) {
           return const Center(child: Text('Nenhum bloco encontrado'));
         }
 
@@ -146,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
             enableInfiniteScroll: false,
             enlargeCenterPage: true,
           ),
-          items: carnivalBlockList.map((block) {
+          items: blocks.map((block) {
             return Builder(
               builder: (BuildContext context) {
                 return InkWell(
@@ -172,30 +114,30 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildMeetingsList() {
-    return ListenableBuilder(
-      listenable: widget.viewModel.loadMeetings,
-      builder: (context, child) {
-        if (widget.viewModel.loadMeetings.isExecuting.value) {
+    return BlocBuilder<HomeCubit, HomeState>(
+      buildWhen: (previous, current) =>
+          previous.status != current.status ||
+          previous.meetings != current.meetings,
+      builder: (context, state) {
+        if (state.status == HomeStatus.loading) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (widget.viewModel.loadMeetings.results.value.hasError) {
-          return ErrorWidget(
-            widget.viewModel.loadMeetings.results.value.error!,
-          );
+        if (state.status == HomeStatus.failure && state.meetings.isEmpty) {
+          return const Center(child: Text('Erro ao carregar encontros'));
         }
 
-        var meetingsList = widget.viewModel.loadMeetings.results.value.data
-            ?.getOrNull();
-        if (meetingsList == null || meetingsList.isEmpty) {
+        final meetings = state.meetings;
+        if (meetings.isEmpty) {
           return const Center(child: Text('Nenhuma reunião encontrada'));
         }
 
         return ListView.builder(
           shrinkWrap: true,
-          itemCount: meetingsList.length,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: meetings.length,
           itemBuilder: (context, index) {
-            final meeting = meetingsList[index];
+            final meeting = meetings[index];
             var meetingDateTime = DateTime.parse(meeting.meetingDateTime ?? '');
 
             return Card(
@@ -253,7 +195,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   );
-                  // context.push('${Routes.meeting}/${meeting.id}');
                 },
               ),
             );
@@ -263,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildNavigationButtons() {
+  Widget _buildNavigationButtons(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.end,

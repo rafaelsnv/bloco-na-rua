@@ -1,12 +1,12 @@
 import 'package:bloco_na_rua/routing/routes.dart';
-import 'package:bloco_na_rua/ui/auth/login/view_models/login_viewmodel.dart';
+import 'package:bloco_na_rua/ui/auth/cubit/auth_cubit.dart';
+import 'package:bloco_na_rua/ui/auth/cubit/auth_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key, required this.viewModel});
-
-  final LoginViewModel viewModel;
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -22,25 +22,18 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    widget.viewModel.login.addListener(_onResult);
     _email.addListener(_validateForm);
     _password.addListener(_validateForm);
     _validateForm();
   }
 
   @override
-  void didUpdateWidget(covariant LoginScreen oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    oldWidget.viewModel.login.removeListener(_onResult);
-    widget.viewModel.login.addListener(_onResult);
-  }
-
-  @override
   void dispose() {
-    widget.viewModel.login.removeListener(_onResult);
     _email.removeListener(_validateForm);
     _password.removeListener(_validateForm);
     _isFormValidNotifier.dispose();
+    _email.dispose();
+    _password.dispose();
     super.dispose();
   }
 
@@ -48,194 +41,196 @@ class _LoginScreenState extends State<LoginScreen> {
     _isFormValidNotifier.value = _formKey.currentState?.validate() ?? false;
   }
 
-  void _onResult() {
-    final result = widget.viewModel.login.results.value.data;
-
-    if (result == null) {
-      return;
-    }
-
-    if (result.isError()) {
-      widget.viewModel.login.clearErrors();
-      // Guard BuildContext use with a mounted check on the BuildContext
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              result.exceptionOrNull().toString().replaceAll("Exception: ", ""),
-            ),
-            showCloseIcon: true,
-          ),
-        );
-        return;
-      }
-    }
-
-    // Guard BuildContext use with a mounted check on the BuildContext
-    if (context.mounted) {
-      context.go(Routes.home);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surfaceBright,
-      appBar: AppBar(
-        title: Text(
-          'Bloco na Rua',
-          style: TextStyle(
-            fontSize: 30,
-            color: Theme.of(context).colorScheme.primary,
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is AuthFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message.replaceAll("Exception: ", "")),
+              showCloseIcon: true,
+            ),
+          );
+        } else if (state is AuthAuthenticated) {
+          context.go(Routes.home);
+        } else if (state is AuthSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message ?? 'Sucesso!'),
+              showCloseIcon: true,
+            ),
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surfaceBright,
+        appBar: AppBar(
+          title: Text(
+            'Bloco na Rua',
+            style: TextStyle(
+              fontSize: 30,
+              color: Theme.of(context).colorScheme.primary,
+            ),
           ),
         ),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Bem vindo',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                      color: Theme.of(context).colorScheme.primary,
+        body: Center(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Bem vindo',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 26),
-                  TextFormField(
-                    controller: _email,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      labelText: 'E-mail',
-                      border: OutlineInputBorder(),
+                    const SizedBox(height: 26),
+                    TextFormField(
+                      controller: _email,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                        labelText: 'E-mail',
+                        border: OutlineInputBorder(),
+                      ),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, insira um e-mail';
+                        }
+                        if (!value.contains('@')) {
+                          return 'E-mail inválido';
+                        }
+                        return null;
+                      },
+                      onChanged: (_) => _validateForm(),
                     ),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, insira um e-mail';
-                      }
-                      if (!value.contains('@')) {
-                        return 'E-mail inválido';
-                      }
-                      return null;
-                    },
-                    onChanged: (_) => _validateForm(),
-                  ),
-                  SizedBox(height: 16),
-                  TextFormField(
-                    controller: _password,
-                    keyboardType: TextInputType.visiblePassword,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    decoration: InputDecoration(
-                      labelText: 'Senha',
-                      border: OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _password,
+                      keyboardType: TextInputType.visiblePassword,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      decoration: InputDecoration(
+                        labelText: 'Senha',
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
+                      ),
+                      obscureText: _obscurePassword,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, insira uma senha';
+                        }
+                        return null;
+                      },
+                      onChanged: (_) => _validateForm(),
+                    ),
+                    const SizedBox(height: 26),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 49,
+                      child: BlocBuilder<AuthCubit, AuthState>(
+                        builder: (context, state) {
+                          if (state is AuthLoading) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+
+                          return ValueListenableBuilder<bool>(
+                            valueListenable: _isFormValidNotifier,
+                            builder: (context, isFormValid, child) {
+                              return ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.primary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                onPressed: isFormValid
+                                    ? () {
+                                        if (_formKey.currentState!
+                                            .validate()) {
+                                          context.read<AuthCubit>().login(
+                                                _email.text,
+                                                _password.text,
+                                              );
+                                        }
+                                      }
+                                    : null,
+                                child: Text(
+                                  'Login',
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceBright,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
                         },
                       ),
                     ),
-                    obscureText: _obscurePassword,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, insira uma senha';
-                      }
-                      return null;
-                    },
-                    onChanged: (_) => _validateForm(),
-                  ),
-                  SizedBox(height: 26),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 49,
-                    child: ListenableBuilder(
-                      listenable: widget.viewModel.login,
-                      builder: (context, _) {
-                        if (widget.viewModel.login.isExecuting.value) {
-                          return const CircularProgressIndicator();
-                        }
-
-                        return ValueListenableBuilder<bool>(
-                          valueListenable: _isFormValidNotifier,
-                          builder: (context, isFormValid, child) {
-                            return ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Theme.of(
-                                  context,
-                                ).colorScheme.primary,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
+                    const SizedBox(height: 26),
+                    Center(
+                      child: Builder(
+                        builder: (context) {
+                          return GestureDetector(
+                            onTap: () =>
+                                _showForgotPasswordDialog(context),
+                            child: Text(
+                              'Esqueceu a senha?',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primaryFixedDim,
                               ),
-                              onPressed: isFormValid
-                                  ? () {
-                                      if (_formKey.currentState!.validate()) {
-                                        widget.viewModel.login.execute((
-                                          _email.value.text,
-                                          _password.value.text,
-                                        ));
-                                      }
-                                    }
-                                  : null,
-                              child: Text(
-                                'Login',
-                                style: TextStyle(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.surfaceBright,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 26),
-                  Center(
-                    child: GestureDetector(
-                      onTap: _showForgotPasswordDialog,
-                      child: Text(
-                        'Esqueceu a senha?',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context).colorScheme.primaryFixedDim,
+                    const SizedBox(height: 10),
+                    Center(
+                      child: GestureDetector(
+                        onTap: () => context.go(Routes.register),
+                        child: Text(
+                          "Não tem uma conta? Cadastre-se",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primaryFixedDim,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () => context.go(Routes.register),
-                      child: Text(
-                        "Não tem uma conta? Cadastre-se",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context).colorScheme.primaryFixedDim,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -244,13 +239,13 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _showForgotPasswordDialog() {
+  void _showForgotPasswordDialog(BuildContext outerContext) {
     final TextEditingController emailController = TextEditingController();
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     bool isFormValid = false;
 
     showDialog(
-      context: context,
+      context: outerContext,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (context, setState) {
@@ -261,8 +256,8 @@ class _LoginScreenState extends State<LoginScreen> {
             }
 
             return Scaffold(
-              body: SizedBox(
-                width: double.infinity,
+              backgroundColor: Colors.transparent,
+              body: Center(
                 child: AlertDialog(
                   title: const Text('Esqueceu a senha?'),
                   content: Form(
@@ -298,9 +293,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text(
                         'Cancelar',
                         style: TextStyle(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.surfaceContainerHigh,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .surfaceContainerHigh,
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
@@ -318,22 +313,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       onPressed: !isFormValid
                           ? null
-                          : () async {
+                          : () {
                               if (formKey.currentState!.validate()) {
-                                final email = emailController.text;
-                                await widget.viewModel.resetPassword(email);
-
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'E-mail de redefinição de senha enviado!',
-                                      ),
-                                      showCloseIcon: true,
-                                    ),
-                                  );
-                                  Navigator.of(context).pop();
-                                }
+                                outerContext.read<AuthCubit>().resetPassword(
+                                      emailController.text,
+                                    );
+                                Navigator.of(context).pop();
                               }
                             },
                       child: Text(

@@ -1,49 +1,28 @@
-import 'package:bloco_na_rua/ui/auth/logout/view_model/logout_viewmodel.dart';
+import 'package:bloco_na_rua/ui/auth/cubit/auth_cubit.dart';
+import 'package:bloco_na_rua/ui/auth/cubit/auth_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LogoutButton extends StatefulWidget {
-  const LogoutButton({super.key, required this.viewModel});
-
-  final LogoutViewModel viewModel;
-
-  @override
-  State<LogoutButton> createState() => _LogoutButtonState();
-}
-
-class _LogoutButtonState extends State<LogoutButton> {
-  @override
-  void initState() {
-    super.initState();
-    widget.viewModel.logout.addListener(_onResult);
-  }
-
-  @override
-  void didUpdateWidget(covariant LogoutButton oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    oldWidget.viewModel.logout.removeListener(_onResult);
-    widget.viewModel.logout.addListener(_onResult);
-  }
-
-  @override
-  void dispose() {
-    widget.viewModel.logout.removeListener(_onResult);
-    super.dispose();
-  }
-
-  void _onResult() {
-    if (widget.viewModel.logout.results.value.hasError) {
-      widget.viewModel.logout.clearErrors();
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("error logout")));
-    }
-  }
+class LogoutButton extends StatelessWidget {
+  const LogoutButton({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.logout),
-      onPressed: () => widget.viewModel.logout.execute(),
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is AuthFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message.replaceAll("Exception: ", "")),
+              showCloseIcon: true,
+            ),
+          );
+        }
+      },
+      child: IconButton(
+        icon: const Icon(Icons.logout),
+        onPressed: () => context.read<AuthCubit>().logout(),
+      ),
     );
   }
 }
