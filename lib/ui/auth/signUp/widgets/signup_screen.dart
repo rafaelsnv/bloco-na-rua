@@ -55,9 +55,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AuthCubit(
-        authRepository: context.read<IAuthRepository>(),
-      ),
+      create: (context) =>
+          AuthCubit(authRepository: context.read<IAuthRepository>()),
       child: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthFailure) {
@@ -206,8 +205,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               builder: (context, isFormValid, child) {
                                 return ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.primary,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
@@ -223,18 +223,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                               phone: _phone.text,
                                               profileImage: 'TODO', //TO-DO
                                             );
-                                            context
-                                                .read<AuthCubit>()
-                                                .signUp(signUpData);
+                                            context.read<AuthCubit>().signUp(
+                                              signUpData,
+                                            );
                                           }
                                         }
                                       : null,
                                   child: Text(
                                     'Cadastrar',
                                     style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .surfaceBright,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.surfaceBright,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
                                     ),
@@ -254,8 +254,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 16,
-                              color:
-                                  Theme.of(context).colorScheme.primaryFixedDim,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.primaryFixedDim,
                             ),
                           ),
                         ),

@@ -28,4 +28,9 @@ class RepositoryBase<TEntity extends EntityBase>
   AsyncResult deleteByIdAsync(int id) async {
     return await apiClient.deleteByIdAsync<TEntity>(id);
   }
+
+  @override
+  AsyncResult<TEntity> createAsync(Map<String, dynamic> data) async {
+    return await apiClient.createAsync<TEntity>(data, _fromJsonFactory);
+  }
 }

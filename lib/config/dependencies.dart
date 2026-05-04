@@ -12,6 +12,8 @@ import 'package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dar
 import 'package:bloco_na_rua/data/repositories/meetings/meetings_repository.dart';
 import 'package:bloco_na_rua/data/repositories/members/imembers_repository.dart';
 import 'package:bloco_na_rua/data/repositories/members/members_repository.dart';
+import 'package:bloco_na_rua/data/repositories/meetingPresences/imeeting_presences_repository.dart';
+import 'package:bloco_na_rua/data/repositories/meetingPresences/meeting_presences_repository.dart';
 import 'package:bloco_na_rua/data/services/api/base/base_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/carnivalBlockMembers/carnival_block_members_api_client.dart';
@@ -22,11 +24,16 @@ import 'package:bloco_na_rua/data/services/api/meetings/imeetings_api_client.dar
 import 'package:bloco_na_rua/data/services/api/meetings/meetings_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/members/imembers_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/members/members_api_client.dart';
+import 'package:bloco_na_rua/data/services/api/meetingPresences/imeeting_presences_api_client.dart';
+import 'package:bloco_na_rua/data/services/api/meetingPresences/meeting_presences_api_client.dart';
 import 'package:bloco_na_rua/data/services/auth/auth_api_client.dart';
 import 'package:bloco_na_rua/data/services/shared_preferencies_service.dart';
 import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart';
 import 'package:bloco_na_rua/domain/use_cases/home/get_home_data_use_case.dart';
+import 'package:bloco_na_rua/domain/use_cases/meetings/get_user_meetings_use_case.dart';
+import 'package:bloco_na_rua/ui/profile/cubit/profile_cubit.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:provider/provider.dart';
@@ -99,6 +106,16 @@ List<SingleChildWidget> get providers {
       ),
     ),
 
+    // MeetingPresences
+    Provider<IMeetingPresencesApiClient>(
+      create: (context) =>
+          MeetingPresencesApiClient(context.read<IBaseApiClient>()),
+    ),
+    Provider<IMeetingPresencesRepository>(
+      create: (context) =>
+          MeetingPresencesRepository(meetingPresencesApiClient: context.read()),
+    ),
+
     // Auth
     Provider(
       create: (context) => AuthApiClient(supabaseClient: supabaseClient),
@@ -122,6 +139,20 @@ List<SingleChildWidget> get providers {
       create: (context) => GetHomeDataUseCase(
         getCurrentUserData: context.read(),
         membersRepo: context.read(),
+      ),
+    ),
+    Provider<GetUserMeetingsUseCase>(
+      create: (context) => GetUserMeetingsUseCase(
+        getCurrentUserData: context.read(),
+        membersRepo: context.read(),
+      ),
+    ),
+
+    // Profile
+    Provider<ProfileCubit>(
+      create: (context) => ProfileCubit(
+        authRepository: context.read(),
+        membersRepository: context.read(),
       ),
     ),
   ];

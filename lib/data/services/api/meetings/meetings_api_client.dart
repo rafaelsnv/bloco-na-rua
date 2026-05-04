@@ -31,4 +31,52 @@ class MeetingsApiClient implements IMeetingsApiClient {
       return Failure(Exception('An error occurred: $e'));
     }
   }
+
+  @override
+  AsyncResult<MeetingsEntity> createAsync(Map<String, dynamic> data) async {
+    try {
+      final response = await baseApiClient.client.post(_basePath, data: data);
+      if (response.statusCode != 201 && response.statusCode != 200) {
+        return Failure(baseApiClient.formatError(response));
+      }
+      return Success(MeetingsEntity.fromJson(response.data));
+    } on Exception catch (e) {
+      baseApiClient.client.close();
+      return Failure(Exception('An error occurred: $e'));
+    }
+  }
+
+  @override
+  AsyncResult<MeetingsEntity> updateAsync(
+    int id,
+    Map<String, dynamic> data,
+  ) async {
+    try {
+      final response = await baseApiClient.client.put(
+        '$_basePath/$id',
+        data: data,
+      );
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        return Failure(baseApiClient.formatError(response));
+      }
+      return Success(MeetingsEntity.fromJson(response.data));
+    } on Exception catch (e) {
+      baseApiClient.client.close();
+      return Failure(Exception('An error occurred: $e'));
+    }
+  }
+
+  @override
+  AsyncResult deleteAsync(int id) async {
+    try {
+      final response = await baseApiClient.client.delete('$_basePath/$id');
+      if (response.statusCode != 204) {
+        return Failure(baseApiClient.formatError(response));
+      }
+      return Success(response.statusCode.toString());
+    } on Exception catch (e) {
+      baseApiClient.client.close();
+      return Failure(Exception('An error occurred: $e'));
+    }
+  }
 }

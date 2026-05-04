@@ -20,4 +20,9 @@ abstract class IBaseApiClient {
   );
 
   AsyncResult deleteByIdAsync<TEntity extends EntityBase>(int id);
+
+  AsyncResult<TEntity> createAsync<TEntity extends EntityBase>(
+    Map<String, dynamic> data,
+    JsonFactory<TEntity> fromJsonFactory,
+  );
 }

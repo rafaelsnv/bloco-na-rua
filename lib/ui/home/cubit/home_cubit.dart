@@ -7,8 +7,8 @@ import 'package:logging/logging.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit({required GetHomeDataUseCase getHomeDataUseCase})
-      : _getHomeDataUseCase = getHomeDataUseCase,
-        super(const HomeState());
+    : _getHomeDataUseCase = getHomeDataUseCase,
+      super(const HomeState());
 
   final GetHomeDataUseCase _getHomeDataUseCase;
   final _log = Logger('HomeCubit');
@@ -26,29 +26,36 @@ class HomeCubit extends Cubit<HomeState> {
       final meetingsResult = results[1];
 
       if (blocksResult.isError() || meetingsResult.isError()) {
-        final error = blocksResult.exceptionOrNull() ?? meetingsResult.exceptionOrNull();
+        final error =
+            blocksResult.exceptionOrNull() ?? meetingsResult.exceptionOrNull();
         _log.warning('Failed to load home data', error);
-        emit(state.copyWith(
-          status: HomeStatus.failure,
-          errorMessage: error?.toString(),
-        ));
+        emit(
+          state.copyWith(
+            status: HomeStatus.failure,
+            errorMessage: error?.toString(),
+          ),
+        );
         return;
       }
 
-      final blocks = (blocksResult.getOrNull() as List?)?.cast<CarnivalBlocksEntity>() ?? [];
-      final meetings = (meetingsResult.getOrNull() as List?)?.cast<MeetingsEntity>() ?? [];
+      final blocks =
+          (blocksResult.getOrNull() as List?)?.cast<CarnivalBlocksEntity>() ??
+          [];
+      final meetings =
+          (meetingsResult.getOrNull() as List?)?.cast<MeetingsEntity>() ?? [];
 
-      emit(state.copyWith(
-        status: HomeStatus.success,
-        blocks: blocks,
-        meetings: meetings,
-      ));
+      emit(
+        state.copyWith(
+          status: HomeStatus.success,
+          blocks: blocks,
+          meetings: meetings,
+        ),
+      );
     } catch (e) {
       _log.severe('Unexpected error during loadHomeData', e);
-      emit(state.copyWith(
-        status: HomeStatus.failure,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(status: HomeStatus.failure, errorMessage: e.toString()),
+      );
     }
   }
 }

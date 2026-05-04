@@ -82,5 +82,10 @@ pids/
 *.pid
 *.seed
 *.pid.lock
+
+# Other
 /swagger.json
 /architecture_summary.md
+*opencode*
+*AGENTS.md
+# *IMPLEMENTATION_PLAN.md

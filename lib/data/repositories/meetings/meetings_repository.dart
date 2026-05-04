@@ -18,4 +18,19 @@ class MeetingsRepository extends RepositoryBase<MeetingsEntity>
   AsyncResult<List<MeetingsEntity>> getAllByBlockId(int id) async {
     return await meetingsApiClient.getAllByBlockId(id);
   }
+
+  @override
+  AsyncResult<MeetingsEntity> create(Map<String, dynamic> data) async {
+    return await meetingsApiClient.createAsync(data);
+  }
+
+  @override
+  AsyncResult<MeetingsEntity> update(int id, Map<String, dynamic> data) async {
+    return await meetingsApiClient.updateAsync(id, data);
+  }
+
+  @override
+  AsyncResult delete(int id) async {
+    return await meetingsApiClient.deleteAsync(id);
+  }
 }

@@ -8,24 +8,7 @@ part 'carnival_block_members_entity.g.dart';
 @freezed
 sealed class CarnivalBlockMembersEntity extends EntityBase
     with _$CarnivalBlockMembersEntity {
-  @override
-  final int carnivalBlockId;
-  @override
-  final int memberId;
-  @override
-  final int role;
-  @override
-  final CarnivalBlocksEntity? carnivalBlock;
-
-  CarnivalBlockMembersEntity._({
-    required this.carnivalBlockId,
-    required this.memberId,
-    required this.role,
-    required super.id,
-    this.carnivalBlock,
-    super.createdAt,
-    super.updatedAt,
-  }) : super();
+  CarnivalBlockMembersEntity._() : super(id: 0);
 
   factory CarnivalBlockMembersEntity({
     required int id,

@@ -27,7 +27,8 @@ class MembersScreen extends StatelessWidget {
             }
           },
           builder: (context, state) {
-            if (state.status == MembersStatus.loading && state.members.isEmpty) {
+            if (state.status == MembersStatus.loading &&
+                state.members.isEmpty) {
               return const Center(child: CircularProgressIndicator());
             }
 

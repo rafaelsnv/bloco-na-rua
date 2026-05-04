@@ -159,29 +159,29 @@ class _LoginScreenState extends State<LoginScreen> {
                             builder: (context, isFormValid, child) {
                               return ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      Theme.of(context).colorScheme.primary,
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
                                 onPressed: isFormValid
                                     ? () {
-                                        if (_formKey.currentState!
-                                            .validate()) {
+                                        if (_formKey.currentState!.validate()) {
                                           context.read<AuthCubit>().login(
-                                                _email.text,
-                                                _password.text,
-                                              );
+                                            _email.text,
+                                            _password.text,
+                                          );
                                         }
                                       }
                                     : null,
                                 child: Text(
                                   'Login',
                                   style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .surfaceBright,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceBright,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,
                                   ),
@@ -197,16 +197,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Builder(
                         builder: (context) {
                           return GestureDetector(
-                            onTap: () =>
-                                _showForgotPasswordDialog(context),
+                            onTap: () => _showForgotPasswordDialog(context),
                             child: Text(
                               'Esqueceu a senha?',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 16,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primaryFixedDim,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.primaryFixedDim,
                               ),
                             ),
                           );
@@ -222,9 +221,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primaryFixedDim,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primaryFixedDim,
                           ),
                         ),
                       ),
@@ -293,14 +292,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text(
                         'Cancelar',
                         style: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .surfaceContainerHigh,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.surfaceContainerHigh,
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
                       ),
                       onPressed: () {
+                        emailController.dispose();
                         Navigator.of(context).pop();
                       },
                     ),
@@ -316,8 +316,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           : () {
                               if (formKey.currentState!.validate()) {
                                 outerContext.read<AuthCubit>().resetPassword(
-                                      emailController.text,
-                                    );
+                                  emailController.text,
+                                );
+                                emailController.dispose();
                                 Navigator.of(context).pop();
                               }
                             },

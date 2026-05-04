@@ -9,8 +9,8 @@ class AuthCubit extends Cubit<AuthState> {
   final _log = Logger('AuthCubit');
 
   AuthCubit({required IAuthRepository authRepository})
-      : _authRepository = authRepository,
-        super(AuthInitial());
+    : _authRepository = authRepository,
+      super(AuthInitial());
 
   Future<void> login(String email, String password) async {
     emit(AuthLoading());

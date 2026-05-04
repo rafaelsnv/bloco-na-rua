@@ -1,6 +1,7 @@
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/carnivalBlockMembers/icarnival_block_members_api_client.dart';
 import 'package:bloco_na_rua/domain/entities/carnivalBlockMembers/carnival_block_members_entity.dart';
+import 'package:dio/dio.dart';
 import 'package:result_dart/result_dart.dart';
 
 class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
@@ -28,6 +29,75 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
           .map((e) => CarnivalBlockMembersEntity.fromJson(e))
           .toList();
       return Success(data);
+    } catch (error) {
+      return Failure(Exception('An error occurred: $error'));
+    }
+  }
+
+  @override
+  AsyncResult<CarnivalBlockMembersEntity> createAsync(
+    int carnivalBlockId,
+    int memberId,
+    int role,
+  ) async {
+    try {
+      final data = {
+        'carnivalBlockId': carnivalBlockId,
+        'memberId': memberId,
+        'role': role,
+      };
+      final response = await baseApiClient.client.post(
+        _basePath,
+        data: data,
+        options: Options(headers: {'X-Logged-Member': memberId.toString()}),
+      );
+      if (response.statusCode != 201 && response.statusCode != 200) {
+        return Failure(baseApiClient.formatError(response));
+      }
+      return Success(CarnivalBlockMembersEntity.fromJson(response.data));
+    } catch (error) {
+      return Failure(Exception('An error occurred: $error'));
+    }
+  }
+
+  @override
+  AsyncResult<CarnivalBlockMembersEntity> updateAsync(
+    int id,
+    int carnivalBlockId,
+    int memberId,
+    int role,
+  ) async {
+    try {
+      final data = {
+        'carnivalBlockId': carnivalBlockId,
+        'memberId': memberId,
+        'role': role,
+      };
+      final response = await baseApiClient.client.put(
+        '$_basePath/$id',
+        data: data,
+        options: Options(headers: {'X-Logged-Member': memberId.toString()}),
+      );
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        return Failure(baseApiClient.formatError(response));
+      }
+      return Success(CarnivalBlockMembersEntity.fromJson(response.data));
+    } catch (error) {
+      return Failure(Exception('An error occurred: $error'));
+    }
+  }
+
+  @override
+  AsyncResult deleteAsync(int id, int memberId) async {
+    try {
+      final response = await baseApiClient.client.delete(
+        '$_basePath/$id',
+        options: Options(headers: {'X-Logged-Member': memberId.toString()}),
+      );
+      if (response.statusCode != 200 && response.statusCode != 204) {
+        return Failure(baseApiClient.formatError(response));
+      }
+      return Success(response.statusCode.toString());
     } catch (error) {
       return Failure(Exception('An error occurred: $error'));
     }

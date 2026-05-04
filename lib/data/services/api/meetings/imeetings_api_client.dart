@@ -6,4 +6,10 @@ abstract class IMeetingsApiClient {
   IBaseApiClient get client;
 
   AsyncResult<List<MeetingsEntity>> getAllByBlockId(int blockId);
+
+  AsyncResult<MeetingsEntity> createAsync(Map<String, dynamic> data);
+
+  AsyncResult<MeetingsEntity> updateAsync(int id, Map<String, dynamic> data);
+
+  AsyncResult deleteAsync(int id);
 }

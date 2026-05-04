@@ -5,4 +5,5 @@ abstract interface class IRepositoryBase<TEntity extends EntityBase> {
   AsyncResult<List<TEntity>> getAllAsync();
   AsyncResult<TEntity> getByIdAsync(int id);
   AsyncResult deleteByIdAsync(int id);
+  AsyncResult<TEntity> createAsync(Map<String, dynamic> data);
 }

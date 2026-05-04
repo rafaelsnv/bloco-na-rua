@@ -25,8 +25,6 @@ sealed class CarnivalBlocksEntity extends EntityBase
     required this.managersInviteCode,
     required this.carnivalBlockImage,
     required super.id,
-    super.createdAt,
-    super.updatedAt,
   }) : super();
 
   factory CarnivalBlocksEntity({

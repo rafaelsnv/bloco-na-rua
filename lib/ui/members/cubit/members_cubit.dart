@@ -15,9 +15,8 @@ class MembersCubit extends Cubit<MembersState> {
     final result = await _membersRepository.getAllAsync();
 
     result.fold(
-      (members) => emit(
-        state.copyWith(status: MembersStatus.success, members: members),
-      ),
+      (members) =>
+          emit(state.copyWith(status: MembersStatus.success, members: members)),
       (error) => emit(
         state.copyWith(
           status: MembersStatus.error,

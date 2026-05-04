@@ -5,4 +5,10 @@ import 'package:result_dart/result_dart.dart';
 abstract interface class IMeetingsRepository
     implements IRepositoryBase<MeetingsEntity> {
   AsyncResult<List<MeetingsEntity>> getAllByBlockId(int id);
+
+  AsyncResult<MeetingsEntity> create(Map<String, dynamic> data);
+
+  AsyncResult<MeetingsEntity> update(int id, Map<String, dynamic> data);
+
+  AsyncResult delete(int id);
 }

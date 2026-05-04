@@ -15,11 +15,11 @@ Future<void> main() async {
     url: dotenv.env['SUPABASE_URL']!,
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
     realtimeClientOptions: RealtimeClientOptions(
-      logLevel: RealtimeLogLevel.info,
+      logLevel: RealtimeLogLevel.warn,
     ),
   );
 
-  Logger.root.level = Level.INFO;
+  Logger.root.level = Level.WARNING;
 
   runApp(MultiProvider(providers: providers, child: const MainApp()));
 }

@@ -6,30 +6,7 @@ part 'meetings_entity.g.dart';
 
 @freezed
 sealed class MeetingsEntity extends EntityBase with _$MeetingsEntity {
-  @override
-  final String? name;
-  @override
-  final String? description;
-  @override
-  final String? location;
-  @override
-  final String? meetingCode;
-  @override
-  final String? meetingDateTime;
-  @override
-  final int? carnivalBlockId;
-
-  MeetingsEntity._({
-    this.name,
-    this.description,
-    this.location,
-    this.meetingCode,
-    this.meetingDateTime,
-    this.carnivalBlockId,
-    required super.id,
-    super.createdAt,
-    super.updatedAt,
-  }) : super();
+  MeetingsEntity._() : super(id: 0);
 
   factory MeetingsEntity({
     required int id,

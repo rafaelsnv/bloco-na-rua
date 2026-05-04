@@ -6,9 +6,9 @@ class BlockDetailsCubit extends Cubit<BlockDetailsState> {
   BlockDetailsCubit({
     required ICarnivalBlocksRepository carnivalBlocksRepository,
     required String carnivalBlockId,
-  })  : _carnivalBlocksRepository = carnivalBlocksRepository,
-        _carnivalBlockId = carnivalBlockId,
-        super(BlockDetailsInitial()) {
+  }) : _carnivalBlocksRepository = carnivalBlocksRepository,
+       _carnivalBlockId = carnivalBlockId,
+       super(BlockDetailsInitial()) {
     loadBlock();
   }
 
