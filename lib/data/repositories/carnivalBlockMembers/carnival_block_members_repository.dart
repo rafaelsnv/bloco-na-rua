@@ -10,10 +10,10 @@ class CarnivalBlockMembersRepository
   final ICarnivalBlockMembersApiClient carnivalBlockMembersApiClient;
 
   @override
-  AsyncResult<List<CarnivalBlockMembersEntity>> getByMemberIdAsync(
-    int id,
+  AsyncResult<List<CarnivalBlockMembersEntity>> getByBlockIdAsync(
+    int blockId,
   ) async {
-    return await carnivalBlockMembersApiClient.getByBlockIdAsync(id);
+    return await carnivalBlockMembersApiClient.getByBlockIdAsync(blockId);
   }
 
   @override

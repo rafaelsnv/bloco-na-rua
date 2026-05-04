@@ -1,3 +1,4 @@
+import 'package:bloco_na_rua/core/api_error.dart';
 import 'package:bloco_na_rua/data/repositories/auth/iauth_repository.dart';
 import 'package:bloco_na_rua/data/repositories/meetingPresences/imeeting_presences_repository.dart';
 import 'package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart';
@@ -22,6 +23,17 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
   final String meetingId;
   final _log = Logger('MeetingDetailsCubit');
 
+  String _extractUserMessage(Object? error) {
+    if (error == null) return 'Erro desconhecido';
+    if (error is ApiError) return error.userMessage;
+    if (error is Exception) {
+      final msg = error.toString();
+      if (msg.startsWith('Exception: ')) return msg.substring(11);
+      return msg;
+    }
+    return error.toString();
+  }
+
   Future<void> loadMeeting() async {
     emit(const MeetingDetailsLoading());
 
@@ -30,9 +42,8 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
     result.fold((meeting) => emit(MeetingDetailsLoaded(meeting: meeting)), (
       exception,
     ) {
-      final message = exception.toString().replaceAll("Exception: ", "");
       _log.warning('Load meeting failed', exception);
-      emit(MeetingDetailsError(message));
+      emit(MeetingDetailsError(_extractUserMessage(exception)));
     });
   }
 
@@ -58,7 +69,7 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
         emit(
           currentState.copyWith(
             presencesStatus: PresencesStatus.error,
-            presencesError: exception.toString(),
+            presencesError: _extractUserMessage(exception),
           ),
         );
       },
@@ -110,7 +121,7 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
           emit(
             currentState.copyWith(
               markingPresenceStatus: MarkingPresenceStatus.error,
-              markingPresenceError: exception.toString(),
+              markingPresenceError: _extractUserMessage(exception),
             ),
           );
         },
@@ -120,7 +131,7 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
       emit(
         currentState.copyWith(
           markingPresenceStatus: MarkingPresenceStatus.error,
-          markingPresenceError: e.toString(),
+          markingPresenceError: _extractUserMessage(e),
         ),
       );
     }

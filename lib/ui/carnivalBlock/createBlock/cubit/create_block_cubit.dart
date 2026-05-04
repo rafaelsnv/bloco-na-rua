@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:bloco_na_rua/core/api_error.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
 import 'package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,17 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
        super(CreateBlockInitial());
 
   final ICarnivalBlocksRepository _carnivalBlocksRepository;
+
+  String _extractUserMessage(Object? error) {
+    if (error == null) return 'Erro desconhecido';
+    if (error is ApiError) return error.userMessage;
+    if (error is Exception) {
+      final msg = error.toString();
+      if (msg.startsWith('Exception: ')) return msg.substring(11);
+      return msg;
+    }
+    return error.toString();
+  }
 
   Future<void> createBlock(String name) async {
     emit(CreateBlockLoading());
@@ -28,7 +40,7 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
 
     result.fold(
       (_) => emit(CreateBlockSuccess()),
-      (failure) => emit(CreateBlockError(failure.toString())),
+      (failure) => emit(CreateBlockError(_extractUserMessage(failure))),
     );
   }
 

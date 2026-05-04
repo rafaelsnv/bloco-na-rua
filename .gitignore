@@ -84,7 +84,6 @@ pids/
 *.pid.lock
 
 # Other
-/swagger.json
 /architecture_summary.md
 *opencode*
 *AGENTS.md

@@ -33,13 +33,25 @@ class MembersRepository implements IMembersRepository {
   }
 
   @override
-  Future<Result<List<MembersEntity>>> getAllAsync() async => const Success([]);
+  AsyncResult<List<MembersEntity>> getAllAsync() async {
+    return await _membersApiClient.getAllAsync();
+  }
 
   @override
-  Future<Result<MembersEntity>> getByIdAsync(int id) async =>
-      Failure(Exception('Not supported'));
+  AsyncResult<MembersEntity> getByIdAsync(int id) async {
+    return await _membersApiClient.getByIdAsync(id);
+  }
 
   @override
-  Future<Result> deleteByIdAsync(int id) async =>
-      Failure(Exception('Not supported'));
+  AsyncResult<MembersEntity> updateAsync(
+    int id,
+    Map<String, dynamic> data,
+  ) async {
+    return await _membersApiClient.updateAsync(id, data);
+  }
+
+  @override
+  AsyncResult deleteAsync(int id) async {
+    return await _membersApiClient.deleteAsync(id);
+  }
 }

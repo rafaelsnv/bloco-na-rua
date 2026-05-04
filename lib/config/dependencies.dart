@@ -15,6 +15,7 @@ import 'package:bloco_na_rua/data/repositories/members/members_repository.dart';
 import 'package:bloco_na_rua/data/repositories/meetingPresences/imeeting_presences_repository.dart';
 import 'package:bloco_na_rua/data/repositories/meetingPresences/meeting_presences_repository.dart';
 import 'package:bloco_na_rua/data/services/api/base/base_api_client.dart';
+import 'package:bloco_na_rua/data/services/api/base/dio_error_interceptor.dart';
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/carnivalBlockMembers/carnival_block_members_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/carnivalBlockMembers/icarnival_block_members_api_client.dart';
@@ -33,7 +34,6 @@ import 'package:bloco_na_rua/domain/use_cases/home/get_home_data_use_case.dart';
 import 'package:bloco_na_rua/domain/use_cases/meetings/get_user_meetings_use_case.dart';
 import 'package:bloco_na_rua/ui/profile/cubit/profile_cubit.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:provider/provider.dart';
@@ -61,6 +61,7 @@ List<SingleChildWidget> get providers {
       create: (context) => BaseApiClient(
         clientFactory: (options) {
           final client = Dio(options);
+          client.interceptors.add(DioErrorInterceptor());
           client.interceptors.add(PrettyDioLogger());
           return client;
         },

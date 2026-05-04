@@ -87,4 +87,72 @@ class MembersApiClient implements IMembersApiClient {
       return Failure(Exception('An error occurred: $e'));
     }
   }
+
+  @override
+  AsyncResult<List<MembersEntity>> getAllAsync() async {
+    try {
+      final response = await baseApiClient.client.get(_basePath);
+      if (response.statusCode != 200) {
+        return Failure(baseApiClient.formatError(response));
+      }
+      final data = response.data as List;
+      final result = data.map((e) => MembersEntity.fromJson(e)).toList();
+      return Success(result);
+    } catch (error) {
+      baseApiClient.client.close();
+      return Failure(Exception('An error occurred: $error'));
+    }
+  }
+
+  @override
+  AsyncResult<MembersEntity> getByIdAsync(int id) async {
+    try {
+      final response = await baseApiClient.client.get('$_basePath/$id');
+      if (response.statusCode != 200) {
+        return Failure(baseApiClient.formatError(response));
+      }
+      final data = response.data;
+      final result = MembersEntity.fromJson(data as Map<String, dynamic>);
+      return Success(result);
+    } catch (error) {
+      baseApiClient.client.close();
+      return Failure(Exception('An error occurred: $error'));
+    }
+  }
+
+  @override
+  AsyncResult<MembersEntity> updateAsync(
+    int id,
+    Map<String, dynamic> data,
+  ) async {
+    try {
+      final response = await baseApiClient.client.put(
+        '$_basePath/$id',
+        data: data,
+      );
+      if (response.statusCode != 200) {
+        return Failure(baseApiClient.formatError(response));
+      }
+      final responseData = response.data;
+      final result = MembersEntity.fromJson(responseData as Map<String, dynamic>);
+      return Success(result);
+    } catch (error) {
+      baseApiClient.client.close();
+      return Failure(Exception('An error occurred: $error'));
+    }
+  }
+
+  @override
+  AsyncResult deleteAsync(int id) async {
+    try {
+      final response = await baseApiClient.client.delete('$_basePath/$id');
+      if (response.statusCode != 200 && response.statusCode != 204) {
+        return Failure(baseApiClient.formatError(response));
+      }
+      return Success(response.statusCode!);
+    } catch (error) {
+      baseApiClient.client.close();
+      return Failure(Exception('An error occurred: $error'));
+    }
+  }
 }

@@ -37,13 +37,13 @@ class CardButton extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: cardColor.withOpacity(0.3),
+                  color: cardColor.withValues(alpha: 0.3),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   icon,
                   size: 28,
-                  color: cardColor.withOpacity(0.9),
+                  color: cardColor.withValues(alpha: 0.9),
                 ),
               ),
               const SizedBox(height: 8),

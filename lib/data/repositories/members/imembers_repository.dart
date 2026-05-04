@@ -9,11 +9,8 @@ abstract interface class IMembersRepository {
   AsyncResult<MembersEntity> getByUuidAsync(String uuid);
   AsyncResult<List<CarnivalBlocksEntity>> getBlocksByMemberId(int id);
   AsyncResult<List<MeetingsEntity>> getMeetingsByMemberId(int id);
-
-  // Stub methods to satisfy the codebase - not actually used
-  Future<Result<List<MembersEntity>>> getAllAsync() async => const Success([]);
-  Future<Result<MembersEntity>> getByIdAsync(int id) async =>
-      Failure(Exception('Not supported'));
-  Future<Result> deleteByIdAsync(int id) async =>
-      Failure(Exception('Not supported'));
+  AsyncResult<List<MembersEntity>> getAllAsync();
+  AsyncResult<MembersEntity> getByIdAsync(int id);
+  AsyncResult<MembersEntity> updateAsync(int id, Map<String, dynamic> data);
+  AsyncResult deleteAsync(int id);
 }

@@ -1,3 +1,4 @@
+import 'package:bloco_na_rua/core/api_error.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart';
 import 'package:bloco_na_rua/data/repositories/members/imembers_repository.dart';
 import 'package:bloco_na_rua/ui/carnivalBlock/addMember/cubit/add_member_state.dart';
@@ -13,6 +14,17 @@ class AddMemberCubit extends Cubit<AddMemberState> {
 
   final IMembersRepository _membersRepository;
   final ICarnivalBlockMembersRepository _carnivalBlockMembersRepository;
+
+  String _extractUserMessage(Object? error) {
+    if (error == null) return 'Erro desconhecido';
+    if (error is ApiError) return error.userMessage;
+    if (error is Exception) {
+      final msg = error.toString();
+      if (msg.startsWith('Exception: ')) return msg.substring(11);
+      return msg;
+    }
+    return error.toString();
+  }
 
   Future<void> loadMembers() async {
     emit(state.copyWith(status: AddMemberStatus.loading));
@@ -33,7 +45,7 @@ class AddMemberCubit extends Cubit<AddMemberState> {
         emit(
           state.copyWith(
             status: AddMemberStatus.error,
-            errorMessage: failure.toString(),
+            errorMessage: _extractUserMessage(failure),
           ),
         );
       },
@@ -72,7 +84,7 @@ class AddMemberCubit extends Cubit<AddMemberState> {
         emit(
           state.copyWith(
             status: AddMemberStatus.error,
-            errorMessage: failure.toString(),
+            errorMessage: _extractUserMessage(failure),
           ),
         );
       },

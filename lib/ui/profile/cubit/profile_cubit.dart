@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:bloco_na_rua/core/api_error.dart';
 import 'package:bloco_na_rua/data/repositories/auth/iauth_repository.dart';
 import 'package:bloco_na_rua/data/repositories/members/imembers_repository.dart';
 import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';
@@ -18,6 +19,17 @@ class ProfileCubit extends Cubit<ProfileState> {
   final IAuthRepository _authRepository;
   final IMembersRepository _membersRepository;
 
+  String _extractUserMessage(Object? error) {
+    if (error == null) return 'Erro desconhecido';
+    if (error is ApiError) return error.userMessage;
+    if (error is Exception) {
+      final msg = error.toString();
+      if (msg.startsWith('Exception: ')) return msg.substring(11);
+      return msg;
+    }
+    return error.toString();
+  }
+
   Future<void> loadProfile() async {
     emit(const ProfileState.loading());
 
@@ -31,7 +43,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     result.fold(
       (member) => emit(ProfileState.loaded(member: member)),
-      (error) => emit(ProfileState.error(error.toString())),
+      (error) => emit(ProfileState.error(_extractUserMessage(error))),
     );
   }
 
@@ -41,7 +53,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     result.fold(
       (_) => emit(const ProfileState.initial()),
-      (error) => emit(ProfileState.error(error.toString())),
+      (error) => emit(ProfileState.error(_extractUserMessage(error))),
     );
   }
 }

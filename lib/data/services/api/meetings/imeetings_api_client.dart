@@ -12,4 +12,6 @@ abstract class IMeetingsApiClient {
   AsyncResult<MeetingsEntity> updateAsync(int id, Map<String, dynamic> data);
 
   AsyncResult deleteAsync(int id);
+
+  AsyncResult<List<MeetingsEntity>> getAllAsync();
 }

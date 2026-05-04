@@ -79,4 +79,9 @@ class MeetingsApiClient implements IMeetingsApiClient {
       return Failure(Exception('An error occurred: $e'));
     }
   }
+
+  @override
+  AsyncResult<List<MeetingsEntity>> getAllAsync() async {
+    return await baseApiClient.getAllAsync<MeetingsEntity>(MeetingsEntity.fromJson);
+  }
 }

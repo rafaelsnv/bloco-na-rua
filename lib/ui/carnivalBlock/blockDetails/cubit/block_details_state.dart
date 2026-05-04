@@ -14,11 +14,33 @@ final class BlockDetailsLoading extends BlockDetailsState {}
 
 final class BlockDetailsLoaded extends BlockDetailsState {
   final CarnivalBlocksEntity carnivalBlock;
+  final int? currentMemberId;
+  final int? currentMemberRole;
+  final bool canManageMembers;
 
-  const BlockDetailsLoaded(this.carnivalBlock);
+  const BlockDetailsLoaded({
+    required this.carnivalBlock,
+    this.currentMemberId,
+    this.currentMemberRole,
+    this.canManageMembers = false,
+  });
+
+  BlockDetailsLoaded copyWith({
+    CarnivalBlocksEntity? carnivalBlock,
+    int? currentMemberId,
+    int? currentMemberRole,
+    bool? canManageMembers,
+  }) {
+    return BlockDetailsLoaded(
+      carnivalBlock: carnivalBlock ?? this.carnivalBlock,
+      currentMemberId: currentMemberId ?? this.currentMemberId,
+      currentMemberRole: currentMemberRole ?? this.currentMemberRole,
+      canManageMembers: canManageMembers ?? this.canManageMembers,
+    );
+  }
 
   @override
-  List<Object?> get props => [carnivalBlock];
+  List<Object?> get props => [carnivalBlock, currentMemberId, currentMemberRole, canManageMembers];
 }
 
 final class BlockDetailsError extends BlockDetailsState {

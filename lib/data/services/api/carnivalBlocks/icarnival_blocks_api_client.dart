@@ -6,6 +6,12 @@ import 'package:result_dart/result_dart.dart';
 abstract interface class ICarnivalBlocksApiClient {
   IBaseApiClient get client;
 
+  AsyncResult<CarnivalBlocksEntity> getByIdAsync(int id);
+
+  AsyncResult<List<CarnivalBlocksEntity>> getAllAsync();
+
+  AsyncResult deleteAsync(int id);
+
   AsyncResult<TEntity> createAsync<TEntity extends EntityBase>(
     Map<String, dynamic> data,
     JsonFactory<TEntity> fromJsonFactory,

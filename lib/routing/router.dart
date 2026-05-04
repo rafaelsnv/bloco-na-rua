@@ -1,4 +1,5 @@
 import 'package:bloco_na_rua/data/repositories/auth/iauth_repository.dart';
+import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
 import 'package:bloco_na_rua/data/repositories/meetingPresences/imeeting_presences_repository.dart';
@@ -28,10 +29,9 @@ import 'package:bloco_na_rua/ui/meetings/meetingDetails/widgets/meeting_details_
 import 'package:bloco_na_rua/ui/meetings/userMeetings/cubit/user_meetings_cubit.dart';
 import 'package:bloco_na_rua/ui/meetings/userMeetings/widgets/user_meetings_screen.dart';
 import 'package:bloco_na_rua/ui/members/cubit/members_cubit.dart';
-import 'package:bloco_na_rua/ui/profile/cubit/profile_cubit.dart';
-import 'package:bloco_na_rua/ui/profile/widgets/profile_screen.dart';
 import 'package:bloco_na_rua/ui/members/widgets/members_screen.dart';
 import 'package:bloco_na_rua/ui/not_found/widgets/not_found_screen.dart';
+import 'package:bloco_na_rua/ui/profile/cubit/profile_cubit.dart';
 import 'package:bloco_na_rua/ui/profile/widgets/profile_screen.dart';
 import 'package:bloco_na_rua/ui/settings/widgets/settings_screen.dart';
 import 'package:flutter/material.dart';
@@ -52,15 +52,10 @@ CustomTransitionPage<void> _buildPageWithSlideTransition({
     child: child,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       return SlideTransition(
-        position: Tween<Offset>(
-          begin: const Offset(1.0, 0.0),
-          end: Offset.zero,
-        ).animate(
-          CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeOutCubic,
-          ),
-        ),
+        position: Tween<Offset>(begin: const Offset(1.0, 0.0), end: Offset.zero)
+            .animate(
+              CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
+            ),
         child: child,
       );
     },
@@ -121,7 +116,9 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
           state: state,
           child: BlocProvider(
             create: (context) => BlockDetailsCubit(
-              carnivalBlocksRepository: context.read<ICarnivalBlocksRepository>(),
+              carnivalBlocksRepository: context
+                  .read<ICarnivalBlocksRepository>(),
+              getCurrentUserData: context.read<GetCurrentUserData>(),
               carnivalBlockId: carnivalBlockId,
             ),
             child: BlockDetailsScreen(carnivalBlockId: carnivalBlockId),
@@ -174,7 +171,8 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
           state: state,
           child: BlocProvider(
             create: (context) => EditBlockCubit(
-              carnivalBlocksRepository: context.read<ICarnivalBlocksRepository>(),
+              carnivalBlocksRepository: context
+                  .read<ICarnivalBlocksRepository>(),
               carnivalBlockId: blockId,
             ),
             child: EditBlockScreen(carnivalBlockId: blockId),
@@ -196,9 +194,9 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
         context: context,
         state: state,
         child: BlocProvider(
-          create: (context) => UserMeetingsCubit(
-            getUserMeetingsUseCase: context.read(),
-          )..loadMeetings(),
+          create: (context) =>
+              UserMeetingsCubit(getUserMeetingsUseCase: context.read())
+                ..loadMeetings(),
           child: const UserMeetingsScreen(),
         ),
       ),

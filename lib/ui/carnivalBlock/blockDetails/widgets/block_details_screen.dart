@@ -39,7 +39,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
       _membersError = null;
     });
 
-    final result = await repo.getByMemberIdAsync(
+    final result = await repo.getByBlockIdAsync(
       int.parse(widget.carnivalBlockId),
     );
 
@@ -291,8 +291,14 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
                     ),
                     const SizedBox(height: 24),
                     // Members section
-                    const SectionHeader(title: 'Membros'),
-                    _buildMembersSection(),
+                    SectionHeader(
+                      title: 'Membros',
+                      action: state.canManageMembers ? 'Adicionar' : null,
+                      onAction: state.canManageMembers
+                          ? () => context.push('/add-member/${widget.carnivalBlockId}')
+                          : null,
+                    ),
+                    _buildMembersSection(state.canManageMembers),
                   ],
                 ),
               );
@@ -305,20 +311,10 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
           },
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/add-member/${widget.carnivalBlockId}'),
-        backgroundColor: Colors.purpleAccent.shade100,
-        icon: const Icon(Icons.person_add, color: Colors.black),
-        label: const Text(
-          'Adicionar',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-      ),
     );
   }
 
-  Widget _buildMembersSection() {
+  Widget _buildMembersSection(bool canManageMembers) {
     if (_loadingMembers) {
       return Card(
         child: Padding(
@@ -385,7 +381,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
               margin: const EdgeInsets.only(top: 4),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
-                color: _getRoleColor(_roleToString(member.role)).withOpacity(0.1),
+                color: _getRoleColor(_roleToString(member.role)).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -403,10 +399,12 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
                     height: 24,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
-                : IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red.shade400),
-                    onPressed: () => _deleteMember(member),
-                  ),
+                : canManageMembers
+                    ? IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red.shade400),
+                        onPressed: () => _deleteMember(member),
+                      )
+                    : null,
           );
         },
       ),
