@@ -25,6 +25,7 @@ class MeetingDetailsLoaded extends MeetingDetailsState {
   final MarkingPresenceStatus markingPresenceStatus;
   final String? markingPresenceError;
   final DeleteStatus deleteStatus;
+  final bool canDeleteMeeting;
 
   const MeetingDetailsLoaded({
     required this.meeting,
@@ -34,6 +35,7 @@ class MeetingDetailsLoaded extends MeetingDetailsState {
     this.markingPresenceStatus = MarkingPresenceStatus.initial,
     this.markingPresenceError,
     this.deleteStatus = DeleteStatus.initial,
+    this.canDeleteMeeting = false,
   });
 
   MeetingDetailsLoaded copyWith({
@@ -44,6 +46,7 @@ class MeetingDetailsLoaded extends MeetingDetailsState {
     MarkingPresenceStatus? markingPresenceStatus,
     String? markingPresenceError,
     DeleteStatus? deleteStatus,
+    bool? canDeleteMeeting,
   }) {
     return MeetingDetailsLoaded(
       meeting: meeting ?? this.meeting,
@@ -54,6 +57,7 @@ class MeetingDetailsLoaded extends MeetingDetailsState {
           markingPresenceStatus ?? this.markingPresenceStatus,
       markingPresenceError: markingPresenceError ?? this.markingPresenceError,
       deleteStatus: deleteStatus ?? this.deleteStatus,
+      canDeleteMeeting: canDeleteMeeting ?? this.canDeleteMeeting,
     );
   }
 
@@ -66,6 +70,7 @@ class MeetingDetailsLoaded extends MeetingDetailsState {
     markingPresenceStatus,
     markingPresenceError,
     deleteStatus,
+    canDeleteMeeting,
   ];
 }
 

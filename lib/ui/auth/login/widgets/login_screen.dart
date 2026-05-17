@@ -64,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surfaceBright,
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
         appBar: AppBar(
           title: Text(
             'Bloco na Rua',
@@ -181,7 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   style: TextStyle(
                                     color: Theme.of(
                                       context,
-                                    ).colorScheme.surfaceBright,
+                                    ).colorScheme.surface,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,
                                   ),
@@ -205,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 fontSize: 16,
                                 color: Theme.of(
                                   context,
-                                ).colorScheme.primaryFixedDim,
+                                ).colorScheme.onSurfaceVariant,
                               ),
                             ),
                           );
@@ -325,7 +325,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text(
                         'Enviar',
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.surfaceBright,
+                          color: Theme.of(context).colorScheme.surface,
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),

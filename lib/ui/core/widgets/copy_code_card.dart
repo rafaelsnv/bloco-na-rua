@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class CopyCodeCard extends StatelessWidget {
+import '../colors/app_colors.dart';
+
+class CopyCodeCard extends StatefulWidget {
   const CopyCodeCard({
     super.key,
     required this.code,
@@ -13,19 +15,30 @@ class CopyCodeCard extends StatelessWidget {
   final String? label;
   final bool isManager;
 
+  @override
+  State<CopyCodeCard> createState() => _CopyCodeCardState();
+}
+
+class _CopyCodeCardState extends State<CopyCodeCard> {
+  bool _isCodeVisible = false;
+
   Future<void> _copyToClipboard(BuildContext context) async {
-    await Clipboard.setData(ClipboardData(text: code));
+    await Clipboard.setData(ClipboardData(text: widget.code));
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(
             children: [
-              const Icon(Icons.check_circle, color: Colors.white, size: 20),
+              Icon(
+                Icons.check_circle,
+                color: Theme.of(context).colorScheme.onInverseSurface,
+                size: 20,
+              ),
               const SizedBox(width: 8),
-              Text('Código ${isManager ? "gerente" : ""} copiado!'),
+              Text('Código ${widget.isManager ? "gerente" : ""} copiado!'),
             ],
           ),
-          backgroundColor: Colors.green.shade600,
+          backgroundColor: Theme.of(context).colorScheme.inverseSurface,
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
         ),
@@ -36,13 +49,9 @@ class CopyCodeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
       child: InkWell(
         onTap: () => _copyToClipboard(context),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Row(
@@ -50,14 +59,14 @@ class CopyCodeCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: isManager
-                      ? Colors.amber.shade100
-                      : Colors.purpleAccent.shade100,
+                  color: widget.isManager
+                      ? AppColors.admin.withValues(alpha: 0.15)
+                      : AppColors.info.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  isManager ? Icons.admin_panel_settings : Icons.vpn_key,
-                  color: isManager ? Colors.amber.shade700 : Colors.purple,
+                  widget.isManager ? Icons.admin_panel_settings : Icons.vpn_key,
+                  color: widget.isManager ? AppColors.admin : AppColors.info,
                   size: 20,
                 ),
               ),
@@ -67,25 +76,37 @@ class CopyCodeCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      label ?? 'Código de convite',
+                      widget.label ?? 'Código de convite',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey.shade600,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      code,
+                      _isCodeVisible ? widget.code : '••••••••',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
+                            letterSpacing: _isCodeVisible ? 1.5 : 2.0,
                           ),
                     ),
                   ],
                 ),
               ),
+              IconButton(
+                icon: Icon(
+                  _isCodeVisible ? Icons.visibility_off : Icons.visibility,
+                  color: Theme.of(context).colorScheme.outline,
+                  size: 20,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isCodeVisible = !_isCodeVisible;
+                  });
+                },
+              ),
               Icon(
                 Icons.copy,
-                color: Colors.grey.shade400,
+                color: Theme.of(context).colorScheme.outline,
                 size: 20,
               ),
             ],

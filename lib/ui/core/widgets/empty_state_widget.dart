@@ -3,37 +3,40 @@ import 'package:flutter/material.dart';
 class EmptyStateWidget extends StatelessWidget {
   const EmptyStateWidget({
     super.key,
-    required this.icon,
     required this.message,
+    this.icon,
     this.subtitle,
     this.actionLabel,
     this.onAction,
   });
 
-  final IconData icon;
   final String message;
+  final IconData? icon;
   final String? subtitle;
   final String? actionLabel;
   final VoidCallback? onAction;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              size: 80,
-              color: Colors.grey.shade600,
-            ),
-            const SizedBox(height: 16),
+            if (icon != null) ...[
+              Icon(
+                icon,
+                size: 80,
+                color: colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(height: 16),
+            ],
             Text(
               message,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.grey.shade700,
+                    color: colorScheme.onSurface,
                   ),
               textAlign: TextAlign.center,
             ),
@@ -42,7 +45,7 @@ class EmptyStateWidget extends StatelessWidget {
               Text(
                 subtitle!,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey.shade500,
+                      color: colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                 textAlign: TextAlign.center,
               ),
@@ -54,8 +57,8 @@ class EmptyStateWidget extends StatelessWidget {
                 icon: const Icon(Icons.add),
                 label: Text(actionLabel!),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purpleAccent.shade100,
-                  foregroundColor: Colors.black,
+                  backgroundColor: colorScheme.primaryContainer,
+                  foregroundColor: colorScheme.onPrimaryContainer,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 24,
                     vertical: 12,

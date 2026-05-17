@@ -7,6 +7,11 @@ abstract interface class IAuthRepository extends ChangeNotifier {
   Future<bool> get isAuthenticated;
   Future<String?> get currentUuid;
 
+  /// Validates that the current session is valid by checking
+  /// that the member record exists in the backend.
+  /// Returns true only if auth token exists AND member is found.
+  Future<bool> validateSession();
+
   AsyncResult<LoginResponse> login({
     required String email,
     required String password,

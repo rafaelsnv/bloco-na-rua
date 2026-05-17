@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../colors/app_colors.dart';
+
 class ChipDate extends StatelessWidget {
   const ChipDate({
     super.key,
@@ -11,6 +13,7 @@ class ChipDate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final tomorrow = today.add(const Duration(days: 1));
@@ -21,16 +24,13 @@ class ChipDate extends StatelessWidget {
 
     if (meetingDate == today) {
       label = 'HOJE';
-      color = Colors.green;
+      color = AppColors.success;
     } else if (meetingDate == tomorrow) {
       label = 'AMANHÃ';
-      color = Colors.blue;
-    } else if (meetingDate.isBefore(today)) {
-      label = 'PASSADO';
-      color = Colors.grey;
+      color = AppColors.info;
     } else {
       label = DateFormat('dd/MM').format(dateTime);
-      color = Colors.grey;
+      color = colorScheme.outline;
     }
 
     return Container(

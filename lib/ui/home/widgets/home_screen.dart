@@ -1,5 +1,6 @@
 import 'package:bloco_na_rua/routing/routes.dart';
 import 'package:bloco_na_rua/ui/auth/logout/widgets/logout_button.dart';
+import 'package:bloco_na_rua/ui/core/colors/app_colors.dart';
 import 'package:bloco_na_rua/ui/core/widgets/card_button.dart';
 import 'package:bloco_na_rua/ui/core/widgets/chip_date.dart';
 import 'package:bloco_na_rua/ui/core/widgets/empty_state_widget.dart';
@@ -29,12 +30,12 @@ class HomeScreen extends StatelessWidget {
             SnackBar(
               content: Row(
                 children: [
-                  const Icon(Icons.error_outline, color: Colors.white),
+                  Icon(Icons.error_outline, color: Theme.of(context).colorScheme.onError),
                   const SizedBox(width: 8),
                   Expanded(child: Text(state.errorMessage!)),
                 ],
               ),
-              backgroundColor: Colors.red.shade600,
+              backgroundColor: Theme.of(context).colorScheme.error,
               behavior: SnackBarBehavior.floating,
             ),
           );
@@ -86,7 +87,7 @@ class HomeScreen extends StatelessWidget {
           previous.status != current.status || previous.blocks != current.blocks,
       builder: (context, state) {
         if (state.status == HomeStatus.loading) {
-          return _buildLoadingCarousel();
+          return _buildLoadingCarousel(context);
         }
 
         if (state.status == HomeStatus.failure && state.blocks.isEmpty) {
@@ -137,16 +138,9 @@ class HomeScreen extends StatelessWidget {
     return InkWell(
       onTap: () => context.push('${Routes.carnivalBlock}/${block.id}'),
       borderRadius: BorderRadius.circular(16),
-      child: Container(
+child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.purple.withValues(alpha: 0.2),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
         ),
         child: Card(
           elevation: 0,
@@ -160,8 +154,8 @@ class HomeScreen extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Colors.purpleAccent.shade100,
-                  Colors.purpleAccent.shade400,
+                  Theme.of(context).colorScheme.primaryContainer,
+                  Theme.of(context).colorScheme.primary,
                 ],
               ),
             ),
@@ -173,7 +167,7 @@ class HomeScreen extends StatelessWidget {
                   child: Icon(
                     Icons.celebration,
                     size: 80,
-                    color: Colors.white.withValues(alpha: 0.2),
+                    color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.2),
                   ),
                 ),
                 Padding(
@@ -185,10 +179,10 @@ class HomeScreen extends StatelessWidget {
                       const SizedBox(height: 8),
                       Text(
                         block.name,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.onPrimary,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -208,7 +202,7 @@ class HomeScreen extends StatelessWidget {
     return const SizedBox.shrink();
   }
 
-  Widget _buildLoadingCarousel() {
+  Widget _buildLoadingCarousel(BuildContext context) {
     return CarouselSlider(
       options: CarouselOptions(
         viewportFraction: 0.45,
@@ -222,7 +216,7 @@ class HomeScreen extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 4),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            color: Colors.grey.shade300,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
           ),
         );
       }),
@@ -253,10 +247,26 @@ class HomeScreen extends StatelessWidget {
 
         final meetings = state.meetings;
         if (meetings.isEmpty) {
-          return const EmptyStateWidget(
-            icon: Icons.event_busy,
-            message: 'Nenhum encontro esta semana',
-            subtitle: 'Aguarde ou crie um novo encontro',
+          return Card(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.event_busy,
+                    color: Theme.of(context).colorScheme.outline,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Nenhum encontro esta semana',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           );
         }
 
@@ -278,7 +288,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildMeetingCard(BuildContext context, meeting, DateTime meetingDateTime) {
     return Card(
-      elevation: 2,
+      elevation: 0,
       margin: const EdgeInsets.only(bottom: 8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -338,7 +348,7 @@ class HomeScreen extends StatelessWidget {
                         Icon(
                           Icons.location_on,
                           size: 14,
-                          color: Colors.grey.shade600,
+                          color: Theme.of(context).colorScheme.outline,
                         ),
                         const SizedBox(width: 4),
                         Expanded(
@@ -363,7 +373,7 @@ class HomeScreen extends StatelessWidget {
                   Text(
                     DateFormat('HH:mm').format(meetingDateTime),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey.shade600,
+                          color: Theme.of(context).colorScheme.outline,
                         ),
                   ),
                 ],
@@ -382,11 +392,11 @@ class HomeScreen extends StatelessWidget {
         DateTime(dateTime.year, dateTime.month, dateTime.day);
 
     if (meetingDate == today) {
-      return Colors.green;
+      return AppColors.success;
     } else if (meetingDate == today.add(const Duration(days: 1))) {
-      return Colors.blue;
+      return AppColors.info;
     } else {
-      return Colors.purple;
+      return AppColors.warning;
     }
   }
 
@@ -408,12 +418,12 @@ class HomeScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.purpleAccent.shade100,
+                    color: Theme.of(context).colorScheme.primaryContainer,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     Icons.event,
-                    color: Colors.purpleAccent.shade700,
+                    color: Theme.of(context).colorScheme.primary,
                     size: 28,
                   ),
                 ),
@@ -436,11 +446,13 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 16),
             ],
             _buildModalInfoRow(
+              context,
               Icons.location_on,
               meeting.location ?? 'Local não informado',
             ),
             const SizedBox(height: 8),
             _buildModalInfoRow(
+              context,
               Icons.calendar_today,
               DateFormat('EEEE, dd/MM/yyyy - HH:mm', 'pt_BR')
                   .format(meetingDateTime),
@@ -454,8 +466,8 @@ class HomeScreen extends StatelessWidget {
                   context.push('${Routes.meeting}/${meeting.id}');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purpleAccent.shade100,
-                  foregroundColor: Colors.black,
+                  backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -473,17 +485,17 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildModalInfoRow(IconData icon, String text) {
+  Widget _buildModalInfoRow(BuildContext context, IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: 20, color: Colors.grey.shade600),
+        Icon(icon, size: 20, color: Theme.of(context).colorScheme.outline),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             text,
             style: TextStyle(
               fontSize: 14,
-              color: Colors.grey.shade700,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ),
@@ -496,19 +508,18 @@ class HomeScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Expanded(
-          child: CardButton(
-            icon: Icons.group_add,
-            label: 'Entrar em Bloco',
-            onTap: () => context.push(Routes.joinBlock),
-            color: Colors.green,
+          child: ElevatedButton.icon(
+            onPressed: () => context.push(Routes.joinBlock),
+            icon: const Icon(Icons.group_add),
+            label: const Text('Entrar em Bloco'),
           ),
         ),
+        const SizedBox(width: 12),
         Expanded(
-          child: CardButton(
-            icon: Icons.add_circle,
-            label: 'Criar Bloco',
-            onTap: () => context.push(Routes.createBlock),
-            color: Colors.purple,
+          child: ElevatedButton.icon(
+            onPressed: () => context.push(Routes.createBlock),
+            icon: const Icon(Icons.add_circle),
+            label: const Text('Criar Bloco'),
           ),
         ),
       ],

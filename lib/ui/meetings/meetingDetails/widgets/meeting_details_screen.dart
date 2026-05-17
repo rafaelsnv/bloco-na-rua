@@ -1,3 +1,4 @@
+import 'package:bloco_na_rua/ui/core/colors/app_colors.dart';
 import 'package:bloco_na_rua/ui/core/widgets/avatar_member.dart';
 import 'package:bloco_na_rua/ui/core/widgets/empty_state_widget.dart';
 import 'package:bloco_na_rua/ui/core/widgets/error_state_widget.dart';
@@ -24,12 +25,12 @@ class MeetingDetailsScreen extends StatelessWidget {
               SnackBar(
                 content: Row(
                   children: [
-                    const Icon(Icons.check_circle, color: Colors.white),
+                    Icon(Icons.check_circle, color: Theme.of(context).colorScheme.onPrimary),
                     const SizedBox(width: 8),
                     const Text('Presença atualizada com sucesso!'),
                   ],
                 ),
-                backgroundColor: Colors.green.shade600,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 behavior: SnackBarBehavior.floating,
               ),
             );
@@ -40,12 +41,12 @@ class MeetingDetailsScreen extends StatelessWidget {
               SnackBar(
                 content: Row(
                   children: [
-                    const Icon(Icons.error, color: Colors.white),
+                    Icon(Icons.error, color: Theme.of(context).colorScheme.onError),
                     const SizedBox(width: 8),
                     Expanded(child: Text(state.markingPresenceError!)),
                   ],
                 ),
-                backgroundColor: Colors.red.shade600,
+                backgroundColor: Theme.of(context).colorScheme.error,
                 behavior: SnackBarBehavior.floating,
               ),
             );
@@ -56,31 +57,31 @@ class MeetingDetailsScreen extends StatelessWidget {
               SnackBar(
                 content: Row(
                   children: [
-                    const Icon(Icons.error, color: Colors.white),
+                    Icon(Icons.error, color: Theme.of(context).colorScheme.onError),
                     const SizedBox(width: 8),
                     const Text('Erro ao excluir reunião'),
                   ],
                 ),
-                backgroundColor: Colors.red.shade600,
+                backgroundColor: Theme.of(context).colorScheme.error,
                 behavior: SnackBarBehavior.floating,
               ),
             );
           }
         }
         if (state is MeetingDetailsError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                children: [
-                  const Icon(Icons.error_outline, color: Colors.white),
-                  const SizedBox(width: 8),
-                  Expanded(child: Text(state.message)),
-                ],
+ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    Icon(Icons.error_outline, color: Theme.of(context).colorScheme.onError),
+                    const SizedBox(width: 8),
+                    Expanded(child: Text(state.message)),
+                  ],
+                ),
+                backgroundColor: Theme.of(context).colorScheme.error,
+                behavior: SnackBarBehavior.floating,
               ),
-              backgroundColor: Colors.red.shade600,
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
+            );
         }
       },
       builder: (context, state) {
@@ -121,7 +122,7 @@ class MeetingDetailsScreen extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               title: Text(meeting.name ?? 'Detalhes da Reunião'),
-              backgroundColor: Colors.grey.shade900,
+              backgroundColor: Theme.of(context).colorScheme.surface,
               actions: [
                 if (state.deleteStatus == DeleteStatus.deleting)
                   const Padding(
@@ -132,9 +133,9 @@ class MeetingDetailsScreen extends StatelessWidget {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     ),
                   )
-                else
+                else if (state.canDeleteMeeting)
                   IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red.shade400),
+                    icon: Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
                     onPressed: () => _showDeleteDialog(context),
                   ),
               ],
@@ -168,12 +169,16 @@ class MeetingDetailsScreen extends StatelessWidget {
                                 Container(
                                   padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
-                                    color: Colors.purpleAccent.shade100,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primaryContainer,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Icon(
                                     Icons.event,
-                                    color: Colors.purpleAccent.shade700,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
                                     size: 28,
                                   ),
                                 ),
@@ -204,23 +209,26 @@ class MeetingDetailsScreen extends StatelessWidget {
                             if (meeting.location != null &&
                                 meeting.location!.isNotEmpty)
                               _buildInfoRow(
+                                context,
                                 Icons.location_on,
                                 meeting.location!,
-                                Colors.green,
+                                Theme.of(context).colorScheme.primary,
                               ),
                             if (meetingDateTime != null) ...[
                               const SizedBox(height: 12),
                               _buildInfoRow(
+                                context,
                                 Icons.calendar_today,
                                 DateFormat('EEEE, dd/MM/yyyy', 'pt_BR')
                                     .format(meetingDateTime),
-                                Colors.blue,
+                                Theme.of(context).colorScheme.secondary,
                               ),
                               const SizedBox(height: 12),
                               _buildInfoRow(
+                                context,
                                 Icons.access_time,
                                 DateFormat('HH:mm').format(meetingDateTime),
-                                Colors.orange,
+                                Theme.of(context).colorScheme.tertiary,
                               ),
                             ],
                           ],
@@ -247,7 +255,6 @@ class MeetingDetailsScreen extends StatelessWidget {
 
         return const Scaffold(
           body: EmptyStateWidget(
-            icon: Icons.event_busy,
             message: 'Nenhum dado encontrado',
           ),
         );
@@ -255,7 +262,8 @@ class MeetingDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String text, Color color) {
+  Widget _buildInfoRow(
+      BuildContext context, IconData icon, String text, Color color) {
     return Row(
       children: [
         Container(
@@ -270,10 +278,7 @@ class MeetingDetailsScreen extends StatelessWidget {
         Expanded(
           child: Text(
             text,
-            style: TextStyle(
-              fontSize: 15,
-              color: Colors.grey.shade800,
-            ),
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
       ],
@@ -300,21 +305,23 @@ class MeetingDetailsScreen extends StatelessWidget {
                           .read<MeetingDetailsCubit>()
                           .markPresence(isPresent: false);
                     },
-              backgroundColor: Colors.red.shade100,
+              backgroundColor:
+                  Theme.of(context).colorScheme.errorContainer,
               icon: isLoading
-                  ? const SizedBox(
+                  ? SizedBox(
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: Colors.red,
+                        color: Theme.of(context).colorScheme.error,
                       ),
                     )
-                  : Icon(Icons.close, color: Colors.red.shade700),
+                  : Icon(Icons.close,
+                      color: Theme.of(context).colorScheme.onErrorContainer),
               label: Text(
-                'Não Vou',
+                '',
                 style: TextStyle(
-                  color: Colors.red.shade700,
+                  color: Theme.of(context).colorScheme.onErrorContainer,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -333,21 +340,23 @@ class MeetingDetailsScreen extends StatelessWidget {
                           .read<MeetingDetailsCubit>()
                           .markPresence(isPresent: true);
                     },
-              backgroundColor: Colors.green.shade100,
+              backgroundColor:
+                  Theme.of(context).colorScheme.primaryContainer,
               icon: isLoading
-                  ? const SizedBox(
+                  ? SizedBox(
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: Colors.green,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     )
-                  : Icon(Icons.check, color: Colors.green.shade700),
+                  : Icon(Icons.check,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer),
               label: Text(
-                'Eu Vou',
+                '',
                 style: TextStyle(
-                  color: Colors.green.shade700,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -363,10 +372,10 @@ class MeetingDetailsScreen extends StatelessWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.delete_forever, color: Colors.red),
-            SizedBox(width: 8),
+            Icon(Icons.delete_forever, color: Theme.of(context).colorScheme.error),
+            const SizedBox(width: 8),
             Text('Excluir reunião'),
           ],
         ),
@@ -382,8 +391,8 @@ class MeetingDetailsScreen extends StatelessWidget {
               context.read<MeetingDetailsCubit>().deleteMeeting();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red.shade100,
-              foregroundColor: Colors.red.shade700,
+              backgroundColor: Theme.of(context).colorScheme.errorContainer,
+              foregroundColor: Theme.of(context).colorScheme.onErrorContainer,
             ),
             child: const Text('Excluir'),
           ),
@@ -407,7 +416,8 @@ class MeetingDetailsScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 Text(
                   'Carregando presenças...',
-                  style: TextStyle(color: Colors.grey.shade600),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
               ],
             ),
@@ -416,16 +426,8 @@ class MeetingDetailsScreen extends StatelessWidget {
       );
     }
 
-    if (state.presencesStatus == PresencesStatus.error) {
-      return ErrorStateWidget(
-        message: state.presencesError ?? 'Erro ao carregar presenças',
-        onRetry: () => context.read<MeetingDetailsCubit>().loadPresences(),
-      );
-    }
-
     if (state.presences.isEmpty) {
       return const EmptyStateWidget(
-        icon: Icons.people_outline,
         message: 'Ninguém confirmou presença ainda',
         subtitle: 'Seja o primeiro a confirmar!',
       );
@@ -444,7 +446,7 @@ class MeetingDetailsScreen extends StatelessWidget {
             context,
             'Presentes',
             presentMembers,
-            Colors.green,
+            Theme.of(context).colorScheme.primary,
             Icons.check_circle,
           ),
           const SizedBox(height: 12),
@@ -455,7 +457,7 @@ class MeetingDetailsScreen extends StatelessWidget {
             context,
             'Ausentes',
             absentMembers,
-            Colors.red,
+            Theme.of(context).colorScheme.error,
             Icons.cancel,
           ),
       ],
@@ -470,7 +472,7 @@ class MeetingDetailsScreen extends StatelessWidget {
     IconData icon,
   ) {
     return Card(
-      elevation: 2,
+      elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Column(
         children: [
@@ -502,7 +504,7 @@ class MeetingDetailsScreen extends StatelessWidget {
             itemCount: presences.length,
             separatorBuilder: (context, index) => Divider(
               height: 1,
-              color: Colors.grey.shade200,
+              color: Theme.of(context).colorScheme.outlineVariant,
             ),
             itemBuilder: (context, index) {
               final presence = presences[index];
@@ -514,7 +516,9 @@ class MeetingDetailsScreen extends StatelessWidget {
                 ),
                 trailing: Icon(
                   presence.isPresent ? Icons.check : Icons.close,
-                  color: presence.isPresent ? Colors.green : Colors.red,
+                  color: presence.isPresent
+                      ? AppColors.success
+                      : Theme.of(context).colorScheme.error,
                 ),
               );
             },

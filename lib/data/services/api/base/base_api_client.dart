@@ -38,7 +38,6 @@ class BaseApiClient implements IBaseApiClient {
             .toList(),
       );
     } catch (error) {
-      client.close();
       return Failure(Exception('An error occurred: $error'));
     }
   }
@@ -58,7 +57,6 @@ class BaseApiClient implements IBaseApiClient {
       final data = await response.data;
       return Success(fromJsonFactory(data as Map<String, dynamic>));
     } catch (error) {
-      client.close();
       return Failure(Exception('An error occurred: $error'));
     }
   }
@@ -75,7 +73,6 @@ class BaseApiClient implements IBaseApiClient {
       }
       return Success(response.statusCode.toString());
     } catch (error) {
-      client.close();
       return Failure(Exception('An error occurred: $error'));
     }
   }
@@ -93,7 +90,6 @@ class BaseApiClient implements IBaseApiClient {
       }
       return Success(fromJsonFactory(response.data as Map<String, dynamic>));
     } catch (error) {
-      client.close();
       return Failure(Exception('An error occurred: $error'));
     }
   }

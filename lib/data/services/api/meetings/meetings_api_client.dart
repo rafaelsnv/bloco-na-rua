@@ -20,14 +20,19 @@ class MeetingsApiClient implements IMeetingsApiClient {
       final response = await baseApiClient.client.get(
         '$_basePath/block/$blockId',
       );
-      if (response.statusCode != 200) {
-        return Failure(baseApiClient.formatError(response));
+      final List<MeetingsEntity> result = [];
+      switch (response.statusCode) {
+        case 200:
+          result.addAll(
+            (response.data as List).map((e) => MeetingsEntity.fromJson(e)),
+          );
+        case 404:
+          return Success(result);
+        default:
+          return Failure(baseApiClient.formatError(response));
       }
-      final data = await response.data as List;
-      final result = data.map((e) => MeetingsEntity.fromJson(e)).toList();
       return Success(result);
     } on Exception catch (e) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $e'));
     }
   }
@@ -41,7 +46,6 @@ class MeetingsApiClient implements IMeetingsApiClient {
       }
       return Success(MeetingsEntity.fromJson(response.data));
     } on Exception catch (e) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $e'));
     }
   }
@@ -61,7 +65,6 @@ class MeetingsApiClient implements IMeetingsApiClient {
       }
       return Success(MeetingsEntity.fromJson(response.data));
     } on Exception catch (e) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $e'));
     }
   }
@@ -75,13 +78,14 @@ class MeetingsApiClient implements IMeetingsApiClient {
       }
       return Success(response.statusCode.toString());
     } on Exception catch (e) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $e'));
     }
   }
 
   @override
   AsyncResult<List<MeetingsEntity>> getAllAsync() async {
-    return await baseApiClient.getAllAsync<MeetingsEntity>(MeetingsEntity.fromJson);
+    return await baseApiClient.getAllAsync<MeetingsEntity>(
+      MeetingsEntity.fromJson,
+    );
   }
 }

@@ -53,8 +53,18 @@ class HomeCubit extends Cubit<HomeState> {
       final blocks =
           (blocksResult.getOrNull() as List?)?.cast<CarnivalBlocksEntity>() ??
               [];
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
       final meetings =
-          (meetingsResult.getOrNull() as List?)?.cast<MeetingsEntity>() ?? [];
+          (meetingsResult.getOrNull() as List?)?.cast<MeetingsEntity>().where((m) {
+            final meetingDate = m.meetingDateTime != null
+                ? DateTime.parse(m.meetingDateTime!)
+                : null;
+            if (meetingDate == null) return false;
+            final meetingDay = DateTime(meetingDate.year, meetingDate.month, meetingDate.day);
+            return !meetingDay.isBefore(today);
+          }).toList() ??
+              [];
 
       emit(
         state.copyWith(

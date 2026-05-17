@@ -26,7 +26,7 @@ class NotFoundScreen extends StatelessWidget {
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
-                // TODO: Implement navigation back to home or previous screen
+                // TO-DO: Implement navigation back to home or previous screen
                 Navigator.of(context).pop();
               },
               child: const Text('Go Back'),

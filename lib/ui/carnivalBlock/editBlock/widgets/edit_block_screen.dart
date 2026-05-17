@@ -50,18 +50,18 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text(
+              title: Text(
                 'Editar Bloco',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
               ),
-              backgroundColor: Colors.grey[850],
+              backgroundColor: Theme.of(context).colorScheme.surface,
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onSurface),
                 onPressed: () => context.pop(),
               ),
             ),
             body: _buildBody(context, state),
-            backgroundColor: Colors.grey[900],
+            backgroundColor: Theme.of(context).colorScheme.surface,
           );
         },
       ),
@@ -78,7 +78,7 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(state.message, style: const TextStyle(color: Colors.red)),
+            Text(state.message, style: TextStyle(color: Theme.of(context).colorScheme.error)),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => context.read<EditBlockCubit>().loadBlock(),
@@ -101,15 +101,15 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
             enabled: !isSaving,
             decoration: InputDecoration(
               labelText: 'Nome do bloco',
-              labelStyle: const TextStyle(color: Colors.white70),
+              labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[700]!),
+                borderSide: BorderSide(color: Theme.of(context).colorScheme.outline),
               ),
-              focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.purpleAccent),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
               ),
             ),
-            style: const TextStyle(color: Colors.white),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
           const SizedBox(height: 20),
           Center(
@@ -127,8 +127,11 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
                           Container(
                         height: 150,
                         width: 200,
-                        color: Colors.grey.shade300,
-                        child: const Icon(Icons.image_not_supported),
+                        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                        child: Icon(
+                          Icons.image_not_supported,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ),
                   )
@@ -136,11 +139,11 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
                   Container(
                     height: 150,
                     width: 200,
-                    color: Colors.grey.shade700,
-                    child: const Icon(
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    child: Icon(
                       Icons.account_circle,
                       size: 100,
-                      color: Colors.grey,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 const SizedBox(height: 12),
@@ -151,8 +154,8 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
                           // Handle image selection
                         },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purpleAccent.shade100,
-                    foregroundColor: Colors.black,
+                    backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                   child: const Text('Alterar imagem'),
                 ),
@@ -181,17 +184,17 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
                       );
                     },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purpleAccent.shade100,
-                foregroundColor: Colors.black,
+                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
                 minimumSize: const Size(150, 50),
               ),
               child: isSaving
-                  ? const SizedBox(
+                  ? SizedBox(
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: Colors.black,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
                       ),
                     )
                   : const Text('Salvar alterações'),

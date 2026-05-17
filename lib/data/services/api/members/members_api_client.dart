@@ -29,7 +29,6 @@ class MembersApiClient implements IMembersApiClient {
       final result = MembersEntity.fromJson(data as Map<String, dynamic>);
       return Success(result);
     } catch (error) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $error'));
     }
   }
@@ -45,7 +44,6 @@ class MembersApiClient implements IMembersApiClient {
       final result = MembersEntity.fromJson(data as Map<String, dynamic>);
       return Success(result);
     } on Exception catch (e) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $e'));
     }
   }
@@ -58,14 +56,19 @@ class MembersApiClient implements IMembersApiClient {
       final response = await baseApiClient.client.get(
         '$_basePath/$memberId/blocks',
       );
-      if (response.statusCode != 200) {
-        return Failure(baseApiClient.formatError(response));
+      List<CarnivalBlocksEntity> result = [];
+      switch (response.statusCode) {
+        case 200:
+          final data = await response.data as List;
+          result = data.map((e) => CarnivalBlocksEntity.fromJson(e)).toList();
+        case 404:
+          // Member has no blocks - return empty list
+          break;
+        default:
+          return Failure(baseApiClient.formatError(response));
       }
-      final data = await response.data as List;
-      final result = data.map((e) => CarnivalBlocksEntity.fromJson(e)).toList();
       return Success(result);
     } on Exception catch (e) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $e'));
     }
   }
@@ -76,14 +79,19 @@ class MembersApiClient implements IMembersApiClient {
       final response = await baseApiClient.client.get(
         '$_basePath/$memberId/meetings',
       );
-      if (response.statusCode != 200) {
-        return Failure(baseApiClient.formatError(response));
+      List<MeetingsEntity> result = [];
+      switch (response.statusCode) {
+        case 200:
+          final data = await response.data as List;
+          result = data.map((e) => MeetingsEntity.fromJson(e)).toList();
+        case 404:
+          // Member has no meetings - return empty list
+          break;
+        default:
+          return Failure(baseApiClient.formatError(response));
       }
-      final data = await response.data as List;
-      final result = data.map((e) => MeetingsEntity.fromJson(e)).toList();
       return Success(result);
     } on Exception catch (e) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $e'));
     }
   }
@@ -99,7 +107,6 @@ class MembersApiClient implements IMembersApiClient {
       final result = data.map((e) => MembersEntity.fromJson(e)).toList();
       return Success(result);
     } catch (error) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $error'));
     }
   }
@@ -115,7 +122,6 @@ class MembersApiClient implements IMembersApiClient {
       final result = MembersEntity.fromJson(data as Map<String, dynamic>);
       return Success(result);
     } catch (error) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $error'));
     }
   }
@@ -134,10 +140,11 @@ class MembersApiClient implements IMembersApiClient {
         return Failure(baseApiClient.formatError(response));
       }
       final responseData = response.data;
-      final result = MembersEntity.fromJson(responseData as Map<String, dynamic>);
+      final result = MembersEntity.fromJson(
+        responseData as Map<String, dynamic>,
+      );
       return Success(result);
     } catch (error) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $error'));
     }
   }
@@ -151,7 +158,6 @@ class MembersApiClient implements IMembersApiClient {
       }
       return Success(response.statusCode!);
     } catch (error) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $error'));
     }
   }

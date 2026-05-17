@@ -21,14 +21,21 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
   ) async {
     try {
       final response = await baseApiClient.client.get('$_basePath/block/$id');
-      if (response.statusCode != 200) {
-        return Failure(baseApiClient.formatError(response));
+      final List<CarnivalBlockMembersEntity> result = [];
+      switch (response.statusCode) {
+        case 200:
+          result.addAll(
+            (response.data as List<dynamic>).map(
+              (e) => CarnivalBlockMembersEntity.fromJson(e),
+            ),
+          );
+        case 404:
+          // No members in this block - return empty list
+          break;
+        default:
+          return Failure(baseApiClient.formatError(response));
       }
-      var jsonData = response.data as List<dynamic>;
-      final data = jsonData
-          .map((e) => CarnivalBlockMembersEntity.fromJson(e))
-          .toList();
-      return Success(data);
+      return Success(result);
     } catch (error) {
       return Failure(Exception('An error occurred: $error'));
     }

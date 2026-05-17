@@ -75,9 +75,9 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
       listener: (context, state) {
         if (state.status == EditMeetingStatus.success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Reunião atualizada com sucesso!'),
-              backgroundColor: Colors.green,
+            SnackBar(
+              content: const Text('Reunião atualizada com sucesso!'),
+              backgroundColor: Theme.of(context).colorScheme.primary,
             ),
           );
           context.pop();
@@ -86,7 +86,7 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.errorMessage!),
-              backgroundColor: Colors.red,
+              backgroundColor: Theme.of(context).colorScheme.error,
             ),
           );
         }

@@ -501,14 +501,14 @@
         }
       }
     },
-    "/api/v1/Meetings/block/{blockId}": {
+    "/api/v1/Meetings/{id}": {
       "get": {
         "tags": [
           "Meetings"
         ],
         "parameters": [
           {
-            "name": "blockId",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -522,9 +522,7 @@
             "description": "OK"
           }
         }
-      }
-    },
-    "/api/v1/Meetings/{id}": {
+      },
       "put": {
         "tags": [
           "Meetings"
@@ -590,6 +588,29 @@
           {
             "name": "X-Logged-Member",
             "in": "header",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/Meetings/block/{blockId}": {
+      "get": {
+        "tags": [
+          "Meetings"
+        ],
+        "parameters": [
+          {
+            "name": "blockId",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"

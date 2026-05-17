@@ -25,13 +25,15 @@ class ServerErrorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Center(
       child: Card(
-        elevation: 4,
+        elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        color: Colors.grey.shade700,
+        color: colorScheme.errorContainer,
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
@@ -41,13 +43,13 @@ class ServerErrorCard extends StatelessWidget {
               Icon(
                 showAnimation ? Icons.cloud_off : Icons.cloud_off,
                 size: 64,
-                color: Colors.white70,
+                color: colorScheme.onErrorContainer.withAlpha(179),
               ),
               const SizedBox(height: 16),
               Text(
                 'Ops! Servidor indisponível',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Colors.white,
+                      color: colorScheme.onErrorContainer,
                       fontWeight: FontWeight.bold,
                     ),
                 textAlign: TextAlign.center,
@@ -59,7 +61,7 @@ class ServerErrorCard extends StatelessWidget {
                         'Isso geralmente acontece quando há muitas\n'
                         'requisições ou manutenção programada.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white70,
+                      color: colorScheme.onErrorContainer.withAlpha(179),
                     ),
                 textAlign: TextAlign.center,
               ),
@@ -68,21 +70,24 @@ class ServerErrorCard extends StatelessWidget {
                 OutlinedButton(
                   onPressed: onRetry,
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.white70),
+                    foregroundColor: colorScheme.onErrorContainer,
+                    side: BorderSide(color: colorScheme.onErrorContainer.withAlpha(179)),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 24,
                       vertical: 12,
                     ),
                   ),
-                  child: const Text('Tentar novamente'),
+                  child: Text(
+                    'Tentar novamente',
+                    style: TextStyle(color: colorScheme.onErrorContainer),
+                  ),
                 ),
               ],
               const SizedBox(height: 16),
               Text(
                 'Se o problema persistir, entre em contato com suporte.',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.white54,
+                      color: colorScheme.onErrorContainer.withAlpha(134),
                     ),
                 textAlign: TextAlign.center,
               ),

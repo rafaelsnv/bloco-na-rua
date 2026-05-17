@@ -22,16 +22,22 @@ class MeetingPresencesApiClient implements IMeetingPresencesApiClient {
       final response = await baseApiClient.client.get(
         '$_basePath/meeting/$meetingId',
       );
-      if (response.statusCode != 200) {
-        return Failure(baseApiClient.formatError(response));
+      final List<MeetingPresencesEntity> result = [];
+      switch (response.statusCode) {
+        case 200:
+          result.addAll(
+            (response.data as List<dynamic>).map(
+              (e) => MeetingPresencesEntity.fromJson(e),
+            ),
+          );
+        case 404:
+          // No presences for this meeting - return empty list
+          break;
+        default:
+          return Failure(baseApiClient.formatError(response));
       }
-      final data = await response.data as List<dynamic>;
-      final result = data
-          .map((e) => MeetingPresencesEntity.fromJson(e))
-          .toList();
       return Success(result);
     } on Exception catch (e) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $e'));
     }
   }
@@ -47,7 +53,6 @@ class MeetingPresencesApiClient implements IMeetingPresencesApiClient {
       }
       return Success(MeetingPresencesEntity.fromJson(response.data));
     } on Exception catch (e) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $e'));
     }
   }
@@ -61,7 +66,6 @@ class MeetingPresencesApiClient implements IMeetingPresencesApiClient {
       }
       return Success(response.statusCode.toString());
     } on Exception catch (e) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $e'));
     }
   }

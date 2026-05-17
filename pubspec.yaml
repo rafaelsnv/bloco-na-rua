@@ -30,6 +30,8 @@ dependencies:
   intl: any
   flutter_bloc: ^9.1.1
   equatable: ^2.0.7
+  flutter_driver:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
@@ -41,8 +43,6 @@ dev_dependencies:
   integration_test:
     sdk: flutter
   test: ^1.30.0
-  flutter_driver:
-    sdk: flutter
 
 flutter:
   uses-material-design: true

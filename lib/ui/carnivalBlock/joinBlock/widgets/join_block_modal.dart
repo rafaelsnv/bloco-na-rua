@@ -30,8 +30,8 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
     return BlocProvider(
       create: (context) => JoinBlockCubit(
         carnivalBlocksRepository: context.read<ICarnivalBlocksRepository>(),
-        carnivalBlockMembersRepository:
-            context.read<ICarnivalBlockMembersRepository>(),
+        carnivalBlockMembersRepository: context
+            .read<ICarnivalBlockMembersRepository>(),
         getCurrentUserData: context.read<GetCurrentUserData>(),
       ),
       child: BlocConsumer<JoinBlockCubit, JoinBlockState>(
@@ -41,12 +41,15 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
               SnackBar(
                 content: Row(
                   children: [
-                    const Icon(Icons.celebration, color: Colors.white),
+                    Icon(
+                      Icons.celebration,
+                      color: Theme.of(context).colorScheme.onError,
+                    ),
                     const SizedBox(width: 8),
                     const Text('Você entrou no bloco com sucesso!'),
                   ],
                 ),
-                backgroundColor: Colors.green.shade600,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 behavior: SnackBarBehavior.floating,
               ),
             );
@@ -56,27 +59,31 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
               SnackBar(
                 content: Row(
                   children: [
-                    const Icon(Icons.error, color: Colors.white),
+                    Icon(
+                      Icons.error,
+                      color: Theme.of(context).colorScheme.onError,
+                    ),
                     const SizedBox(width: 8),
                     Expanded(child: Text(state.message)),
                   ],
                 ),
-                backgroundColor: Colors.red.shade600,
+                backgroundColor: Theme.of(context).colorScheme.error,
                 behavior: SnackBarBehavior.floating,
               ),
             );
           }
         },
         builder: (context, state) {
+          final colorScheme = Theme.of(context).colorScheme;
           return Scaffold(
             appBar: AppBar(
-              title: const Text(
+              title: Text(
                 'Entrar em um bloco',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: colorScheme.onSurface),
               ),
-              backgroundColor: Colors.grey.shade900,
+              backgroundColor: colorScheme.surface,
               leading: IconButton(
-                icon: const Icon(Icons.close, color: Colors.white),
+                icon: Icon(Icons.close, color: colorScheme.onSurface),
                 onPressed: () {
                   if (context.canPop()) {
                     context.pop();
@@ -98,29 +105,27 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
                       width: 120,
                       height: 120,
                       decoration: BoxDecoration(
-                        color: Colors.purpleAccent.shade100,
+                        color: colorScheme.primaryContainer,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.group_add,
                         size: 60,
-                        color: Colors.purpleAccent.shade700,
+                        color: colorScheme.onPrimaryContainer,
                       ),
                     ),
                     const SizedBox(height: 32),
                     Text(
                       'Entre em um bloco',
-                      style:
-                          Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Insira o código de convite para participar de um bloco existente.',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.grey.shade600,
-                          ),
+                        color: colorScheme.onSurfaceVariant,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 32),
@@ -132,14 +137,16 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
                         decoration: InputDecoration(
                           prefixIcon: Icon(
                             Icons.vpn_key,
-                            color: Colors.purpleAccent.shade700,
+                            color: colorScheme.primary,
                           ),
                           labelText: 'Código de convite',
-                          labelStyle: TextStyle(color: Colors.grey.shade400),
+                          labelStyle: TextStyle(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
                           hintText: 'Ex: ABC123',
-                          hintStyle: TextStyle(color: Colors.grey.shade600),
+                          hintStyle: TextStyle(color: colorScheme.outline),
                           filled: true,
-                          fillColor: Colors.grey.shade800,
+                          fillColor: colorScheme.surfaceContainerHighest,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide.none,
@@ -147,27 +154,27 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: Colors.purpleAccent.shade400,
+                              color: colorScheme.primary,
                               width: 2,
                             ),
                           ),
                           errorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: Colors.red.shade400,
+                              color: colorScheme.error,
                               width: 2,
                             ),
                           ),
                           focusedErrorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: Colors.red.shade400,
+                              color: colorScheme.error,
                               width: 2,
                             ),
                           ),
                         ),
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: colorScheme.onSurface,
                           fontSize: 18,
                           letterSpacing: 2,
                           fontWeight: FontWeight.bold,
@@ -194,31 +201,34 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
                             ? null
                             : () {
                                 if (_formKey.currentState!.validate()) {
-                                  final code =
-                                      _inviteCodeController.text.trim().toUpperCase();
-                                  context.read<JoinBlockCubit>().joinBlock(code);
+                                  final code = _inviteCodeController.text
+                                      .trim()
+                                      .toUpperCase();
+                                  context.read<JoinBlockCubit>().joinBlock(
+                                    code,
+                                  );
                                 }
                               },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purpleAccent.shade100,
-                          foregroundColor: Colors.black,
+                          backgroundColor: colorScheme.primaryContainer,
+                          foregroundColor: colorScheme.onPrimaryContainer,
                           disabledBackgroundColor:
-                              Colors.grey.shade800,
-                          disabledForegroundColor: Colors.grey.shade500,
+                              colorScheme.surfaceContainerHighest,
+                          disabledForegroundColor: colorScheme.outline,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                         child: state is JoinBlockLoading
-                            ? const SizedBox(
+                            ? SizedBox(
                                 width: 24,
                                 height: 24,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: Colors.black,
+                                  color: colorScheme.onPrimaryContainer,
                                 ),
                               )
-                            : const Row(
+                            : Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(Icons.login),
@@ -238,7 +248,7 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
                 ),
               ),
             ),
-            backgroundColor: Colors.grey.shade900,
+            backgroundColor: colorScheme.surface,
           );
         },
       ),

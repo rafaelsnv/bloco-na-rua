@@ -1,3 +1,5 @@
+import 'package:bloco_na_rua/ui/auth/cubit/auth_cubit.dart';
+import 'package:bloco_na_rua/ui/auth/cubit/auth_state.dart';
 import 'package:bloco_na_rua/ui/core/widgets/error_state_widget.dart';
 import 'package:bloco_na_rua/ui/profile/cubit/profile_cubit.dart';
 import 'package:flutter/material.dart';
@@ -22,9 +24,7 @@ class ProfileScreen extends StatelessWidget {
           ),
           body: state.when(
             initial: () => const SizedBox.shrink(),
-            loading: () => const Center(
-              child: CircularProgressIndicator(),
-            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
             error: (message) => ErrorStateWidget(
               message: message,
               onRetry: () => context.read<ProfileCubit>().loadProfile(),
@@ -63,13 +63,13 @@ class ProfileScreen extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Colors.purpleAccent.shade100,
-                  Colors.purpleAccent.shade400,
+                  Theme.of(context).colorScheme.primaryContainer,
+                  Theme.of(context).colorScheme.primary,
                 ],
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.purple.withValues(alpha: 0.3),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                   blurRadius: 16,
                   offset: const Offset(0, 8),
                 ),
@@ -91,18 +91,18 @@ class ProfileScreen extends StatelessWidget {
           // Name
           Text(
             name,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
 
           // Email
           Text(
             email,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.grey.shade600,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
 
           const SizedBox(height: 32),
@@ -131,7 +131,7 @@ class ProfileScreen extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: () {
-                // TODO: Implement edit profile
+                // TO-DO: Implement edit profile
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Editar perfil - Em breve!'),
@@ -142,8 +142,8 @@ class ProfileScreen extends StatelessWidget {
               icon: const Icon(Icons.edit),
               label: const Text('Editar Perfil'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purpleAccent.shade100,
-                foregroundColor: Colors.black87,
+                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -157,18 +157,29 @@ class ProfileScreen extends StatelessWidget {
           // Logout Button
           SizedBox(
             width: double.infinity,
-            child: OutlinedButton.icon(
-              onPressed: () => _showLogoutDialog(context),
-              icon: const Icon(Icons.logout, color: Colors.red),
-              label: const Text(
-                'Sair',
-                style: TextStyle(color: Colors.red),
-              ),
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                side: const BorderSide(color: Colors.red),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+            child: BlocListener<AuthCubit, AuthState>(
+              listener: (context, state) {
+                if (state is AuthUnauthenticated) {
+                  context.go('/login');
+                } else if (state is AuthFailure) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                    ),
+                  );
+                }
+              },
+              child: OutlinedButton.icon(
+                onPressed: () => _showLogoutDialog(context),
+                icon: const Icon(Icons.logout, color: Colors.red),
+                label: const Text('Sair', style: TextStyle(color: Colors.red)),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  side: const BorderSide(color: Colors.red),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
             ),
@@ -187,7 +198,7 @@ class ProfileScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        color: Theme.of(context).colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -195,13 +206,10 @@ class ProfileScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.purpleAccent.shade100,
+              color: Theme.of(context).colorScheme.primaryContainer,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(
-              icon,
-              color: Colors.purpleAccent.shade700,
-            ),
+            child: Icon(icon, color: Theme.of(context).colorScheme.onPrimaryContainer),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -210,16 +218,16 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey.shade600,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   value,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
                 ),
               ],
             ),
@@ -243,13 +251,9 @@ class ProfileScreen extends StatelessWidget {
           TextButton(
             onPressed: () {
               Navigator.pop(dialogContext);
-              context.read<ProfileCubit>().logout();
-              context.go('/login');
+              context.read<AuthCubit>().logout();
             },
-            child: const Text(
-              'Sair',
-              style: TextStyle(color: Colors.red),
-            ),
+            child: const Text('Sair', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),

@@ -49,17 +49,17 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text(
+            title: Text(
               'Adicionar Membro',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
             ),
-            backgroundColor: Colors.grey[850],
+            backgroundColor: Theme.of(context).colorScheme.surface,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onSurface),
               onPressed: () => context.pop(),
             ),
           ),
-          backgroundColor: Colors.grey[900],
+          backgroundColor: Theme.of(context).colorScheme.surface,
           body: Column(
             children: [
               Padding(
@@ -68,16 +68,16 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                   controller: _searchController,
                   decoration: InputDecoration(
                     hintText: 'Buscar por nome ou email',
-                    hintStyle: const TextStyle(color: Colors.white54),
-                    prefixIcon: const Icon(Icons.search, color: Colors.white54),
+                    hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                    prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.onSurfaceVariant),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey[700]!),
+                      borderSide: BorderSide(color: Theme.of(context).colorScheme.outline),
                     ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.purpleAccent),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
                     ),
                   ),
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   onChanged: (value) {
                     context.read<AddMemberCubit>().searchMembers(value);
                   },
@@ -92,7 +92,6 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                   child: Center(
                     child: Text(
                       'Nenhum membro encontrado',
-                      style: TextStyle(color: Colors.white54),
                     ),
                   ),
                 )
@@ -105,11 +104,9 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                       return ListTile(
                         title: Text(
                           member.name ?? 'Sem nome',
-                          style: const TextStyle(color: Colors.white),
                         ),
                         subtitle: Text(
                           member.email ?? 'Sem email',
-                          style: const TextStyle(color: Colors.white54),
                         ),
                         onTap: () {
                           context.read<AddMemberCubit>().addMember(

@@ -76,13 +76,13 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text(
+              title: Text(
                 'Criar reunião',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
               ),
-              backgroundColor: Colors.grey[850],
+              backgroundColor: Theme.of(context).colorScheme.surface,
               leading: IconButton(
-                icon: const Icon(Icons.close, color: Colors.white),
+                icon: Icon(Icons.close, color: Theme.of(context).colorScheme.onSurface),
                 onPressed: () {
                   context.pop();
                 },
@@ -90,154 +90,156 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
             ),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextField(
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      labelText: 'Nome do encontro',
-                      labelStyle: const TextStyle(color: Colors.white70),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey[700]!),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        labelText: 'Nome do encontro',
+                        labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.outline),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                        ),
                       ),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.purpleAccent),
-                      ),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                     ),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: _descriptionController,
-                    decoration: InputDecoration(
-                      labelText: 'Descrição',
-                      labelStyle: const TextStyle(color: Colors.white70),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey[700]!),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _descriptionController,
+                      decoration: InputDecoration(
+                        labelText: 'Descrição',
+                        labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.outline),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                        ),
                       ),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.purpleAccent),
-                      ),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                      maxLines: 3,
                     ),
-                    style: const TextStyle(color: Colors.white),
-                    maxLines: 3,
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: _locationController,
-                    decoration: InputDecoration(
-                      labelText: 'Local',
-                      labelStyle: const TextStyle(color: Colors.white70),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey[700]!),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _locationController,
+                      decoration: InputDecoration(
+                        labelText: 'Local',
+                        labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.outline),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                        ),
                       ),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.purpleAccent),
-                      ),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                     ),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          onTap: () => _selectDate(context),
-                          child: InputDecorator(
-                            decoration: InputDecoration(
-                              labelText: 'Data',
-                              labelStyle: const TextStyle(
-                                color: Colors.white70,
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.grey[700]!,
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => _selectDate(context),
+                            child: InputDecorator(
+                              decoration: InputDecoration(
+                                labelText: 'Data',
+                                labelStyle: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context).colorScheme.outline,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context).colorScheme.primary,
+                                  ),
                                 ),
                               ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.purpleAccent,
+                              child: Text(
+                                _selectedDate != null
+                                    ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
+                                    : 'Selecione a data',
+                                style: TextStyle(
+                                  color: _selectedDate != null
+                                      ? Theme.of(context).colorScheme.onSurface
+                                      : Theme.of(context).colorScheme.onSurfaceVariant,
                                 ),
-                              ),
-                            ),
-                            child: Text(
-                              _selectedDate != null
-                                  ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
-                                  : 'Selecione a data',
-                              style: TextStyle(
-                                color: _selectedDate != null
-                                    ? Colors.white
-                                    : Colors.white54,
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () => _selectTime(context),
-                          child: InputDecorator(
-                            decoration: InputDecoration(
-                              labelText: 'Hora',
-                              labelStyle: const TextStyle(
-                                color: Colors.white70,
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.grey[700]!,
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => _selectTime(context),
+                            child: InputDecorator(
+                              decoration: InputDecoration(
+                                labelText: 'Hora',
+                                labelStyle: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context).colorScheme.outline,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context).colorScheme.primary,
+                                  ),
                                 ),
                               ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.purpleAccent,
+                              child: Text(
+                                _selectedTime != null
+                                    ? _selectedTime!.format(context)
+                                    : 'Selecione a hora',
+                                style: TextStyle(
+                                  color: _selectedTime != null
+                                      ? Theme.of(context).colorScheme.onSurface
+                                      : Theme.of(context).colorScheme.onSurfaceVariant,
                                 ),
-                              ),
-                            ),
-                            child: Text(
-                              _selectedTime != null
-                                  ? _selectedTime!.format(context)
-                                  : 'Selecione a hora',
-                              style: TextStyle(
-                                color: _selectedTime != null
-                                    ? Colors.white
-                                    : Colors.white54,
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: ElevatedButton(
-                      onPressed: state.status == CreateMeetingStatus.loading
-                          ? null
-                          : () => _submitForm(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.purpleAccent.shade100,
-                        foregroundColor: Colors.black,
-                        minimumSize: const Size(150, 50),
-                      ),
-                      child: state.status == CreateMeetingStatus.loading
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.black,
-                              ),
-                            )
-                          : const Text('Criar reunião'),
+                      ],
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: state.status == CreateMeetingStatus.loading
+                            ? null
+                            : () => _submitForm(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                          foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                          minimumSize: const Size(150, 50),
+                        ),
+                        child: state.status == CreateMeetingStatus.loading
+                            ? SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                                ),
+                              )
+                            : const Text('Criar reunião'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            backgroundColor: Colors.grey[900],
+            backgroundColor: Theme.of(context).colorScheme.surface,
           );
         },
       ),

@@ -28,6 +28,7 @@ class ErrorStateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -50,21 +51,21 @@ class ErrorStateWidget extends StatelessWidget {
               child: Icon(
                 _icon,
                 size: 80,
-                color: Colors.red.shade300,
+                color: colorScheme.error,
               ),
             ),
             const SizedBox(height: 16),
             Text(
               title ?? _defaultTitle,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.grey.shade700,
+                    color: colorScheme.onSurface,
                   ),
             ),
             const SizedBox(height: 8),
             Text(
               message,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey.shade500,
+                    color: colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
               textAlign: TextAlign.center,
             ),
@@ -73,7 +74,7 @@ class ErrorStateWidget extends StatelessWidget {
               Text(
                 _getSubtitle(errorType)!,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey.shade400,
+                      color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                     ),
                 textAlign: TextAlign.center,
               ),
@@ -85,8 +86,8 @@ class ErrorStateWidget extends StatelessWidget {
                 icon: const Icon(Icons.refresh),
                 label: const Text('Tentar novamente'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red.shade100,
-                  foregroundColor: Colors.red.shade700,
+                  backgroundColor: colorScheme.errorContainer,
+                  foregroundColor: colorScheme.onErrorContainer,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 24,
                     vertical: 12,

@@ -26,7 +26,6 @@ class CarnivalBlocksApiClient implements ICarnivalBlocksApiClient {
       final result = CarnivalBlocksEntity.fromJson(data as Map<String, dynamic>);
       return Success(result);
     } on Exception catch (e) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $e'));
     }
   }
@@ -42,7 +41,6 @@ class CarnivalBlocksApiClient implements ICarnivalBlocksApiClient {
       final result = data.map((e) => CarnivalBlocksEntity.fromJson(e)).toList();
       return Success(result);
     } catch (error) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $error'));
     }
   }
@@ -56,7 +54,6 @@ class CarnivalBlocksApiClient implements ICarnivalBlocksApiClient {
       }
       return Success(response.statusCode.toString());
     } on Exception catch (e) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $e'));
     }
   }
@@ -84,7 +81,6 @@ class CarnivalBlocksApiClient implements ICarnivalBlocksApiClient {
       }
       return Success(CarnivalBlocksEntity.fromJson(response.data));
     } on Exception catch (e) {
-      baseApiClient.client.close();
       return Failure(Exception('An error occurred: $e'));
     }
   }

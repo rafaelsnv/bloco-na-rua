@@ -25,7 +25,7 @@ class ErrorScreen extends StatelessWidget {
               const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () {
-                  // TODO: Implement navigation back or retry logic
+                  // TO-DO: Implement navigation back or retry logic
                   Navigator.of(context).pop();
                 },
                 child: const Text('Go Back'),

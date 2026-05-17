@@ -1,5 +1,6 @@
 import 'package:bloco_na_rua/core/api_error.dart';
 import 'package:bloco_na_rua/data/repositories/auth/iauth_repository.dart';
+import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
 import 'package:bloco_na_rua/data/repositories/meetingPresences/imeeting_presences_repository.dart';
 import 'package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart';
 import 'package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_state.dart';
@@ -11,15 +12,18 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
     required IMeetingsRepository meetingsRepository,
     required IMeetingPresencesRepository meetingPresencesRepository,
     required IAuthRepository authRepository,
+    required ICarnivalBlocksRepository carnivalBlocksRepository,
     required this.meetingId,
   }) : _meetingsRepository = meetingsRepository,
        _meetingPresencesRepository = meetingPresencesRepository,
        _authRepository = authRepository,
+       _carnivalBlocksRepository = carnivalBlocksRepository,
        super(const MeetingDetailsInitial());
 
   final IMeetingsRepository _meetingsRepository;
   final IMeetingPresencesRepository _meetingPresencesRepository;
   final IAuthRepository _authRepository;
+  final ICarnivalBlocksRepository _carnivalBlocksRepository;
   final String meetingId;
   final _log = Logger('MeetingDetailsCubit');
 
@@ -39,7 +43,21 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
 
     final result = await _meetingsRepository.getByIdAsync(int.parse(meetingId));
 
-    result.fold((meeting) => emit(MeetingDetailsLoaded(meeting: meeting)), (
+    result.fold((meeting) async {
+      // Check if current user can delete (is block owner)
+      final uuid = await _authRepository.currentUuid;
+      bool canDelete = false;
+      
+      if (uuid != null && meeting.carnivalBlockId != null) {
+        final blockResult = await _carnivalBlocksRepository.getByIdAsync(meeting.carnivalBlockId!);
+        canDelete = blockResult.fold(
+          (block) => block.ownerId.toString() == uuid,
+          (_) => false,
+        );
+      }
+      
+      emit(MeetingDetailsLoaded(meeting: meeting, canDeleteMeeting: canDelete));
+    }, (
       exception,
     ) {
       _log.warning('Load meeting failed', exception);
@@ -66,10 +84,11 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
       ),
       (exception) {
         _log.warning('Load presences failed', exception);
+        // Show empty list instead of error
         emit(
           currentState.copyWith(
-            presencesStatus: PresencesStatus.error,
-            presencesError: _extractUserMessage(exception),
+            presences: [],
+            presencesStatus: PresencesStatus.loaded,
           ),
         );
       },

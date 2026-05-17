@@ -68,6 +68,29 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
   }
 
   @override
+  Future<bool> validateSession() async {
+    final uuid = await currentUuid;
+    if (uuid == null || uuid.isEmpty) {
+      return false;
+    }
+
+    final memberResult = await _membersRepository.getByUuidAsync(uuid);
+    if (memberResult.isError()) {
+      _log.warning('Session validation failed: member not found for uuid: $uuid');
+      // Clear stale data
+      await _sharedPreferencesService.saveUuid(null);
+      await _sharedPreferencesService.saveToken(null);
+      _currentUuid = null;
+      _authToken = null;
+      _isAuthenticated = false;
+      notifyListeners();
+      return false;
+    }
+
+    return true;
+  }
+
+  @override
   AsyncResult<LoginResponse> login({
     required String email,
     required String password,
@@ -138,10 +161,13 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
         userData.userUuid,
       );
       if (membersResult.isError()) {
+        // Option C: Clean up Supabase auth user if member creation failed
+        _authApiClient.deleteUser(userData.userUuid);
         return Failure(membersResult.exceptionOrNull()!);
       }
 
       _log.info('Sign up successful');
+      // Only set authenticated AFTER member registration succeeded
       _isAuthenticated = true;
       _authToken = userData.accessToken;
       _currentUuid = userData.userUuid;
@@ -151,6 +177,11 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
       );
       if (userIdResult.isError()) {
         _log.severe('Failed to save User ID', userIdResult.exceptionOrNull());
+        // Clean up - don't keep authenticated state without persistence
+        _isAuthenticated = false;
+        _authToken = null;
+        _currentUuid = null;
+        return Failure(Exception('Failed to persist session'));
       }
 
       var tokenResult = await _sharedPreferencesService.saveToken(
@@ -158,7 +189,12 @@ class AuthRepository extends ChangeNotifier implements IAuthRepository {
       );
       if (tokenResult.isError()) {
         _log.severe('Failed to save token', tokenResult.exceptionOrNull());
-        return Failure(tokenResult.exceptionOrNull()!);
+        // Clean up - don't keep authenticated state without persistence
+        _isAuthenticated = false;
+        _authToken = null;
+        _currentUuid = null;
+        await _sharedPreferencesService.saveUuid(null); // Clear uuid too
+        return Failure(Exception('Failed to persist session'));
       }
       _log.info('Token saved successfully');
       return authResult;

@@ -43,7 +43,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 var baseOptions = BaseOptions(
   baseUrl: dotenv.env['API_URL']!,
   receiveDataWhenStatusError: true,
-  validateStatus: (status) => status! < 500,
+  validateStatus: (status) => status != null && status >= 200 && status < 500,
 );
 
 var supabaseClient = Supabase.instance.client;
@@ -62,7 +62,10 @@ List<SingleChildWidget> get providers {
         clientFactory: (options) {
           final client = Dio(options);
           client.interceptors.add(DioErrorInterceptor());
-          client.interceptors.add(PrettyDioLogger());
+          client.interceptors.add(PrettyDioLogger(
+            requestBody: true,
+            responseBody: true,
+          ));
           return client;
         },
         options: baseOptions,

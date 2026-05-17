@@ -1,10 +1,10 @@
 import 'package:bloco_na_rua/data/repositories/auth/iauth_repository.dart';
-import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
 import 'package:bloco_na_rua/data/repositories/meetingPresences/imeeting_presences_repository.dart';
 import 'package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart';
 import 'package:bloco_na_rua/data/repositories/members/imembers_repository.dart';
+import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart';
 import 'package:bloco_na_rua/routing/routes.dart';
 import 'package:bloco_na_rua/ui/auth/login/widgets/login_screen.dart';
 import 'package:bloco_na_rua/ui/auth/signUp/widgets/signup_screen.dart';
@@ -139,6 +139,7 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
               meetingPresencesRepository: context
                   .read<IMeetingPresencesRepository>(),
               authRepository: context.read<IAuthRepository>(),
+              carnivalBlocksRepository: context.read<ICarnivalBlocksRepository>(),
               meetingId: meetingId,
             ),
             child: MeetingDetailsScreen(meetingId: meetingId),
@@ -266,7 +267,7 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
     GoRoute(
       path: Routes.meetingPresences,
       builder: (context, state) {
-        // TODO: Implement MeetingPresencesCubit with IMeetingPresencesRepository
+        // TO-DO: Implement MeetingPresencesCubit with IMeetingPresencesRepository
         return const MeetingPresencesScreen();
       },
     ),
@@ -297,10 +298,10 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
 );
 
 Future<String?> _redirect(BuildContext context, GoRouterState state) async {
-  final loggedIn = await context.read<IAuthRepository>().isAuthenticated;
+  final sessionValid = await context.read<IAuthRepository>().validateSession();
   final location = state.matchedLocation;
 
-  if (!loggedIn) {
+  if (!sessionValid) {
     if (location == Routes.register) {
       return null;
     }

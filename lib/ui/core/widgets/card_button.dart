@@ -16,10 +16,11 @@ class CardButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cardColor = color ?? Colors.purpleAccent.shade100;
+    final colorScheme = Theme.of(context).colorScheme;
+    final cardColor = color ?? colorScheme.secondaryContainer;
 
     return Card(
-      elevation: 4,
+      elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
