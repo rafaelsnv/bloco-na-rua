@@ -28,11 +28,11 @@ dependencies:
   flutter_dotenv: ^6.0.0
   carousel_slider: ^5.1.1
   intl: any
+  google_fonts: ^6.2.1
+  cached_network_image: ^3.4.1
+  flutter_cache_manager: ^3.4.1
   flutter_bloc: ^9.1.1
   equatable: ^2.0.7
-  flutter_driver:
-    sdk: flutter
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -40,9 +40,9 @@ dev_dependencies:
   build_runner: ^2.7.0
   freezed: ^3.2.0
   json_serializable: ^6.7.1
-  integration_test:
-    sdk: flutter
   test: ^1.30.0
+  bloc_test: ^10.0.0
+  mocktail: ^1.0.4
 
 flutter:
   uses-material-design: true
