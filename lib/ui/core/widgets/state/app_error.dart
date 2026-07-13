@@ -1,10 +1,3 @@
-// lib/ui/core/widgets/state/app_error.dart
-//
-// Full-screen error state widget with optional retry CTA.
-//
-// Displays a centered error icon, title, message, and optional retry button.
-// Use as a full-screen error placeholder in async state failures.
-
 import "package:flutter/material.dart";
 
 import "../../tokens/app_colors.dart";

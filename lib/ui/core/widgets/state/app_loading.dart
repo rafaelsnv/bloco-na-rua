@@ -1,9 +1,3 @@
-// Full-screen loading state widget.
-//
-// Displays a centered spinner with an optional message below.
-// Respects [MediaQuery.disableAnimationsOf(context)] by showing
-// a static hourglass icon instead of the spinning indicator.
-
 import "package:flutter/material.dart";
 
 import "../../tokens/app_colors.dart";

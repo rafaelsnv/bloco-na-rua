@@ -1,9 +1,3 @@
-// lib/ui/core/theme/theme_cubit.dart
-//
-// Single source of truth for app ThemeMode.
-// Persists to SharedPreferences under the "THEME_MODE" key (int = ThemeMode.index).
-// 0 = ThemeMode.system, 1 = ThemeMode.light, 2 = ThemeMode.dark.
-
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:shared_preferences/shared_preferences.dart";

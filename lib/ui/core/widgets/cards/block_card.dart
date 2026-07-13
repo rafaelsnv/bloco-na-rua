@@ -1,12 +1,3 @@
-// lib/ui/core/widgets/cards/block_card.dart
-//
-// BlockCard compound widget for displaying a carnival block summary card.
-//
-// Renders: block image (100px) + block name + member count + invite code + optional tags.
-//
-// Uses CachedNetworkImage for the block photo with a surfaceContainerHighest
-// placeholder while loading. All layout uses design system tokens.
-
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
 import "package:bloco_na_rua/core/cache/app_cache_manager.dart";

@@ -1,22 +1,3 @@
-// Design System - Animation Duration and Curve Tokens
-//
-// Single source of truth for all animation durations and curves used
-// across the application. Use these tokens instead of hardcoded values
-// to ensure consistent motion throughout the app.
-//
-// Duration values follow the 1.7 Motion & Animation Principles:
-// - instant: State toggles (no animation)
-// - fast: Hover states, micro-interactions (150ms)
-// - normal: Standard transitions (200ms)
-// - slow: Page transitions, modals (300ms)
-// - slower: Complex animations (400ms)
-//
-// Curves are designed to feel natural and playful:
-// - standard: Default curve for most transitions
-// - entering: Elements entering the screen
-// - exiting: Elements leaving the screen
-// - bounce: Elastic effect for playful interactions
-
 import "package:flutter/animation.dart";
 
 /// Holds animation duration constants for the design system.

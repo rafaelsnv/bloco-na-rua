@@ -1,9 +1,3 @@
-// lib/ui/carnivalBlock/createBlock/widgets/create_block_screen.dart
-//
-// Bloco na Rua design system — create block form screen.
-//
-// Uses: AppAppBar, AppCard, AppTextField, AppButton, AppSnackbar.
-
 import "package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_state.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";

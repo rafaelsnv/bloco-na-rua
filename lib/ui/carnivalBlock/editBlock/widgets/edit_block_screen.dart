@@ -1,11 +1,3 @@
-// lib/ui/carnivalBlock/editBlock/widgets/edit_block_screen.dart
-//
-// Bloco na Rua design system — edit block form screen.
-//
-// Form pattern: prefilled (loads existing block data from cubit state).
-// Uses AppAppBar, AppCard, AppTextField, AppButton, AppLoading, AppError,
-// and AppSnackbar design system primitives.
-
 import "package:bloco_na_rua/ui/carnivalBlock/editBlock/cubit/edit_block_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/editBlock/cubit/edit_block_state.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";

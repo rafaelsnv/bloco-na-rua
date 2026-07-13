@@ -1,8 +1,3 @@
-// lib/ui/meetings/meetingDetails/widgets/meeting_details_screen.dart
-//
-// Meeting details screen showing meeting info, attendance list,
-// and presence marking FABs. Uses the Bloco na Rua design system.
-
 import "package:bloco_na_rua/domain/entities/meetingPresences/meeting_presences_entity.dart";
 import "package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart";
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";

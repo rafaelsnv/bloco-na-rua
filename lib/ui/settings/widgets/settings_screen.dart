@@ -1,17 +1,3 @@
-// lib/ui/settings/widgets/settings_screen.dart
-//
-// Bloco na Rua design system settings screen.
-//
-// Rewritten to use design system primitives:
-//   - AppAppBar, AppCard, AppListTile, AppSectionHeader
-//   - AppDialog.confirm for logout confirmation
-//   - AppSnackbar for feedback
-//   - BlocBuilder<AuthCubit, AuthState> for logout loading state
-//   - BlocBuilder<ThemeCubit, ThemeMode> for live theme mode
-//   - Theme persistence delegated to ThemeCubit (SharedPreferences)
-//
-// All colors/spacings/radii via design system tokens.
-
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 

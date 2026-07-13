@@ -1,16 +1,3 @@
-// lib/ui/core/widgets/inputs/app_text_field.dart
-//
-// Bloco na Rua design system text field widget.
-//
-// Built on top of TextFormField for seamless Form integration.
-// Decoration (padding, border, fill colors) is supplied entirely by the
-// app's inputDecorationTheme in app_theme.dart — this widget only sets
-// labelText, hintText, helperText, errorText, prefixIcon, and suffixIcon.
-//
-// State behavior:
-//   - enabled = true  (default): normal interactive state
-//   - enabled = false: TextFormField's built-in opacity reduction applies
-
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 

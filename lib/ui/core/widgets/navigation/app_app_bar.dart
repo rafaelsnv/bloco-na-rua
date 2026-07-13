@@ -1,12 +1,3 @@
-// lib/ui/core/widgets/navigation/app_app_bar.dart
-//
-// Bloco na Rua design system app bar component.
-//
-// A themed AppBar wrapper that implements PreferredSizeWidget so it can be
-// used as a custom appBar in Scaffold. Applies design system typography,
-// colors, and spacing conventions. Handles back-button navigation with
-// Navigator.maybePop and wraps action items with consistent spacing.
-
 import "package:flutter/material.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";

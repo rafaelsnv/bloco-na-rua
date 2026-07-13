@@ -1,23 +1,3 @@
-// Design system dropdown input widget with typed selection support.
-//
-// AppDropdown is a generic dropdown widget that wraps DropdownButtonFormField
-// with the design system's visual language. It supports optional icons per
-// item, label, hint, error text, and disabled state.
-//
-// Usage:
-// ```dart
-// AppDropdown<String>(
-//   label: "Select a role",
-//   hint: "Choose...",
-//   value: _selectedRole,
-//   items: [
-//     AppDropdownItem(value: "admin", label: "Administrator", icon: Icon(Icons.admin)),
-//     AppDropdownItem(value: "user", label: "User"),
-//   ],
-//   onChanged: (value) => setState(() => _selectedRole = value),
-// )
-// ```
-
 import "package:flutter/material.dart";
 
 import "../../tokens/app_colors.dart";

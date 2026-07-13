@@ -1,10 +1,3 @@
-// lib/ui/auth/signUp/widgets/signup_screen.dart
-//
-// Sign-up screen for the Bloco na Rua app.
-//
-// Uses the design system primitives: AppTextField, AppButton, AppCard,
-// and AppSnackbar for consistent styling and behavior.
-
 import "package:bloco_na_rua/data/repositories/auth/auth_listenable.dart";
 import "package:bloco_na_rua/data/repositories/auth/iauth_repository.dart";
 import "package:bloco_na_rua/data/services/auth/models/signup_request/signup_request.dart";

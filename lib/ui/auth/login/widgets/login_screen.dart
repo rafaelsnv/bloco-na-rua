@@ -1,10 +1,3 @@
-// lib/ui/auth/login/widgets/login_screen.dart
-//
-// Login screen rebuilt with the Bloco na Rua design system.
-//
-// Uses design system primitives: AppTextField, AppButton, AppCard,
-// AppSnackbar, and design tokens for all spacing, colors, and typography.
-
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";

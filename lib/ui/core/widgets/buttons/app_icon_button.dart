@@ -1,16 +1,3 @@
-// lib/ui/core/widgets/buttons/app_icon_button.dart
-//
-// Bloco na Rua design system icon button component.
-//
-// A tappable icon button with three size presets, optional tooltip,
-// and full state support (hover, press, disabled).
-//
-// State behaviour:
-//   - Hover:  Applies 0.9 opacity (layout-safe, no scale transform).
-//   - Press:  Native IconButton splash/ink effect.
-//   - Disabled: Applies 0.5 opacity and sets onPressed to null.
-//   - Animations are disabled when MediaQuery.disableAnimationsOf(context) is true.
-
 import "package:flutter/material.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 

@@ -1,10 +1,3 @@
-// lib/ui/carnivalBlock/joinBlock/widgets/join_block_modal.dart
-//
-// Bloco na Rua design system — Join Block Modal screen.
-//
-// Pattern: Modal with invite code input.
-// Uses JoinBlockCubit for state management.
-
 import "package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart";
 import "package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart";
 import "package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart";
@@ -175,7 +168,6 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
   }
 }
 
-/// A [TextInputFormatter] that converts all input to uppercase letters.
 class _UpperCaseTextFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
@@ -185,8 +177,3 @@ class _UpperCaseTextFormatter extends TextInputFormatter {
     return newValue.copyWith(text: newValue.text.toUpperCase());
   }
 }
-
-// Spacing token reference for this file:
-// Spacing.space_md = 24.0 (page padding)
-// Spacing.space_lg = 32.0 (section gaps)
-// Spacing.space_xs = 12.0 (small gaps)

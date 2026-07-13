@@ -1,9 +1,3 @@
-// Design system chip component with filled, outlined, and soft variants.
-//
-// Supports optional avatar (leading widget), delete action (trailing icon),
-// and press feedback via RawChip's built-in splash. Use factory presets for common
-// semantic colors (presence, role, status) or pass a custom color.
-
 import "package:flutter/material.dart";
 
 import "../../tokens/app_colors.dart";

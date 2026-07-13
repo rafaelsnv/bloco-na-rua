@@ -1,20 +1,3 @@
-// lib/ui/core/widgets/buttons/app_button.dart
-//
-// Bloco na Rua design system button component.
-//
-// Variants:
-//   - primary:   CTA orange fill — used for the main call-to-action.
-//   - secondary: Primary indigo outline — used for secondary actions.
-//   - tertiary:  Surface fill — used for low-emphasis actions.
-//   - ghost:     Transparent fill — used for inline or tertiary actions.
-//
-// State behaviour:
-//   - isLoading: Replaces the label text with a CircularProgressIndicator.
-//   - isDisabled: Applies 0.5 opacity and sets onPressed to null.
-//   - Hover:     Applies 0.9 opacity (layout-safe, no scale transform).
-//   - Press:     AnimatedScale to 0.97 with 150ms ease-out-cubic.
-//   - Animations are disabled when MediaQuery.disableAnimationsOf(context) is true.
-
 import "package:flutter/material.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";

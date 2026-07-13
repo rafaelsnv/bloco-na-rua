@@ -1,16 +1,3 @@
-// lib/ui/home/widgets/home_screen.dart
-//
-// Home screen for Bloco na Rua.
-//
-// Uses the design system components:
-//   - AppAppBar for top navigation
-//   - AppSectionHeader for section titles
-//   - BlockCard for carnival block items
-//   - MeetingCard for meeting items
-//   - AppLoading, AppError, AppEmpty for state rendering
-//   - AppButton and AppFAB for actions
-//   - All colors/spacings via design tokens
-
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";

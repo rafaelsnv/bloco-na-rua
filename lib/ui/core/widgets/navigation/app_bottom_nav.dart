@@ -1,10 +1,3 @@
-// Bottom navigation widget for the Bloco na Rua design system.
-///
-/// Uses Material 3 NavigationBar with always-show labels.
-/// Supports 3-5 navigation items with active/inactive icon colors
-/// and indicator customization via theme colors.
-library;
-
 import "package:flutter/material.dart";
 
 /// Represents a single navigation item in the bottom navigation bar.

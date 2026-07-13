@@ -1,14 +1,3 @@
-// lib/ui/carnivalBlock/blockList/widgets/block_list_screen.dart
-//
-// Block List screen - displays the user's carnival blocks.
-//
-// Architecture: BlocProvider creates BlockListCubit, which loads blocks
-// via GetHomeDataUseCase. Screen observes state via BlocConsumer,
-// showing AppLoading, AppError, AppEmpty, or a ListView of BlockCards.
-//
-// Routing: Tab 2 of the bottom navigation shell.
-// Modal routes (/create-block, /edit-block/:id) are handled by go_router.
-
 import "package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart";
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_cubit.dart";

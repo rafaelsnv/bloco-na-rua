@@ -1,10 +1,3 @@
-// Static helpers for showing themed SnackBars across the Bloco na Rua app.
-//
-// All snackbars are floating with a colored background and an optional action button.
-// Use via: AppSnackbar.success(context, message: "Done!");
-//
-// Does NOT extend StatelessWidget — this is a pure static helper class.
-
 import "package:flutter/material.dart";
 
 import "../../tokens/app_colors.dart";

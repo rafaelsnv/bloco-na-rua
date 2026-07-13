@@ -1,25 +1,3 @@
-// lib/ui/core/widgets/feedback/app_dialog.dart
-//
-// Static helper dialogs for consistent confirm/alert patterns.
-//
-// Usage:
-//
-//   // Confirm dialog — returns true/false/null
-//   final result = await AppDialog.confirm(
-//     context,
-//     title: "Excluir item?",
-//     message: "Esta acao nao pode ser desfeita.",
-//     confirmLabel: "Excluir",
-//     isDestructive: true,
-//   );
-//
-//   // Alert dialog — returns void
-//   await AppDialog.alert(
-//     context,
-//     title: "Aviso",
-//     message: "Sessão expirada. Faça login novamente.",
-//   );
-
 import "package:flutter/material.dart";
 
 import "../../tokens/app_colors.dart";

@@ -1,18 +1,3 @@
-// lib/ui/core/widgets/display/app_avatar.dart
-//
-// Avatar widget for the Bloco na Rua design system.
-//
-// Displays a user avatar with the following behavior:
-// - If [imageUrl] is non-null and loads successfully: shows the network image
-// - If [imageUrl] is non-null but fails to load: shows initials fallback
-// - If [name] is provided but no imageUrl: shows initials with hashed background
-// - If neither [imageUrl] nor [name] is available: shows a person icon on primary background
-//
-// The initials are generated from the [name]:
-// - Two or more words: first letter of the first two words (uppercase)
-// - Single word: first two letters (uppercase)
-// - Empty or null: person icon is shown
-
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
 

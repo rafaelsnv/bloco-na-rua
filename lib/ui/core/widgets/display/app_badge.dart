@@ -1,11 +1,3 @@
-// Design system badge component for Bloco na Rua.
-//
-// Renders as a small pill badge for notifications and status indicators.
-// Supports standalone rendering or as a Material 3 badge overlay on [child].
-//
-// Uses [Badge] from Material 3 for proper positioning semantics when
-// wrapping content. Standalone badges use [Chip] for a Material pill shape.
-
 import "package:flutter/material.dart";
 
 import "../../tokens/app_colors.dart";

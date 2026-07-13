@@ -1,16 +1,3 @@
-// lib/ui/core/widgets/inputs/app_search_field.dart
-//
-// Search field widget for the Bloco na Rua design system.
-//
-// A specialized text input with a search icon prefix and a clear-button suffix.
-// The clear button appears only when the field contains text; it clears the
-// content and notifies the onChanged callback.
-//
-// State behaviour:
-//   - Manages its own TextEditingController when no external controller is provided.
-//   - Disposes its own controller only (not the externally-provided one).
-//   - Re-renders when text changes to show/hide the clear button.
-
 import "package:flutter/material.dart";
 
 import "../../tokens/app_duration.dart";

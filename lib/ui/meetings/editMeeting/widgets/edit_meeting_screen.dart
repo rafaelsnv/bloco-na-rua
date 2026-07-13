@@ -1,8 +1,3 @@
-// lib/ui/meetings/editMeeting/widgets/edit_meeting_screen.dart
-//
-// Bloco na Rua design system — Edit Meeting screen.
-// Form pattern: prefilled fields loaded from EditMeetingLoaded state.
-
 import "package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart";
 import "package:bloco_na_rua/ui/meetings/editMeeting/cubit/edit_meeting_cubit.dart";
 import "package:bloco_na_rua/ui/meetings/editMeeting/cubit/edit_meeting_state.dart";

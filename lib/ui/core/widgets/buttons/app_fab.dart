@@ -1,16 +1,3 @@
-// lib/ui/core/widgets/buttons/app_fab.dart
-//
-// Bloco na Rua design system Floating Action Button component.
-//
-// Variants:
-//   - Basic FAB:  Rendered when [label] is null.
-//   - Extended FAB: Rendered when [label] is non-null — shows icon + label.
-//
-// State behaviour:
-//   - Press:     AnimatedScale to 0.95 + opacity 0.9.
-//   - Hover:     Opacity 0.9 (layout-safe, no scale transform).
-//   - Animations are disabled when MediaQuery.disableAnimationsOf(context) is true.
-
 import "package:flutter/material.dart";
 
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";

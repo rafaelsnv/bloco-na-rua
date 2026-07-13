@@ -1,13 +1,3 @@
-// lib/ui/core/theme/app_text_themes.dart
-//
-// Wraps GoogleFonts typography from AppTypography into Flutter's TextTheme,
-// applying onSurface and display colors per brightness.
-//
-// This layer exists because GoogleFonts generates TextStyles at runtime, so we
-// cannot use const constructors for TextTheme. Instead, we expose top-level
-// TextTheme instances for light and dark modes that apply the correct
-// per-brightness text colors.
-
 import "package:flutter/material.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";

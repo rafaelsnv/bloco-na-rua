@@ -1,15 +1,3 @@
-// lib/ui/core/widgets/state/app_empty.dart
-//
-// Full-screen empty state widget with optional CTA button.
-//
-// Example usage:
-// AppEmpty(
-//   title: "Nenhum bloco encontrado",
-//   message: "Crie seu primeiro bloco de carnaval.",
-//   actionLabel: "Criar bloco",
-//   onAction: () => context.push(Routes.createBlock),
-// )
-
 import "package:flutter/material.dart";
 
 import "../../tokens/app_colors.dart";

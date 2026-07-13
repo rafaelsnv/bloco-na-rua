@@ -1,17 +1,3 @@
-// lib/ui/core/widgets/display/safe_network_image.dart
-//
-// SafeNetworkImage — URL-validated CachedNetworkImage wrapper.
-//
-// Guards CachedNetworkImage callsites from backend placeholder strings
-// (e.g. "img") that lack a scheme/host and would otherwise throw
-// asynchronously inside the image cache (where no errorBuilder can catch
-// them). This widget applies the validation internally so callers do not
-// need to remember to guard each usage.
-//
-// Usage:
-//   SafeNetworkImage(url: block.carnivalBlockImage)
-//   SafeNetworkImage(url: member.avatarUrl, height: 48, width: 48)
-
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
 import "package:flutter_cache_manager/flutter_cache_manager.dart";

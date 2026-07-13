@@ -1,11 +1,3 @@
-// lib/ui/carnivalBlock/addMember/widgets/add_member_screen.dart
-//
-// Screen for searching and adding members to a carnival block.
-//
-// Pattern: LIST + SEARCH + ADD
-// Uses new design system primitives: AppAppBar, AppSearchField, MemberCard,
-// AppIconButton, AppSnackbar, AppLoading, AppError, AppEmpty.
-
 import "package:bloco_na_rua/ui/carnivalBlock/addMember/cubit/add_member_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/addMember/cubit/add_member_state.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";

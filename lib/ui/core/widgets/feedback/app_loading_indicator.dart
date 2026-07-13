@@ -1,10 +1,3 @@
-// Loading indicator widget with circular and pulse variants.
-//
-// [AppLoadingIndicator] displays a loading state indicator.
-// Use [variant] to switch between circular spinner and pulsing dot.
-// Pulse animation uses [AnimationController.repeat(reverse: true)] and
-// respects [MediaQuery.disableAnimationsOf(context)].
-
 import "package:flutter/material.dart";
 
 import "../../tokens/app_duration.dart";

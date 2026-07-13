@@ -1,19 +1,3 @@
-// lib/ui/core/theme/app_theme.dart
-//
-// Unified ThemeData builder for light and dark modes.
-//
-// Strategy: All component themes are configured here as a single source of truth.
-// Material 3 is enabled with the project ColorScheme, TextTheme, and component
-// themes for AppBar, Card, FilledButton, OutlinedButton, TextButton,
-// InputDecoration, IconTheme, and DividerTheme.
-//
-// References:
-//   - ColorScheme: lib/ui/core/theme/app_color_schemes.dart (lightColorScheme, darkColorScheme)
-//   - TextTheme:   lib/ui/core/theme/app_text_themes.dart  (lightTextTheme,  darkTextTheme)
-//   - Colors:      lib/ui/core/tokens/app_colors.dart      (AppColors.backgroundLight, etc.)
-//   - Spacing:     lib/ui/core/tokens/app_spacing.dart      (Spacing.spaceSm, Spacing.spaceMd)
-//   - Radii:       lib/ui/core/tokens/app_radius.dart       (Radii.button, Radii.card, Radii.input)
-
 import "package:flutter/material.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/theme/app_color_schemes.dart";

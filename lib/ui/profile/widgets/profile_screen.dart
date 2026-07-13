@@ -1,10 +1,3 @@
-// lib/ui/profile/widgets/profile_screen.dart
-//
-// Profile screen for the Bloco na Rua app.
-//
-// Displays the user's profile information with options to edit profile,
-// access settings, or logout.
-
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_cubit.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_state.dart";

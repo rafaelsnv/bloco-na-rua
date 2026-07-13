@@ -1,10 +1,3 @@
-// Section header widget for Bloco na Rua.
-//
-// Renders a titled section with optional leading icon and trailing action widget.
-// Used to label content sections throughout the app (e.g. "Meus Blocos" with "Ver todos" action).
-//
-// No animations — pure layout widget.
-
 import "package:flutter/material.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";

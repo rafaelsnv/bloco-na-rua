@@ -56,10 +56,12 @@ void main() {
           ),
         ];
 
-        when(() => mockGetHomeDataUseCase.getCarnivalBlocks())
-            .thenAnswer((_) async => Success(blocks));
-        when(() => mockGetHomeDataUseCase.getMeetings())
-            .thenAnswer((_) async => Success(meetings));
+        when(
+          () => mockGetHomeDataUseCase.getCarnivalBlocks(),
+        ).thenAnswer((_) async => Success(blocks));
+        when(
+          () => mockGetHomeDataUseCase.getMeetings(),
+        ).thenAnswer((_) async => Success(meetings));
 
         return homeCubit;
       },
@@ -76,10 +78,12 @@ void main() {
     blocTest<HomeCubit, HomeState>(
       "emits failure when blocks fail",
       build: () {
-        when(() => mockGetHomeDataUseCase.getCarnivalBlocks())
-            .thenAnswer((_) async => Failure(Exception("Network error")));
-        when(() => mockGetHomeDataUseCase.getMeetings())
-            .thenAnswer((_) async => Success([]));
+        when(
+          () => mockGetHomeDataUseCase.getCarnivalBlocks(),
+        ).thenAnswer((_) async => Failure(Exception("Network error")));
+        when(
+          () => mockGetHomeDataUseCase.getMeetings(),
+        ).thenAnswer((_) async => Success([]));
 
         return homeCubit;
       },
@@ -118,10 +122,12 @@ void main() {
           ),
         ];
 
-        when(() => mockGetHomeDataUseCase.getCarnivalBlocks())
-            .thenAnswer((_) async => Success(blocks));
-        when(() => mockGetHomeDataUseCase.getMeetings())
-            .thenAnswer((_) async => Success(meetingsWithMalformedDate));
+        when(
+          () => mockGetHomeDataUseCase.getCarnivalBlocks(),
+        ).thenAnswer((_) async => Success(blocks));
+        when(
+          () => mockGetHomeDataUseCase.getMeetings(),
+        ).thenAnswer((_) async => Success(meetingsWithMalformedDate));
 
         return homeCubit;
       },

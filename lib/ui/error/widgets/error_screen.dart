@@ -1,11 +1,3 @@
-// lib/ui/error/widgets/error_screen.dart
-//
-// Fallback screen rendered by the router's errorBuilder for routing errors
-// that are NOT "page not found". Uses design system primitives:
-//   - AppAppBar, AppEmpty pattern, AppButton
-//
-// All colors/spacings/radii via design system tokens.
-
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";

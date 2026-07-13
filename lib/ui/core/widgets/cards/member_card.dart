@@ -1,17 +1,3 @@
-// lib/ui/core/widgets/cards/member_card.dart
-//
-// Compound card widget for displaying a member with avatar, name,
-// optional email, optional role chip, and optional online indicator.
-//
-// Usage:
-//   MemberCard(
-//     member: aMembersEntity,
-//     onTap: () => navigateToMember(member.id),
-//     roleLabel: "Organizadora",
-//     roleColor: AppColors.cta,
-//     isOnline: true,
-//   )
-
 import "package:flutter/material.dart";
 
 import "../../../../domain/entities/members/members_entity.dart";

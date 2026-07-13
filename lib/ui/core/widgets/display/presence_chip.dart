@@ -1,9 +1,3 @@
-// Design system presence chip widget for indicating attendance status.
-//
-// Renders a colored chip with optional icon for present/absent/pending states.
-// Delegates to AppChip base constructor for showIcon=false, or constructs
-// with avatar icon for showIcon=true.
-
 import "package:flutter/material.dart";
 
 import "../../tokens/app_colors.dart";

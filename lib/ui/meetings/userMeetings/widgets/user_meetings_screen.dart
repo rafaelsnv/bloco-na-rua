@@ -1,12 +1,3 @@
-// lib/ui/meetings/userMeetings/widgets/user_meetings_screen.dart
-//
-// User meetings screen for the Bloco na Rua app.
-//
-// Displays a list of meetings assigned to the current user with search
-// filtering, pull-to-refresh, and navigation to meeting details.
-// Uses the design system for all UI primitives: AppAppBar, MeetingCard,
-// AppLoading, AppError, AppEmpty, AppSearchField, and AppSnackbar.
-
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";

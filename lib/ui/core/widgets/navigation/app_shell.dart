@@ -1,15 +1,3 @@
-// lib/ui/core/widgets/navigation/app_shell.dart
-//
-// Bloco na Rua design system app shell widget.
-//
-// Wraps a StatefulNavigationShell (from go_router's StatefulShellRoute.indexedStack)
-// with a Scaffold that renders the current branch's page and an AppBottomNav.
-// The AppAppBar is conditionally shown based on the [showAppBar] parameter.
-//
-// [navigationShell] carries the current branch state and index from go_router.
-// [items] defines the bottom navigation items (3-5 required).
-// [showAppBar] controls whether an AppAppBar is rendered above the branch content.
-
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 

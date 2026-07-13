@@ -1,11 +1,3 @@
-// URL validator for image providers.
-//
-// Guards CachedNetworkImageProvider / CachedNetworkImage callsites from
-// backend placeholder strings such as "img" that lack a scheme/host and
-// would otherwise throw asynchronously inside the image cache (where no
-// errorBuilder can catch them). See session handoff §16 for the original
-// runtime error captured against the live app.
-
 /// Returns true when [url] is an absolute http(s) URL with a parseable host.
 ///
 /// Rejects: null, empty, whitespace, relative paths, protocol-relative URLs,

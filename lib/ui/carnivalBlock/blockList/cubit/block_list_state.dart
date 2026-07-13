@@ -1,12 +1,3 @@
-// lib/ui/carnivalBlock/blockList/cubit/block_list_state.dart
-//
-// BlockList state for the Blocks tab.
-//
-// Uses the standard Cubit pattern: sealed class with Status enum,
-// Equatable for equality, and copyWith for immutable state transitions.
-//
-// Status transitions: initial -> loading -> success | failure
-
 import "package:equatable/equatable.dart";
 
 import "package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart";

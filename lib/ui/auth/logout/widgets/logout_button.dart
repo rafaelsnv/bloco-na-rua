@@ -1,7 +1,3 @@
-// lib/ui/auth/logout/widgets/logout_button.dart
-//
-// Design-system-compliant logout button with confirmation dialog.
-
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 

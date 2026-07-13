@@ -1,12 +1,3 @@
-// lib/ui/core/widgets/cards/app_card.dart
-//
-// Bloco na Rua design system card component.
-//
-// Stateful behaviour:
-//   - Hover (when onTap is provided): translateY(-2px) via AnimatedContainer.
-//   - Press (when onTap is provided): scale 0.98 via AnimatedScale.
-//   - Animations are disabled when MediaQuery.disableAnimationsOf(context) is true.
-
 import "package:flutter/material.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";

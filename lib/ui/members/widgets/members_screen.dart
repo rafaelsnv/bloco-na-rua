@@ -1,12 +1,3 @@
-// lib/ui/members/widgets/members_screen.dart
-//
-// Members screen - displays paginated list of all members.
-// Uses design system primitives: AppAppBar, MemberCard, AppLoading,
-// AppError, AppEmpty, AppSearchField (when search is active).
-//
-// Behavior: pull-to-refresh, exhaustive status switch via BlocBuilder,
-// error snackbar via BlocConsumer listener.
-
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
 import "package:bloco_na_rua/ui/members/cubit/members_cubit.dart";
 import "package:bloco_na_rua/ui/members/cubit/members_state.dart";

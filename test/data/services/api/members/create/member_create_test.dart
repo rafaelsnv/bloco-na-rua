@@ -35,7 +35,10 @@ void main() {
       expect(memberCreate.email, equals("john@example.com"));
       expect(memberCreate.phone, equals("123456789"));
       expect(memberCreate.uuid, equals("test-uuid-123"));
-      expect(memberCreate.profileImage, equals("https://example.com/avatar.png"));
+      expect(
+        memberCreate.profileImage,
+        equals("https://example.com/avatar.png"),
+      );
     });
 
     test("JSON serialization/deserialization works without profileImage", () {

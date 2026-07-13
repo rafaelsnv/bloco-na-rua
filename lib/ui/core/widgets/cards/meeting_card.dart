@@ -1,11 +1,3 @@
-// Compound card widget for displaying meeting information.
-//
-// Renders: title + optional code badge, datetime, location, description,
-// and optional presence statistics chips.
-//
-// Stateful behaviour: inherits AppCard hover/press animations when onTap is
-// provided.
-
 import "package:flutter/material.dart";
 import "package:intl/intl.dart";
 

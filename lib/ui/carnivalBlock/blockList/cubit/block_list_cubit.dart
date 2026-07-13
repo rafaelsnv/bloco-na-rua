@@ -1,12 +1,3 @@
-// lib/ui/carnivalBlock/blockList/cubit/block_list_cubit.dart
-//
-// Cubit for the Blocks tab list screen.
-//
-// Loads the authenticated user's carnival blocks via GetHomeDataUseCase
-// and emits states following the standard BlockListState state machine.
-//
-// Architecture: BlockListScreen -> BlockListCubit -> GetHomeDataUseCase
-
 import "package:bloco_na_rua/core/errors/user_message.dart";
 import "package:bloco_na_rua/domain/use_cases/home/get_home_data_use_case.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_state.dart";

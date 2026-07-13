@@ -1,21 +1,3 @@
-// Material 3 ColorScheme definitions for Bloco na Rua.
-//
-// This file maps design token colors to Material 3 semantic color roles.
-// Each ColorScheme includes all 27 roles required by Material 3:
-//
-//   Primary roles:     primary, onPrimary, primaryContainer, onPrimaryContainer
-//   Secondary roles:   secondary, onSecondary, secondaryContainer, onSecondaryContainer
-//   Tertiary roles:    tertiary, onTertiary, tertiaryContainer, onTertiaryContainer
-//   Error roles:       error, onError, errorContainer, onErrorContainer
-//   Surface roles:     surface, onSurface, surfaceContainerHighest, onSurfaceVariant
-//   Outline roles:     outline, outlineVariant
-//   Utility roles:     shadow, scrim
-//   Inverse roles:     inverseSurface, onInverseSurface, inversePrimary
-//
-// References:
-//   - AppColors tokens: lib/ui/core/tokens/app_colors.dart
-//   - Design spec: design-system/bloco-na-rua/DESIGN_PLAN.md section 2.2
-
 import "package:flutter/material.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 

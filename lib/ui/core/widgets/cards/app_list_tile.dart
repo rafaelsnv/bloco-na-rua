@@ -1,17 +1,3 @@
-// lib/ui/core/widgets/cards/app_list_tile.dart
-//
-// A design-system-compliant list tile widget for Bloco na Rua.
-//
-// Wraps Material [ListTile] with design system tokens:
-//   - Title uses [AppTypography.titleMedium]
-//   - Subtitle uses [AppTypography.bodyMedium] with onSurfaceVariant color
-//   - Padding uses [Spacing.space_sm] horizontal and [Spacing.listItemVerticalPadding] vertical
-//   - Tap and long-press feedback via InkWell (built into ListTile)
-//
-// State behaviour:
-//   - When [onTap] is null: disabled appearance via ListTile.enabled=false.
-//   - Animations respect [MediaQuery.disableAnimationsOf(context)].
-
 import "package:flutter/material.dart";
 
 import "../../tokens/app_spacing.dart";

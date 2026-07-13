@@ -1,20 +1,3 @@
-// lib/ui/carnivalBlock/blockDetails/widgets/block_details_screen.dart
-//
-// Block details screen — rewritten to the Bloco na Rua design system.
-//
-// Pattern: DETAIL with ownership + members list + actions.
-// Uses design system primitives: AppAppBar, AppCard, AppSectionHeader,
-// AppListTile, AppButton, AppFAB, MemberCard, AppDialog, AppSnackbar,
-// AppLoading, AppError, AppEmpty.
-//
-// State: BlockDetailsInitial / BlockDetailsLoading / BlockDetailsLoaded /
-// BlockDetailsError (sealed class, switch/is pattern).
-//
-// Navigation after action:
-//   - Delete member -> AppDialog.confirm(isDestructive: true) -> AppSnackbar
-//   - FAB "Nova Reuniao" -> /create-meeting/:blockId
-//   - Edit Block button -> /edit-block/:blockId
-
 import "package:cached_network_image/cached_network_image.dart";
 import "package:bloco_na_rua/core/cache/app_cache_manager.dart";
 import "package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart";
