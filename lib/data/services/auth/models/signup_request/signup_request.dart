@@ -10,7 +10,7 @@ sealed class SignUpRequest with _$SignUpRequest {
     required String email,
     required String phone,
     required String password,
-    required String profileImage,
+    String? profileImage,
   }) = _SignUpRequest;
 
   factory SignUpRequest.fromJson(Map<String, dynamic> json) =>
