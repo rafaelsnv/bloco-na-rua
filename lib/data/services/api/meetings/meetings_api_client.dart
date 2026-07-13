@@ -15,6 +15,19 @@ class MeetingsApiClient implements IMeetingsApiClient {
   IBaseApiClient get client => baseApiClient;
 
   @override
+  AsyncResult<MeetingsEntity> getByIdAsync(int id) async {
+    try {
+      final response = await baseApiClient.client.get('$_basePath/$id');
+      if (response.statusCode != 200) {
+        return Failure(baseApiClient.formatError(response));
+      }
+      return Success(MeetingsEntity.fromJson(response.data));
+    } on Exception catch (e) {
+      return Failure(Exception('An error occurred: $e'));
+    }
+  }
+
+  @override
   AsyncResult<List<MeetingsEntity>> getAllByBlockId(int blockId) async {
     try {
       final response = await baseApiClient.client.get(
@@ -84,8 +97,16 @@ class MeetingsApiClient implements IMeetingsApiClient {
 
   @override
   AsyncResult<List<MeetingsEntity>> getAllAsync() async {
-    return await baseApiClient.getAllAsync<MeetingsEntity>(
-      MeetingsEntity.fromJson,
-    );
+    try {
+      final response = await baseApiClient.client.get(_basePath);
+      if (response.statusCode != 200) {
+        return Failure(baseApiClient.formatError(response));
+      }
+      final data = response.data as List;
+      final result = data.map((e) => MeetingsEntity.fromJson(e)).toList();
+      return Success(result);
+    } catch (error) {
+      return Failure(Exception('An error occurred: $error'));
+    }
   }
 }

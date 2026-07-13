@@ -16,6 +16,6 @@ abstract class MemberUpdate with _$MemberUpdate {
     String? profileImage,
   }) = _MemberUpdate;
 
-  factory MemberUpdate.fromJson(Map<String, Object?> json) =>
+  factory MemberUpdate.fromJson(Map<String, dynamic> json) =>
       _$MemberUpdateFromJson(json);
 }

@@ -46,6 +46,10 @@ class AuthApiClient {
         password: signUpRequest.password,
       );
 
+      if (response.user == null) {
+        return Failure(Exception("User not found"));
+      }
+
       if (response.session == null) {
         return Failure(Exception('Failed to login'));
       }

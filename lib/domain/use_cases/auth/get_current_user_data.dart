@@ -13,6 +13,15 @@ class GetCurrentUserData {
   });
 
   AsyncResult<MembersEntity> call() async {
+    // Return cached member if AuthRepository already validated the session
+    // (e.g. via the router redirect). This avoids duplicate
+    // GET /Members/uuid/{uuid} calls when HomeCubit (and the meetings
+    // use case) fire in parallel right after the redirect.
+    final cached = authRepository.currentMember;
+    if (cached != null) {
+      return Success(cached);
+    }
+
     var uuid = await authRepository.currentUuid;
     if (uuid == null || uuid.isEmpty) {
       return Failure(Exception('Failed to get current user UUID'));

@@ -13,10 +13,10 @@ sealed class MemberCreate with _$MemberCreate {
     required String name,
     required String email,
     required String phone,
-    required String profileImage,
+    String? profileImage,
     required String uuid,
   }) = _MemberCreate;
 
-  factory MemberCreate.fromJson(Map<String, Object?> json) =>
+  factory MemberCreate.fromJson(Map<String, dynamic> json) =>
       _$MemberCreateFromJson(json);
 }

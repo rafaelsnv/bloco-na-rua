@@ -23,11 +23,25 @@ class CarnivalBlocksApiClient implements ICarnivalBlocksApiClient {
         return Failure(baseApiClient.formatError(response));
       }
       final data = await response.data;
-      final result = CarnivalBlocksEntity.fromJson(data as Map<String, dynamic>);
+      final result = CarnivalBlocksEntity.fromJson(
+        data as Map<String, dynamic>,
+      );
       return Success(result);
     } on Exception catch (e) {
       return Failure(Exception('An error occurred: $e'));
     }
+  }
+
+  @override
+  AsyncResult<CarnivalBlocksEntity> getByInviteCodeAsync(
+    String inviteCode,
+  ) async {
+    // TODO(backend): Implement GET /CarnivalBlocks/by-invite/{code} endpoint
+    return Failure(
+      Exception(
+        'TODO(backend): GET /CarnivalBlocks/by-invite/{code} endpoint not implemented',
+      ),
+    );
   }
 
   @override
@@ -63,7 +77,15 @@ class CarnivalBlocksApiClient implements ICarnivalBlocksApiClient {
     Map<String, dynamic> data,
     JsonFactory<TEntity> fromJsonFactory,
   ) async {
-    return await baseApiClient.createAsync(data, fromJsonFactory);
+    try {
+      final response = await baseApiClient.client.post(_basePath, data: data);
+      if (response.statusCode != 201 && response.statusCode != 200) {
+        return Failure(baseApiClient.formatError(response));
+      }
+      return Success(fromJsonFactory(response.data as Map<String, dynamic>));
+    } on Exception catch (e) {
+      return Failure(Exception('An error occurred: $e'));
+    }
   }
 
   @override

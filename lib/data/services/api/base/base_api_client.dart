@@ -1,7 +1,5 @@
-import 'package:bloco_na_rua/core/entity_base.dart';
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
 import 'package:dio/dio.dart';
-import 'package:result_dart/result_dart.dart';
 
 class BaseApiClient implements IBaseApiClient {
   BaseApiClient({this.options, this.clientFactory}) {
@@ -16,83 +14,6 @@ class BaseApiClient implements IBaseApiClient {
   late final Dio client;
   @override
   final String basePath = '/api/v1/';
-
-  @override
-  AsyncResult<List<TEntity>> getAllAsync<TEntity extends EntityBase>(
-    JsonFactory<TEntity> fromJsonFactory,
-  ) async {
-    try {
-      String endpoint = TEntity.toString()
-          .replaceAll('Entity', '')
-          .toLowerCase();
-      final response = await client.get('$basePath$endpoint');
-      if (response.statusCode != 200) {
-        return Failure(formatError(response));
-      }
-
-      final data = await response.data as List<dynamic>;
-
-      return Success(
-        data
-            .map((element) => fromJsonFactory(element as Map<String, dynamic>))
-            .toList(),
-      );
-    } catch (error) {
-      return Failure(Exception('An error occurred: $error'));
-    }
-  }
-
-  @override
-  AsyncResult<TEntity> getByIdAsync<TEntity extends EntityBase>(
-    int id,
-    JsonFactory<TEntity> fromJsonFactory,
-  ) async {
-    try {
-      String endpoint = TEntity.toString().replaceAll('Entity', '');
-      final response = await client.get('$basePath/$endpoint/${id.toString()}');
-      if (response.statusCode != 200) {
-        return Failure(formatError(response));
-      }
-
-      final data = await response.data;
-      return Success(fromJsonFactory(data as Map<String, dynamic>));
-    } catch (error) {
-      return Failure(Exception('An error occurred: $error'));
-    }
-  }
-
-  @override
-  AsyncResult deleteByIdAsync<TEntity extends EntityBase>(int id) async {
-    try {
-      String endpoint = TEntity.toString().replaceAll('Entity', '');
-      final response = await client.delete(
-        '$basePath$endpoint/${id.toString()}',
-      );
-      if (response.statusCode != 204) {
-        return Failure(formatError(response));
-      }
-      return Success(response.statusCode.toString());
-    } catch (error) {
-      return Failure(Exception('An error occurred: $error'));
-    }
-  }
-
-  @override
-  AsyncResult<TEntity> createAsync<TEntity extends EntityBase>(
-    Map<String, dynamic> data,
-    JsonFactory<TEntity> fromJsonFactory,
-  ) async {
-    try {
-      String endpoint = TEntity.toString().replaceAll('Entity', '');
-      final response = await client.post('$basePath$endpoint', data: data);
-      if (response.statusCode != 201 && response.statusCode != 200) {
-        return Failure(formatError(response));
-      }
-      return Success(fromJsonFactory(response.data as Map<String, dynamic>));
-    } catch (error) {
-      return Failure(Exception('An error occurred: $error'));
-    }
-  }
 
   @override
   Exception formatError(Response response) {

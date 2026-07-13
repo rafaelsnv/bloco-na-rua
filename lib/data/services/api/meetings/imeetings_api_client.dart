@@ -5,6 +5,8 @@ import 'package:result_dart/result_dart.dart';
 abstract class IMeetingsApiClient {
   IBaseApiClient get client;
 
+  AsyncResult<MeetingsEntity> getByIdAsync(int id);
+
   AsyncResult<List<MeetingsEntity>> getAllByBlockId(int blockId);
 
   AsyncResult<MeetingsEntity> createAsync(Map<String, dynamic> data);

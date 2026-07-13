@@ -8,6 +8,8 @@ abstract interface class ICarnivalBlocksApiClient {
 
   AsyncResult<CarnivalBlocksEntity> getByIdAsync(int id);
 
+  AsyncResult<CarnivalBlocksEntity> getByInviteCodeAsync(String inviteCode);
+
   AsyncResult<List<CarnivalBlocksEntity>> getAllAsync();
 
   AsyncResult deleteAsync(int id);
@@ -17,5 +19,8 @@ abstract interface class ICarnivalBlocksApiClient {
     JsonFactory<TEntity> fromJsonFactory,
   );
 
-  AsyncResult<CarnivalBlocksEntity> updateAsync(int id, Map<String, dynamic> data);
+  AsyncResult<CarnivalBlocksEntity> updateAsync(
+    int id,
+    Map<String, dynamic> data,
+  );
 }
