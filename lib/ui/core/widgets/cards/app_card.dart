@@ -70,10 +70,6 @@ class AppCard extends StatelessWidget {
   /// Overrides the default surface colour from the current theme.
   final Color? color;
 
-  // -------------------------------------------------------------------------
-  // Elevation mapping
-  // -------------------------------------------------------------------------
-
   static const Map<AppCardElevation, double> _elevationTokens = {
     AppCardElevation.none: 0.0,
     AppCardElevation.xs: 1.0,
@@ -81,10 +77,6 @@ class AppCard extends StatelessWidget {
     AppCardElevation.md: 4.0,
     AppCardElevation.lg: 8.0,
   };
-
-  // -------------------------------------------------------------------------
-  // Build
-  // -------------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -125,10 +117,6 @@ class AppCard extends StatelessWidget {
   }
 }
 
-// -------------------------------------------------------------------------
-// _StaticInteractiveCard — tappable card without animations
-// -------------------------------------------------------------------------
-
 class _StaticInteractiveCard extends StatelessWidget {
   const _StaticInteractiveCard({
     required this.onTap,
@@ -152,10 +140,6 @@ class _StaticInteractiveCard extends StatelessWidget {
     );
   }
 }
-
-// -------------------------------------------------------------------------
-// _AnimatedInteractiveCard — hover + press wrapper for tappable cards
-// -------------------------------------------------------------------------
 
 class _AnimatedInteractiveCard extends StatefulWidget {
   const _AnimatedInteractiveCard({

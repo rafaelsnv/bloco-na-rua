@@ -211,10 +211,6 @@ class MeetingDetailsScreen extends StatelessWidget {
   }
 }
 
-// -----------------------------------------------------------------------------
-// _MeetingInfoCard
-// -----------------------------------------------------------------------------
-
 class _MeetingInfoCard extends StatelessWidget {
   const _MeetingInfoCard({required this.meeting, this.meetingDateTime});
 
@@ -319,10 +315,6 @@ class _InfoRow extends StatelessWidget {
     );
   }
 }
-
-// -----------------------------------------------------------------------------
-// _PresencesSection
-// -----------------------------------------------------------------------------
 
 class _PresencesSection extends StatelessWidget {
   const _PresencesSection({required this.state, required this.onRetry});
@@ -471,10 +463,6 @@ class _PresenceGroup extends StatelessWidget {
     );
   }
 }
-
-// -----------------------------------------------------------------------------
-// _PresenceFABs
-// -----------------------------------------------------------------------------
 
 class _PresenceFABs extends StatelessWidget {
   const _PresenceFABs({

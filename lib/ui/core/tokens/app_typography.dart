@@ -12,11 +12,7 @@ import "package:google_fonts/google_fonts.dart";
 class AppTypography {
   AppTypography._();
 
-  // ============================================================
-  // HEADINGS — Fredoka (fontWeight 500-700)
-  // ============================================================
-
-  /// Fredoka w700, 57px, lineHeight 64/57, letterSpacing -0.25
+/// Fredoka w700, 57px, lineHeight 64/57, letterSpacing -0.25
   static TextStyle get displayLarge => GoogleFonts.fredoka(
     fontSize: 57,
     fontWeight: FontWeight.w700,
@@ -64,11 +60,7 @@ class AppTypography {
     height: 32 / 24,
   );
 
-  // ============================================================
-  // TITLES, BODY, LABELS — Nunito (fontWeight 400-600)
-  // ============================================================
-
-  /// Nunito w600, 22px, lineHeight 28/22, letterSpacing 0
+/// Nunito w600, 22px, lineHeight 28/22, letterSpacing 0
   static TextStyle get titleLarge => GoogleFonts.nunito(
     fontSize: 22,
     fontWeight: FontWeight.w600,
@@ -140,11 +132,7 @@ class AppTypography {
     height: 16 / 11,
   );
 
-  // ============================================================
-  // BUTTON SIZES — Nunito w500 (per AppButton.size variant)
-  // ============================================================
-
-  /// Button small: Nunito w500, 14px, lineHeight 20/14.
+/// Button small: Nunito w500, 14px, lineHeight 20/14.
   static TextStyle get buttonSmall => GoogleFonts.nunito(
     fontSize: 14,
     fontWeight: FontWeight.w500,

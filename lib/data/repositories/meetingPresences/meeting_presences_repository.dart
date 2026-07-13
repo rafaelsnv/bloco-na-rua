@@ -25,7 +25,7 @@ class MeetingPresencesRepository implements IMeetingPresencesRepository {
   // Implement required IRepositoryBase methods using base repo pattern
   @override
   AsyncResult<List<MeetingPresencesEntity>> getAllAsync() async {
-    // TODO(backend): implement list-all endpoint or confirm no list-all operation exists
+    // Not implemented: use getByMeetingId for specific meetings
     return Failure(
       Exception(
         'List-all not implemented: use getByMeetingId for specific meetings',
@@ -35,7 +35,6 @@ class MeetingPresencesRepository implements IMeetingPresencesRepository {
 
   @override
   AsyncResult<MeetingPresencesEntity> getByIdAsync(int id) async {
-    // TODO(backend): implement getById endpoint if needed
     return Failure(Exception(UnimplementedError()));
   }
 

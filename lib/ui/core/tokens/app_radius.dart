@@ -17,10 +17,6 @@ import "package:flutter/material.dart";
 class Radii {
   Radii._();
 
-  // -------------------------------------------------------------------------
-  // Numeric radius constants (in pixels)
-  // -------------------------------------------------------------------------
-
   /// No border radius — full-bleed elements.
   static const double none = 0.0;
 
@@ -42,10 +38,6 @@ class Radii {
   /// Full — circular/pill shape. Avatars, FABs.
   static const double full = 9999.0;
 
-  // -------------------------------------------------------------------------
-  // Generic pre-built BorderRadius instances
-  // -------------------------------------------------------------------------
-
   /// BorderRadius.circular(xs) — 4px all corners.
   static final BorderRadius radiusXs = BorderRadius.circular(xs);
 
@@ -63,10 +55,6 @@ class Radii {
 
   /// BorderRadius.circular(full) — circular/pill all corners.
   static final BorderRadius radiusFull = BorderRadius.circular(full);
-
-  // -------------------------------------------------------------------------
-  // Component-specific pre-built BorderRadius instances
-  // -------------------------------------------------------------------------
 
   /// Buttons: 8px all corners.
   static final BorderRadius button = radiusSm;

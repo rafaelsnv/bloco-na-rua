@@ -1,5 +1,3 @@
-// lib/main_app.dart
-//
 // App root. Provides ThemeCubit, AuthCubit. Drives MaterialApp.themeMode from
 // ThemeCubit so the theme persists across reboots and updates live when the
 // user toggles via the Settings screen.

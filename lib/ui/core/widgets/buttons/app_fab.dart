@@ -63,10 +63,6 @@ class AppFAB extends StatelessWidget {
   /// Size preset controlling the FAB diameter.
   final AppFabSize size;
 
-  // -------------------------------------------------------------------------
-  // Size tokens
-  // -------------------------------------------------------------------------
-
   static const Map<AppFabSize, double> _sizeTokens = {
     AppFabSize.sm: 40.0,
     AppFabSize.md: 56.0,
@@ -84,10 +80,6 @@ class AppFAB extends StatelessWidget {
 
   double get _diameter => _sizeTokens[size]!;
   double get _iconSize => _iconSizeTokens[size]!;
-
-  // -------------------------------------------------------------------------
-  // Build
-  // -------------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -133,10 +125,6 @@ class AppFAB extends StatelessWidget {
     );
   }
 }
-
-// -------------------------------------------------------------------------
-// _PressFeedbackWrapper — press scale + opacity feedback
-// -------------------------------------------------------------------------
 
 class _PressFeedbackWrapper extends StatefulWidget {
   const _PressFeedbackWrapper({required this.child});

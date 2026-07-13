@@ -375,10 +375,6 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
   }
 }
 
-// =============================================================================
-// _BlockInfoCard
-// =============================================================================
-
 class _BlockInfoCard extends StatelessWidget {
   const _BlockInfoCard({
     required this.carnivalBlock,
@@ -523,7 +519,6 @@ class _InviteCodeRow extends StatelessWidget {
           const SizedBox(width: Spacing.space_2xs),
           GestureDetector(
             onTap: () {
-              // In a full implementation this would copy to clipboard
               AppSnackbar.info(context, message: "Codigo copiado");
             },
             child: Icon(
@@ -537,10 +532,6 @@ class _InviteCodeRow extends StatelessWidget {
     );
   }
 }
-
-// =============================================================================
-// _MeetingsSection
-// =============================================================================
 
 class _MeetingsSection extends StatelessWidget {
   const _MeetingsSection({
@@ -688,10 +679,6 @@ class _MeetingsSection extends StatelessWidget {
     );
   }
 }
-
-// =============================================================================
-// _MembersSection
-// =============================================================================
 
 class _MembersSection extends StatelessWidget {
   const _MembersSection({
@@ -867,10 +854,6 @@ class _MembersSection extends StatelessWidget {
     );
   }
 }
-
-// =============================================================================
-// _MemberTile
-// =============================================================================
 
 class _MemberTile extends StatelessWidget {
   const _MemberTile({

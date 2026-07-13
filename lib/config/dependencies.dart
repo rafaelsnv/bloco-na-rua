@@ -1,7 +1,3 @@
-// Copyright 2024 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'package:bloco_na_rua/data/repositories/auth/auth_listenable.dart';
 import 'package:bloco_na_rua/data/repositories/auth/auth_repository.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/carnival_block_members_repository.dart';

@@ -45,10 +45,6 @@ class MeetingCard extends StatelessWidget {
   /// description as a second line below the location row.
   final bool showDescription;
 
-  // -------------------------------------------------------------------------
-  // Helpers
-  // -------------------------------------------------------------------------
-
   /// Formats an ISO 8601 datetime string to "dd MMM yyyy • HH:mm" in pt-BR.
   /// Returns "Data nao definida" when [dateTimeStr] is null or invalid.
   String _formatDateTime(String? dateTimeStr) {
@@ -69,10 +65,6 @@ class MeetingCard extends StatelessWidget {
 
   /// A compact vertical gap using Spacing.space_4xs.
   Widget get _gap => SizedBox(height: Spacing.space_4xs);
-
-  // -------------------------------------------------------------------------
-  // Build
-  // -------------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {

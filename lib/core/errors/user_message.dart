@@ -5,7 +5,7 @@ import "package:bloco_na_rua/core/api_error.dart";
 /// Handles [ApiError] with its user-facing message, raw [Exception]
 /// messages, and unknown error types.
 ///
-/// This is the centralized helper for translating errors to user-facing
+/// Centralized helper for translating errors to user-facing
 /// messages across all cubits. Preserves:
 /// - [ApiError.userMessage] handling
 /// - Null fallback to "Erro desconhecido"

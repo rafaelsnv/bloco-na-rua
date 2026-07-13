@@ -82,10 +82,6 @@ class AppDialog {
   }
 }
 
-// -------------------------------------------------------------------------
-// _ConfirmDialogContent
-// -------------------------------------------------------------------------
-
 class _ConfirmDialogContent extends StatelessWidget {
   const _ConfirmDialogContent({
     required this.title,
@@ -125,10 +121,6 @@ class _ConfirmDialogContent extends StatelessWidget {
     );
   }
 }
-
-// -------------------------------------------------------------------------
-// _AlertDialogContent
-// -------------------------------------------------------------------------
 
 class _AlertDialogContent extends StatelessWidget {
   const _AlertDialogContent({

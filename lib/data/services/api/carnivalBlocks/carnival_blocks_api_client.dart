@@ -36,10 +36,9 @@ class CarnivalBlocksApiClient implements ICarnivalBlocksApiClient {
   AsyncResult<CarnivalBlocksEntity> getByInviteCodeAsync(
     String inviteCode,
   ) async {
-    // TODO(backend): Implement GET /CarnivalBlocks/by-invite/{code} endpoint
     return Failure(
       Exception(
-        'TODO(backend): GET /CarnivalBlocks/by-invite/{code} endpoint not implemented',
+        'GET /CarnivalBlocks/by-invite/{code} endpoint not implemented',
       ),
     );
   }

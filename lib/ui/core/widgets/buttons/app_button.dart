@@ -96,10 +96,6 @@ class AppButton extends StatelessWidget {
   /// When true the button expands to fill its parent's width.
   final bool isFullWidth;
 
-  // -------------------------------------------------------------------------
-  // Size tokens
-  // -------------------------------------------------------------------------
-
   static const Map<AppButtonSize, double> _heightTokens = {
     AppButtonSize.sm: 36.0,
     AppButtonSize.md: 44.0,
@@ -130,10 +126,6 @@ class AppButton extends StatelessWidget {
     AppButtonSize.lg: 24.0,
   };
 
-  // -------------------------------------------------------------------------
-  // Variant colour helpers
-  // -------------------------------------------------------------------------
-
   Color _foregroundColor(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     switch (variant) {
@@ -147,10 +139,6 @@ class AppButton extends StatelessWidget {
         return isDark ? AppColors.primaryLight : AppColors.primary;
     }
   }
-
-  // -------------------------------------------------------------------------
-  // Build
-  // -------------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -308,10 +296,6 @@ class AppButton extends StatelessWidget {
   }
 }
 
-// -------------------------------------------------------------------------
-// _HoverOpacityWrapper — hover feedback via opacity (no layout shift)
-// -------------------------------------------------------------------------
-
 class _HoverOpacityWrapper extends StatefulWidget {
   const _HoverOpacityWrapper({required this.opacity, required this.child});
 
@@ -339,10 +323,6 @@ class _HoverOpacityWrapperState extends State<_HoverOpacityWrapper> {
     );
   }
 }
-
-// -------------------------------------------------------------------------
-// _PressScaleWrapper — press feedback via AnimatedScale
-// -------------------------------------------------------------------------
 
 class _PressScaleWrapper extends StatefulWidget {
   const _PressScaleWrapper({required this.child});
