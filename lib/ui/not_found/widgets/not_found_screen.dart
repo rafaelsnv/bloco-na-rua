@@ -1,4 +1,16 @@
-import 'package:flutter/material.dart';
+// lib/ui/not_found/widgets/not_found_screen.dart
+//
+// Fallback screen rendered by the router's errorBuilder when the requested
+// URL does not match any route. Uses design system primitives:
+//   - AppAppBar, AppEmpty pattern, AppButton
+//
+// All colors/spacings/radii via design system tokens.
+
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
+import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
+import "package:flutter/material.dart";
 
 class NotFoundScreen extends StatelessWidget {
   const NotFoundScreen({super.key});
@@ -6,32 +18,43 @@ class NotFoundScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Page Not Found')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 80, color: Colors.red),
-            const SizedBox(height: 20),
-            Text(
-              '404 - Page Not Found',
-              style: Theme.of(context).textTheme.headlineMedium,
+      appBar: const AppAppBar(title: "Pagina nao encontrada"),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(Spacing.pagePaddingMobile),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.search_off_rounded,
+                  color: AppColors.error,
+                  size: 80,
+                ),
+                const SizedBox(height: Spacing.sectionGap),
+                Text("404", style: Theme.of(context).textTheme.headlineLarge),
+                const SizedBox(height: Spacing.space_sm),
+                Text(
+                  "A pagina que voce procura nao existe.",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: Spacing.sectionGap),
+                AppButton(
+                  label: "Voltar",
+                  variant: AppButtonVariant.primary,
+                  icon: const Icon(Icons.arrow_back_rounded),
+                  onPressed: () {
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    } else {
+                      Navigator.of(context).pushReplacementNamed("/");
+                    }
+                  },
+                ),
+              ],
             ),
-            const SizedBox(height: 10),
-            Text(
-              'The page you requested could not be found.',
-              style: Theme.of(context).textTheme.titleMedium,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () {
-                // TO-DO: Implement navigation back to home or previous screen
-                Navigator.of(context).pop();
-              },
-              child: const Text('Go Back'),
-            ),
-          ],
+          ),
         ),
       ),
     );

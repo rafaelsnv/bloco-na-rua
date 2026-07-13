@@ -1,4 +1,4 @@
-import 'package:bloco_na_rua/core/api_error.dart';
+import 'package:bloco_na_rua/core/errors/user_message.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
 import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart';
 import 'package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_state.dart';
@@ -20,17 +20,6 @@ class BlockDetailsCubit extends Cubit<BlockDetailsState> {
   final GetCurrentUserData _getCurrentUserData;
   final String _carnivalBlockId;
 
-  String _extractUserMessage(Object? error) {
-    if (error == null) return 'Erro desconhecido';
-    if (error is ApiError) return error.userMessage;
-    if (error is Exception) {
-      final msg = error.toString();
-      if (msg.startsWith('Exception: ')) return msg.substring(11);
-      return msg;
-    }
-    return error.toString();
-  }
-
   Future<void> loadBlock() async {
     emit(BlockDetailsLoading());
 
@@ -40,7 +29,7 @@ class BlockDetailsCubit extends Cubit<BlockDetailsState> {
 
     if (result.isError()) {
       final failure = result.exceptionOrNull();
-      emit(BlockDetailsError(_extractUserMessage(failure)));
+      emit(BlockDetailsError(extractUserMessage(failure)));
       return;
     }
 
@@ -56,9 +45,6 @@ class BlockDetailsCubit extends Cubit<BlockDetailsState> {
       (_) => false,
     );
 
-    emit(BlockDetailsLoaded(
-      carnivalBlock: block,
-      canManageMembers: canManage,
-    ));
+    emit(BlockDetailsLoaded(carnivalBlock: block, canManageMembers: canManage));
   }
 }

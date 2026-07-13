@@ -13,6 +13,7 @@ class Routes {
 
   // Rotas de blocos de carnaval
   static const String carnivalBlock = '/carnival-block';
+  static const String carnivalBlocks = '/carnival-blocks';
   static const String createBlock = '/create-block';
   static const String editBlock = '/edit-block';
   static const String joinBlock = '/join-block';
@@ -25,9 +26,6 @@ class Routes {
   static const String userMeetings = '/user-meetings';
   static const String editMeeting = '/edit-meeting';
   static const String createMeeting = '/create-meeting';
-
-  // Rotas de presenças
-  static const String meetingPresences = '/meeting-presences';
 
   // Rotas de perfil
   static const String profile = '/profile';

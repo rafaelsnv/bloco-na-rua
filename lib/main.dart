@@ -1,5 +1,6 @@
 import 'package:bloco_na_rua/config/dependencies.dart';
 import 'package:bloco_na_rua/main_app.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logging/logging.dart';
@@ -19,7 +20,7 @@ Future<void> main() async {
     ),
   );
 
-  Logger.root.level = Level.WARNING;
+  Logger.root.level = kDebugMode ? Level.INFO : Level.WARNING;
 
   runApp(MultiProvider(providers: providers, child: const MainApp()));
 }

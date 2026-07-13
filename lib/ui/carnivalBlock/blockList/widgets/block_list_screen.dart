@@ -1,0 +1,138 @@
+// lib/ui/carnivalBlock/blockList/widgets/block_list_screen.dart
+//
+// Block List screen - displays the user's carnival blocks.
+//
+// Architecture: BlocProvider creates BlockListCubit, which loads blocks
+// via GetHomeDataUseCase. Screen observes state via BlocConsumer,
+// showing AppLoading, AppError, AppEmpty, or a ListView of BlockCards.
+//
+// Routing: Tab 2 of the bottom navigation shell.
+// Modal routes (/create-block, /edit-block/:id) are handled by go_router.
+
+import "package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart";
+import "package:bloco_na_rua/routing/routes.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_cubit.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_state.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/widgets/buttons/app_fab.dart";
+import "package:bloco_na_rua/ui/core/widgets/cards/block_card.dart";
+import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
+import "package:bloco_na_rua/ui/core/widgets/state/app_empty.dart";
+import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
+import "package:bloco_na_rua/ui/core/widgets/state/app_loading.dart";
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:go_router/go_router.dart";
+
+/// Screen widget for the Blocks tab.
+///
+/// Wraps its content in a [BlocProvider] that creates a [BlockListCubit]
+/// and immediately triggers a load. The cubit is obtained from the
+/// surrounding scope via [context.read].
+///
+/// The [Scaffold] uses [AppAppBar] for the title bar and [AppFAB] for the
+/// create-block CTA. Body content is driven by [BlocConsumer] which routes
+/// [BlockListStatus] to the appropriate design system widget.
+class BlockListScreen extends StatelessWidget {
+  const BlockListScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<BlockListCubit>(
+      create: (context) => context.read<BlockListCubit>()..loadBlocks(),
+      child: const _BlockListScreenContent(),
+    );
+  }
+}
+
+class _BlockListScreenContent extends StatelessWidget {
+  const _BlockListScreenContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: const AppAppBar(title: "Blocos", showBackButton: false),
+      body: SafeArea(
+        child: BlocConsumer<BlockListCubit, BlockListState>(
+          listener: (context, state) {
+            if (state.status == BlockListStatus.failure &&
+                state.errorMessage != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    state.errorMessage!.replaceAll("Exception: ", ""),
+                  ),
+                  showCloseIcon: true,
+                ),
+              );
+            }
+          },
+          builder: (context, state) {
+            switch (state.status) {
+              case BlockListStatus.initial:
+              case BlockListStatus.loading:
+                if (state.blocks.isEmpty) {
+                  return const AppLoading(message: "Carregando blocos...");
+                }
+                return _BlockListView(blocks: state.blocks);
+
+              case BlockListStatus.failure:
+                if (state.blocks.isEmpty) {
+                  return AppError(
+                    message: state.errorMessage,
+                    onRetry: () => context.read<BlockListCubit>().loadBlocks(),
+                  );
+                }
+                return _BlockListView(blocks: state.blocks);
+
+              case BlockListStatus.success:
+                if (state.blocks.isEmpty) {
+                  return AppEmpty(
+                    title: "Nenhum bloco ainda",
+                    message:
+                        "Crie um bloco para comecar a organizar seu carnaval",
+                    icon: Icons.celebration_outlined,
+                    actionLabel: "Criar bloco",
+                    onAction: () => context.push(Routes.createBlock),
+                  );
+                }
+                return _BlockListView(blocks: state.blocks);
+            }
+          },
+        ),
+      ),
+      floatingActionButton: AppFAB(
+        icon: Icons.add_rounded,
+        label: "Criar bloco",
+        onPressed: () => context.push(Routes.createBlock),
+      ),
+    );
+  }
+}
+
+class _BlockListView extends StatelessWidget {
+  const _BlockListView({required this.blocks});
+
+  final List<CarnivalBlocksEntity> blocks;
+
+  @override
+  Widget build(BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: () => context.read<BlockListCubit>().loadBlocks(),
+      child: ListView.builder(
+        padding: const EdgeInsets.all(Spacing.space_sm),
+        itemCount: blocks.length,
+        itemBuilder: (context, index) {
+          final block = blocks[index];
+          return Padding(
+            padding: EdgeInsets.only(bottom: Spacing.space_xs),
+            child: BlockCard(
+              block: block,
+              onTap: () => context.push("${Routes.carnivalBlock}/${block.id}"),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

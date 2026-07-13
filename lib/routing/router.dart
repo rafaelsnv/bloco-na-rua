@@ -1,45 +1,57 @@
-import 'package:bloco_na_rua/data/repositories/auth/iauth_repository.dart';
-import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart';
-import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
-import 'package:bloco_na_rua/data/repositories/meetingPresences/imeeting_presences_repository.dart';
-import 'package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart';
-import 'package:bloco_na_rua/data/repositories/members/imembers_repository.dart';
-import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart';
-import 'package:bloco_na_rua/routing/routes.dart';
-import 'package:bloco_na_rua/ui/auth/login/widgets/login_screen.dart';
-import 'package:bloco_na_rua/ui/auth/signUp/widgets/signup_screen.dart';
-import 'package:bloco_na_rua/ui/carnivalBlock/addMember/cubit/add_member_cubit.dart';
-import 'package:bloco_na_rua/ui/carnivalBlock/addMember/widgets/add_member_screen.dart';
-import 'package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_cubit.dart';
-import 'package:bloco_na_rua/ui/carnivalBlock/blockDetails/widgets/block_details_screen.dart';
-import 'package:bloco_na_rua/ui/carnivalBlock/createBlock/widgets/create_block_screen.dart';
-import 'package:bloco_na_rua/ui/carnivalBlock/editBlock/cubit/edit_block_cubit.dart';
-import 'package:bloco_na_rua/ui/carnivalBlock/editBlock/widgets/edit_block_screen.dart';
-import 'package:bloco_na_rua/ui/carnivalBlock/joinBlock/widgets/join_block_modal.dart';
-import 'package:bloco_na_rua/ui/error/widgets/error_screen.dart';
-import 'package:bloco_na_rua/ui/home/cubit/home_cubit.dart';
-import 'package:bloco_na_rua/ui/home/widgets/home_screen.dart';
-import 'package:bloco_na_rua/ui/meeting_presences/widgets/meeting_presences_screen.dart';
-import 'package:bloco_na_rua/ui/meetings/createMeeting/cubit/create_meeting_cubit.dart';
-import 'package:bloco_na_rua/ui/meetings/createMeeting/widgets/create_meeting_screen.dart';
-import 'package:bloco_na_rua/ui/meetings/editMeeting/cubit/edit_meeting_cubit.dart';
-import 'package:bloco_na_rua/ui/meetings/editMeeting/widgets/edit_meeting_screen.dart';
-import 'package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_cubit.dart';
-import 'package:bloco_na_rua/ui/meetings/meetingDetails/widgets/meeting_details_screen.dart';
-import 'package:bloco_na_rua/ui/meetings/userMeetings/cubit/user_meetings_cubit.dart';
-import 'package:bloco_na_rua/ui/meetings/userMeetings/widgets/user_meetings_screen.dart';
-import 'package:bloco_na_rua/ui/members/cubit/members_cubit.dart';
-import 'package:bloco_na_rua/ui/members/widgets/members_screen.dart';
-import 'package:bloco_na_rua/ui/not_found/widgets/not_found_screen.dart';
-import 'package:bloco_na_rua/ui/profile/cubit/profile_cubit.dart';
-import 'package:bloco_na_rua/ui/profile/widgets/profile_screen.dart';
-import 'package:bloco_na_rua/ui/settings/widgets/settings_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:logging/logging.dart';
+import "package:bloco_na_rua/data/repositories/auth/auth_listenable.dart";
+import "package:bloco_na_rua/data/repositories/auth/iauth_repository.dart";
+import "package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart";
+import "package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart";
+import "package:bloco_na_rua/data/repositories/meetingPresences/imeeting_presences_repository.dart";
+import "package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart";
+import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart";
+import "package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart";
+import "package:bloco_na_rua/routing/routes.dart";
+import "package:bloco_na_rua/ui/auth/login/widgets/login_screen.dart";
+import "package:bloco_na_rua/ui/auth/signUp/widgets/signup_screen.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/addMember/cubit/add_member_cubit.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/addMember/widgets/add_member_screen.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_cubit.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/blockDetails/widgets/block_details_screen.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_cubit.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/blockList/widgets/block_list_screen.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/createBlock/widgets/create_block_screen.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/editBlock/cubit/edit_block_cubit.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/editBlock/widgets/edit_block_screen.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/joinBlock/widgets/join_block_modal.dart";
+import "package:bloco_na_rua/ui/core/widgets/navigation/app_shell.dart";
+import "package:bloco_na_rua/ui/core/widgets/navigation/app_bottom_nav.dart";
+import "package:bloco_na_rua/ui/error/widgets/error_screen.dart";
+import "package:bloco_na_rua/ui/home/cubit/home_cubit.dart";
+import "package:bloco_na_rua/ui/home/widgets/home_screen.dart";
+import "package:bloco_na_rua/ui/meetings/createMeeting/cubit/create_meeting_cubit.dart";
+import "package:bloco_na_rua/ui/meetings/createMeeting/widgets/create_meeting_screen.dart";
+import "package:bloco_na_rua/ui/meetings/editMeeting/cubit/edit_meeting_cubit.dart";
+import "package:bloco_na_rua/ui/meetings/editMeeting/widgets/edit_meeting_screen.dart";
+import "package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_cubit.dart";
+import "package:bloco_na_rua/ui/meetings/meetingDetails/widgets/meeting_details_screen.dart";
+import "package:bloco_na_rua/ui/meetings/userMeetings/cubit/user_meetings_cubit.dart";
+import "package:bloco_na_rua/ui/meetings/userMeetings/widgets/user_meetings_screen.dart";
+import "package:bloco_na_rua/ui/members/cubit/members_cubit.dart";
+import "package:bloco_na_rua/ui/members/widgets/members_screen.dart";
+import "package:bloco_na_rua/ui/not_found/widgets/not_found_screen.dart";
+import "package:bloco_na_rua/ui/profile/cubit/profile_cubit.dart";
+import "package:bloco_na_rua/ui/profile/widgets/profile_screen.dart";
+import "package:bloco_na_rua/ui/settings/widgets/settings_screen.dart";
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:go_router/go_router.dart";
+import "package:logging/logging.dart";
 
-final _logger = Logger('GoRouter');
+final _logger = Logger("GoRouter");
+
+const _shellNavItems = <AppBottomNavItem>[
+  AppBottomNavItem(icon: Icons.home_rounded, label: "Início"),
+  AppBottomNavItem(icon: Icons.celebration_rounded, label: "Blocos"),
+  AppBottomNavItem(icon: Icons.event_rounded, label: "Reuniões"),
+  AppBottomNavItem(icon: Icons.people_rounded, label: "Membros"),
+  AppBottomNavItem(icon: Icons.person_rounded, label: "Perfil"),
+];
 
 // Custom page transition
 CustomTransitionPage<void> _buildPageWithSlideTransition({
@@ -62,55 +74,127 @@ CustomTransitionPage<void> _buildPageWithSlideTransition({
   );
 }
 
-GoRouter router(IAuthRepository authRepository) => GoRouter(
+GoRouter router(AuthListenable authListenable) => GoRouter(
   initialLocation: Routes.login,
   redirect: _redirect,
-  refreshListenable: authRepository,
-  errorBuilder: (context, state) {
-    final error = state.error;
-    if (error != null && error.toString().contains('not found')) {
-      _logger.warning('Page not found: ${state.uri}');
-      return const NotFoundScreen();
-    }
-    _logger.severe('Routing error: $error', error, StackTrace.current);
-    return const ErrorScreen();
-  },
+  refreshListenable: authListenable,
+  errorBuilder: _errorBuilder,
   routes: [
+    // Auth routes (no shell, no transition)
     GoRoute(
       path: Routes.login,
-      builder: (context, state) {
-        return const LoginScreen();
-      },
+      builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
       path: Routes.register,
-      builder: (context, state) {
-        return const SignUpScreen();
-      },
+      builder: (context, state) => const SignUpScreen(),
     ),
-    GoRoute(
-      path: Routes.home,
-      builder: (context, state) {
-        return BlocProvider(
-          create: (context) =>
-              HomeCubit(getHomeDataUseCase: context.read())..loadHomeData(),
-          child: const HomeScreen(),
-        );
-      },
-      pageBuilder: (context, state) => _buildPageWithSlideTransition(
-        context: context,
-        state: state,
-        child: BlocProvider(
-          create: (context) =>
-              HomeCubit(getHomeDataUseCase: context.read())..loadHomeData(),
-          child: const HomeScreen(),
-        ),
+
+    // Shell with 5 branches
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) => AppShell(
+        navigationShell: navigationShell,
+        items: _shellNavItems,
+        showAppBar: false,
       ),
+      branches: [
+        // Branch 0: Home
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: Routes.home,
+              pageBuilder: (context, state) => _buildPageWithSlideTransition(
+                context: context,
+                state: state,
+                child: BlocProvider(
+                  create: (context) =>
+                      HomeCubit(getHomeDataUseCase: context.read())
+                        ..loadHomeData(),
+                  child: const HomeScreen(),
+                ),
+              ),
+            ),
+          ],
+        ),
+        // Branch 1: Blocks
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: Routes.carnivalBlocks,
+              pageBuilder: (context, state) => _buildPageWithSlideTransition(
+                context: context,
+                state: state,
+                child: BlocProvider(
+                  create: (context) =>
+                      BlockListCubit(getHomeDataUseCase: context.read())
+                        ..loadBlocks(),
+                  child: const BlockListScreen(),
+                ),
+              ),
+            ),
+          ],
+        ),
+        // Branch 2: Meetings (using userMeetingsScreen)
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: Routes.userMeetings,
+              pageBuilder: (context, state) => _buildPageWithSlideTransition(
+                context: context,
+                state: state,
+                child: BlocProvider(
+                  create: (context) =>
+                      UserMeetingsCubit(getUserMeetingsUseCase: context.read())
+                        ..loadMeetings(),
+                  child: const UserMeetingsScreen(),
+                ),
+              ),
+            ),
+          ],
+        ),
+        // Branch 3: Members
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: Routes.members,
+              pageBuilder: (context, state) => _buildPageWithSlideTransition(
+                context: context,
+                state: state,
+                child: BlocProvider(
+                  create: (context) =>
+                      MembersCubit(membersRepository: context.read())
+                        ..loadMembers(),
+                  child: const MembersScreen(),
+                ),
+              ),
+            ),
+          ],
+        ),
+        // Branch 4: Profile
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: Routes.profile,
+              pageBuilder: (context, state) => _buildPageWithSlideTransition(
+                context: context,
+                state: state,
+                child: BlocProvider(
+                  create: (context) =>
+                      context.read<ProfileCubit>()..loadProfile(),
+                  child: const ProfileScreen(),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     ),
+
+    // All modal/detail routes OUTSIDE the shell (with slide transition)
     GoRoute(
-      path: '${Routes.carnivalBlock}/:id',
+      path: "${Routes.carnivalBlock}/:id",
       pageBuilder: (context, state) {
-        final carnivalBlockId = state.pathParameters['id']!;
+        final carnivalBlockId = state.pathParameters["id"]!;
         return _buildPageWithSlideTransition(
           context: context,
           state: state,
@@ -127,9 +211,9 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
       },
     ),
     GoRoute(
-      path: '${Routes.meeting}/:id',
+      path: "${Routes.meeting}/:id",
       pageBuilder: (context, state) {
-        final meetingId = state.pathParameters['id']!;
+        final meetingId = state.pathParameters["id"]!;
         return _buildPageWithSlideTransition(
           context: context,
           state: state,
@@ -139,7 +223,8 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
               meetingPresencesRepository: context
                   .read<IMeetingPresencesRepository>(),
               authRepository: context.read<IAuthRepository>(),
-              carnivalBlocksRepository: context.read<ICarnivalBlocksRepository>(),
+              carnivalBlocksRepository: context
+                  .read<ICarnivalBlocksRepository>(),
               meetingId: meetingId,
             ),
             child: MeetingDetailsScreen(meetingId: meetingId),
@@ -148,9 +233,9 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
       },
     ),
     GoRoute(
-      path: '${Routes.editMeeting}/:id',
+      path: "${Routes.editMeeting}/:id",
       pageBuilder: (context, state) {
-        final meetingId = state.pathParameters['id']!;
+        final meetingId = state.pathParameters["id"]!;
         return _buildPageWithSlideTransition(
           context: context,
           state: state,
@@ -164,9 +249,9 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
       },
     ),
     GoRoute(
-      path: '${Routes.editBlock}/:id',
+      path: "${Routes.editBlock}/:id",
       pageBuilder: (context, state) {
-        final blockId = state.pathParameters['id']!;
+        final blockId = state.pathParameters["id"]!;
         return _buildPageWithSlideTransition(
           context: context,
           state: state,
@@ -190,19 +275,6 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
       ),
     ),
     GoRoute(
-      path: Routes.userMeetings,
-      pageBuilder: (context, state) => _buildPageWithSlideTransition(
-        context: context,
-        state: state,
-        child: BlocProvider(
-          create: (context) =>
-              UserMeetingsCubit(getUserMeetingsUseCase: context.read())
-                ..loadMeetings(),
-          child: const UserMeetingsScreen(),
-        ),
-      ),
-    ),
-    GoRoute(
       path: Routes.createBlock,
       pageBuilder: (context, state) => _buildPageWithSlideTransition(
         context: context,
@@ -211,9 +283,9 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
       ),
     ),
     GoRoute(
-      path: '/create-meeting/:blockId',
+      path: "/create-meeting/:blockId",
       pageBuilder: (context, state) {
-        final blockId = state.pathParameters['blockId']!;
+        final blockId = state.pathParameters["blockId"]!;
         return _buildPageWithSlideTransition(
           context: context,
           state: state,
@@ -227,9 +299,9 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
       },
     ),
     GoRoute(
-      path: '/add-member/:blockId',
+      path: "/add-member/:blockId",
       pageBuilder: (context, state) {
-        final blockId = state.pathParameters['blockId']!;
+        final blockId = state.pathParameters["blockId"]!;
         return _buildPageWithSlideTransition(
           context: context,
           state: state,
@@ -245,18 +317,6 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
       },
     ),
     GoRoute(
-      path: Routes.members,
-      pageBuilder: (context, state) => _buildPageWithSlideTransition(
-        context: context,
-        state: state,
-        child: BlocProvider(
-          create: (context) =>
-              MembersCubit(membersRepository: context.read())..loadMembers(),
-          child: const MembersScreen(),
-        ),
-      ),
-    ),
-    GoRoute(
       path: Routes.settings,
       pageBuilder: (context, state) => _buildPageWithSlideTransition(
         context: context,
@@ -265,34 +325,12 @@ GoRouter router(IAuthRepository authRepository) => GoRouter(
       ),
     ),
     GoRoute(
-      path: Routes.meetingPresences,
-      builder: (context, state) {
-        // TO-DO: Implement MeetingPresencesCubit with IMeetingPresencesRepository
-        return const MeetingPresencesScreen();
-      },
-    ),
-    GoRoute(
-      path: Routes.profile,
-      pageBuilder: (context, state) => _buildPageWithSlideTransition(
-        context: context,
-        state: state,
-        child: BlocProvider(
-          create: (context) => context.read<ProfileCubit>()..loadProfile(),
-          child: const ProfileScreen(),
-        ),
-      ),
-    ),
-    GoRoute(
       path: Routes.notFound,
-      builder: (context, state) {
-        return const NotFoundScreen();
-      },
+      builder: (context, state) => const NotFoundScreen(),
     ),
     GoRoute(
       path: Routes.error,
-      builder: (context, state) {
-        return const ErrorScreen();
-      },
+      builder: (context, state) => const ErrorScreen(),
     ),
   ],
 );
@@ -312,9 +350,19 @@ Future<String?> _redirect(BuildContext context, GoRouterState state) async {
     return Routes.home;
   }
 
-  if (location.startsWith('/add-member/')) {
+  if (location.startsWith("/add-member/")) {
     return null;
   }
 
   return null;
+}
+
+Widget _errorBuilder(BuildContext context, GoRouterState state) {
+  final error = state.error;
+  if (error != null && error.toString().contains("not found")) {
+    _logger.warning("Page not found: ${state.uri}");
+    return const NotFoundScreen();
+  }
+  _logger.severe("Routing error: $error", error, StackTrace.current);
+  return const ErrorScreen();
 }

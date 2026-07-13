@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:bloco_na_rua/data/repositories/auth/auth_listenable.dart';
 import 'package:bloco_na_rua/data/repositories/auth/auth_repository.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/carnival_block_members_repository.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlocks/carnival_blocks_repository.dart';
@@ -62,10 +63,9 @@ List<SingleChildWidget> get providers {
         clientFactory: (options) {
           final client = Dio(options);
           client.interceptors.add(DioErrorInterceptor());
-          client.interceptors.add(PrettyDioLogger(
-            requestBody: true,
-            responseBody: true,
-          ));
+          client.interceptors.add(
+            PrettyDioLogger(requestBody: true, responseBody: true),
+          );
           return client;
         },
         options: baseOptions,
@@ -124,13 +124,14 @@ List<SingleChildWidget> get providers {
     Provider(
       create: (context) => AuthApiClient(supabaseClient: supabaseClient),
     ),
-    ChangeNotifierProvider<IAuthRepository>(
+    Provider<IAuthRepository>(
       create: (context) => AuthRepository(
         membersRepository: context.read(),
         authApiClient: context.read(),
         sharedPreferencesService: context.read(),
       ),
     ),
+    ChangeNotifierProvider<AuthListenable>(create: (_) => AuthListenable()),
 
     // Use Cases
     Provider<GetCurrentUserData>(

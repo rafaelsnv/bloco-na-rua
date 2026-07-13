@@ -40,7 +40,12 @@ final class BlockDetailsLoaded extends BlockDetailsState {
   }
 
   @override
-  List<Object?> get props => [carnivalBlock, currentMemberId, currentMemberRole, canManageMembers];
+  List<Object?> get props => [
+    carnivalBlock,
+    currentMemberId,
+    currentMemberRole,
+    canManageMembers,
+  ];
 }
 
 final class BlockDetailsError extends BlockDetailsState {

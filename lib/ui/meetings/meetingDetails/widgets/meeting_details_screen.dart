@@ -1,14 +1,32 @@
-import 'package:bloco_na_rua/ui/core/colors/app_colors.dart';
-import 'package:bloco_na_rua/ui/core/widgets/avatar_member.dart';
-import 'package:bloco_na_rua/ui/core/widgets/empty_state_widget.dart';
-import 'package:bloco_na_rua/ui/core/widgets/error_state_widget.dart';
-import 'package:bloco_na_rua/ui/core/widgets/section_header.dart';
-import 'package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_cubit.dart';
-import 'package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_state.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+// lib/ui/meetings/meetingDetails/widgets/meeting_details_screen.dart
+//
+// Meeting details screen showing meeting info, attendance list,
+// and presence marking FABs. Uses the Bloco na Rua design system.
+
+import "package:bloco_na_rua/domain/entities/meetingPresences/meeting_presences_entity.dart";
+import "package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart";
+import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
+import "package:bloco_na_rua/ui/core/widgets/buttons/app_fab.dart";
+import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
+import "package:bloco_na_rua/ui/core/widgets/cards/member_card.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_section_header.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/presence_chip.dart";
+import "package:bloco_na_rua/ui/core/widgets/feedback/app_dialog.dart";
+import "package:bloco_na_rua/ui/core/widgets/feedback/app_loading_indicator.dart";
+import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
+import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
+import "package:bloco_na_rua/ui/core/widgets/state/app_empty.dart";
+import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
+import "package:bloco_na_rua/ui/core/widgets/state/app_loading.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_cubit.dart";
+import "package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_state.dart";
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:go_router/go_router.dart";
+import "package:intl/intl.dart";
 
 class MeetingDetailsScreen extends StatelessWidget {
   const MeetingDetailsScreen({super.key, required this.meetingId});
@@ -18,90 +36,51 @@ class MeetingDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MeetingDetailsCubit, MeetingDetailsState>(
-      listener: (context, state) {
-        if (state is MeetingDetailsLoaded) {
-          if (state.markingPresenceStatus == MarkingPresenceStatus.success) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Row(
-                  children: [
-                    Icon(Icons.check_circle, color: Theme.of(context).colorScheme.onPrimary),
-                    const SizedBox(width: 8),
-                    const Text('Presença atualizada com sucesso!'),
-                  ],
-                ),
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          } else if (state.markingPresenceStatus ==
-                  MarkingPresenceStatus.error &&
-              state.markingPresenceError != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Row(
-                  children: [
-                    Icon(Icons.error, color: Theme.of(context).colorScheme.onError),
-                    const SizedBox(width: 8),
-                    Expanded(child: Text(state.markingPresenceError!)),
-                  ],
-                ),
-                backgroundColor: Theme.of(context).colorScheme.error,
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          } else if (state.deleteStatus == DeleteStatus.success) {
-            context.pop();
-          } else if (state.deleteStatus == DeleteStatus.failure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Row(
-                  children: [
-                    Icon(Icons.error, color: Theme.of(context).colorScheme.onError),
-                    const SizedBox(width: 8),
-                    const Text('Erro ao excluir reunião'),
-                  ],
-                ),
-                backgroundColor: Theme.of(context).colorScheme.error,
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          }
+      listenWhen: (previous, current) {
+        if (previous is MeetingDetailsLoaded &&
+            current is MeetingDetailsLoaded) {
+          return previous.markingPresenceStatus !=
+              current.markingPresenceStatus;
         }
-        if (state is MeetingDetailsError) {
-ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Row(
-                  children: [
-                    Icon(Icons.error_outline, color: Theme.of(context).colorScheme.onError),
-                    const SizedBox(width: 8),
-                    Expanded(child: Text(state.message)),
-                  ],
-                ),
-                backgroundColor: Theme.of(context).colorScheme.error,
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
+        return false;
+      },
+      listener: (context, state) {
+        if (state is! MeetingDetailsLoaded) return;
+
+        if (state.markingPresenceStatus == MarkingPresenceStatus.success) {
+          AppSnackbar.success(
+            context,
+            message: "Presença atualizada com sucesso!",
+          );
+        } else if (state.markingPresenceStatus == MarkingPresenceStatus.error &&
+            state.markingPresenceError != null) {
+          AppSnackbar.error(context, message: state.markingPresenceError!);
+        } else if (state.deleteStatus == DeleteStatus.success) {
+          context.pop();
+        } else if (state.deleteStatus == DeleteStatus.failure) {
+          AppSnackbar.error(context, message: "Erro ao excluir reunião");
         }
       },
       builder: (context, state) {
         if (state is MeetingDetailsInitial) {
           context.read<MeetingDetailsCubit>().loadMeeting();
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+          return Scaffold(
+            appBar: const AppAppBar(title: "Detalhes da Reunião"),
+            body: const AppLoading(),
           );
         }
 
         if (state is MeetingDetailsLoading) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+          return Scaffold(
+            appBar: const AppAppBar(title: "Detalhes da Reunião"),
+            body: const AppLoading(),
           );
         }
 
         if (state is MeetingDetailsError) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Erro')),
-            body: ErrorStateWidget(
+            appBar: const AppAppBar(title: "Erro"),
+            body: AppError(
               message: state.message,
               onRetry: () => context.read<MeetingDetailsCubit>().loadMeeting(),
             ),
@@ -110,6 +89,7 @@ ScaffoldMessenger.of(context).showSnackBar(
 
         if (state is MeetingDetailsLoaded) {
           final meeting = state.meeting;
+
           // Load presences if not loaded yet
           if (state.presencesStatus == PresencesStatus.initial) {
             context.read<MeetingDetailsCubit>().loadPresences();
@@ -120,25 +100,9 @@ ScaffoldMessenger.of(context).showSnackBar(
               : null;
 
           return Scaffold(
-            appBar: AppBar(
-              title: Text(meeting.name ?? 'Detalhes da Reunião'),
-              backgroundColor: Theme.of(context).colorScheme.surface,
-              actions: [
-                if (state.deleteStatus == DeleteStatus.deleting)
-                  const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
-                  )
-                else if (state.canDeleteMeeting)
-                  IconButton(
-                    icon: Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
-                    onPressed: () => _showDeleteDialog(context),
-                  ),
-              ],
+            appBar: AppAppBar(
+              title: meeting.name ?? "Detalhes da Reunião",
+              actions: _buildAppBarActions(context, state),
             ),
             body: RefreshIndicator(
               onRefresh: () async {
@@ -148,352 +112,322 @@ ScaffoldMessenger.of(context).showSnackBar(
               },
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(Spacing.pagePaddingMobile),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Meeting Info Card
-                    Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Title with icon
-                            Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primaryContainer,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Icon(
-                                    Icons.event,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimaryContainer,
-                                    size: 28,
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    meeting.name ?? '',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineSmall
-                                        ?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            if (meeting.description != null &&
-                                meeting.description!.isNotEmpty) ...[
-                              const SizedBox(height: 16),
-                              Text(
-                                meeting.description!,
-                                style: Theme.of(context).textTheme.bodyLarge,
-                              ),
-                            ],
-                            const SizedBox(height: 16),
-                            const Divider(),
-                            const SizedBox(height: 16),
-                            // Location
-                            if (meeting.location != null &&
-                                meeting.location!.isNotEmpty)
-                              _buildInfoRow(
-                                context,
-                                Icons.location_on,
-                                meeting.location!,
-                                Theme.of(context).colorScheme.primary,
-                              ),
-                            if (meetingDateTime != null) ...[
-                              const SizedBox(height: 12),
-                              _buildInfoRow(
-                                context,
-                                Icons.calendar_today,
-                                DateFormat('EEEE, dd/MM/yyyy', 'pt_BR')
-                                    .format(meetingDateTime),
-                                Theme.of(context).colorScheme.secondary,
-                              ),
-                              const SizedBox(height: 12),
-                              _buildInfoRow(
-                                context,
-                                Icons.access_time,
-                                DateFormat('HH:mm').format(meetingDateTime),
-                                Theme.of(context).colorScheme.tertiary,
-                              ),
-                            ],
-                          ],
-                        ),
+                    _MeetingInfoCard(
+                      meeting: meeting,
+                      meetingDateTime: meetingDateTime,
+                    ),
+                    const SizedBox(height: Spacing.space_md),
+                    // Presences Section
+                    AppSectionHeader(
+                      title: "Lista de Presença",
+                      action: TextButton(
+                        onPressed: () =>
+                            context.read<MeetingDetailsCubit>().loadPresences(),
+                        child: const Text("Atualizar"),
                       ),
                     ),
-                    const SizedBox(height: 24),
-                    // Presences Section
-                    SectionHeader(
-                      title: 'Lista de Presença',
-                      action: 'Atualizar',
-                      onAction: () =>
+                    const SizedBox(height: Spacing.space_2xs),
+                    _PresencesSection(
+                      state: state,
+                      onRetry: () =>
                           context.read<MeetingDetailsCubit>().loadPresences(),
                     ),
-                    const SizedBox(height: 8),
-                    _buildPresencesSection(context, state),
                   ],
                 ),
               ),
             ),
-            floatingActionButton: _buildPresenceFABs(context, state),
+            floatingActionButton: _PresenceFABs(
+              isLoading:
+                  state.markingPresenceStatus == MarkingPresenceStatus.loading,
+              onMarkPresent: () => context
+                  .read<MeetingDetailsCubit>()
+                  .markPresence(isPresent: true),
+              onMarkAbsent: () => context
+                  .read<MeetingDetailsCubit>()
+                  .markPresence(isPresent: false),
+            ),
           );
         }
 
-        return const Scaffold(
-          body: EmptyStateWidget(
-            message: 'Nenhum dado encontrado',
-          ),
+        return Scaffold(
+          appBar: const AppAppBar(title: "Detalhes da Reunião"),
+          body: const AppEmpty(message: "Nenhum dado encontrado"),
         );
       },
     );
   }
 
-  Widget _buildInfoRow(
-      BuildContext context, IconData icon, String text, Color color) {
+  List<Widget>? _buildAppBarActions(
+    BuildContext context,
+    MeetingDetailsLoaded state,
+  ) {
+    if (state.deleteStatus == DeleteStatus.deleting) {
+      return [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: Spacing.space_sm),
+          child: SizedBox(
+            width: 20,
+            height: 20,
+            child: AppLoadingIndicator(
+              size: 20,
+              color: Theme.of(context).colorScheme.error,
+            ),
+          ),
+        ),
+      ];
+    }
+
+    if (!state.canDeleteMeeting) return null;
+
+    return [
+      IconButton(
+        icon: Icon(
+          Icons.delete_outline_rounded,
+          color: Theme.of(context).colorScheme.error,
+        ),
+        tooltip: "Excluir reunião",
+        onPressed: () => _showDeleteDialog(context),
+      ),
+    ];
+  }
+
+  void _showDeleteDialog(BuildContext context) async {
+    final confirmed = await AppDialog.confirm(
+      context,
+      title: "Excluir reunião",
+      message:
+          "Tem certeza que deseja excluir esta reunião? Esta ação não pode ser desfeita.",
+      confirmLabel: "Excluir",
+      isDestructive: true,
+    );
+    if (confirmed == true && context.mounted) {
+      context.read<MeetingDetailsCubit>().deleteMeeting();
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// _MeetingInfoCard
+// -----------------------------------------------------------------------------
+
+class _MeetingInfoCard extends StatelessWidget {
+  const _MeetingInfoCard({required this.meeting, this.meetingDateTime});
+
+  final MeetingsEntity meeting;
+  final DateTime? meetingDateTime;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Title row
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(Spacing.space_xs),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: Radii.radiusMd,
+                ),
+                child: Icon(
+                  Icons.event_rounded,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(width: Spacing.space_xs),
+              Expanded(
+                child: Text(
+                  meeting.name ?? "",
+                  style: AppTypography.headlineSmall,
+                ),
+              ),
+            ],
+          ),
+          if (meeting.description != null &&
+              meeting.description!.isNotEmpty) ...[
+            const SizedBox(height: Spacing.space_sm),
+            Text(
+              meeting.description!,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ],
+          const SizedBox(height: Spacing.space_sm),
+          Divider(color: Theme.of(context).colorScheme.outlineVariant),
+          const SizedBox(height: Spacing.space_sm),
+          // Location
+          if (meeting.location != null && meeting.location!.isNotEmpty)
+            _InfoRow(
+              icon: Icons.location_on_rounded,
+              text: meeting.location!,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          if (meetingDateTime != null) ...[
+            const SizedBox(height: Spacing.space_xs),
+            _InfoRow(
+              icon: Icons.calendar_today_rounded,
+              text: DateFormat(
+                "EEEE, dd/MM/yyyy",
+                "pt_BR",
+              ).format(meetingDateTime!),
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            const SizedBox(height: Spacing.space_xs),
+            _InfoRow(
+              icon: Icons.access_time_rounded,
+              text: DateFormat("HH:mm").format(meetingDateTime!),
+              color: Theme.of(context).colorScheme.tertiary,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  const _InfoRow({required this.icon, required this.text, required this.color});
+
+  final IconData icon;
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(Spacing.space_2xs),
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: Radii.radiusSm,
           ),
           child: Icon(icon, size: 20, color: color),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: Spacing.space_xs),
         Expanded(
-          child: Text(
-            text,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          child: Text(text, style: Theme.of(context).textTheme.bodyMedium),
         ),
       ],
     );
   }
+}
 
-  Widget _buildPresenceFABs(BuildContext context, MeetingDetailsLoaded state) {
-    final isLoading = state.markingPresenceStatus == MarkingPresenceStatus.loading;
+// -----------------------------------------------------------------------------
+// _PresencesSection
+// -----------------------------------------------------------------------------
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Deny FAB
-          SizedBox(
-            height: 56,
-            child: FloatingActionButton.extended(
-              heroTag: 'denyPresence',
-              onPressed: isLoading
-                  ? null
-                  : () {
-                      context
-                          .read<MeetingDetailsCubit>()
-                          .markPresence(isPresent: false);
-                    },
-              backgroundColor:
-                  Theme.of(context).colorScheme.errorContainer,
-              icon: isLoading
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                    )
-                  : Icon(Icons.close,
-                      color: Theme.of(context).colorScheme.onErrorContainer),
-              label: Text(
-                '',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onErrorContainer,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 20),
-          // Confirm FAB
-          SizedBox(
-            height: 56,
-            child: FloatingActionButton.extended(
-              heroTag: 'confirmPresence',
-              onPressed: isLoading
-                  ? null
-                  : () {
-                      context
-                          .read<MeetingDetailsCubit>()
-                          .markPresence(isPresent: true);
-                    },
-              backgroundColor:
-                  Theme.of(context).colorScheme.primaryContainer,
-              icon: isLoading
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    )
-                  : Icon(Icons.check,
-                      color: Theme.of(context).colorScheme.onPrimaryContainer),
-              label: Text(
-                '',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+class _PresencesSection extends StatelessWidget {
+  const _PresencesSection({required this.state, required this.onRetry});
 
-  void _showDeleteDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
-          children: [
-            Icon(Icons.delete_forever, color: Theme.of(context).colorScheme.error),
-            const SizedBox(width: 8),
-            Text('Excluir reunião'),
-          ],
-        ),
-        content: const Text('Tem certeza que deseja excluir esta reunião? Esta ação não pode ser desfeita.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Cancelar'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(dialogContext).pop();
-              context.read<MeetingDetailsCubit>().deleteMeeting();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.errorContainer,
-              foregroundColor: Theme.of(context).colorScheme.onErrorContainer,
-            ),
-            child: const Text('Excluir'),
-          ),
-        ],
-      ),
-    );
-  }
+  final MeetingDetailsLoaded state;
+  final VoidCallback onRetry;
 
-  Widget _buildPresencesSection(
-    BuildContext context,
-    MeetingDetailsLoaded state,
-  ) {
+  @override
+  Widget build(BuildContext context) {
     if (state.presencesStatus == PresencesStatus.loading) {
-      return Card(
+      return AppCard(
         child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Center(
-            child: Column(
-              children: [
-                const CircularProgressIndicator(),
-                const SizedBox(height: 16),
-                Text(
-                  'Carregando presenças...',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant),
+          padding: EdgeInsets.all(Spacing.space_lg),
+          child: Column(
+            children: [
+              AppLoadingIndicator(size: 32),
+              const SizedBox(height: Spacing.space_sm),
+              Text(
+                "Carregando presenças...",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       );
     }
 
     if (state.presences.isEmpty) {
-      return const EmptyStateWidget(
-        message: 'Ninguém confirmou presença ainda',
-        subtitle: 'Seja o primeiro a confirmar!',
+      return AppCard(
+        child: Padding(
+          padding: EdgeInsets.all(Spacing.space_md),
+          child: AppEmpty(
+            message: "Ninguém confirmou presença ainda",
+            icon: Icons.people_outline_rounded,
+          ),
+        ),
       );
     }
 
-    final presentMembers =
-        state.presences.where((p) => p.isPresent).toList();
-    final absentMembers =
-        state.presences.where((p) => !p.isPresent).toList();
+    final presentMembers = state.presences.where((p) => p.isPresent).toList();
+    final absentMembers = state.presences.where((p) => !p.isPresent).toList();
 
     return Column(
       children: [
-        // Present members
         if (presentMembers.isNotEmpty) ...[
-          _buildPresenceGroup(
-            context,
-            'Presentes',
-            presentMembers,
-            Theme.of(context).colorScheme.primary,
-            Icons.check_circle,
+          _PresenceGroup(
+            title: "Presentes",
+            presences: presentMembers,
+            color: Theme.of(context).colorScheme.primary,
+            icon: Icons.check_circle_rounded,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: Spacing.space_xs),
         ],
-        // Absent members
         if (absentMembers.isNotEmpty)
-          _buildPresenceGroup(
-            context,
-            'Ausentes',
-            absentMembers,
-            Theme.of(context).colorScheme.error,
-            Icons.cancel,
+          _PresenceGroup(
+            title: "Ausentes",
+            presences: absentMembers,
+            color: Theme.of(context).colorScheme.error,
+            icon: Icons.cancel_rounded,
           ),
       ],
     );
   }
+}
 
-  Widget _buildPresenceGroup(
-    BuildContext context,
-    String title,
-    List presences,
-    Color color,
-    IconData icon,
-  ) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+class _PresenceGroup extends StatelessWidget {
+  const _PresenceGroup({
+    required this.title,
+    required this.presences,
+    required this.color,
+    required this.icon,
+  });
+
+  final String title;
+  final List<MeetingPresencesEntity> presences;
+  final Color color;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      elevation: AppCardElevation.none,
+      padding: EdgeInsets.zero,
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: EdgeInsets.symmetric(
+              horizontal: Spacing.space_sm,
+              vertical: Spacing.space_xs,
+            ),
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.1),
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(12),
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(Radii.radiusMd.topLeft.x),
               ),
             ),
             child: Row(
               children: [
                 Icon(icon, color: color, size: 20),
-                const SizedBox(width: 8),
+                const SizedBox(width: Spacing.space_2xs),
                 Text(
-                  '$title (${presences.length})',
-                  style: TextStyle(
-                    color: color,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  "$title (${presences.length})",
+                  style: AppTypography.titleSmall.copyWith(color: color),
                 ),
               ],
             ),
@@ -508,20 +442,68 @@ ScaffoldMessenger.of(context).showSnackBar(
             ),
             itemBuilder: (context, index) {
               final presence = presences[index];
-              return ListTile(
-                leading: AvatarMember(memberId: presence.memberId),
-                title: Text(
-                  'Membro #${presence.memberId}',
-                  style: const TextStyle(fontWeight: FontWeight.w500),
+              // Build a synthetic MembersEntity for MemberCard
+              final member = MembersEntity(
+                id: presence.memberId,
+                name: "Membro #${presence.memberId}",
+              );
+              return Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Spacing.space_2xs,
+                  vertical: Spacing.space_3xs,
                 ),
-                trailing: Icon(
-                  presence.isPresent ? Icons.check : Icons.close,
-                  color: presence.isPresent
-                      ? AppColors.success
-                      : Theme.of(context).colorScheme.error,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: MemberCard(member: member, showEmail: false),
+                    ),
+                    const SizedBox(width: Spacing.space_2xs),
+                    presence.isPresent
+                        ? PresenceChip.present()
+                        : PresenceChip.absent(),
+                  ],
                 ),
               );
             },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// _PresenceFABs
+// -----------------------------------------------------------------------------
+
+class _PresenceFABs extends StatelessWidget {
+  const _PresenceFABs({
+    required this.isLoading,
+    required this.onMarkPresent,
+    required this.onMarkAbsent,
+  });
+
+  final bool isLoading;
+  final VoidCallback onMarkPresent;
+  final VoidCallback onMarkAbsent;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: Spacing.space_sm),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Deny FAB
+          AppFAB(
+            icon: Icons.close_rounded,
+            onPressed: isLoading ? () {} : onMarkAbsent,
+          ),
+          const SizedBox(width: Spacing.space_sm),
+          // Confirm FAB
+          AppFAB(
+            icon: Icons.check_rounded,
+            onPressed: isLoading ? () {} : onMarkPresent,
           ),
         ],
       ),

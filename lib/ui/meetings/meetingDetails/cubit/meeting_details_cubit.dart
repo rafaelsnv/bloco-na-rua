@@ -1,4 +1,4 @@
-import 'package:bloco_na_rua/core/api_error.dart';
+import 'package:bloco_na_rua/core/errors/user_message.dart';
 import 'package:bloco_na_rua/data/repositories/auth/iauth_repository.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
 import 'package:bloco_na_rua/data/repositories/meetingPresences/imeeting_presences_repository.dart';
@@ -27,42 +27,36 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
   final String meetingId;
   final _log = Logger('MeetingDetailsCubit');
 
-  String _extractUserMessage(Object? error) {
-    if (error == null) return 'Erro desconhecido';
-    if (error is ApiError) return error.userMessage;
-    if (error is Exception) {
-      final msg = error.toString();
-      if (msg.startsWith('Exception: ')) return msg.substring(11);
-      return msg;
-    }
-    return error.toString();
-  }
-
   Future<void> loadMeeting() async {
     emit(const MeetingDetailsLoading());
 
     final result = await _meetingsRepository.getByIdAsync(int.parse(meetingId));
 
-    result.fold((meeting) async {
-      // Check if current user can delete (is block owner)
-      final uuid = await _authRepository.currentUuid;
-      bool canDelete = false;
-      
-      if (uuid != null && meeting.carnivalBlockId != null) {
-        final blockResult = await _carnivalBlocksRepository.getByIdAsync(meeting.carnivalBlockId!);
-        canDelete = blockResult.fold(
-          (block) => block.ownerId.toString() == uuid,
-          (_) => false,
+    result.fold(
+      (meeting) async {
+        // Check if current user can delete (is block owner)
+        final uuid = await _authRepository.currentUuid;
+        bool canDelete = false;
+
+        if (uuid != null && meeting.carnivalBlockId != null) {
+          final blockResult = await _carnivalBlocksRepository.getByIdAsync(
+            meeting.carnivalBlockId!,
+          );
+          canDelete = blockResult.fold(
+            (block) => block.ownerId.toString() == uuid,
+            (_) => false,
+          );
+        }
+
+        emit(
+          MeetingDetailsLoaded(meeting: meeting, canDeleteMeeting: canDelete),
         );
-      }
-      
-      emit(MeetingDetailsLoaded(meeting: meeting, canDeleteMeeting: canDelete));
-    }, (
-      exception,
-    ) {
-      _log.warning('Load meeting failed', exception);
-      emit(MeetingDetailsError(_extractUserMessage(exception)));
-    });
+      },
+      (exception) {
+        _log.warning('Load meeting failed', exception);
+        emit(MeetingDetailsError(extractUserMessage(exception)));
+      },
+    );
   }
 
   Future<void> loadPresences() async {
@@ -140,7 +134,7 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
           emit(
             currentState.copyWith(
               markingPresenceStatus: MarkingPresenceStatus.error,
-              markingPresenceError: _extractUserMessage(exception),
+              markingPresenceError: extractUserMessage(exception),
             ),
           );
         },
@@ -150,7 +144,7 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
       emit(
         currentState.copyWith(
           markingPresenceStatus: MarkingPresenceStatus.error,
-          markingPresenceError: _extractUserMessage(e),
+          markingPresenceError: extractUserMessage(e),
         ),
       );
     }

@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:bloco_na_rua/core/api_error.dart';
+import 'package:bloco_na_rua/core/errors/user_message.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
 import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart';
@@ -21,17 +21,6 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
   final ICarnivalBlockMembersRepository _carnivalBlockMembersRepository;
   final GetCurrentUserData _getCurrentUserData;
 
-  String _extractUserMessage(Object? error) {
-    if (error == null) return 'Erro desconhecido';
-    if (error is ApiError) return error.userMessage;
-    if (error is Exception) {
-      final msg = error.toString();
-      if (msg.startsWith('Exception: ')) return msg.substring(11);
-      return msg;
-    }
-    return error.toString();
-  }
-
   Future<void> createBlock(String name) async {
     emit(CreateBlockLoading());
 
@@ -39,7 +28,11 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
       // 1. Get current user
       final userResult = await _getCurrentUserData();
       if (userResult.isError()) {
-        emit(CreateBlockError('Erro ao obter dados do usuário: ${_extractUserMessage(userResult.exceptionOrNull())}'));
+        emit(
+          CreateBlockError(
+            'Erro ao obter dados do usuário: ${extractUserMessage(userResult.exceptionOrNull())}',
+          ),
+        );
         return;
       }
       final user = userResult.getOrNull()!;
@@ -57,13 +50,10 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
       final result = await _carnivalBlocksRepository.createAsync(data);
 
       // Handle result
-      final block = result.fold(
-        (block) => block,
-        (failure) {
-          emit(CreateBlockError(_extractUserMessage(failure)));
-          return null;
-        },
-      );
+      final block = result.fold((block) => block, (failure) {
+        emit(CreateBlockError(extractUserMessage(failure)));
+        return null;
+      });
 
       // If block creation failed, exit early
       if (block == null) return;
@@ -77,10 +67,14 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
 
       memberResult.fold(
         (_) => emit(CreateBlockSuccess()),
-        (failure) => emit(CreateBlockError('Bloco criado, mas erro ao registrar membro: ${_extractUserMessage(failure)}')),
+        (failure) => emit(
+          CreateBlockError(
+            'Bloco criado, mas erro ao registrar membro: ${extractUserMessage(failure)}',
+          ),
+        ),
       );
     } catch (e) {
-      emit(CreateBlockError('Erro inesperado: ${_extractUserMessage(e)}'));
+      emit(CreateBlockError('Erro inesperado: ${extractUserMessage(e)}'));
     }
   }
 

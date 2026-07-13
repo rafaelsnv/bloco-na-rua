@@ -1,12 +1,21 @@
-import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart';
-import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
-import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart';
-import 'package:bloco_na_rua/routing/routes.dart';
-import 'package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_cubit.dart';
-import 'package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_state.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+// lib/ui/carnivalBlock/createBlock/widgets/create_block_screen.dart
+//
+// Bloco na Rua design system — create block form screen.
+//
+// Uses: AppAppBar, AppCard, AppTextField, AppButton, AppSnackbar.
+
+import "package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_cubit.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_state.dart";
+import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
+import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
+import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
+import "package:bloco_na_rua/ui/core/widgets/inputs/app_text_field.dart";
+import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:go_router/go_router.dart";
 
 class CreateBlockScreen extends StatefulWidget {
   const CreateBlockScreen({super.key});
@@ -27,265 +36,115 @@ class _CreateBlockScreenState extends State<CreateBlockScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    return BlocConsumer<CreateBlockCubit, CreateBlockState>(
+      listener: (context, state) {
+        if (state is CreateBlockSuccess) {
+          AppSnackbar.success(context, message: "Bloco criado com sucesso!");
+          context.pop();
+        } else if (state is CreateBlockError) {
+          AppSnackbar.error(context, message: state.message);
+        }
+      },
+      builder: (context, state) {
+        final isLoading = state is CreateBlockLoading;
+        final name = _nameController.text.trim();
+        final isDisabled = name.isEmpty || isLoading;
 
-    return BlocProvider(
-      create: (context) => CreateBlockCubit(
-        carnivalBlocksRepository: context.read<ICarnivalBlocksRepository>(),
-        carnivalBlockMembersRepository: context.read<ICarnivalBlockMembersRepository>(),
-        getCurrentUserData: context.read<GetCurrentUserData>(),
-      ),
-      child: BlocConsumer<CreateBlockCubit, CreateBlockState>(
-        listener: (context, state) {
-          if (state is CreateBlockSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Row(
-                  children: [
-                    Icon(Icons.celebration, color: colorScheme.onError),
-                    const SizedBox(width: 8),
-                    const Text('Bloco criado com sucesso!'),
-                  ],
-                ),
-                backgroundColor: colorScheme.primary,
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-            context.go(Routes.home);
-          } else if (state is CreateBlockError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Row(
-                  children: [
-                    Icon(Icons.error, color: colorScheme.onError),
-                    const SizedBox(width: 8),
-                    Expanded(child: Text(state.message)),
-                  ],
-                ),
-                backgroundColor: colorScheme.error,
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          }
-        },
-        builder: (context, state) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'Criar novo bloco',
-                style: TextStyle(color: colorScheme.onSurface),
-              ),
-              backgroundColor: colorScheme.surface,
-              leading: IconButton(
-                icon: Icon(Icons.close, color: colorScheme.onSurface),
-                onPressed: () {
-                  context.go(Routes.home);
-                },
-              ),
-            ),
-            body: SafeArea(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
+        return Scaffold(
+          appBar: const AppAppBar(title: "Criar bloco"),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(Spacing.space_md),
+              child: AppCard(
                 child: Form(
                   key: _formKey,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const SizedBox(height: 20),
+                      const SizedBox(height: Spacing.space_lg),
                       // Illustration
-                      Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          color: colorScheme.primaryContainer,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.celebration,
-                          size: 60,
-                          color: colorScheme.onPrimaryContainer,
+                      Center(
+                        child: Container(
+                          width: 96,
+                          height: 96,
+                          decoration: BoxDecoration(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primaryContainer,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.celebration_rounded,
+                            size: 48,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onPrimaryContainer,
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: Spacing.space_lg),
+                      // Heading
                       Text(
-                        'Crie seu bloco',
-                        style: Theme.of(context).textTheme.headlineSmall
-                            ?.copyWith(fontWeight: FontWeight.bold),
+                        "Crie seu bloco",
+                        style: AppTypography.headlineSmall,
+                        textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: Spacing.space_2xs),
                       Text(
-                        'Dê um nome ao seu bloco de rua e comece a organizar!',
+                        "Dê um nome ao seu bloco de rua e comece a organizar!",
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 32),
-                      // Name input
-                      TextFormField(
+                      const SizedBox(height: Spacing.space_lg),
+                      // Name field
+                      AppTextField(
                         controller: _nameController,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.celebration,
-                            color: colorScheme.primary,
-                          ),
-                          labelText: 'Nome do bloco',
-                          labelStyle: TextStyle(color: colorScheme.onSurfaceVariant),
-                          hintText: 'Ex: Bloco da Vizinhança',
-                          hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7)),
-                          filled: true,
-                          fillColor: colorScheme.surfaceContainerHighest,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: colorScheme.primary,
-                              width: 2,
-                            ),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: colorScheme.error,
-                              width: 2,
-                            ),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: colorScheme.error,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                        style: TextStyle(
-                          color: colorScheme.onSurface,
-                          fontSize: 16,
-                        ),
-                        textCapitalization: TextCapitalization.words,
+                        label: "Nome do bloco",
+                        hint: "Ex.: Bloco da Saudade",
+                        prefixIcon: Icons.celebration_rounded,
+                        textInputAction: TextInputAction.done,
+                        autofocus: true,
+                        onChanged: (_) => setState(() {}),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'Digite um nome para o bloco';
+                            return "Digite um nome para o bloco";
                           }
                           if (value.trim().length < 3) {
-                            return 'Nome muito curto';
+                            return "Nome muito curto";
                           }
                           if (value.trim().length > 50) {
-                            return 'Nome muito longo';
+                            return "Nome muito longo";
                           }
                           return null;
                         },
                       ),
-                      const SizedBox(height: 24),
-                      // Image picker placeholder
-                      Container(
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: colorScheme.surfaceContainerHighest,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: colorScheme.outline,
-                            style: BorderStyle.solid,
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.add_photo_alternate,
-                              size: 48,
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Adicionar imagem do bloco',
-                              style: TextStyle(color: colorScheme.onSurfaceVariant),
-                            ),
-                            const SizedBox(height: 12),
-                            OutlinedButton.icon(
-                              onPressed: () {
-                                // TO-DO: Implement image picker
-ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: const Text(
-                                      'Em breve: seleção de imagem',
-                                    ),
-                                    backgroundColor: colorScheme.secondary,
-                                    behavior: SnackBarBehavior.floating,
-                                  ),
-                                );
-                              },
-                              icon: const Icon(Icons.upload),
-                              label: const Text('Selecionar'),
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: colorScheme.primary,
-                                side: BorderSide(color: colorScheme.outline),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: Spacing.space_lg),
                       // Submit button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 56,
-                        child: ElevatedButton(
-                          onPressed: state is CreateBlockLoading
-                              ? null
-                              : () {
-                                  if (_formKey.currentState!.validate()) {
-                                    final name = _nameController.text.trim();
-                                    context
-                                        .read<CreateBlockCubit>()
-                                        .createBlock(name);
-                                  }
-                                },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: colorScheme.primary,
-                            foregroundColor: colorScheme.onPrimary,
-                            disabledBackgroundColor: colorScheme.surfaceContainerHighest,
-                            disabledForegroundColor: colorScheme.onSurfaceVariant,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: state is CreateBlockLoading
-                              ? SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: colorScheme.onPrimary,
-                                  ),
-                                )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.add_circle),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      'Criar bloco',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                        ),
+                      AppButton(
+                        label: "Criar",
+                        variant: AppButtonVariant.primary,
+                        size: AppButtonSize.lg,
+                        isFullWidth: true,
+                        isLoading: isLoading,
+                        isDisabled: isDisabled,
+                        onPressed: () {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            final name = _nameController.text.trim();
+                            context.read<CreateBlockCubit>().createBlock(name);
+                          }
+                        },
                       ),
+                      const SizedBox(height: Spacing.space_lg),
                     ],
                   ),
                 ),
               ),
             ),
-            backgroundColor: colorScheme.surface,
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

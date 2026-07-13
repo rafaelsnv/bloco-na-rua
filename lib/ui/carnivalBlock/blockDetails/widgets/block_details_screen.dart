@@ -1,21 +1,54 @@
-import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart';
-import 'package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart';
-import 'package:bloco_na_rua/data/repositories/members/imembers_repository.dart';
-import 'package:bloco_na_rua/domain/entities/carnivalBlockMembers/carnival_block_members_entity.dart';
-import 'package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart';
-import 'package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_cubit.dart';
-import 'package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_state.dart';
-import 'package:bloco_na_rua/ui/core/colors/app_colors.dart';
-import 'package:bloco_na_rua/ui/core/widgets/avatar_member.dart';
-import 'package:bloco_na_rua/ui/core/widgets/copy_code_card.dart';
-import 'package:bloco_na_rua/ui/core/widgets/empty_state_widget.dart';
-import 'package:bloco_na_rua/ui/core/widgets/error_state_widget.dart';
-import 'package:bloco_na_rua/ui/core/widgets/section_header.dart';
-import 'package:bloco_na_rua/routing/routes.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+// lib/ui/carnivalBlock/blockDetails/widgets/block_details_screen.dart
+//
+// Block details screen — rewritten to the Bloco na Rua design system.
+//
+// Pattern: DETAIL with ownership + members list + actions.
+// Uses design system primitives: AppAppBar, AppCard, AppSectionHeader,
+// AppListTile, AppButton, AppFAB, MemberCard, AppDialog, AppSnackbar,
+// AppLoading, AppError, AppEmpty.
+//
+// State: BlockDetailsInitial / BlockDetailsLoading / BlockDetailsLoaded /
+// BlockDetailsError (sealed class, switch/is pattern).
+//
+// Navigation after action:
+//   - Delete member -> AppDialog.confirm(isDestructive: true) -> AppSnackbar
+//   - FAB "Nova Reuniao" -> /create-meeting/:blockId
+//   - Edit Block button -> /edit-block/:blockId
+
+import "package:cached_network_image/cached_network_image.dart";
+import "package:bloco_na_rua/core/cache/app_cache_manager.dart";
+import "package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart";
+import "package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart";
+import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart";
+import "package:bloco_na_rua/domain/entities/carnivalBlockMembers/carnival_block_members_entity.dart";
+import "package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart";
+import "package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart";
+import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
+import "package:bloco_na_rua/routing/routes.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_cubit.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_state.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
+import "package:bloco_na_rua/ui/core/widgets/buttons/app_fab.dart";
+import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
+import "package:bloco_na_rua/ui/core/widgets/cards/app_list_tile.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_avatar.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_chip.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_section_header.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/image_url_validator.dart";
+import "package:bloco_na_rua/ui/core/widgets/feedback/app_dialog.dart";
+import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
+import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
+import "package:bloco_na_rua/ui/core/widgets/state/app_empty.dart";
+import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
+import "package:bloco_na_rua/ui/core/widgets/state/app_loading.dart";
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:go_router/go_router.dart";
+import "package:intl/intl.dart";
 
 class BlockDetailsScreen extends StatefulWidget {
   const BlockDetailsScreen({super.key, required this.carnivalBlockId});
@@ -29,12 +62,12 @@ class BlockDetailsScreen extends StatefulWidget {
 class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
   List<CarnivalBlockMembersEntity> _members = [];
   List<MeetingsEntity> _meetings = [];
+  Map<int, MembersEntity> _memberEntities = {};
   bool _loadingMembers = false;
   bool _loadingMeetings = false;
   String? _membersError;
   String? _meetingsError;
   int? _deletingMemberId;
-  Map<int, String> _memberNames = {};
 
   @override
   void initState() {
@@ -57,27 +90,41 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
 
     result.fold(
       (members) async {
-        // Fetch member names
-        final memberNames = <int, String>{};
-        for (final member in members) {
-          final memberResult = await membersRepo.getByIdAsync(member.memberId);
+        // Fetch all member entities concurrently with Future.wait
+        final entities = <int, MembersEntity>{};
+        final memberFutures = members.map(
+          (member) => membersRepo.getByIdAsync(member.memberId),
+        );
+        final memberResults = await Future.wait(memberFutures);
+
+        for (var i = 0; i < members.length; i++) {
+          final member = members[i];
+          final memberResult = memberResults[i];
           memberResult.fold(
-            (m) => memberNames[member.memberId] = m.name ?? 'Membro',
-            (_) => memberNames[member.memberId] = 'Membro',
+            (m) => entities[member.memberId] = m,
+            (_) => entities[member.memberId] = MembersEntity(
+              id: member.memberId,
+              name: "Membro",
+              email: null,
+              profileImage: null,
+            ),
           );
         }
-        if (mounted) {
-          setState(() {
-            _members = members;
-            _memberNames = memberNames;
-            _loadingMembers = false;
-          });
-        }
+
+        if (!mounted) return;
+        setState(() {
+          _members = members;
+          _memberEntities = entities;
+          _loadingMembers = false;
+        });
       },
-      (failure) => setState(() {
-        _membersError = failure.toString();
-        _loadingMembers = false;
-      }),
+      (failure) {
+        if (!mounted) return;
+        setState(() {
+          _membersError = failure.toString();
+          _loadingMembers = false;
+        });
+      },
     );
   }
 
@@ -93,41 +140,31 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
     );
 
     result.fold(
-      (meetings) => setState(() {
-        _meetings = meetings;
-        _loadingMeetings = false;
-      }),
-      (failure) => setState(() {
-        _meetingsError = failure.toString();
-        _loadingMeetings = false;
-      }),
+      (meetings) {
+        if (!mounted) return;
+        setState(() {
+          _meetings = meetings;
+          _loadingMeetings = false;
+        });
+      },
+      (failure) {
+        if (!mounted) return;
+        setState(() {
+          _meetingsError = failure.toString();
+          _loadingMeetings = false;
+        });
+      },
     );
   }
 
   Future<void> _deleteMember(CarnivalBlockMembersEntity member) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
-          children: [
-            Icon(Icons.person_remove, color: Theme.of(context).colorScheme.error),
-            const SizedBox(width: 8),
-            const Text('Remover membro'),
-          ],
-        ),
-        content: const Text('Remover este membro do bloco?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancelar'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Remover'),
-          ),
-        ],
-      ),
+    final confirmed = await AppDialog.confirm(
+      context,
+      title: "Remover membro",
+      message: "Remover este membro do bloco?",
+      confirmLabel: "Remover",
+      cancelLabel: "Cancelar",
+      isDestructive: true,
     );
 
     if (confirmed != true) return;
@@ -149,226 +186,390 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
           _members = _members.where((m) => m.id != member.id).toList();
           _deletingMemberId = null;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.check_circle, color: Theme.of(context).colorScheme.onError),
-                const SizedBox(width: 8),
-                const Text('Membro removido com sucesso'),
-              ],
-            ),
-            backgroundColor: Theme.of(context).colorScheme.error,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        AppSnackbar.success(context, message: "Membro removido com sucesso");
       },
       (failure) {
         if (!mounted) return;
         setState(() {
           _deletingMemberId = null;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.error, color: Theme.of(context).colorScheme.onError),
-                const SizedBox(width: 8),
-                Expanded(child: Text('Erro ao remover membro: $failure')),
-              ],
-            ),
-            backgroundColor: Theme.of(context).colorScheme.error,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        AppSnackbar.error(context, message: "Erro ao remover membro: $failure");
       },
     );
+  }
+
+  Color _roleColor(int role) {
+    switch (role) {
+      case 1:
+        return AppColors.primary;
+      case 2:
+        return AppColors.info;
+      default:
+        return AppColors.primary;
+    }
+  }
+
+  String _roleLabel(int role) {
+    switch (role) {
+      case 1:
+        return "Admin";
+      case 2:
+        return "Moderador";
+      default:
+        return "Membro";
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BlockDetailsCubit, BlockDetailsState>(
-      buildWhen: (previous, current) =>
-          current is BlockDetailsLoaded && previous != current,
+    return BlocConsumer<BlockDetailsCubit, BlockDetailsState>(
+      listener: (context, state) {
+        if (state is BlockDetailsError) {
+          AppSnackbar.error(context, message: state.message);
+        }
+      },
       builder: (context, state) {
-        final canManageMembers = state is BlockDetailsLoaded && state.canManageMembers;
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text("Detalhes do Bloco"),
-            actions: [
-              if (canManageMembers) ...[
-                IconButton(
-                  icon: const Icon(Icons.add_alert),
-                  tooltip: 'Criar Reunião',
-                  onPressed: () =>
-                      context.push('/create-meeting/${widget.carnivalBlockId}'),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  tooltip: 'Editar Bloco',
-                  onPressed: () =>
-                      context.push('/edit-block/${widget.carnivalBlockId}'),
-                ),
-              ],
-            ],
-          ),
-          body: SafeArea(
-            child: BlocConsumer<BlockDetailsCubit, BlockDetailsState>(
-              listener: (context, state) {
-                if (state is BlockDetailsError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Row(
-                        children: [
-                          Icon(Icons.error_outline, color: Theme.of(context).colorScheme.onError),
-                          const SizedBox(width: 8),
-                          Expanded(child: Text(state.message)),
-                        ],
-                      ),
-                      backgroundColor: Theme.of(context).colorScheme.error,
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                }
-              },
-              builder: (context, state) {
-                if (state is BlockDetailsLoading || state is BlockDetailsInitial) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+        if (state is BlockDetailsLoading || state is BlockDetailsInitial) {
+          return Scaffold(
+            appBar: const AppAppBar(title: "Detalhes do Bloco"),
+            body: const AppLoading(),
+          );
+        }
 
-                if (state is BlockDetailsError) {
-                  return ErrorStateWidget(
-                    message: state.message,
-                    onRetry: () => context.read<BlockDetailsCubit>().loadBlock(),
-                  );
-                }
-
-                if (state is BlockDetailsLoaded) {
-                  final carnivalBlock = state.carnivalBlock;
-                  return RefreshIndicator(
-                    onRefresh: () async {
-                      await _loadMembers();
-                      await _loadMeetings();
-                    },
-                    child: ListView(
-                      padding: const EdgeInsets.all(16),
-                      children: [
-                        // Block info card
-                        Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Block name
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context).colorScheme.primaryContainer,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(
-                                        Icons.celebration,
-                                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                                        size: 28,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Text(
-                                        carnivalBlock.name,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headlineSmall
-                                            ?.copyWith(fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 20),
-                                // Block image - don't show on error
-                                if (carnivalBlock.carnivalBlockImage.isNotEmpty)
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: Image.network(
-                                      carnivalBlock.carnivalBlockImage,
-                                      height: 150,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) =>
-                                          const SizedBox.shrink(),
-                                    ),
-                                  ),
-                                if (carnivalBlock.carnivalBlockImage.isNotEmpty)
-                                  const SizedBox(height: 16),
-                                // Invite codes - only visible to owner/manager
-                                if (canManageMembers) ...[
-                                  CopyCodeCard(
-                                    code: carnivalBlock.inviteCode,
-                                    label: 'Código de convite',
-                                  ),
-                                  const SizedBox(height: 8),
-                                  CopyCodeCard(
-                                    code: carnivalBlock.managersInviteCode,
-                                    label: 'Código gerente',
-                                    isManager: true,
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        // Meetings section
-                        SectionHeader(
-                          title: 'Encontros',
-                          action: canManageMembers ? 'Criar' : null,
-                          onAction: canManageMembers
-                              ? () => context.push('/create-meeting/${widget.carnivalBlockId}')
-                              : null,
-                        ),
-                        _buildMeetingsSection(),
-                        const SizedBox(height: 24),
-                        // Members section
-                        SectionHeader(
-                          title: 'Membros',
-                          action: canManageMembers ? 'Adicionar' : null,
-                          onAction: canManageMembers
-                              ? () => context.push('/add-member/${widget.carnivalBlockId}')
-                              : null,
-                        ),
-                        _buildMembersSection(canManageMembers),
-                      ],
-                    ),
-                  );
-                }
-
-                return const EmptyStateWidget(
-                  message: 'Bloco não encontrado',
-                );
-              },
+        if (state is BlockDetailsError) {
+          return Scaffold(
+            appBar: const AppAppBar(title: "Detalhes do Bloco"),
+            body: AppError(
+              message: state.message,
+              onRetry: () => context.read<BlockDetailsCubit>().loadBlock(),
             ),
+          );
+        }
+
+        if (state is BlockDetailsLoaded) {
+          final carnivalBlock = state.carnivalBlock;
+          final canManageMembers = state.canManageMembers;
+
+          return Scaffold(
+            appBar: AppAppBar(
+              title: "Detalhes do Bloco",
+              actions: [
+                if (canManageMembers) ...[
+                  IconButton(
+                    icon: const Icon(Icons.add_alert_rounded),
+                    tooltip: "Criar Reuniao",
+                    onPressed: () => context.push(
+                      "/create-meeting/${widget.carnivalBlockId}",
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.edit_rounded),
+                    tooltip: "Editar Bloco",
+                    onPressed: () =>
+                        context.push("/edit-block/${widget.carnivalBlockId}"),
+                  ),
+                ],
+              ],
+            ),
+            body: SafeArea(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await _loadMembers();
+                  await _loadMeetings();
+                },
+                child: ListView(
+                  padding: const EdgeInsets.all(Spacing.pagePaddingMobile),
+                  children: [
+                    // Block info card
+                    _BlockInfoCard(
+                      carnivalBlock: carnivalBlock,
+                      canManageMembers: canManageMembers,
+                    ),
+                    const SizedBox(height: Spacing.sectionGap),
+
+                    // Meetings section
+                    AppSectionHeader(
+                      title: "Encontros",
+                      leading: Icon(
+                        Icons.event_rounded,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 20,
+                      ),
+                      action: canManageMembers
+                          ? AppButton(
+                              label: "Criar",
+                              variant: AppButtonVariant.ghost,
+                              size: AppButtonSize.sm,
+                              onPressed: () => context.push(
+                                "/create-meeting/${widget.carnivalBlockId}",
+                              ),
+                            )
+                          : null,
+                    ),
+                    const SizedBox(height: Spacing.space_xs),
+                    _MeetingsSection(
+                      meetings: _meetings,
+                      isLoading: _loadingMeetings,
+                      error: _meetingsError,
+                      onRetry: _loadMeetings,
+                    ),
+                    const SizedBox(height: Spacing.sectionGap),
+
+                    // Members section
+                    AppSectionHeader(
+                      title: "Membros",
+                      leading: Icon(
+                        Icons.people_rounded,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 20,
+                      ),
+                      action: canManageMembers
+                          ? AppButton(
+                              label: "Adicionar",
+                              variant: AppButtonVariant.ghost,
+                              size: AppButtonSize.sm,
+                              onPressed: () => context.push(
+                                "/add-member/${widget.carnivalBlockId}",
+                              ),
+                            )
+                          : null,
+                    ),
+                    const SizedBox(height: Spacing.space_xs),
+                    _MembersSection(
+                      members: _members,
+                      memberEntities: _memberEntities,
+                      isLoading: _loadingMembers,
+                      error: _membersError,
+                      canManageMembers: canManageMembers,
+                      deletingMemberId: _deletingMemberId,
+                      onRetry: _loadMembers,
+                      onDeleteMember: _deleteMember,
+                      roleColor: _roleColor,
+                      roleLabel: _roleLabel,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            floatingActionButton: canManageMembers
+                ? AppFAB(
+                    icon: Icons.event_rounded,
+                    label: "Nova Reuniao",
+                    onPressed: () => context.push(
+                      "/create-meeting/${widget.carnivalBlockId}",
+                    ),
+                  )
+                : null,
+          );
+        }
+
+        return Scaffold(
+          appBar: const AppAppBar(title: "Detalhes do Bloco"),
+          body: const AppEmpty(
+            title: "Bloco nao encontrado",
+            message: "Este bloco nao esta disponivel.",
           ),
         );
       },
     );
   }
+}
 
-  Widget _buildMeetingsSection() {
-    if (_loadingMeetings) {
-      return Card(
+// =============================================================================
+// _BlockInfoCard
+// =============================================================================
+
+class _BlockInfoCard extends StatelessWidget {
+  const _BlockInfoCard({
+    required this.carnivalBlock,
+    required this.canManageMembers,
+  });
+
+  final CarnivalBlocksEntity carnivalBlock;
+  final bool canManageMembers;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      elevation: AppCardElevation.sm,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Block name row
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(Spacing.space_sm),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.celebration_rounded,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(width: Spacing.space_sm),
+              Expanded(
+                child: Text(
+                  carnivalBlock.name,
+                  style: AppTypography.headlineSmall.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: Spacing.space_md),
+
+          // Cover image — guard with isValidImageUrl() so backend placeholders
+          // (e.g. "img") don't crash CachedNetworkImageProvider.
+          if (isValidImageUrl(carnivalBlock.carnivalBlockImage)) ...[
+            ClipRRect(
+              borderRadius: Radii.radiusMd,
+              child: CachedNetworkImage(
+                imageUrl: carnivalBlock.carnivalBlockImage,
+                height: 160,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                cacheManager: AppCacheManager.instance,
+                placeholder: (context, url) => Container(
+                  height: 160,
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  child: const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  height: 160,
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  child: Icon(
+                    Icons.celebration_rounded,
+                    size: 48,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: Spacing.space_md),
+          ],
+
+          // Invite codes (only for managers)
+          if (canManageMembers) ...[
+            _InviteCodeRow(
+              label: "Codigo de convite",
+              code: carnivalBlock.inviteCode,
+            ),
+            const SizedBox(height: Spacing.space_2xs),
+            _InviteCodeRow(
+              label: "Codigo gerente",
+              code: carnivalBlock.managersInviteCode,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _InviteCodeRow extends StatelessWidget {
+  const _InviteCodeRow({required this.label, required this.code});
+
+  final String label;
+  final String code;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Spacing.space_sm,
+        vertical: Spacing.space_xs,
+      ),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        borderRadius: Radii.radiusSm,
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.qr_code_rounded,
+            size: 16,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+          const SizedBox(width: Spacing.space_2xs),
+          Text(
+            label,
+            style: AppTypography.bodySmall.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const Spacer(),
+          // Flexible allows the long invite/manager code
+          // (e.g. "managers_invite_fulano_block") to ellipsize when the
+          // available width is too tight. The copy icon still works since
+          // it triggers the same code copy action.
+          Flexible(
+            child: Text(
+              code,
+              style: AppTypography.titleMedium.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+                letterSpacing: 2,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(width: Spacing.space_2xs),
+          GestureDetector(
+            onTap: () {
+              // In a full implementation this would copy to clipboard
+              AppSnackbar.info(context, message: "Codigo copiado");
+            },
+            child: Icon(
+              Icons.copy_rounded,
+              size: 16,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// =============================================================================
+// _MeetingsSection
+// =============================================================================
+
+class _MeetingsSection extends StatelessWidget {
+  const _MeetingsSection({
+    required this.meetings,
+    required this.isLoading,
+    required this.error,
+    required this.onRetry,
+  });
+
+  final List<MeetingsEntity> meetings;
+  final bool isLoading;
+  final String? error;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isLoading) {
+      return AppCard(
+        elevation: AppCardElevation.sm,
         child: Padding(
-          padding: const EdgeInsets.all(32),
+          padding: const EdgeInsets.all(Spacing.space_lg),
           child: Center(
             child: Column(
               children: [
-                const CircularProgressIndicator(),
-                const SizedBox(height: 16),
+                const CircularProgressIndicator(strokeWidth: 2),
+                const SizedBox(height: Spacing.space_sm),
                 Text(
-                  'Carregando encontros...',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  "Carregando encontros...",
+                  style: AppTypography.bodyMedium.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
@@ -379,28 +580,57 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
       );
     }
 
-    if (_meetingsError != null) {
-      return ErrorStateWidget(
-        message: _meetingsError!,
-        onRetry: _loadMeetings,
+    if (error != null) {
+      return AppCard(
+        elevation: AppCardElevation.sm,
+        child: Padding(
+          padding: const EdgeInsets.all(Spacing.space_lg),
+          child: Center(
+            child: Column(
+              children: [
+                Icon(
+                  Icons.error_outline_rounded,
+                  size: 32,
+                  color: AppColors.error,
+                ),
+                const SizedBox(height: Spacing.space_sm),
+                Text(
+                  error!,
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: Spacing.space_sm),
+                AppButton(
+                  label: "Tentar novamente",
+                  variant: AppButtonVariant.secondary,
+                  size: AppButtonSize.sm,
+                  onPressed: onRetry,
+                ),
+              ],
+            ),
+          ),
+        ),
       );
     }
 
-    if (_meetings.isEmpty) {
-      return Card(
+    if (meetings.isEmpty) {
+      return AppCard(
+        elevation: AppCardElevation.sm,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.all(Spacing.space_md),
           child: Row(
             children: [
               Icon(
-                Icons.event_busy,
+                Icons.event_busy_rounded,
                 color: Theme.of(context).colorScheme.outline,
                 size: 20,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: Spacing.space_2xs),
               Text(
-                'Nenhum encontro ainda',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                "Nenhum encontro ainda",
+                style: AppTypography.bodyMedium.copyWith(
                   color: Theme.of(context).colorScheme.outline,
                 ),
               ),
@@ -410,72 +640,99 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
       );
     }
 
-    return Card(
+    return AppCard(
+      elevation: AppCardElevation.sm,
+      padding: EdgeInsets.zero,
       child: ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: _meetings.length,
-        separatorBuilder: (context, index) => const Divider(height: 1),
+        itemCount: meetings.length,
+        separatorBuilder: (context, index) => Divider(
+          height: 1,
+          color: Theme.of(context).colorScheme.outlineVariant,
+        ),
         itemBuilder: (context, index) {
-          final meeting = _meetings[index];
+          final meeting = meetings[index];
           final meetingDateTime = meeting.meetingDateTime != null
               ? DateTime.parse(meeting.meetingDateTime!)
               : null;
 
-          return ListTile(
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 8,
-            ),
+          return AppListTile(
             leading: Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(Spacing.space_2xs),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: Radii.radiusSm,
               ),
               child: Icon(
-                Icons.event,
+                Icons.event_rounded,
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
+                size: 20,
               ),
             ),
-            title: Text(
-              meeting.name ?? '',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            title: meeting.name ?? "Sem titulo",
             subtitle: meetingDateTime != null
-                ? Text(
-                    DateFormat('dd/MM/yyyy - HH:mm', 'pt_BR').format(meetingDateTime),
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  )
+                ? DateFormat(
+                    "dd/MM/yyyy - HH:mm",
+                    "pt_BR",
+                  ).format(meetingDateTime)
                 : null,
             trailing: Icon(
-              Icons.chevron_right,
+              Icons.chevron_right_rounded,
               color: Theme.of(context).colorScheme.outline,
             ),
-            onTap: () => context.push('${Routes.meeting}/${meeting.id}'),
+            onTap: () => context.push("${Routes.meeting}/${meeting.id}"),
           );
         },
       ),
     );
   }
+}
 
-  Widget _buildMembersSection(bool canManageMembers) {
-    if (_loadingMembers) {
-      return Card(
+// =============================================================================
+// _MembersSection
+// =============================================================================
+
+class _MembersSection extends StatelessWidget {
+  const _MembersSection({
+    required this.members,
+    required this.memberEntities,
+    required this.isLoading,
+    required this.error,
+    required this.canManageMembers,
+    required this.deletingMemberId,
+    required this.onRetry,
+    required this.onDeleteMember,
+    required this.roleColor,
+    required this.roleLabel,
+  });
+
+  final List<CarnivalBlockMembersEntity> members;
+  final Map<int, MembersEntity> memberEntities;
+  final bool isLoading;
+  final String? error;
+  final bool canManageMembers;
+  final int? deletingMemberId;
+  final VoidCallback onRetry;
+  final void Function(CarnivalBlockMembersEntity) onDeleteMember;
+  final Color Function(int) roleColor;
+  final String Function(int) roleLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isLoading) {
+      return AppCard(
+        elevation: AppCardElevation.sm,
         child: Padding(
-          padding: const EdgeInsets.all(32),
+          padding: const EdgeInsets.all(Spacing.space_lg),
           child: Center(
             child: Column(
               children: [
-                const CircularProgressIndicator(),
-                const SizedBox(height: 16),
+                const CircularProgressIndicator(strokeWidth: 2),
+                const SizedBox(height: Spacing.space_sm),
                 Text(
-                  'Carregando membros...',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  "Carregando membros...",
+                  style: AppTypography.bodyMedium.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
@@ -486,121 +743,303 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
       );
     }
 
-    if (_membersError != null) {
-      return ErrorStateWidget(
-        message: _membersError!,
-        onRetry: _loadMembers,
+    if (error != null) {
+      return AppCard(
+        elevation: AppCardElevation.sm,
+        child: Padding(
+          padding: const EdgeInsets.all(Spacing.space_lg),
+          child: Center(
+            child: Column(
+              children: [
+                Icon(
+                  Icons.error_outline_rounded,
+                  size: 32,
+                  color: AppColors.error,
+                ),
+                const SizedBox(height: Spacing.space_sm),
+                Text(
+                  error!,
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: Spacing.space_sm),
+                AppButton(
+                  label: "Tentar novamente",
+                  variant: AppButtonVariant.secondary,
+                  size: AppButtonSize.sm,
+                  onPressed: onRetry,
+                ),
+              ],
+            ),
+          ),
+        ),
       );
     }
 
-    if (_members.isEmpty) {
-      return const EmptyStateWidget(
-        message: 'Nenhum membro ainda',
-        subtitle: 'Adicione membros ao seu bloco',
+    if (members.isEmpty) {
+      return AppCard(
+        elevation: AppCardElevation.sm,
+        child: Padding(
+          padding: const EdgeInsets.all(Spacing.space_md),
+          child: Row(
+            children: [
+              Icon(
+                Icons.people_outline_rounded,
+                color: Theme.of(context).colorScheme.outline,
+                size: 20,
+              ),
+              const SizedBox(width: Spacing.space_2xs),
+              Expanded(
+                child: Text(
+                  "Nenhum membro ainda",
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       );
     }
 
     // Group members by role
-    final admins = _members.where((m) => m.role == 1).toList();
-    final moderators = _members.where((m) => m.role == 2).toList();
-    final members = _members.where((m) => m.role != 1 && m.role != 2).toList();
+    final admins = members.where((m) => m.role == 1).toList();
+    final moderators = members.where((m) => m.role == 2).toList();
+    final regularMembers = members
+        .where((m) => m.role != 1 && m.role != 2)
+        .toList();
 
-    return Card(
+    return AppCard(
+      elevation: AppCardElevation.sm,
+      padding: EdgeInsets.zero,
       child: Column(
         children: [
           if (admins.isNotEmpty) ...[
-            _buildMemberGroup('Admins', admins, canManageMembers, AppColors.admin),
-            if (moderators.isNotEmpty || members.isNotEmpty)
-              const Divider(height: 1),
+            _MemberGroup(
+              title: "Admins",
+              members: admins,
+              memberEntities: memberEntities,
+              canManageMembers: canManageMembers,
+              deletingMemberId: deletingMemberId,
+              onDeleteMember: onDeleteMember,
+              roleColor: roleColor,
+              roleLabel: roleLabel,
+            ),
+            if (moderators.isNotEmpty || regularMembers.isNotEmpty)
+              Divider(
+                height: 1,
+                color: Theme.of(context).colorScheme.outlineVariant,
+              ),
           ],
           if (moderators.isNotEmpty) ...[
-            _buildMemberGroup('Moderadores', moderators, canManageMembers, AppColors.info),
-            if (members.isNotEmpty)
-              const Divider(height: 1),
+            _MemberGroup(
+              title: "Moderadores",
+              members: moderators,
+              memberEntities: memberEntities,
+              canManageMembers: canManageMembers,
+              deletingMemberId: deletingMemberId,
+              onDeleteMember: onDeleteMember,
+              roleColor: roleColor,
+              roleLabel: roleLabel,
+            ),
+            if (regularMembers.isNotEmpty)
+              Divider(
+                height: 1,
+                color: Theme.of(context).colorScheme.outlineVariant,
+              ),
           ],
-          if (members.isNotEmpty)
-            _buildMemberGroup('Membros', members, canManageMembers, Theme.of(context).colorScheme.primary),
+          if (regularMembers.isNotEmpty)
+            _MemberGroup(
+              title: "Membros",
+              members: regularMembers,
+              memberEntities: memberEntities,
+              canManageMembers: canManageMembers,
+              deletingMemberId: deletingMemberId,
+              onDeleteMember: onDeleteMember,
+              roleColor: roleColor,
+              roleLabel: roleLabel,
+            ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildMemberGroup(String title, List<CarnivalBlockMembersEntity> members, bool canManageMembers, Color roleColor) {
+// =============================================================================
+// _MemberTile
+// =============================================================================
+
+class _MemberTile extends StatelessWidget {
+  const _MemberTile({
+    required this.member,
+    required this.roleLabel,
+    required this.roleColor,
+    required this.isDeleting,
+    required this.canManageMembers,
+    required this.onDelete,
+  });
+
+  final MembersEntity member;
+  final String roleLabel;
+  final Color roleColor;
+  final bool isDeleting;
+  final bool canManageMembers;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Spacing.space_sm,
+        vertical: Spacing.space_2xs,
+      ),
+      child: AppCard(
+        elevation: AppCardElevation.sm,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            AppAvatar(
+              imageUrl: member.profileImage,
+              name: member.name,
+              size: AvatarSize.md,
+              imageCacheVersion: member.updatedAt,
+            ),
+            const SizedBox(width: Spacing.space_md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    member.name ?? "Sem nome",
+                    style: AppTypography.titleMedium,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (member.email != null) ...[
+                    const SizedBox(height: Spacing.space_4xs),
+                    Text(
+                      member.email!,
+                      style: AppTypography.bodySmall.copyWith(
+                        color: AppColors.textSecondaryLight,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(width: Spacing.space_sm),
+            AppChip(
+              label: roleLabel,
+              variant: ChipVariant.filled,
+              color: roleColor,
+            ),
+            if (isDeleting) ...[
+              const SizedBox(width: Spacing.space_2xs),
+              const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            ] else if (canManageMembers) ...[
+              const SizedBox(width: Spacing.space_2xs),
+              IconButton(
+                icon: Icon(
+                  Icons.delete_rounded,
+                  color: AppColors.error,
+                  size: 20,
+                ),
+                onPressed: onDelete,
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MemberGroup extends StatelessWidget {
+  const _MemberGroup({
+    required this.title,
+    required this.members,
+    required this.memberEntities,
+    required this.canManageMembers,
+    required this.deletingMemberId,
+    required this.onDeleteMember,
+    required this.roleColor,
+    required this.roleLabel,
+  });
+
+  final String title;
+  final List<CarnivalBlockMembersEntity> members;
+  final Map<int, MembersEntity> memberEntities;
+  final bool canManageMembers;
+  final int? deletingMemberId;
+  final void Function(CarnivalBlockMembersEntity) onDeleteMember;
+  final Color Function(int) roleColor;
+  final String Function(int) roleLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final groupRoleColor = roleColor(members.first.role);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(
+            horizontal: Spacing.space_sm,
+            vertical: Spacing.space_xs,
+          ),
           child: Text(
-            '$title (${members.length})',
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: roleColor,
-              fontWeight: FontWeight.bold,
-            ),
+            "$title (${members.length})",
+            style: AppTypography.titleSmall.copyWith(color: groupRoleColor),
           ),
         ),
-        ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: members.length,
-          separatorBuilder: (context, index) => const Divider(height: 1),
-          itemBuilder: (context, index) {
-            final member = members[index];
-            final isDeleting = _deletingMemberId == member.id;
-            final memberName = _memberNames[member.memberId] ?? 'Membro';
-            return ListTile(
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 4,
-              ),
-              leading: AvatarMember(
-                memberId: member.memberId,
-                name: memberName,
-                role: _roleToString(member.role),
-              ),
-              title: Text(
-                memberName,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              trailing: isDeleting
-                  ? const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : canManageMembers
-                      ? IconButton(
-                          icon: Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
-                          onPressed: () => _deleteMember(member),
-                        )
-                      : null,
+        ...members.map((member) {
+          final isDeleting = deletingMemberId == member.id;
+          final entity = memberEntities[member.memberId];
+
+          if (entity != null) {
+            return _MemberTile(
+              member: entity,
+              roleLabel: roleLabel(member.role),
+              roleColor: roleColor(member.role),
+              isDeleting: isDeleting,
+              canManageMembers: canManageMembers,
+              onDelete: () => onDeleteMember(member),
             );
-          },
-        ),
+          }
+
+          // Fallback: display minimal member info
+          return AppListTile(
+            leading: AppAvatar(name: "Membro", size: AvatarSize.md),
+            title: "Membro",
+            trailing: isDeleting
+                ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : canManageMembers
+                ? IconButton(
+                    icon: Icon(
+                      Icons.delete_rounded,
+                      color: AppColors.error,
+                      size: 20,
+                    ),
+                    onPressed: () => onDeleteMember(member),
+                  )
+                : null,
+          );
+        }),
       ],
     );
-  }
-
-  Color _getRoleColor(String? role) {
-    final r = role?.toLowerCase() ?? '';
-    if (r == 'admin' || r == 'gerente') {
-      return AppColors.admin;
-    } else if (r == 'moderador') {
-      return AppColors.info;
-    }
-    return Theme.of(context).colorScheme.primary;
-  }
-
-  String _roleToString(int role) {
-    switch (role) {
-      case 1:
-        return 'Admin';
-      case 2:
-        return 'Moderador';
-      default:
-        return 'Membro';
-    }
   }
 }

@@ -1,9 +1,25 @@
-import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
-import 'package:bloco_na_rua/ui/carnivalBlock/editBlock/cubit/edit_block_cubit.dart';
-import 'package:bloco_na_rua/ui/carnivalBlock/editBlock/cubit/edit_block_state.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+// lib/ui/carnivalBlock/editBlock/widgets/edit_block_screen.dart
+//
+// Bloco na Rua design system — edit block form screen.
+//
+// Form pattern: prefilled (loads existing block data from cubit state).
+// Uses AppAppBar, AppCard, AppTextField, AppButton, AppLoading, AppError,
+// and AppSnackbar design system primitives.
+
+import "package:bloco_na_rua/ui/carnivalBlock/editBlock/cubit/edit_block_cubit.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/editBlock/cubit/edit_block_state.dart";
+import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
+import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
+import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
+import "package:bloco_na_rua/ui/core/widgets/inputs/app_text_field.dart";
+import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
+import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
+import "package:bloco_na_rua/ui/core/widgets/state/app_loading.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:go_router/go_router.dart";
 
 class EditBlockScreen extends StatefulWidget {
   const EditBlockScreen({super.key, required this.carnivalBlockId});
@@ -16,7 +32,9 @@ class EditBlockScreen extends StatefulWidget {
 
 class _EditBlockScreenState extends State<EditBlockScreen> {
   final _nameController = TextEditingController();
-  String _currentImage = '';
+  String _currentImage = "";
+  String _originalName = "";
+  bool _initialized = false;
 
   @override
   void dispose() {
@@ -26,155 +44,76 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => EditBlockCubit(
-        carnivalBlocksRepository: context.read<ICarnivalBlocksRepository>(),
-        carnivalBlockId: widget.carnivalBlockId,
-      ),
-      child: BlocConsumer<EditBlockCubit, EditBlockState>(
-        listener: (context, state) {
-          if (state is EditBlockSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Bloco atualizado com sucesso')),
-            );
-            context.pop();
-          } else if (state is EditBlockError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-          } else if (state is EditBlockLoaded) {
-            _nameController.text = state.name;
-            _currentImage = state.carnivalBlockImage;
-          }
-        },
-        builder: (context, state) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'Editar Bloco',
-                style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-              ),
-              backgroundColor: Theme.of(context).colorScheme.surface,
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onSurface),
-                onPressed: () => context.pop(),
-              ),
-            ),
-            body: _buildBody(context, state),
-            backgroundColor: Theme.of(context).colorScheme.surface,
-          );
-        },
-      ),
+    return BlocConsumer<EditBlockCubit, EditBlockState>(
+      listener: (context, state) {
+        if (state is EditBlockSuccess) {
+          AppSnackbar.success(context, message: "Bloco atualizado com sucesso");
+          context.read<EditBlockCubit>().loadBlock();
+          context.pop();
+        } else if (state is EditBlockError) {
+          AppSnackbar.error(context, message: state.message);
+        } else if (state is EditBlockLoaded && !_initialized) {
+          _nameController.text = state.name;
+          _currentImage = state.carnivalBlockImage;
+          _originalName = state.name;
+          _initialized = true;
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppAppBar(title: "Editar bloco", showBackButton: true),
+          body: _buildBody(context, state),
+        );
+      },
     );
   }
 
   Widget _buildBody(BuildContext context, EditBlockState state) {
     if (state is EditBlockLoading || state is EditBlockInitial) {
-      return const Center(child: CircularProgressIndicator());
+      return const AppLoading(message: "Carregando bloco...");
     }
 
     if (state is EditBlockError) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(state.message, style: TextStyle(color: Theme.of(context).colorScheme.error)),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => context.read<EditBlockCubit>().loadBlock(),
-              child: const Text('Tentar novamente'),
-            ),
-          ],
-        ),
+      return AppError(
+        message: state.message,
+        onRetry: () => context.read<EditBlockCubit>().loadBlock(),
       );
     }
 
-    final isSaving = state is EditBlockSaving;
+    if (state is! EditBlockLoaded) {
+      return const AppLoading(message: "Carregando bloco...");
+    }
 
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextField(
-            controller: _nameController,
-            enabled: !isSaving,
-            decoration: InputDecoration(
-              labelText: 'Nome do bloco',
-              labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Theme.of(context).colorScheme.outline),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
-              ),
+    final isSaving = state is EditBlockSaving;
+    final currentName = _nameController.text.trim();
+    final isUnchanged = currentName.isEmpty || currentName == _originalName;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(Spacing.space_sm),
+      child: AppCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            AppTextField(
+              label: "Nome do bloco",
+              hint: "Ex: Bloco da Vizinhança",
+              controller: _nameController,
+              onChanged: (_) => setState(() {}),
+              isEnabled: !isSaving,
             ),
-            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-          ),
-          const SizedBox(height: 20),
-          Center(
-            child: Column(
-              children: [
-                if (_currentImage.isNotEmpty)
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      _currentImage,
-                      height: 150,
-                      width: 200,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          Container(
-                        height: 150,
-                        width: 200,
-                        color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                        child: Icon(
-                          Icons.image_not_supported,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ),
-                  )
-                else
-                  Container(
-                    height: 150,
-                    width: 200,
-                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                    child: Icon(
-                      Icons.account_circle,
-                      size: 100,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                const SizedBox(height: 12),
-                ElevatedButton(
-                  onPressed: isSaving
-                      ? null
-                      : () {
-                          // Handle image selection
-                        },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                    foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                  child: const Text('Alterar imagem'),
-                ),
-              ],
-            ),
-          ),
-          const Spacer(),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: ElevatedButton(
-              onPressed: isSaving
+            const SizedBox(height: Spacing.space_lg),
+            _buildImageSection(context, state),
+            const SizedBox(height: Spacing.space_xl),
+            AppButton(
+              label: "Salvar alterações",
+              onPressed: isSaving || isUnchanged
                   ? null
                   : () {
                       final name = _nameController.text.trim();
                       if (name.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Por favor, insira um nome para o bloco'),
-                          ),
+                        AppSnackbar.warning(
+                          context,
+                          message: "Digite um nome para o bloco",
                         );
                         return;
                       }
@@ -183,24 +122,53 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
                         carnivalBlockImage: _currentImage,
                       );
                     },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-                minimumSize: const Size(150, 50),
-              ),
-              child: isSaving
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      ),
-                    )
-                  : const Text('Salvar alterações'),
+              isLoading: isSaving,
+              isFullWidth: true,
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImageSection(BuildContext context, EditBlockLoaded state) {
+    final hasImage = state.carnivalBlockImage.isNotEmpty;
+
+    return Column(
+      children: [
+        ClipRRect(
+          borderRadius: Radii.radiusMd,
+          child: hasImage
+              ? Image.network(
+                  state.carnivalBlockImage,
+                  height: 150,
+                  width: 200,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      _buildImagePlaceholder(context),
+                )
+              : _buildImagePlaceholder(context),
+        ),
+        const SizedBox(height: Spacing.space_sm),
+        Text(
+          hasImage ? "Imagem do bloco" : "Sem imagem",
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
-        ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildImagePlaceholder(BuildContext context) {
+    return Container(
+      height: 150,
+      width: 200,
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      child: Icon(
+        Icons.image_not_supported_rounded,
+        size: 48,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
       ),
     );
   }
