@@ -1,7 +1,7 @@
-import "package:cached_network_image/cached_network_image.dart";
-import "package:flutter/material.dart";
 import "package:bloco_na_rua/core/cache/app_cache_manager.dart";
 import "package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart";
+import "package:cached_network_image/cached_network_image.dart";
+import "package:flutter/material.dart";
 
 import "../../tokens/app_colors.dart";
 import "../../tokens/app_radius.dart";
@@ -9,6 +9,8 @@ import "../../tokens/app_spacing.dart";
 import "../../tokens/app_typography.dart";
 import "../cards/app_card.dart";
 import "../display/image_url_validator.dart";
+
+const _blockEmojis = ["🎭", "🎉", "🎊", "", "🎷", "🎺", "🪇", "🏟️"];
 
 /// BlockCard compound widget for displaying a carnival block summary.
 ///
@@ -46,7 +48,9 @@ class BlockCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final surfaceVariant = Theme.of(context).colorScheme.surfaceContainerHighest;
+    final surfaceVariant = Theme.of(
+      context,
+    ).colorScheme.surfaceContainerHighest;
     final textSecondary = Theme.of(context).colorScheme.onSurfaceVariant;
     final textTertiary = Theme.of(context).brightness == Brightness.dark
         ? AppColors.textTertiaryDark
@@ -54,7 +58,6 @@ class BlockCard extends StatelessWidget {
 
     return AppCard(
       onTap: onTap,
-      elevation: AppCardElevation.sm,
       padding: EdgeInsets.zero,
       child: Padding(
         padding: const EdgeInsets.all(Spacing.space_sm),
@@ -78,23 +81,13 @@ class BlockCard extends StatelessWidget {
                         height: 40,
                         fit: BoxFit.cover,
                         cacheManager: AppCacheManager.instance,
-                        placeholder: (_, shim) => Container(
-                          color: surfaceVariant,
-                          child: const Center(
-                            child: Text("🎭", style: TextStyle(fontSize: 20)),
-                          ),
-                        ),
-                        errorWidget: (_, shim, err) => Container(
-                          color: surfaceVariant,
-                          child: const Center(
-                            child: Text("🎭", style: TextStyle(fontSize: 20)),
-                          ),
-                        ),
+                        placeholder: (_, shim) =>
+                            _buildEmojiPlaceholder(surfaceVariant),
+                        errorWidget: (_, shim, err) =>
+                            _buildEmojiPlaceholder(surfaceVariant),
                       ),
                     )
-                  : const Center(
-                      child: Text("🎭", style: TextStyle(fontSize: 20)),
-                    ),
+                  : _buildEmojiPlaceholder(surfaceVariant),
             ),
             const SizedBox(width: Spacing.space_xs),
             // Content column — tight fit, no Expanded to avoid stretching row height
@@ -128,7 +121,22 @@ class BlockCard extends StatelessWidget {
     );
   }
 
-  Widget _buildBadgeRow(Color surfaceVariant, Color textSecondary, Color textTertiary) {
+  Widget _buildEmojiPlaceholder(Color surfaceVariant) {
+    final emoji = _blockEmojis[block.id.hashCode % _blockEmojis.length];
+    return Container(
+      decoration: BoxDecoration(
+        color: surfaceVariant,
+        borderRadius: Radii.radiusSm,
+      ),
+      child: Center(child: Text(emoji, style: const TextStyle(fontSize: 20))),
+    );
+  }
+
+  Widget _buildBadgeRow(
+    Color surfaceVariant,
+    Color textSecondary,
+    Color textTertiary,
+  ) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [

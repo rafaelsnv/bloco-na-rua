@@ -69,24 +69,26 @@ class AppEmpty extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Icon
-            Icon(
-              icon ?? Icons.inbox_outlined,
-              size: 96,
-              color: AppColors.primaryLight,
-            ),
-
-            // Gap: icon -> title
-            const SizedBox(height: Spacing.space_md),
-
-            // Title
-            Text(
-              title ?? "Nada por aqui",
-              style: AppTypography.headlineSmall.copyWith(
-                color: Theme.of(context).colorScheme.onSurface,
+            // Icon (only shown when provided)
+            if (icon != null) ...[
+              Icon(
+                icon,
+                size: 96,
+                color: AppColors.primaryLight,
               ),
-              textAlign: TextAlign.center,
-            ),
+              // Gap: icon -> title
+              const SizedBox(height: Spacing.space_md),
+            ],
+
+            // Title (only shown when provided)
+            if (title != null)
+              Text(
+                title!,
+                style: AppTypography.headlineSmall.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                textAlign: TextAlign.center,
+              ),
 
             // Gap: title -> message
             if (message != null) ...[

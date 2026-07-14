@@ -1,7 +1,7 @@
-import "package:flutter/material.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:flutter/material.dart";
 
 /// Card elevation taxonomy.
 ///
@@ -33,7 +33,7 @@ class AppCard extends StatelessWidget {
   const AppCard({
     required this.child,
     this.onTap,
-    this.elevation = AppCardElevation.sm,
+    this.elevation = AppCardElevation.none,
     this.padding,
     this.radius,
     this.color,
@@ -82,7 +82,7 @@ class AppCard extends StatelessWidget {
         borderRadius: computedRadius,
         side: BorderSide(
           color: Theme.of(context).colorScheme.outline,
-          width: 1,
+          width: 1.5,
         ),
       ),
       color: color ?? defaultColor,
