@@ -16,6 +16,18 @@ enum AppFabSize {
   lg,
 }
 
+/// Color variants for [AppFAB].
+enum AppFabColor {
+  /// Primary violet — brand primary.
+  primary,
+
+  /// Accent orange — call-to-action.
+  accent,
+
+  /// Tertiary teal — presence/online indicators.
+  tertiary,
+}
+
 /// A design-system-compliant FAB widget supporting basic and extended variants,
 /// with press and hover feedback, respecting accessibility animation preferences.
 class AppFAB extends StatelessWidget {
@@ -29,11 +41,14 @@ class AppFAB extends StatelessWidget {
   /// as an ExtendedFloatingActionButton; when null it renders as a basic FAB.
   ///
   /// [size] defaults to [AppFabSize.md] (56px).
+  ///
+  /// [fabColor] defaults to [AppFabColor.accent] (orange).
   const AppFAB({
     required this.icon,
     required this.onPressed,
     this.label,
     this.size = AppFabSize.md,
+    this.fabColor = AppFabColor.accent,
     super.key,
   });
 
@@ -49,6 +64,9 @@ class AppFAB extends StatelessWidget {
 
   /// Size preset controlling the FAB diameter.
   final AppFabSize size;
+
+  /// Color variant controlling the FAB background color.
+  final AppFabColor fabColor;
 
   static const Map<AppFabSize, double> _sizeTokens = {
     AppFabSize.sm: 40.0,
@@ -67,6 +85,12 @@ class AppFAB extends StatelessWidget {
 
   double get _diameter => _sizeTokens[size]!;
   double get _iconSize => _iconSizeTokens[size]!;
+
+  Color get _backgroundColor => switch (fabColor) {
+    AppFabColor.primary => AppColors.primary,
+    AppFabColor.accent => AppColors.accent,
+    AppFabColor.tertiary => AppColors.tertiary,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +113,7 @@ class AppFAB extends StatelessWidget {
       height: _diameter,
       child: FloatingActionButton(
         onPressed: onPressed,
-        backgroundColor: AppColors.cta,
+        backgroundColor: _backgroundColor,
         foregroundColor: Colors.white,
         elevation: _elevationDefault,
         shape: RoundedRectangleBorder(borderRadius: Radii.fab),
@@ -102,7 +126,7 @@ class AppFAB extends StatelessWidget {
   Widget _buildExtendedFab(BuildContext context) {
     return FloatingActionButton.extended(
       onPressed: onPressed,
-      backgroundColor: AppColors.cta,
+      backgroundColor: _backgroundColor,
       foregroundColor: Colors.white,
       elevation: _elevationDefault,
       shape: RoundedRectangleBorder(borderRadius: Radii.fab),

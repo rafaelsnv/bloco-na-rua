@@ -7,11 +7,15 @@ import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 
 /// Button variant taxonomy.
 enum AppButtonVariant {
-  /// CTA orange fill — main call-to-action.
+  /// Brand primary violet fill — main call-to-action.
   primary,
 
-  /// Primary indigo outline — secondary actions.
+  /// Brand secondary rose outline — secondary actions.
   secondary,
+
+  /// Accent orange fill — call-to-action (e.g. "Entrar no Bloco", "Salvar").
+  /// Renders bold with elevation shadow and 12px (rounded-xl) radius.
+  accent,
 
   /// Surface fill — low-emphasis actions.
   tertiary,
@@ -115,9 +119,11 @@ class AppButton extends StatelessWidget {
       case AppButtonVariant.primary:
         return Colors.white;
       case AppButtonVariant.secondary:
-        return isDark ? AppColors.primaryLight : AppColors.primary;
+        return isDark ? AppColors.secondaryLight : AppColors.secondary;
+      case AppButtonVariant.accent:
+        return isDark ? AppColors.accentDark : Colors.white;
       case AppButtonVariant.tertiary:
-        return isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+        return isDark ? AppColors.textPrimaryDark : AppColors.textPrimary;
       case AppButtonVariant.ghost:
         return isDark ? AppColors.primaryLight : AppColors.primary;
     }
@@ -209,6 +215,7 @@ class AppButton extends StatelessWidget {
     double effectiveOpacity,
     bool animationsDisabled,
   ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final foreground = _foregroundColor(context);
     final minimumSize = Size.fromHeight(height);
     final padding = EdgeInsets.symmetric(
@@ -230,8 +237,22 @@ class AppButton extends StatelessWidget {
       AppButtonVariant.primary => FilledButton(
         onPressed: effectiveOnPressed,
         style: buttonStyle.copyWith(
-          backgroundColor: WidgetStateProperty.all(AppColors.cta),
+          backgroundColor: WidgetStateProperty.all(AppColors.primary),
           foregroundColor: WidgetStateProperty.all(Colors.white),
+        ),
+        child: content,
+      ),
+      AppButtonVariant.accent => FilledButton(
+        onPressed: effectiveOnPressed,
+        style: buttonStyle.copyWith(
+          backgroundColor: WidgetStateProperty.all(
+            isDark ? AppColors.accentLight : AppColors.accent,
+          ),
+          foregroundColor: WidgetStateProperty.all(foreground),
+          elevation: WidgetStateProperty.all(isDark ? 0.0 : 6.0),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(borderRadius: Radii.radiusMd),
+          ),
         ),
         child: content,
       ),
@@ -239,9 +260,9 @@ class AppButton extends StatelessWidget {
         onPressed: effectiveOnPressed,
         style: buttonStyle.copyWith(
           backgroundColor: WidgetStateProperty.all(Colors.transparent),
-          foregroundColor: WidgetStateProperty.all(foreground),
+          foregroundColor: WidgetStateProperty.all(AppColors.secondary),
           side: WidgetStateProperty.all(
-            BorderSide(color: foreground, width: 1.5),
+            BorderSide(color: AppColors.secondary, width: 1.5),
           ),
         ),
         child: content,
@@ -270,10 +291,15 @@ class AppButton extends StatelessWidget {
   }
 
   TextStyle _textStyle(BuildContext context, Color foreground) {
-    final base = switch (size) {
-      AppButtonSize.sm => AppTypography.buttonSmall,
-      AppButtonSize.md => AppTypography.buttonMedium,
-      AppButtonSize.lg => AppTypography.buttonLarge,
+    final base = switch (variant) {
+      AppButtonVariant.accent => AppTypography.buttonLarge.copyWith(
+        fontWeight: FontWeight.w700,
+      ),
+      _ => switch (size) {
+        AppButtonSize.sm => AppTypography.buttonSmall,
+        AppButtonSize.md => AppTypography.buttonMedium,
+        AppButtonSize.lg => AppTypography.buttonLarge,
+      },
     };
     return base.copyWith(color: foreground);
   }

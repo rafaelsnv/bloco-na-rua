@@ -54,7 +54,7 @@ coverage/
 
 # Temporary files
 *.temp
-/.tmp
+.tmp/
 
 # Environment files
 .env

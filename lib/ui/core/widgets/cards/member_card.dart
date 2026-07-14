@@ -86,7 +86,7 @@ class MemberCard extends StatelessWidget {
                   Text(
                     member.email!,
                     style: AppTypography.bodySmall.copyWith(
-                      color: AppColors.textSecondaryLight,
+                      color: AppColors.textSecondary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

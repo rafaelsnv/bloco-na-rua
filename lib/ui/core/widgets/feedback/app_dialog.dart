@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 
 import "../../tokens/app_colors.dart";
 import "../../tokens/app_radius.dart";
+import "../buttons/app_button.dart";
 
 /// Static helper class for themed confirm and alert dialogs.
 ///
@@ -86,15 +87,21 @@ class _ConfirmDialogContent extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(false),
           child: Text(cancelLabel),
         ),
-        FilledButton(
-          onPressed: () => Navigator.of(context).pop(true),
-          style: FilledButton.styleFrom(
-            backgroundColor: isDestructive
-                ? AppColors.error
-                : AppColors.primary,
-          ),
-          child: Text(confirmLabel),
-        ),
+        isDestructive
+            ? FilledButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.error,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: Radii.button),
+                ),
+                child: Text(confirmLabel),
+              )
+            : AppButton(
+                label: confirmLabel,
+                variant: AppButtonVariant.accent,
+                onPressed: () => Navigator.of(context).pop(true),
+              ),
       ],
     );
   }
@@ -123,10 +130,10 @@ class _AlertDialogContent extends StatelessWidget {
       content: Text(message),
       shape: RoundedRectangleBorder(borderRadius: Radii.modal),
       actions: [
-        FilledButton(
+        AppButton(
+          label: okLabel,
+          variant: AppButtonVariant.accent,
           onPressed: () => Navigator.of(context).pop(),
-          style: FilledButton.styleFrom(backgroundColor: AppColors.primary),
-          child: Text(okLabel),
         ),
       ],
     );

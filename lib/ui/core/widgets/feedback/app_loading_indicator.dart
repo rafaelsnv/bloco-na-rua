@@ -24,7 +24,7 @@ enum AppLoadingIndicatorVariant {
 /// ```dart
 /// AppLoadingIndicator(
 ///   size: 32,
-///   color: AppColors.cta,
+///   color: AppColors.accent,
 ///   variant: AppLoadingIndicatorVariant.pulse,
 /// )
 /// ```

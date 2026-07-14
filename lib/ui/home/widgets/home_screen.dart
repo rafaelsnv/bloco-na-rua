@@ -109,7 +109,7 @@ class HomeScreen extends StatelessWidget {
               Text(
                 "Veja seus blocos e reuniões",
                 style: AppTypography.bodyMedium.copyWith(
-                  color: AppColors.textSecondaryLight,
+                  color: AppColors.textSecondary,
                 ),
               ),
             ],
@@ -166,8 +166,6 @@ class HomeScreen extends StatelessWidget {
                     width: 240,
                     child: BlockCard(
                       block: block,
-                      memberCount: null,
-                      tags: null,
                       onTap: () =>
                           context.push("${Routes.carnivalBlock}/${block.id}"),
                     ),

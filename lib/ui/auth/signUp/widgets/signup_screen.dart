@@ -213,7 +213,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     label: "Cadastrar",
                                     isLoading: true,
                                     isFullWidth: true,
-                                    variant: AppButtonVariant.primary,
+                                    variant: AppButtonVariant.accent,
                                   );
                                 }
 
@@ -225,7 +225,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       onPressed: isFormValid ? _submit : null,
                                       isDisabled: !isFormValid,
                                       isFullWidth: true,
-                                      variant: AppButtonVariant.primary,
+                                      variant: AppButtonVariant.accent,
                                     );
                                   },
                                 );

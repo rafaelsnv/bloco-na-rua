@@ -62,8 +62,8 @@ class Radii {
   /// Cards: 12px all corners.
   static final BorderRadius card = radiusMd;
 
-  /// Inputs: 8px all corners.
-  static final BorderRadius input = radiusSm;
+  /// Inputs: 12px all corners (matches mockup's rounded-xl).
+  static final BorderRadius input = radiusMd;
 
   /// FAB: 16px all corners.
   static final BorderRadius fab = radiusLg;

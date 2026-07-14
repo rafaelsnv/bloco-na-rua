@@ -52,12 +52,12 @@ class AppChip extends StatelessWidget {
     );
   }
 
-  /// Meeting status chip (cta color).
+  /// Meeting status chip (accent color).
   factory AppChip.meetingStatus(String label) {
     return AppChip(
       label: label,
       variant: ChipVariant.filled,
-      color: AppColors.cta,
+      color: AppColors.accent,
     );
   }
 
@@ -84,11 +84,11 @@ class AppChip extends StatelessWidget {
           ? Icon(
               Icons.close_rounded,
               size: 16,
-              color: AppColors.textSecondaryLight,
+              color: AppColors.textSecondary,
             )
           : null,
       backgroundColor: background,
-      deleteIconColor: AppColors.textSecondaryLight,
+      deleteIconColor: AppColors.textSecondary,
       side: side,
       shape: RoundedRectangleBorder(borderRadius: Radii.chip),
       padding: EdgeInsets.symmetric(
@@ -107,9 +107,18 @@ class AppChip extends StatelessWidget {
     ChipThemeData chipTheme,
     Color effectiveColor,
   ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     switch (variant) {
       case ChipVariant.filled:
-        // Filled: colored background, white foreground
+        // Filled: in light mode use effectiveColor bg + white text.
+        // In dark mode, swap to lighter primary equivalents (primaryLight
+        // background + primaryDark text) only when the chip uses the
+        // brand primary color, mirroring the mockup (lines 373: dark Todos
+        // chip uses bg-primary-light text-primary-dark).
+        if (isDark && effectiveColor == AppColors.primary) {
+          return (AppColors.primaryDark, AppColors.primaryLight, BorderSide.none);
+        }
         return (Colors.white, effectiveColor, BorderSide.none);
 
       case ChipVariant.outlined:
@@ -120,9 +129,17 @@ class AppChip extends StatelessWidget {
         return (foreground, background, side);
 
       case ChipVariant.soft:
-        // Soft: low-alpha colored background, colored text
-        final foreground = effectiveColor;
-        final background = effectiveColor.withValues(alpha: 0.15);
+        // Soft: low-alpha colored background, colored text.
+        // For secondary (rose), use secondaryDark in light, secondaryLight in dark
+        // for proper contrast on the 20% opacity background.
+        Color foreground = effectiveColor;
+        if (effectiveColor == AppColors.secondary) {
+          foreground = isDark ? AppColors.secondaryLight : AppColors.secondaryDark;
+        }
+        // Background always uses the effective (input) color at 20% opacity,
+        // not the swapped foreground — this matches the mockup's
+        // `bg-secondary/20` (mockup line 254).
+        final background = effectiveColor.withValues(alpha: 0.20);
         final side = BorderSide.none;
         return (foreground, background, side);
     }

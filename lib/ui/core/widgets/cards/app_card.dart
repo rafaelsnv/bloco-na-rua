@@ -78,7 +78,13 @@ class AppCard extends StatelessWidget {
 
     final card = Card(
       elevation: computedElevation,
-      shape: RoundedRectangleBorder(borderRadius: computedRadius),
+      shape: RoundedRectangleBorder(
+        borderRadius: computedRadius,
+        side: BorderSide(
+          color: Theme.of(context).colorScheme.outline,
+          width: 1,
+        ),
+      ),
       color: color ?? defaultColor,
       margin: EdgeInsets.zero,
       child: Padding(padding: computedPadding, child: child),

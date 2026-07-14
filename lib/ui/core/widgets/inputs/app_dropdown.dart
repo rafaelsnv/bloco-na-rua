@@ -81,7 +81,7 @@ class AppDropdown<T> extends StatelessWidget {
           ? Text(
               hint!,
               style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.textDisabledLight,
+                color: AppColors.textDisabled,
               ),
             )
           : null,

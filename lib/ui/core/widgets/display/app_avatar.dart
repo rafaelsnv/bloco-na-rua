@@ -24,12 +24,12 @@ enum AvatarShape { circle, square, roundedSquare }
 
 /// AVATAR_PALETTE — six colors used for initials background, selected by name hash.
 const List<Color> _avatarPalette = [
-  AppColors.primary, // #4F46E5
-  AppColors.cta, // #F97316
-  AppColors.success, // #10B981
-  AppColors.info, // #3B82F6
-  Color(0xFF8B5CF6), // purple
-  Color(0xFFEC4899), // pink
+  AppColors.primary, // #6D28D9
+  AppColors.accent, // #F97316
+  AppColors.success, // #16A34A
+  AppColors.info, // #0EA5E9
+  AppColors.primaryLight, // #A78BFA
+  AppColors.secondary, // #FB7185
 ];
 
 /// Returns the initials text for a given [name].

@@ -185,6 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   label: "Entrar",
                                   isLoading: true,
                                   isFullWidth: true,
+                                  variant: AppButtonVariant.accent,
                                 );
                               }
 
@@ -196,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     onPressed: isFormValid ? _submit : null,
                                     isDisabled: !isFormValid,
                                     isFullWidth: true,
-                                    variant: AppButtonVariant.primary,
+                                    variant: AppButtonVariant.accent,
                                   );
                                 },
                               );
@@ -331,7 +332,7 @@ class _ForgotPasswordDialogState extends State<_ForgotPasswordDialog> {
                   const SizedBox(width: Spacing.space_xs),
                   AppButton(
                     label: "Enviar",
-                    variant: AppButtonVariant.primary,
+                    variant: AppButtonVariant.accent,
                     isDisabled: !_isFormValid,
                     onPressed: !_isFormValid
                         ? null

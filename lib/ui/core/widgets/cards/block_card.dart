@@ -3,24 +3,26 @@ import "package:flutter/material.dart";
 import "package:bloco_na_rua/core/cache/app_cache_manager.dart";
 import "package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart";
 
+import "../../tokens/app_colors.dart";
 import "../../tokens/app_radius.dart";
 import "../../tokens/app_spacing.dart";
 import "../../tokens/app_typography.dart";
 import "../cards/app_card.dart";
-import "../display/app_chip.dart";
 import "../display/image_url_validator.dart";
 
 /// BlockCard compound widget for displaying a carnival block summary.
 ///
-/// Shows: block image (100px, top-rounded) + block name + member count +
-/// invite code (if present) + optional soft tag chips.
+/// Shows: emoji icon + block name + location • date + member count badge +
+/// optional live indicator.
 class BlockCard extends StatelessWidget {
   const BlockCard({
     super.key,
     required this.block,
     this.onTap,
     this.memberCount,
-    this.tags,
+    this.location,
+    this.date,
+    this.isLive = false,
   });
 
   /// The carnival block entity to display.
@@ -33,147 +35,134 @@ class BlockCard extends StatelessWidget {
   /// When null displays "Sem membros".
   final int? memberCount;
 
-  /// Optional list of tag strings rendered as soft chips below the info row.
-  final List<String>? tags;
+  /// Optional location string (e.g. "Recife").
+  final String? location;
+
+  /// Optional date string (e.g. "12 Jan").
+  final String? date;
+
+  /// When true, shows a tertiary teal dot + "Ao vivo" indicator.
+  final bool isLive;
 
   @override
   Widget build(BuildContext context) {
-    final onSurfaceVariant = Theme.of(context).colorScheme.onSurfaceVariant;
-    final shimmerColor = Theme.of(context).colorScheme.surfaceContainerHighest;
-    final imageRadius = Radius.circular(Radii.card.topLeft.x);
+    final surfaceVariant = Theme.of(context).colorScheme.surfaceContainerHighest;
+    final textSecondary = Theme.of(context).colorScheme.onSurfaceVariant;
+    final textTertiary = Theme.of(context).brightness == Brightness.dark
+        ? AppColors.textTertiaryDark
+        : AppColors.textTertiary;
 
     return AppCard(
       onTap: onTap,
       elevation: AppCardElevation.sm,
       padding: EdgeInsets.zero,
-      // Defensive: clips any future visual overflow to card bounds.
-      // The actual layout overflow is prevented by the 100px image header
-      // and the removal of the 200px parent SizedBox in home_screen.dart.
-      child: ClipRect(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: Padding(
+        padding: const EdgeInsets.all(Spacing.space_sm),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Block image — 100px, top corners match card radius.
-            // Guard with isValidImageUrl() because the backend sometimes returns
-            // bare placeholder strings (e.g. "img") that would crash
-            // CachedNetworkImageProvider asynchronously, escaping the
-            // errorWidget callback and tripping the ImageResourceService.
-            if (isValidImageUrl(block.carnivalBlockImage))
-              ClipRRect(
-                borderRadius: BorderRadius.vertical(top: imageRadius),
-                child: SizedBox(
-                  height: 100,
-                  child: CachedNetworkImage(
-                    imageUrl: block.carnivalBlockImage,
-                    height: 100,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    cacheManager: AppCacheManager.instance,
-                    placeholder: (_, _) =>
-                        Container(height: 100, color: shimmerColor),
-                    errorWidget: (_, _, _) =>
-                        Container(height: 100, color: shimmerColor),
-                  ),
-                ),
-              )
-            else
-              Container(
-                height: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(top: imageRadius),
-                  color: shimmerColor,
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.celebration_rounded,
-                    size: 40,
-                    color: onSurfaceVariant,
-                  ),
-                ),
+            // Icon container — 40x40px to fit content height
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: surfaceVariant,
+                borderRadius: Radii.radiusSm,
               ),
-
-            // Content padding + column.
-            Padding(
-              padding: const EdgeInsets.all(Spacing.cardPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Block name.
+              child: isValidImageUrl(block.carnivalBlockImage)
+                  ? ClipRRect(
+                      borderRadius: Radii.radiusSm,
+                      child: CachedNetworkImage(
+                        imageUrl: block.carnivalBlockImage,
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.cover,
+                        cacheManager: AppCacheManager.instance,
+                        placeholder: (_, shim) => Container(
+                          color: surfaceVariant,
+                          child: const Center(
+                            child: Text("🎭", style: TextStyle(fontSize: 20)),
+                          ),
+                        ),
+                        errorWidget: (_, shim, err) => Container(
+                          color: surfaceVariant,
+                          child: const Center(
+                            child: Text("🎭", style: TextStyle(fontSize: 20)),
+                          ),
+                        ),
+                      ),
+                    )
+                  : const Center(
+                      child: Text("🎭", style: TextStyle(fontSize: 20)),
+                    ),
+            ),
+            const SizedBox(width: Spacing.space_xs),
+            // Content column — tight fit, no Expanded to avoid stretching row height
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  block.name,
+                  style: AppTypography.labelLarge.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (location != null || date != null)
                   Text(
-                    block.name,
-                    style: AppTypography.titleMedium,
+                    [location, date].whereType<String>().join(" • "),
+                    style: AppTypography.bodySmall.copyWith(
+                      color: textSecondary,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-
-                  SizedBox(height: Spacing.space_xs),
-
-                  // Member count row + invite code.
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.group_rounded,
-                        size: 14,
-                        color: onSurfaceVariant,
-                      ),
-                      SizedBox(width: Spacing.space_2xs),
-                      // Flexible allows this text to ellipsize when the row is
-                      // narrow (e.g. card width 240px with a long invite code
-                      // like "managers_invite_fulano_block"). Without Flexible
-                      // the Row overflows on the right.
-                      Flexible(
-                        child: Text(
-                          memberCount != null
-                              ? "$memberCount membros"
-                              : "Sem membros",
-                          style: AppTypography.bodySmall.copyWith(
-                            color: onSurfaceVariant,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      if (block.inviteCode.isNotEmpty) ...[
-                        SizedBox(width: Spacing.space_sm),
-                        Icon(
-                          Icons.qr_code_rounded,
-                          size: 14,
-                          color: onSurfaceVariant,
-                        ),
-                        SizedBox(width: Spacing.space_2xs),
-                        Flexible(
-                          child: Text(
-                            block.inviteCode,
-                            style: AppTypography.bodySmall.copyWith(
-                              color: onSurfaceVariant,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-
-                  // Optional tags.
-                  if (tags?.isNotEmpty == true) ...[
-                    SizedBox(height: Spacing.space_sm),
-                    Wrap(
-                      spacing: Spacing.space_2xs,
-                      runSpacing: Spacing.space_2xs,
-                      children: tags!
-                          .map(
-                            (t) => AppChip(label: t, variant: ChipVariant.soft),
-                          )
-                          .toList(),
-                    ),
-                  ],
-                ],
-              ),
+                _buildBadgeRow(surfaceVariant, textSecondary, textTertiary),
+              ],
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildBadgeRow(Color surfaceVariant, Color textSecondary, Color textTertiary) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Spacing.space_2xs,
+            vertical: 1,
+          ),
+          decoration: BoxDecoration(
+            color: surfaceVariant,
+            borderRadius: Radii.radiusFull,
+          ),
+          child: Text(
+            memberCount != null ? "$memberCount membros" : "Sem membros",
+            style: AppTypography.labelSmall.copyWith(color: textSecondary),
+          ),
+        ),
+        if (isLive) ...[
+          const SizedBox(width: Spacing.space_xs),
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              color: AppColors.tertiary,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: Spacing.space_2xs),
+          Text(
+            "Ao vivo",
+            style: AppTypography.labelSmall.copyWith(color: textTertiary),
+          ),
+        ],
+      ],
     );
   }
 }

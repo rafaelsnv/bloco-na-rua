@@ -52,7 +52,7 @@ class MeetingCard extends StatelessWidget {
 
   /// Returns a small 14px icon with the onSurfaceVariant colour.
   Widget _icon(IconData icon) {
-    return Icon(icon, size: 14, color: AppColors.textSecondaryLight);
+    return Icon(icon, size: 14, color: AppColors.textSecondary);
   }
 
   /// A compact vertical gap using Spacing.space_4xs.
@@ -93,7 +93,7 @@ class MeetingCard extends StatelessWidget {
               Text(
                 _formatDateTime(meeting.meetingDateTime),
                 style: AppTypography.bodySmall.copyWith(
-                  color: AppColors.textSecondaryLight,
+                  color: AppColors.textSecondary,
                 ),
               ),
             ],
@@ -110,7 +110,7 @@ class MeetingCard extends StatelessWidget {
                   child: Text(
                     meeting.location!,
                     style: AppTypography.bodySmall.copyWith(
-                      color: AppColors.textSecondaryLight,
+                      color: AppColors.textSecondary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

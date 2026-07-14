@@ -19,18 +19,23 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.backgroundLight,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       appBarTheme: AppBarTheme(
-        backgroundColor: lightColorScheme.surface,
-        foregroundColor: lightColorScheme.onSurface,
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 1,
         centerTitle: false,
-        titleTextStyle: lightTextTheme.headlineMedium,
+        titleTextStyle: lightTextTheme.headlineMedium?.copyWith(
+          color: Colors.white,
+        ),
       ),
       cardTheme: CardThemeData(
         color: lightColorScheme.surface,
         elevation: 1,
         margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(borderRadius: Radii.card),
+        shape: RoundedRectangleBorder(
+          borderRadius: Radii.card,
+          side: BorderSide(color: lightColorScheme.outline, width: 1),
+        ),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
@@ -102,7 +107,7 @@ class AppTheme {
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: Radii.input,
-          borderSide: BorderSide(color: lightColorScheme.error),
+          borderSide: BorderSide(color: lightColorScheme.error, width: 2),
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: Spacing.space_md,
@@ -139,7 +144,10 @@ class AppTheme {
         color: darkColorScheme.surface,
         elevation: 1,
         margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(borderRadius: Radii.card),
+        shape: RoundedRectangleBorder(
+          borderRadius: Radii.card,
+          side: BorderSide(color: darkColorScheme.outline, width: 1),
+        ),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
@@ -211,7 +219,7 @@ class AppTheme {
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: Radii.input,
-          borderSide: BorderSide(color: darkColorScheme.error),
+          borderSide: BorderSide(color: darkColorScheme.error, width: 2),
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: Spacing.space_md,

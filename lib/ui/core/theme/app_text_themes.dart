@@ -28,10 +28,10 @@ TextTheme _buildTextTheme({required Color textColor}) {
   );
 }
 
-/// Light-mode [TextTheme] using [AppColors.textPrimaryLight] as the
+/// Light-mode [TextTheme] using [AppColors.textPrimary] as the
 /// onSurface text color.
 final TextTheme lightTextTheme = _buildTextTheme(
-  textColor: AppColors.textPrimaryLight,
+  textColor: AppColors.textPrimary,
 );
 
 /// Dark-mode [TextTheme] using [AppColors.textPrimaryDark] as the
