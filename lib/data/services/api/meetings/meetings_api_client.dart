@@ -1,6 +1,9 @@
+import 'package:bloco_na_rua/core/api_error.dart';
+import 'package:bloco_na_rua/core/error_types.dart';
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/meetings/imeetings_api_client.dart';
 import 'package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart';
+import 'package:dio/dio.dart';
 import 'package:result_dart/result_dart.dart';
 
 class MeetingsApiClient implements IMeetingsApiClient {
@@ -22,8 +25,14 @@ class MeetingsApiClient implements IMeetingsApiClient {
         return Failure(baseApiClient.formatError(response));
       }
       return Success(MeetingsEntity.fromJson(response.data));
-    } on Exception catch (e) {
-      return Failure(Exception('An error occurred: $e'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -45,8 +54,14 @@ class MeetingsApiClient implements IMeetingsApiClient {
           return Failure(baseApiClient.formatError(response));
       }
       return Success(result);
-    } on Exception catch (e) {
-      return Failure(Exception('An error occurred: $e'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -58,8 +73,14 @@ class MeetingsApiClient implements IMeetingsApiClient {
         return Failure(baseApiClient.formatError(response));
       }
       return Success(MeetingsEntity.fromJson(response.data));
-    } on Exception catch (e) {
-      return Failure(Exception('An error occurred: $e'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -77,8 +98,14 @@ class MeetingsApiClient implements IMeetingsApiClient {
         return Failure(baseApiClient.formatError(response));
       }
       return Success(MeetingsEntity.fromJson(response.data));
-    } on Exception catch (e) {
-      return Failure(Exception('An error occurred: $e'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -90,8 +117,14 @@ class MeetingsApiClient implements IMeetingsApiClient {
         return Failure(baseApiClient.formatError(response));
       }
       return Success(response.statusCode.toString());
-    } on Exception catch (e) {
-      return Failure(Exception('An error occurred: $e'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -105,8 +138,14 @@ class MeetingsApiClient implements IMeetingsApiClient {
       final data = response.data as List;
       final result = data.map((e) => MeetingsEntity.fromJson(e)).toList();
       return Success(result);
-    } catch (error) {
-      return Failure(Exception('An error occurred: $error'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 }

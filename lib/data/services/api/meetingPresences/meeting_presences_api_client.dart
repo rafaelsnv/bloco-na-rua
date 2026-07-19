@@ -1,6 +1,9 @@
+import 'package:bloco_na_rua/core/api_error.dart';
+import 'package:bloco_na_rua/core/error_types.dart';
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/meetingPresences/imeeting_presences_api_client.dart';
 import 'package:bloco_na_rua/domain/entities/meetingPresences/meeting_presences_entity.dart';
+import 'package:dio/dio.dart';
 import 'package:result_dart/result_dart.dart';
 
 class MeetingPresencesApiClient implements IMeetingPresencesApiClient {
@@ -37,8 +40,14 @@ class MeetingPresencesApiClient implements IMeetingPresencesApiClient {
           return Failure(baseApiClient.formatError(response));
       }
       return Success(result);
-    } on Exception catch (e) {
-      return Failure(Exception('An error occurred: $e'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -52,8 +61,14 @@ class MeetingPresencesApiClient implements IMeetingPresencesApiClient {
         return Failure(baseApiClient.formatError(response));
       }
       return Success(MeetingPresencesEntity.fromJson(response.data));
-    } on Exception catch (e) {
-      return Failure(Exception('An error occurred: $e'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -65,8 +80,14 @@ class MeetingPresencesApiClient implements IMeetingPresencesApiClient {
         return Failure(baseApiClient.formatError(response));
       }
       return Success(response.statusCode.toString());
-    } on Exception catch (e) {
-      return Failure(Exception('An error occurred: $e'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 }

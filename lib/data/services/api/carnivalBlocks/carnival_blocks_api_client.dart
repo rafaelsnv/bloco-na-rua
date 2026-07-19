@@ -1,7 +1,10 @@
+import 'package:bloco_na_rua/core/api_error.dart';
 import 'package:bloco_na_rua/core/entity_base.dart';
+import 'package:bloco_na_rua/core/error_types.dart';
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/carnivalBlocks/icarnival_blocks_api_client.dart';
 import 'package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart';
+import 'package:dio/dio.dart';
 import 'package:result_dart/result_dart.dart';
 
 class CarnivalBlocksApiClient implements ICarnivalBlocksApiClient {
@@ -27,8 +30,14 @@ class CarnivalBlocksApiClient implements ICarnivalBlocksApiClient {
         data as Map<String, dynamic>,
       );
       return Success(result);
-    } on Exception catch (e) {
-      return Failure(Exception('An error occurred: $e'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -37,8 +46,10 @@ class CarnivalBlocksApiClient implements ICarnivalBlocksApiClient {
     String inviteCode,
   ) async {
     return Failure(
-      Exception(
-        'GET /CarnivalBlocks/by-invite/{code} endpoint not implemented',
+      ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: 'GET /CarnivalBlocks/by-invite/{code} endpoint not implemented',
       ),
     );
   }
@@ -53,8 +64,14 @@ class CarnivalBlocksApiClient implements ICarnivalBlocksApiClient {
       final data = response.data as List;
       final result = data.map((e) => CarnivalBlocksEntity.fromJson(e)).toList();
       return Success(result);
-    } catch (error) {
-      return Failure(Exception('An error occurred: $error'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -66,8 +83,14 @@ class CarnivalBlocksApiClient implements ICarnivalBlocksApiClient {
         return Failure(baseApiClient.formatError(response));
       }
       return Success(response.statusCode.toString());
-    } on Exception catch (e) {
-      return Failure(Exception('An error occurred: $e'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -82,8 +105,14 @@ class CarnivalBlocksApiClient implements ICarnivalBlocksApiClient {
         return Failure(baseApiClient.formatError(response));
       }
       return Success(fromJsonFactory(response.data as Map<String, dynamic>));
-    } on Exception catch (e) {
-      return Failure(Exception('An error occurred: $e'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -101,8 +130,14 @@ class CarnivalBlocksApiClient implements ICarnivalBlocksApiClient {
         return Failure(baseApiClient.formatError(response));
       }
       return Success(CarnivalBlocksEntity.fromJson(response.data));
-    } on Exception catch (e) {
-      return Failure(Exception('An error occurred: $e'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 }

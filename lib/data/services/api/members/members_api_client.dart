@@ -1,9 +1,12 @@
+import 'package:bloco_na_rua/core/api_error.dart';
+import 'package:bloco_na_rua/core/error_types.dart';
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/members/create/member_create.dart';
 import 'package:bloco_na_rua/data/services/api/members/imembers_api_client.dart';
 import 'package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart';
 import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';
 import 'package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart';
+import 'package:dio/dio.dart';
 import 'package:result_dart/result_dart.dart';
 
 class MembersApiClient implements IMembersApiClient {
@@ -28,8 +31,14 @@ class MembersApiClient implements IMembersApiClient {
       final data = await response.data;
       final result = MembersEntity.fromJson(data as Map<String, dynamic>);
       return Success(result);
-    } catch (error) {
-      return Failure(Exception('An error occurred: $error'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -43,8 +52,14 @@ class MembersApiClient implements IMembersApiClient {
       final data = await response.data;
       final result = MembersEntity.fromJson(data as Map<String, dynamic>);
       return Success(result);
-    } on Exception catch (e) {
-      return Failure(Exception('An error occurred: $e'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -68,8 +83,14 @@ class MembersApiClient implements IMembersApiClient {
           return Failure(baseApiClient.formatError(response));
       }
       return Success(result);
-    } on Exception catch (e) {
-      return Failure(Exception('An error occurred: $e'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -91,8 +112,14 @@ class MembersApiClient implements IMembersApiClient {
           return Failure(baseApiClient.formatError(response));
       }
       return Success(result);
-    } on Exception catch (e) {
-      return Failure(Exception('An error occurred: $e'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -106,8 +133,14 @@ class MembersApiClient implements IMembersApiClient {
       final data = response.data as List;
       final result = data.map((e) => MembersEntity.fromJson(e)).toList();
       return Success(result);
-    } catch (error) {
-      return Failure(Exception('An error occurred: $error'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -121,8 +154,14 @@ class MembersApiClient implements IMembersApiClient {
       final data = response.data;
       final result = MembersEntity.fromJson(data as Map<String, dynamic>);
       return Success(result);
-    } catch (error) {
-      return Failure(Exception('An error occurred: $error'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -144,8 +183,14 @@ class MembersApiClient implements IMembersApiClient {
         responseData as Map<String, dynamic>,
       );
       return Success(result);
-    } catch (error) {
-      return Failure(Exception('An error occurred: $error'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -157,8 +202,14 @@ class MembersApiClient implements IMembersApiClient {
         return Failure(baseApiClient.formatError(response));
       }
       return Success(response.statusCode!);
-    } catch (error) {
-      return Failure(Exception('An error occurred: $error'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 }

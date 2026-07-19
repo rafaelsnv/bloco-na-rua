@@ -1,3 +1,5 @@
+import 'package:bloco_na_rua/core/api_error.dart';
+import 'package:bloco_na_rua/core/error_types.dart';
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/carnivalBlockMembers/icarnival_block_members_api_client.dart';
 import 'package:bloco_na_rua/domain/entities/carnivalBlockMembers/carnival_block_members_entity.dart';
@@ -36,8 +38,14 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
           return Failure(baseApiClient.formatError(response));
       }
       return Success(result);
-    } catch (error) {
-      return Failure(Exception('An error occurred: $error'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -62,8 +70,14 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
         return Failure(baseApiClient.formatError(response));
       }
       return Success(CarnivalBlockMembersEntity.fromJson(response.data));
-    } catch (error) {
-      return Failure(Exception('An error occurred: $error'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -89,8 +103,14 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
         return Failure(baseApiClient.formatError(response));
       }
       return Success(CarnivalBlockMembersEntity.fromJson(response.data));
-    } catch (error) {
-      return Failure(Exception('An error occurred: $error'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 
@@ -105,8 +125,14 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
         return Failure(baseApiClient.formatError(response));
       }
       return Success(response.statusCode.toString());
-    } catch (error) {
-      return Failure(Exception('An error occurred: $error'));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
     }
   }
 }
