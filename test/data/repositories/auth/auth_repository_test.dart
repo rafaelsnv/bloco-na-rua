@@ -3,7 +3,7 @@ import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart"
 import "package:bloco_na_rua/data/services/auth/auth_api_client.dart";
 import "package:bloco_na_rua/data/services/auth/models/login_request/login_request.dart";
 import "package:bloco_na_rua/data/services/auth/models/login_response/login_response.dart";
-import "package:bloco_na_rua/data/services/shared_preferencies_service.dart";
+import "package:bloco_na_rua/data/services/secure_storage_service.dart";
 import "package:mocktail/mocktail.dart";
 import "package:result_dart/result_dart.dart";
 import "package:test/test.dart";
@@ -12,14 +12,14 @@ class MockIMembersRepository extends Mock implements IMembersRepository {}
 
 class MockAuthApiClient extends Mock implements AuthApiClient {}
 
-class MockSharedPreferencesService extends Mock
-    implements SharedPreferencesService {}
+class MockSecureStorageService extends Mock
+    implements SecureStorageService {}
 
 void main() {
   late AuthRepository authRepository;
   late MockIMembersRepository mockMembersRepository;
   late MockAuthApiClient mockAuthApiClient;
-  late MockSharedPreferencesService mockSharedPreferencesService;
+  late MockSecureStorageService mockSecureStorageService;
 
   setUpAll(() {
     // Register fallback value for LoginRequest (sealed freezed class)
@@ -31,12 +31,12 @@ void main() {
   setUp(() {
     mockMembersRepository = MockIMembersRepository();
     mockAuthApiClient = MockAuthApiClient();
-    mockSharedPreferencesService = MockSharedPreferencesService();
+    mockSecureStorageService = MockSecureStorageService();
 
     authRepository = AuthRepository(
       membersRepository: mockMembersRepository,
       authApiClient: mockAuthApiClient,
-      sharedPreferencesService: mockSharedPreferencesService,
+      sharedPreferencesService: mockSecureStorageService,
     );
   });
 
@@ -44,10 +44,10 @@ void main() {
     test("concurrent calls share the same in-flight Future", () async {
       // Arrange: Set up successful SharedPreferences reads
       when(
-        () => mockSharedPreferencesService.fetchToken(),
+        () => mockSecureStorageService.fetchToken(),
       ).thenAnswer((_) async => const Success("test-token"));
       when(
-        () => mockSharedPreferencesService.fetchUuid(),
+        () => mockSecureStorageService.fetchUuid(),
       ).thenAnswer((_) async => const Success("test-uuid"));
 
       // Act: Call currentUuid concurrently multiple times
@@ -63,17 +63,17 @@ void main() {
       }
 
       // Verify the SharedPreferences was only called once per type
-      verify(() => mockSharedPreferencesService.fetchToken()).called(1);
-      verify(() => mockSharedPreferencesService.fetchUuid()).called(1);
+      verify(() => mockSecureStorageService.fetchToken()).called(1);
+      verify(() => mockSecureStorageService.fetchUuid()).called(1);
     });
 
     test("logout clears the UUID cache", () async {
       // Arrange: Set up a logged-in state with cached UUID
       when(
-        () => mockSharedPreferencesService.fetchToken(),
+        () => mockSecureStorageService.fetchToken(),
       ).thenAnswer((_) async => const Success("test-token"));
       when(
-        () => mockSharedPreferencesService.fetchUuid(),
+        () => mockSecureStorageService.fetchUuid(),
       ).thenAnswer((_) async => const Success("test-uuid"));
 
       // Prime the cache
@@ -82,20 +82,20 @@ void main() {
 
       // Setup logout to clear cache
       when(
-        () => mockSharedPreferencesService.saveUuid(any()),
+        () => mockSecureStorageService.saveUuid(any()),
       ).thenAnswer((_) async => const Success(true));
       when(
-        () => mockSharedPreferencesService.saveToken(any()),
+        () => mockSecureStorageService.saveToken(any()),
       ).thenAnswer((_) async => const Success(true));
 
       await authRepository.logout();
 
       // Act: Fetch UUID again after logout - should be null
       when(
-        () => mockSharedPreferencesService.fetchToken(),
+        () => mockSecureStorageService.fetchToken(),
       ).thenAnswer((_) async => const Success(""));
       when(
-        () => mockSharedPreferencesService.fetchUuid(),
+        () => mockSecureStorageService.fetchUuid(),
       ).thenAnswer((_) async => Failure(Exception("UUID not found")));
 
       final uuidAfterLogout = await authRepository.currentUuid;
@@ -107,10 +107,10 @@ void main() {
     test("login clears the UUID cache", () async {
       // Arrange: Set up initial state with null values
       when(
-        () => mockSharedPreferencesService.fetchToken(),
+        () => mockSecureStorageService.fetchToken(),
       ).thenAnswer((_) async => const Success(""));
       when(
-        () => mockSharedPreferencesService.fetchUuid(),
+        () => mockSecureStorageService.fetchUuid(),
       ).thenAnswer((_) async => Failure(Exception("UUID not found")));
 
       // Prime the cache with null values
@@ -126,10 +126,10 @@ void main() {
         () => mockAuthApiClient.logIn(any()),
       ).thenAnswer((_) async => Success(loginResponse));
       when(
-        () => mockSharedPreferencesService.saveUuid(any()),
+        () => mockSecureStorageService.saveUuid(any()),
       ).thenAnswer((_) async => const Success(true));
       when(
-        () => mockSharedPreferencesService.saveToken(any()),
+        () => mockSecureStorageService.saveToken(any()),
       ).thenAnswer((_) async => const Success(true));
 
       await authRepository.login(
@@ -139,10 +139,10 @@ void main() {
 
       // Act: Simulate fresh SharedPreferences after login and re-fetch
       when(
-        () => mockSharedPreferencesService.fetchToken(),
+        () => mockSecureStorageService.fetchToken(),
       ).thenAnswer((_) async => const Success("new-token"));
       when(
-        () => mockSharedPreferencesService.fetchUuid(),
+        () => mockSecureStorageService.fetchUuid(),
       ).thenAnswer((_) async => const Success("new-uuid"));
 
       final uuid = await authRepository.currentUuid;
