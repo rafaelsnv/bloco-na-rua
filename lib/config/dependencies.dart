@@ -1,29 +1,28 @@
 import 'package:bloco_na_rua/data/repositories/auth/auth_listenable.dart';
 import 'package:bloco_na_rua/data/repositories/auth/auth_repository.dart';
-import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/carnival_block_members_repository.dart';
-import 'package:bloco_na_rua/data/repositories/carnivalBlocks/carnival_blocks_repository.dart';
 import 'package:bloco_na_rua/data/repositories/auth/iauth_repository.dart';
+import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/carnival_block_members_repository.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart';
+import 'package:bloco_na_rua/data/repositories/carnivalBlocks/carnival_blocks_repository.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
+import 'package:bloco_na_rua/data/repositories/meetingPresences/imeeting_presences_repository.dart';
+import 'package:bloco_na_rua/data/repositories/meetingPresences/meeting_presences_repository.dart';
 import 'package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart';
 import 'package:bloco_na_rua/data/repositories/meetings/meetings_repository.dart';
 import 'package:bloco_na_rua/data/repositories/members/imembers_repository.dart';
 import 'package:bloco_na_rua/data/repositories/members/members_repository.dart';
-import 'package:bloco_na_rua/data/repositories/meetingPresences/imeeting_presences_repository.dart';
-import 'package:bloco_na_rua/data/repositories/meetingPresences/meeting_presences_repository.dart';
 import 'package:bloco_na_rua/data/services/api/base/base_api_client.dart';
-import 'package:bloco_na_rua/data/services/api/base/dio_error_interceptor.dart';
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/carnivalBlockMembers/carnival_block_members_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/carnivalBlockMembers/icarnival_block_members_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/carnivalBlocks/carnival_blocks_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/carnivalBlocks/icarnival_blocks_api_client.dart';
+import 'package:bloco_na_rua/data/services/api/meetingPresences/imeeting_presences_api_client.dart';
+import 'package:bloco_na_rua/data/services/api/meetingPresences/meeting_presences_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/meetings/imeetings_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/meetings/meetings_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/members/imembers_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/members/members_api_client.dart';
-import 'package:bloco_na_rua/data/services/api/meetingPresences/imeeting_presences_api_client.dart';
-import 'package:bloco_na_rua/data/services/api/meetingPresences/meeting_presences_api_client.dart';
 import 'package:bloco_na_rua/data/services/auth/auth_api_client.dart';
 import 'package:bloco_na_rua/data/services/shared_preferencies_service.dart';
 import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart';
@@ -58,9 +57,8 @@ List<SingleChildWidget> get providers {
       create: (context) => BaseApiClient(
         clientFactory: (options) {
           final client = Dio(options);
-          client.interceptors.add(DioErrorInterceptor());
           client.interceptors.add(
-            PrettyDioLogger(requestBody: true, responseBody: true),
+            PrettyDioLogger(compact: true, request: false, responseBody: false),
           );
           return client;
         },

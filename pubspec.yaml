@@ -33,6 +33,9 @@ dependencies:
   flutter_cache_manager: ^3.4.1
   flutter_bloc: ^9.1.1
   equatable: ^2.0.7
+  marionette_flutter: ^0.6.0
+  flutter_driver:
+    sdk: flutter
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,11 +1,22 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
-    "dart_mcp": {
+    "marionette": {
       "type": "local",
-      "command": ["dart", "mcp-server"],
+      "command": ["dart", "pub", "global", "run", "marionette_mcp"],
       "enabled": true,
       "environment": {}
+    },
+    "dart": {
+      "type": "local",
+      "command": ["dart", "mcp-server", "--log-file=.logs/dart_mcp.log"],
+      "enabled": true,
+      "environment": {}
+    },
+    "figma": {
+      "enabled": true,
+      "type": "remote",
+      "url": "http://127.0.0.1:3845/mcp"
     }
   },
   "agent": {
