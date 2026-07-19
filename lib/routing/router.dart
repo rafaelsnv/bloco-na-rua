@@ -23,6 +23,7 @@ import "package:bloco_na_rua/ui/carnivalBlock/editBlock/widgets/edit_block_scree
 import "package:bloco_na_rua/ui/carnivalBlock/joinBlock/widgets/join_block_modal.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_shell.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_bottom_nav.dart";
+import "package:bloco_na_rua/ui/core/cubit/fab_state_cubit.dart";
 import "package:bloco_na_rua/ui/error/widgets/error_screen.dart";
 import "package:bloco_na_rua/ui/home/cubit/home_cubit.dart";
 import "package:bloco_na_rua/ui/home/widgets/home_screen.dart";
@@ -104,10 +105,13 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
 
     // Shell with 4 branches
     StatefulShellRoute.indexedStack(
-      builder: (context, state, navigationShell) => AppShell(
-        navigationShell: navigationShell,
-        items: _shellNavItems,
-        showAppBar: false,
+      builder: (context, state, navigationShell) => BlocProvider(
+        create: (context) => FabStateCubit(),
+        child: AppShell(
+          navigationShell: navigationShell,
+          items: _shellNavItems,
+          showAppBar: false,
+        ),
       ),
       branches: [
         // Branch 0: Home

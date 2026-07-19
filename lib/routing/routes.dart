@@ -1,6 +1,12 @@
+import 'package:flutter/material.dart';
+
 /// Definição das rotas da aplicação
 class Routes {
   Routes._();
+
+  /// Global route observer for listening to navigation events.
+  static final RouteObserver<ModalRoute<Object?>> routeObserver =
+      RouteObserver<ModalRoute<Object?>>();
 
   // Rotas principais
   static const String home = '/';
