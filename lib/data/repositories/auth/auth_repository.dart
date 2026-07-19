@@ -5,7 +5,7 @@ import "package:bloco_na_rua/data/services/auth/auth_api_client.dart";
 import "package:bloco_na_rua/data/services/auth/models/login_request/login_request.dart";
 import "package:bloco_na_rua/data/services/auth/models/login_response/login_response.dart";
 import "package:bloco_na_rua/data/services/auth/models/signup_request/signup_request.dart";
-import "package:bloco_na_rua/data/services/shared_preferencies_service.dart";
+import "package:bloco_na_rua/data/services/secure_storage_service.dart";
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
 import "package:logging/logging.dart";
 import "package:result_dart/result_dart.dart";
@@ -14,14 +14,14 @@ class AuthRepository implements IAuthRepository {
   AuthRepository({
     required IMembersRepository membersRepository,
     required AuthApiClient authApiClient,
-    required SharedPreferencesService sharedPreferencesService,
+    required SecureStorageService sharedPreferencesService,
   }) : _membersRepository = membersRepository,
        _authApiClient = authApiClient,
-       _sharedPreferencesService = sharedPreferencesService;
+       _secureStorageService = sharedPreferencesService;
 
   final IMembersRepository _membersRepository;
   final AuthApiClient _authApiClient;
-  final SharedPreferencesService _sharedPreferencesService;
+  final SecureStorageService _secureStorageService;
 
   bool? _isAuthenticated;
   String? _authToken;
@@ -35,7 +35,7 @@ class AuthRepository implements IAuthRepository {
   final _log = Logger("AuthRepository");
 
   Future<String?> _fetchTokenAndUuid() async {
-    final tokenResult = await _sharedPreferencesService.fetchToken();
+    final tokenResult = await _secureStorageService.fetchToken();
     if (tokenResult.isError()) {
       _log.severe("Failed to fetch Token from SharedPreferences");
       _authToken = null;
@@ -43,7 +43,7 @@ class AuthRepository implements IAuthRepository {
       _authToken = tokenResult.getOrNull();
     }
 
-    final uuidResult = await _sharedPreferencesService.fetchUuid();
+    final uuidResult = await _secureStorageService.fetchUuid();
     if (uuidResult.isError()) {
       _log.severe("Failed to fetch User ID from SharedPreferences");
     }
@@ -93,8 +93,8 @@ class AuthRepository implements IAuthRepository {
         "Session validation failed: member not found for uuid: $uuid",
       );
       // Clear stale data
-      await _sharedPreferencesService.saveUuid(null);
-      await _sharedPreferencesService.saveToken(null);
+      await _secureStorageService.saveUuid(null);
+      await _secureStorageService.saveToken(null);
       _currentUuidFuture = null;
       _authToken = null;
       _currentMember = null;
@@ -141,14 +141,14 @@ class AuthRepository implements IAuthRepository {
     // calls validateSession() in the same frame.
     _currentMember = null;
 
-    var userIdResult = await _sharedPreferencesService.saveUuid(
+    var userIdResult = await _secureStorageService.saveUuid(
       loginResponse.userUuid,
     );
     if (userIdResult.isError()) {
       _log.severe("Failed to save User UUID", userIdResult.exceptionOrNull());
     }
 
-    var tokenResult = await _sharedPreferencesService.saveToken(
+    var tokenResult = await _secureStorageService.saveToken(
       loginResponse.accessToken,
     );
     if (tokenResult.isError()) {
@@ -192,7 +192,7 @@ class AuthRepository implements IAuthRepository {
     // Invalidate cached member; GetCurrentUserData will fetch it.
     _currentMember = null;
 
-    var userIdResult = await _sharedPreferencesService.saveUuid(
+    var userIdResult = await _secureStorageService.saveUuid(
       userData.userUuid,
     );
     if (userIdResult.isError()) {
@@ -201,11 +201,11 @@ class AuthRepository implements IAuthRepository {
       _isAuthenticated = false;
       _authToken = null;
       _currentUuidFuture = null;
-      await _sharedPreferencesService.saveUuid(null);
+      await _secureStorageService.saveUuid(null);
       return Failure(Exception("Failed to persist session"));
     }
 
-    var tokenResult = await _sharedPreferencesService.saveToken(
+    var tokenResult = await _secureStorageService.saveToken(
       userData.accessToken,
     );
     if (tokenResult.isError()) {
@@ -214,7 +214,7 @@ class AuthRepository implements IAuthRepository {
       _isAuthenticated = false;
       _authToken = null;
       _currentUuidFuture = null;
-      await _sharedPreferencesService.saveUuid(null); // Clear uuid too
+      await _secureStorageService.saveUuid(null); // Clear uuid too
       return Failure(Exception("Failed to persist session"));
     }
     _log.info("Token saved successfully");
@@ -232,7 +232,7 @@ class AuthRepository implements IAuthRepository {
     _currentMember = null;
     _isAuthenticated = false;
 
-    final userIdResult = await _sharedPreferencesService.saveUuid(null);
+    final userIdResult = await _secureStorageService.saveUuid(null);
     if (userIdResult.isError()) {
       _log.warning(
         "Failed to clear stored User ID",
@@ -240,7 +240,7 @@ class AuthRepository implements IAuthRepository {
       );
     }
 
-    final tokenResult = await _sharedPreferencesService.saveToken(null);
+    final tokenResult = await _secureStorageService.saveToken(null);
     if (tokenResult.isError()) {
       _log.warning(
         "Failed to clear stored auth token",
@@ -295,7 +295,7 @@ class AuthRepository implements IAuthRepository {
         membersResult.exceptionOrNull() ?? membersResult.getOrNull(),
       );
       _authApiClient.deleteUser(model.uuid);
-      await _sharedPreferencesService.saveToken(null);
+      await _secureStorageService.saveToken(null);
       return Failure(membersResult.exceptionOrNull()!);
     }
     _log.info("Member registered successfully");

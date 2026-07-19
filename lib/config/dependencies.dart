@@ -24,7 +24,7 @@ import 'package:bloco_na_rua/data/services/api/meetings/meetings_api_client.dart
 import 'package:bloco_na_rua/data/services/api/members/imembers_api_client.dart';
 import 'package:bloco_na_rua/data/services/api/members/members_api_client.dart';
 import 'package:bloco_na_rua/data/services/auth/auth_api_client.dart';
-import 'package:bloco_na_rua/data/services/shared_preferencies_service.dart';
+import 'package:bloco_na_rua/data/services/secure_storage_service.dart';
 import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart';
 import 'package:bloco_na_rua/domain/use_cases/home/get_home_data_use_case.dart';
 import 'package:bloco_na_rua/domain/use_cases/meetings/get_user_meetings_use_case.dart';
@@ -48,7 +48,7 @@ List<SingleChildWidget> get providers {
   return [
     // Core
     Provider<SupabaseClient>(create: (context) => supabaseClient),
-    Provider(create: (context) => SharedPreferencesService()),
+    Provider(create: (context) => SecureStorageService()),
     Provider(
       create: (context) =>
           AuthApiClient(supabaseClient: context.read<SupabaseClient>()),
