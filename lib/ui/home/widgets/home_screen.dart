@@ -1,8 +1,10 @@
 import "package:bloco_na_rua/routing/routes.dart";
+import "package:bloco_na_rua/ui/core/cubit/fab_state.dart";
+import "package:bloco_na_rua/ui/core/cubit/fab_state_cubit.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
-import "package:bloco_na_rua/ui/core/widgets/buttons/app_fab.dart";
+import "package:bloco_na_rua/ui/core/widgets/buttons/add_block_fab.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/block_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/meeting_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_section_header.dart";
@@ -16,71 +18,108 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final _fabKey = GlobalKey();
+
+  @override
   Widget build(BuildContext context) {
-    return BlocListener<HomeCubit, HomeState>(
-      listenWhen: (previous, current) =>
-          current.status == HomeStatus.failure &&
-          previous.status != HomeStatus.failure,
-      listener: (context, state) {
-        if (state.errorMessage != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    color: Theme.of(context).colorScheme.onError,
+    return BlocBuilder<FabStateCubit, FabState>(
+      builder: (context, fabState) {
+        return BlocListener<HomeCubit, HomeState>(
+          listenWhen: (previous, current) =>
+              current.status == HomeStatus.failure &&
+              previous.status != HomeStatus.failure,
+          listener: (context, state) {
+            if (state.errorMessage != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Row(
+                    children: [
+                      Icon(
+                        Icons.error_outline,
+                        color: Theme.of(context).colorScheme.onError,
+                      ),
+                      const SizedBox(width: Spacing.space_2xs),
+                      Expanded(child: Text(state.errorMessage!)),
+                    ],
                   ),
-                  const SizedBox(width: Spacing.space_2xs),
-                  Expanded(child: Text(state.errorMessage!)),
-                ],
-              ),
-              backgroundColor: Theme.of(context).colorScheme.error,
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-        }
-      },
-      child: Scaffold(
-        appBar: AppAppBar(
-          title: "Bloco na Rua",
-          centerTitle: false,
-          showBackButton: false,
-        ),
-        body: SafeArea(
-          child: RefreshIndicator(
-            onRefresh: () async {
-              context.read<HomeCubit>().loadHomeData();
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            }
+          },
+          child: Listener(
+            onPointerDown: (event) {
+              if (!fabState.expanded) return;
+              // Dismiss only if tap is outside the FAB bounds
+              final fabBox = _fabKey.currentContext?.findRenderObject() as RenderBox?;
+              if (fabBox == null) return;
+              final localPos = fabBox.globalToLocal(event.position);
+              if (localPos.dx >= 0 &&
+                  localPos.dy >= 0 &&
+                  localPos.dx <= fabBox.size.width &&
+                  localPos.dy <= fabBox.size.height) {
+                return; // Tap on FAB — its onPressed handles toggle
+              }
+              context.read<FabStateCubit>().dismiss();
             },
-            child: BlocBuilder<HomeCubit, HomeState>(
-              builder: (context, state) {
-                switch (state.status) {
-                  case HomeStatus.initial:
-                  case HomeStatus.loading:
-                    return const AppLoading(message: "Carregando...");
+            child: Scaffold(
+              appBar: AppAppBar(
+                title: "Bloco na Rua",
+                centerTitle: false,
+                showBackButton: false,
+              ),
+              body: SafeArea(
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<HomeCubit>().loadHomeData();
+                  },
+                  child: BlocBuilder<HomeCubit, HomeState>(
+                    builder: (context, state) {
+                      switch (state.status) {
+                        case HomeStatus.initial:
+                        case HomeStatus.loading:
+                          return const AppLoading(message: "Carregando...");
 
-                  case HomeStatus.failure:
-                    return AppError(
-                      message: state.errorMessage,
-                      onRetry: () => context.read<HomeCubit>().loadHomeData(),
-                    );
+                        case HomeStatus.failure:
+                          return AppError(
+                            message: state.errorMessage,
+                            onRetry: () =>
+                                context.read<HomeCubit>().loadHomeData(),
+                          );
 
-                  case HomeStatus.success:
-                    return _buildContent(context, state);
-                }
-              },
+                        case HomeStatus.success:
+                          return _buildContent(context, state);
+                      }
+                    },
+                  ),
+                ),
+              ),
+              floatingActionButton: AddBlockFab(
+                key: _fabKey,
+                isExpanded: fabState.expanded,
+                shouldAnimate: fabState.shouldAnimate,
+                onFabPressed: () => context.read<FabStateCubit>().toggle(),
+                onExpandedChanged: (expanded) {
+                  if (!expanded) {
+                    context.read<FabStateCubit>().dismiss();
+                  }
+                },
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.endFloat,
             ),
           ),
-        ),
-        floatingActionButton: AppFAB(
-          icon: Icons.add_rounded,
-          onPressed: () => _showAddMenu(context),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -221,38 +260,6 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
         ],
-      ),
-    );
-  }
-
-  void _showAddMenu(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: Spacing.space_md),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.group_add_rounded),
-                title: const Text("Entrar em Bloco"),
-                onTap: () {
-                  Navigator.pop(context);
-                  context.push(Routes.joinBlock);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.add_rounded),
-                title: const Text("Criar Bloco"),
-                onTap: () {
-                  Navigator.pop(context);
-                  context.push(Routes.createBlock);
-                },
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
