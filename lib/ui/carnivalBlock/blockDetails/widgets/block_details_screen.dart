@@ -1,21 +1,18 @@
-import "package:cached_network_image/cached_network_image.dart";
-import "package:flutter_cache_manager/flutter_cache_manager.dart";
 import "package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart";
 import "package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart";
 import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart";
+import "package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart";
 import "package:bloco_na_rua/domain/entities/carnivalBlockMembers/carnival_block_members_entity.dart";
 import "package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart";
-import "package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart";
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_state.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
-import "package:bloco_na_rua/ui/core/widgets/buttons/app_fab.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_icon_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_list_tile.dart";
@@ -28,8 +25,10 @@ import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_empty.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_loading.dart";
+import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_cache_manager/flutter_cache_manager.dart";
 import "package:go_router/go_router.dart";
 import "package:intl/intl.dart";
 
@@ -430,92 +429,6 @@ class _BlockInfoCard extends StatelessWidget {
             ),
             const SizedBox(height: Spacing.space_md),
           ],
-
-        ],
-      ),
-    );
-  }
-}
-
-class _CompactInviteCodesRow extends StatelessWidget {
-  const _CompactInviteCodesRow({
-    required this.inviteCode,
-    required this.managersInviteCode,
-  });
-
-  final String inviteCode;
-  final String managersInviteCode;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _InviteCodeChip(
-            label: "Convite",
-            code: inviteCode,
-          ),
-        ),
-        const SizedBox(width: Spacing.space_xs),
-        Expanded(
-          child: _InviteCodeChip(
-            label: "Gerente",
-            code: managersInviteCode,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _InviteCodeChip extends StatelessWidget {
-  const _InviteCodeChip({required this.label, required this.code});
-
-  final String label;
-  final String code;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: Spacing.space_xs,
-        vertical: Spacing.space_4xs,
-      ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        borderRadius: Radii.radiusSm,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            "$label: ",
-            style: AppTypography.labelSmall.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-          Flexible(
-            child: Text(
-              code,
-              style: AppTypography.bodySmall.copyWith(
-                color: Theme.of(context).colorScheme.primary,
-                letterSpacing: 1,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          const SizedBox(width: Spacing.space_4xs),
-          GestureDetector(
-            onTap: () {
-              AppSnackbar.info(context, message: "Codigo copiado");
-            },
-            child: Icon(
-              Icons.copy_rounded,
-              size: 12,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          ),
         ],
       ),
     );
@@ -792,65 +705,81 @@ class _MembersSection extends StatelessWidget {
     final List<Widget> items = [];
 
     if (admins.isNotEmpty) {
-      items.add(_MemberGroupHeader(
-        title: "Admins",
-        count: admins.length,
-        color: roleColor(1),
-      ));
+      items.add(
+        _MemberGroupHeader(
+          title: "Admins",
+          count: admins.length,
+          color: roleColor(1),
+        ),
+      );
       for (final member in admins) {
-        items.add(_MemberRow(
-          member: member,
-          entity: memberEntities[member.memberId],
-          isDeleting: deletingMemberId == member.id,
-          canManageMembers: canManageMembers,
-          onDelete: () => onDeleteMember(member),
-        ));
+        items.add(
+          _MemberRow(
+            member: member,
+            entity: memberEntities[member.memberId],
+            isDeleting: deletingMemberId == member.id,
+            canManageMembers: canManageMembers,
+            onDelete: () => onDeleteMember(member),
+          ),
+        );
       }
       if (moderators.isNotEmpty || regularMembers.isNotEmpty) {
-        items.add(Divider(
-          height: 1,
-          color: Theme.of(context).colorScheme.outlineVariant,
-        ));
+        items.add(
+          Divider(
+            height: 1,
+            color: Theme.of(context).colorScheme.outlineVariant,
+          ),
+        );
       }
     }
 
     if (moderators.isNotEmpty) {
-      items.add(_MemberGroupHeader(
-        title: "Moderadores",
-        count: moderators.length,
-        color: roleColor(2),
-      ));
+      items.add(
+        _MemberGroupHeader(
+          title: "Moderadores",
+          count: moderators.length,
+          color: roleColor(2),
+        ),
+      );
       for (final member in moderators) {
-        items.add(_MemberRow(
-          member: member,
-          entity: memberEntities[member.memberId],
-          isDeleting: deletingMemberId == member.id,
-          canManageMembers: canManageMembers,
-          onDelete: () => onDeleteMember(member),
-        ));
+        items.add(
+          _MemberRow(
+            member: member,
+            entity: memberEntities[member.memberId],
+            isDeleting: deletingMemberId == member.id,
+            canManageMembers: canManageMembers,
+            onDelete: () => onDeleteMember(member),
+          ),
+        );
       }
       if (regularMembers.isNotEmpty) {
-        items.add(Divider(
-          height: 1,
-          color: Theme.of(context).colorScheme.outlineVariant,
-        ));
+        items.add(
+          Divider(
+            height: 1,
+            color: Theme.of(context).colorScheme.outlineVariant,
+          ),
+        );
       }
     }
 
     if (regularMembers.isNotEmpty) {
-      items.add(_MemberGroupHeader(
-        title: "Membros",
-        count: regularMembers.length,
-        color: roleColor(0),
-      ));
+      items.add(
+        _MemberGroupHeader(
+          title: "Membros",
+          count: regularMembers.length,
+          color: roleColor(0),
+        ),
+      );
       for (final member in regularMembers) {
-        items.add(_MemberRow(
-          member: member,
-          entity: memberEntities[member.memberId],
-          isDeleting: deletingMemberId == member.id,
-          canManageMembers: canManageMembers,
-          onDelete: () => onDeleteMember(member),
-        ));
+        items.add(
+          _MemberRow(
+            member: member,
+            entity: memberEntities[member.memberId],
+            isDeleting: deletingMemberId == member.id,
+            canManageMembers: canManageMembers,
+            onDelete: () => onDeleteMember(member),
+          ),
+        );
       }
     }
 

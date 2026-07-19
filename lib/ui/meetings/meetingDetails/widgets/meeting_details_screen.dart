@@ -1,13 +1,13 @@
 import "package:bloco_na_rua/domain/entities/meetingPresences/meeting_presences_entity.dart";
 import "package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart";
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
-import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
-import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
-import "package:bloco_na_rua/ui/core/widgets/cards/member_card.dart";
-import "package:bloco_na_rua/ui/core/widgets/buttons/app_fab.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/core/widgets/buttons/app_fab.dart";
+import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
+import "package:bloco_na_rua/ui/core/widgets/cards/member_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_chip.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_section_header.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/presence_chip.dart";
@@ -18,7 +18,6 @@ import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_empty.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_loading.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_cubit.dart";
 import "package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_state.dart";
 import "package:flutter/material.dart";
@@ -124,7 +123,8 @@ class MeetingDetailsScreen extends StatelessWidget {
                     AppSectionHeader(
                       title: "Lista de Presença",
                       action: AppChip(
-                        label: "${state.presences.where((p) => p.isPresent).length} / ${state.presences.length} confirmaram",
+                        label:
+                            "${state.presences.where((p) => p.isPresent).length} / ${state.presences.length} confirmaram",
                         variant: ChipVariant.soft,
                         color: AppColors.primary,
                       ),
@@ -286,7 +286,9 @@ class _MeetingInfoCard extends StatelessWidget {
                       label: "Ver bloco",
                       variant: ChipVariant.outlined,
                       color: AppColors.primary,
-                      onPressed: () => context.push("/carnival-block/${meeting.carnivalBlockId}"),
+                      onPressed: () => context.push(
+                        "/carnival-block/${meeting.carnivalBlockId}",
+                      ),
                     ),
                   ],
                 ),

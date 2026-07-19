@@ -1,6 +1,11 @@
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
+import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_cubit.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_state.dart";
+import "package:bloco_na_rua/ui/core/theme/theme_cubit.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_list_tile.dart";
@@ -15,12 +20,6 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 import "package:intl/intl.dart";
-
-import "package:bloco_na_rua/ui/core/theme/theme_cubit.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
-import "package:bloco_na_rua/routing/routes.dart";
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -133,7 +132,7 @@ class ProfileScreen extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: 2,
-            separatorBuilder: (_, _a) => const Divider(height: 1),
+            separatorBuilder: (_, _) => const Divider(height: 1),
             itemBuilder: (_, index) {
               if (index == 0) {
                 return AppListTile(
