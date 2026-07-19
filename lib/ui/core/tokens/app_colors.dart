@@ -35,18 +35,22 @@ class AppColors {
   static const Color errorContainerDark = Color(0xFF991B1B);
   static const Color info = Color(0xFF0EA5E9);
 
-  // Group 6 — Surface Light (Stone + Violet tonal)
+  // Group 6 — Surface Light (Stone anchor + Violet tonal ladder)
   static const Color backgroundLight = Color(0xFFFAFAF9);
   static const Color surfaceLight = Color(0xFFFFFFFF);
-  static const Color surfaceVariantLight = Color(0xFFF5F3FF);
-  static const Color surfaceContainerLight = Color(0xFFEDE9FE);
-  static const Color borderLight = Color(0xFFE5E7EB);
+  static const Color surfaceVariantLight = Color(0xFFF6F4FC);
+  static const Color surfaceContainerLight = Color(0xFFECE7F7);
+  static const Color surfaceContainerHighLight = Color(0xFFE3DAF4);
+  static const Color surfaceContainerHighestLight = Color(0xFFD9CCEE);
+  static const Color surfaceNeutralLight = Color(0xFFF0EFED);
+  static const Color borderLight = Color(0xFFDCD2F0);
 
   // Group 7 — Surface Dark (Deep violet)
   static const Color backgroundDark = Color(0xFF0B0716);
   static const Color surfaceDark = Color(0xFF15101F);
   static const Color surfaceVariantDark = Color(0xFF1E1830);
   static const Color surfaceContainerDark = Color(0xFF2A2142);
+  static const Color surfaceNeutralDark = Color(0xFF1A1626);
   static const Color borderDark = Color(0xFF3B2F5C);
 
   // Group 8 — Text Light
