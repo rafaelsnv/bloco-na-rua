@@ -2,7 +2,6 @@ import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
-import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_fab.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/block_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/meeting_card.dart";
@@ -79,7 +78,7 @@ class HomeScreen extends StatelessWidget {
         ),
         floatingActionButton: AppFAB(
           icon: Icons.add_rounded,
-          onPressed: () => context.push(Routes.createBlock),
+          onPressed: () => _showAddMenu(context),
         ),
       ),
     );
@@ -122,7 +121,10 @@ class HomeScreen extends StatelessWidget {
           AppSectionHeader(
             title: "Meus blocos",
             action: TextButton(
-              onPressed: () => context.push(Routes.carnivalBlocks),
+              onPressed: () {
+                final shell = StatefulNavigationShell.of(context);
+                shell.goBranch(1, initialLocation: true);
+              },
               child: Text(
                 "Ver todos",
                 style: AppTypography.labelLarge.copyWith(
@@ -173,7 +175,21 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(height: Spacing.space_md),
 
           // Próximas reuniões section
-          AppSectionHeader(title: "Próximas reuniões"),
+          AppSectionHeader(
+            title: "Próximas reuniões",
+            action: TextButton(
+              onPressed: () {
+                final shell = StatefulNavigationShell.of(context);
+                shell.goBranch(2, initialLocation: true);
+              },
+              child: Text(
+                "Ver todos",
+                style: AppTypography.labelLarge.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+          ),
 
           // Meetings list
           if (meetings.isEmpty)
@@ -204,37 +220,39 @@ class HomeScreen extends StatelessWidget {
                 }).toList(),
               ),
             ),
-
-          const SizedBox(height: Spacing.space_lg),
-
-          // Navigation buttons
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: Spacing.pagePaddingMobile,
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: AppButton(
-                    label: "Entrar em Bloco",
-                    variant: AppButtonVariant.secondary,
-                    icon: const Icon(Icons.group_add_rounded, size: 20),
-                    onPressed: () => context.push(Routes.joinBlock),
-                  ),
-                ),
-                const SizedBox(width: Spacing.space_sm),
-                Expanded(
-                  child: AppButton(
-                    label: "Criar Bloco",
-                    variant: AppButtonVariant.primary,
-                    icon: const Icon(Icons.add_rounded, size: 20),
-                    onPressed: () => context.push(Routes.createBlock),
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
+      ),
+    );
+  }
+
+  void _showAddMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: Spacing.space_md),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.group_add_rounded),
+                title: const Text("Entrar em Bloco"),
+                onTap: () {
+                  Navigator.pop(context);
+                  context.push(Routes.joinBlock);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.add_rounded),
+                title: const Text("Criar Bloco"),
+                onTap: () {
+                  Navigator.pop(context);
+                  context.push(Routes.createBlock);
+                },
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

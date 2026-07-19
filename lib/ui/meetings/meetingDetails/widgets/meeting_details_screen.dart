@@ -1,11 +1,14 @@
 import "package:bloco_na_rua/domain/entities/meetingPresences/meeting_presences_entity.dart";
 import "package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart";
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
-import "package:bloco_na_rua/ui/core/widgets/buttons/app_fab.dart";
+import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/member_card.dart";
+import "package:bloco_na_rua/ui/core/widgets/buttons/app_fab.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_chip.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_section_header.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/presence_chip.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_dialog.dart";
@@ -120,10 +123,10 @@ class MeetingDetailsScreen extends StatelessWidget {
                     // Presences Section
                     AppSectionHeader(
                       title: "Lista de Presença",
-                      action: TextButton(
-                        onPressed: () =>
-                            context.read<MeetingDetailsCubit>().loadPresences(),
-                        child: const Text("Atualizar"),
+                      action: AppChip(
+                        label: "${state.presences.where((p) => p.isPresent).length} / ${state.presences.length} confirmaram",
+                        variant: ChipVariant.soft,
+                        color: AppColors.primary,
                       ),
                     ),
                     const SizedBox(height: Spacing.space_2xs),
@@ -132,6 +135,7 @@ class MeetingDetailsScreen extends StatelessWidget {
                       onRetry: () =>
                           context.read<MeetingDetailsCubit>().loadPresences(),
                     ),
+                    const SizedBox(height: Spacing.space_xl),
                   ],
                 ),
               ),
@@ -212,6 +216,30 @@ class _MeetingInfoCard extends StatelessWidget {
   final MeetingsEntity meeting;
   final DateTime? meetingDateTime;
 
+  String get _statusLabel {
+    if (meetingDateTime == null) return "Próxima";
+    final now = DateTime.now();
+    if (meetingDateTime!.isBefore(now)) {
+      return "Realizada";
+    } else if (meetingDateTime!.isBefore(now.add(const Duration(hours: 1)))) {
+      return "Em breve";
+    } else {
+      return "Próxima";
+    }
+  }
+
+  Color get _statusColor {
+    if (meetingDateTime == null) return AppColors.accent;
+    final now = DateTime.now();
+    if (meetingDateTime!.isBefore(now)) {
+      return AppColors.success;
+    } else if (meetingDateTime!.isBefore(now.add(const Duration(hours: 1)))) {
+      return AppColors.warning;
+    } else {
+      return AppColors.accent;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppCard(
@@ -235,9 +263,32 @@ class _MeetingInfoCard extends StatelessWidget {
               ),
               const SizedBox(width: Spacing.space_xs),
               Expanded(
-                child: Text(
-                  meeting.name ?? "",
-                  style: AppTypography.headlineSmall,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            meeting.name ?? "",
+                            style: AppTypography.headlineSmall,
+                          ),
+                        ),
+                        AppChip(
+                          label: _statusLabel,
+                          variant: ChipVariant.filled,
+                          color: _statusColor,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: Spacing.space_2xs),
+                    AppChip(
+                      label: "Ver bloco",
+                      variant: ChipVariant.outlined,
+                      color: AppColors.primary,
+                      onPressed: () => context.push("/carnival-block/${meeting.carnivalBlockId}"),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -477,13 +528,11 @@ class _PresenceFABs extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Deny FAB
           AppFAB(
             icon: Icons.close_rounded,
             onPressed: isLoading ? () {} : onMarkAbsent,
           ),
           const SizedBox(width: Spacing.space_sm),
-          // Confirm FAB
           AppFAB(
             icon: Icons.check_rounded,
             onPressed: isLoading ? () {} : onMarkPresent,

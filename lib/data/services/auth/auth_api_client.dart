@@ -92,4 +92,16 @@ class AuthApiClient {
       return Failure(Exception(ex));
     }
   }
+
+  AsyncResult<void> resendVerification(String email) async {
+    try {
+      await _supabaseClient.auth.resend(email: email, type: OtpType.signup);
+      return Success.unit();
+    } on AuthException catch (ex) {
+      _logger.warning(ex.message);
+      return Failure(Exception("${ex.message} - ${ex.statusCode}"));
+    } catch (ex) {
+      return Failure(Exception(ex));
+    }
+  }
 }
