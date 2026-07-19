@@ -1,4 +1,6 @@
+import "package:bloco_na_rua/ui/core/cubit/fab_state_cubit.dart";
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 
 import "app_app_bar.dart";
@@ -7,16 +9,10 @@ import "app_bottom_nav.dart";
 /// AppShell wraps a [StatefulNavigationShell] with a [Scaffold] that renders
 /// the current branch's page and an [AppBottomNav].
 ///
-/// The [navigationShell] parameter provides access to the current branch index
-/// via [StatefulNavigationShell.currentIndex] and the branch navigation method
-/// [StatefulNavigationShell.goBranch].
-///
-/// [items] must contain 3-5 [AppBottomNavItem] entries matching the number of
-/// branches in the parent [StatefulShellRoute.indexedStack].
-///
-/// When [showAppBar] is true (the default), an [AppAppBar] is rendered above
-/// the branch content with the title taken from `items[navigationShell.currentIndex].label`.
-class AppShell extends StatelessWidget {
+/// Uses [StatefulNavigationShell.goBranch] to switch between branches without
+/// losing state. When the branch changes, any expanded FAB is dismissed via
+/// [FabStateCubit].
+class AppShell extends StatefulWidget {
   /// Creates an [AppShell].
   ///
   /// [navigationShell] is required and must be a [StatefulNavigationShell] obtained
@@ -48,6 +44,20 @@ class AppShell extends StatelessWidget {
   /// `items[navigationShell.currentIndex].label`.
   final bool showAppBar;
 
+  @override
+  State<AppShell> createState() => _AppShellState();
+}
+
+class _AppShellState extends State<AppShell> {
+  @override
+  void didUpdateWidget(covariant AppShell oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.navigationShell.currentIndex !=
+        widget.navigationShell.currentIndex) {
+      context.read<FabStateCubit>().dismiss(animate: false);
+    }
+  }
+
   // -------------------------------------------------------------------------
   // Build
   // -------------------------------------------------------------------------
@@ -57,16 +67,18 @@ class AppShell extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          if (showAppBar)
-            AppAppBar(title: items[navigationShell.currentIndex].label),
-          Expanded(child: navigationShell),
+          if (widget.showAppBar)
+            AppAppBar(
+              title: widget.items[widget.navigationShell.currentIndex].label,
+            ),
+          Expanded(child: widget.navigationShell),
         ],
       ),
       bottomNavigationBar: AppBottomNav(
-        items: items,
-        currentIndex: navigationShell.currentIndex,
+        items: widget.items,
+        currentIndex: widget.navigationShell.currentIndex,
         onTap: (index) =>
-            navigationShell.goBranch(index, initialLocation: false),
+            widget.navigationShell.goBranch(index, initialLocation: false),
       ),
     );
   }
