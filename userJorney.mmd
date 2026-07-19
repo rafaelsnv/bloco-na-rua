@@ -1,35 +1,50 @@
 flowchart LR
 
 	n1@{ shape: "circle", label: "Start" }
-	n2["auth"]
-	
-	n1
-	n1 --- n2
-	n2 --- n3["MainPage"]
-	n3 --- n4["BlockPage"]
-	n3
-	n5@{ shape: "diam", label: "Meeting<br>Interaction?" }
-	style n5 fill:#FFDE59,stroke:#FF914D
+	n2["LoginScreen<br>/login"]
+
+	n1 --> n2
+
+	%% Auth Flow
+	n2 --> n3["SignUpScreen<br>/register"]
+
+	%% Main App Shell (5 tabs)
+	n2 --> n4["MainPage<br>/home<br>(Início)"]
+
 	style n1 color:#000000,fill:#C1FF72,stroke:#00BF63
-	n3 --- n5@{ shape: "diam", label: "Meeting<br>Interact?" }
-	n5 --- n6["UserMeetingsPage"]
-	n5 --- n7["MeetingModal"]
-	n6 --- n7
-	n3 --- n8@{ shape: "diam", label: "Block<br>Interact?" }
-	style n8 fill:#FFDE59,stroke:#FF914D
-	n8 --- n9["JoinBlockModal"]
-	n8 --- n10["CreateBlockPage"]
-	n9 --- n4
-	n10 --- n4
-	n11@{ shape: "diam", label: "Create<br>Meeting?" }
-	style n11 fill:#FFDE59,stroke:#FF914D
-	n4 --- n11
-	n11 --- n12["CreateMeetingPage"]
-	n12 --- n4
-	n4 --- n13@{ shape: "diam", label: "Edit<br>Block?" }
-	style n13 fill:#FFDE59,stroke:#FF914D
-	n13 --- n14["EditBlockPage"]
-	n7 --- n15@{ shape: "diam", label: "Confirm or Deny<br>Presence?" }
-	style n15 fill:#FFDE59,stroke:#FF914D
-	n15 --- n16["Presence Confirmed"]
-	n15 --- n17["Presence Denied"]
+
+	%% Bottom Navigation
+	n4 --> n5["Blocos Page<br>/carnival-blocks"]
+	n4 --> n6["Reuniões Page<br>/user-meetings"]
+	n4 --> n7["Membros Page<br>/members"]
+	n4 --> n8["Perfil Page<br>/profile"]
+	n4 --> n9["Settings<br>/settings"]
+
+	%% Blocos Flow
+	n5 --> n10["Criar Bloco<br>→ CreateBlockScreen"]
+	n5 --> n11["Entrar em Bloco<br>→ JoinBlockModal"]
+	n5 --> n12["BlockDetails<br>/carnival-block/:id"]
+
+	n12 --> n13["CreateMeeting<br>/create-meeting/:blockId"]
+	n12 --> n14["EditBlock<br>/edit-block/:id"]
+	n12 --> n15["AddMember<br>/add-member/:blockId"]
+
+	%% Reuniões Flow
+	n6 --> n16["MeetingDetails<br>/meeting/:id"]
+	n16 --> n17["EditMeeting<br>/edit-meeting/:id"]
+
+	%% Decision Diamonds
+	n16 --> n18@{ shape: "diam", label: "Confirm<br>Presence?" }
+	style n18 fill:,stroke:#FF914D
+	n18 --> n19["Presença Confirmada"]
+	n18 --> n20["Presença Recusada"]
+
+	%% Membros Flow
+	n7 --> n21["MemberDetails"]
+
+	%% Modals/Forms
+	n10 --> n12
+	n11 --> n12
+	n13 --> n12
+	n14 --> n12
+	n15 --> n12
