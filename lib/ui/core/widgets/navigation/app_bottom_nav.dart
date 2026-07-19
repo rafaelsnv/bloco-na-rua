@@ -102,7 +102,7 @@ class AppBottomNav extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final effectiveBackgroundColor =
-        backgroundColor ?? theme.colorScheme.surface;
+        backgroundColor ?? (isDark ? AppColors.surfaceNeutralDark : AppColors.surfaceNeutralLight);
     // No indicator pill in the mockup (lines 283-288) — active icon is just
     // highlighted with the primary color.
     final effectiveIndicatorColor = indicatorColor ?? Colors.transparent;
