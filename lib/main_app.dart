@@ -11,9 +11,23 @@ import "package:bloco_na_rua/ui/core/theme/theme_cubit.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter/foundation.dart";
+import "package:go_router/go_router.dart";
 
-class MainApp extends StatelessWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
+
+  @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+  late final GoRouter _router;
+
+  @override
+  void initState() {
+    super.initState();
+    _router = router(context.read<AuthListenable>());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +56,7 @@ class MainApp extends StatelessWidget {
             themeMode: themeMode,
             theme: AppTheme.light(),
             darkTheme: AppTheme.dark(),
-            routerConfig: router(context.read<AuthListenable>()),
+            routerConfig: _router,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
           );
