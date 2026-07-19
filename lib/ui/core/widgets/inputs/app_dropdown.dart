@@ -60,6 +60,7 @@ class AppDropdown<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<T>(
+      key: key ?? Key('app_dropdown_$label'),
       initialValue: value,
       items: items.map((item) {
         return DropdownMenuItem<T>(

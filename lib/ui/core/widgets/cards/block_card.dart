@@ -1,4 +1,4 @@
-import "package:bloco_na_rua/core/cache/app_cache_manager.dart";
+import "package:flutter_cache_manager/flutter_cache_manager.dart";
 import "package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart";
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
@@ -57,6 +57,7 @@ class BlockCard extends StatelessWidget {
         : AppColors.textTertiary;
 
     return AppCard(
+      key: Key('block_card_${block.id}'),
       onTap: onTap,
       padding: EdgeInsets.zero,
       child: Padding(
@@ -80,7 +81,13 @@ class BlockCard extends StatelessWidget {
                         width: 40,
                         height: 40,
                         fit: BoxFit.cover,
-                        cacheManager: AppCacheManager.instance,
+                        cacheManager: CacheManager(
+                          Config(
+                            "appImageCache",
+                            stalePeriod: Duration(days: 7),
+                            maxNrOfCacheObjects: 200,
+                          ),
+                        ),
                         placeholder: (_, shim) =>
                             _buildEmojiPlaceholder(surfaceVariant),
                         errorWidget: (_, shim, err) =>

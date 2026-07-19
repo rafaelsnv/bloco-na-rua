@@ -1,4 +1,3 @@
-import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:flutter/material.dart";
@@ -58,7 +57,7 @@ class AppCard extends StatelessWidget {
   /// Overrides the default [Radii.card] border radius.
   final BorderRadius? radius;
 
-  /// Overrides the default surface colour from the current theme.
+  /// Overrides the default surface color from the current theme.
   final Color? color;
 
   static const Map<AppCardElevation, double> _elevationTokens = {
@@ -94,108 +93,11 @@ class AppCard extends StatelessWidget {
       return card;
     }
 
-    final animationsDisabled = MediaQuery.disableAnimationsOf(context);
-
-    if (animationsDisabled) {
-      return _StaticInteractiveCard(
-        onTap: onTap!,
-        elevation: computedElevation,
-        radius: computedRadius,
-        child: card,
-      );
-    }
-
-    return _AnimatedInteractiveCard(
-      onTap: onTap!,
-      elevation: computedElevation,
-      radius: computedRadius,
-      child: card,
-    );
-  }
-}
-
-class _StaticInteractiveCard extends StatelessWidget {
-  const _StaticInteractiveCard({
-    required this.onTap,
-    required this.elevation,
-    required this.radius,
-    required this.child,
-  });
-
-  final VoidCallback onTap;
-  final double elevation;
-  final BorderRadius radius;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
     return Material(
-      elevation: elevation,
-      borderRadius: radius,
+      elevation: computedElevation,
+      borderRadius: computedRadius,
       color: Colors.transparent,
-      child: InkWell(onTap: onTap, borderRadius: radius, child: child),
-    );
-  }
-}
-
-class _AnimatedInteractiveCard extends StatefulWidget {
-  const _AnimatedInteractiveCard({
-    required this.onTap,
-    required this.elevation,
-    required this.radius,
-    required this.child,
-  });
-
-  final VoidCallback onTap;
-  final double elevation;
-  final BorderRadius radius;
-  final Widget child;
-
-  @override
-  State<_AnimatedInteractiveCard> createState() =>
-      _AnimatedInteractiveCardState();
-}
-
-class _AnimatedInteractiveCardState extends State<_AnimatedInteractiveCard> {
-  bool _isHovered = false;
-  bool _isPressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final effectiveElevation = _isHovered
-        ? (widget.elevation + 1.0)
-        : widget.elevation;
-
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: GestureDetector(
-        onTap: widget.onTap,
-        onTapDown: (_) => setState(() => _isPressed = true),
-        onTapUp: (_) => setState(() => _isPressed = false),
-        onTapCancel: () => setState(() => _isPressed = false),
-        child: AnimatedContainer(
-          duration: AppDurations.fast,
-          curve: AppCurves.standard,
-          transform: Matrix4.identity()
-            ..translateByDouble(0.0, _isHovered ? -2.0 : 0.0, 0.0, 1.0),
-          child: AnimatedScale(
-            scale: _isPressed ? 0.98 : 1.0,
-            duration: AppDurations.fast,
-            curve: AppCurves.standard,
-            child: Material(
-              elevation: effectiveElevation,
-              borderRadius: widget.radius,
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: widget.onTap,
-                borderRadius: widget.radius,
-                child: widget.child,
-              ),
-            ),
-          ),
-        ),
-      ),
+      child: InkWell(onTap: onTap, borderRadius: computedRadius, child: card),
     );
   }
 }

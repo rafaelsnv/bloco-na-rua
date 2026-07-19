@@ -80,9 +80,13 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final effectiveBackgroundColor =
-        backgroundColor ?? theme.appBarTheme.backgroundColor ?? theme.colorScheme.surface;
+        backgroundColor ??
+        theme.appBarTheme.backgroundColor ??
+        theme.colorScheme.surface;
     final effectiveForegroundColor =
-        foregroundColor ?? theme.appBarTheme.foregroundColor ?? theme.colorScheme.onSurfaceVariant;
+        foregroundColor ??
+        theme.appBarTheme.foregroundColor ??
+        theme.colorScheme.onSurfaceVariant;
 
     final List<Widget>? effectiveActions = _buildActions();
 

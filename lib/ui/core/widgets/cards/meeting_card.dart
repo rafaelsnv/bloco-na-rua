@@ -61,6 +61,7 @@ class MeetingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppCard(
+      key: Key('meeting_card_${meeting.id}'),
       onTap: onTap,
       elevation: AppCardElevation.sm,
       child: Column(

@@ -51,6 +51,7 @@ class MemberCard extends StatelessWidget {
     final onlineDot = _OnlineDot();
 
     return AppCard(
+      key: Key('member_card_${member.id}'),
       onTap: onTap,
       elevation: AppCardElevation.sm,
       child: Row(

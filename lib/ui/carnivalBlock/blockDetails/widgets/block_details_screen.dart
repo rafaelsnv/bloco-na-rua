@@ -1,5 +1,5 @@
 import "package:cached_network_image/cached_network_image.dart";
-import "package:bloco_na_rua/core/cache/app_cache_manager.dart";
+import "package:flutter_cache_manager/flutter_cache_manager.dart";
 import "package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart";
 import "package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart";
 import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart";
@@ -16,10 +16,10 @@ import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_fab.dart";
+import "package:bloco_na_rua/ui/core/widgets/buttons/app_icon_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_list_tile.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_avatar.dart";
-import "package:bloco_na_rua/ui/core/widgets/display/app_chip.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_section_header.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/image_url_validator.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_dialog.dart";
@@ -276,7 +276,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
                       leading: Icon(
                         Icons.event_rounded,
                         color: Theme.of(context).colorScheme.primary,
-                        size: 20,
+                        size: 24,
                       ),
                       action: canManageMembers
                           ? AppButton(
@@ -289,7 +289,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
                             )
                           : null,
                     ),
-                    const SizedBox(height: Spacing.space_xs),
+                    const SizedBox(height: Spacing.space_sm),
                     _MeetingsSection(
                       meetings: _meetings,
                       isLoading: _loadingMeetings,
@@ -304,7 +304,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
                       leading: Icon(
                         Icons.people_rounded,
                         color: Theme.of(context).colorScheme.primary,
-                        size: 20,
+                        size: 24,
                       ),
                       action: canManageMembers
                           ? AppButton(
@@ -317,7 +317,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
                             )
                           : null,
                     ),
-                    const SizedBox(height: Spacing.space_xs),
+                    const SizedBox(height: Spacing.space_sm),
                     _MembersSection(
                       members: _members,
                       memberEntities: _memberEntities,
@@ -334,15 +334,6 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
                 ),
               ),
             ),
-            floatingActionButton: canManageMembers
-                ? AppFAB(
-                    icon: Icons.event_rounded,
-                    label: "Nova Reuniao",
-                    onPressed: () => context.push(
-                      "/create-meeting/${widget.carnivalBlockId}",
-                    ),
-                  )
-                : null,
           );
         }
 
@@ -412,7 +403,13 @@ class _BlockInfoCard extends StatelessWidget {
                 height: 160,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                cacheManager: AppCacheManager.instance,
+                cacheManager: CacheManager(
+                  Config(
+                    "appImageCache",
+                    stalePeriod: Duration(days: 7),
+                    maxNrOfCacheObjects: 200,
+                  ),
+                ),
                 placeholder: (context, url) => Container(
                   height: 160,
                   color: Theme.of(context).colorScheme.surfaceContainerHighest,
@@ -434,26 +431,45 @@ class _BlockInfoCard extends StatelessWidget {
             const SizedBox(height: Spacing.space_md),
           ],
 
-          // Invite codes (only for managers)
-          if (canManageMembers) ...[
-            _InviteCodeRow(
-              label: "Codigo de convite",
-              code: carnivalBlock.inviteCode,
-            ),
-            const SizedBox(height: Spacing.space_2xs),
-            _InviteCodeRow(
-              label: "Codigo gerente",
-              code: carnivalBlock.managersInviteCode,
-            ),
-          ],
         ],
       ),
     );
   }
 }
 
-class _InviteCodeRow extends StatelessWidget {
-  const _InviteCodeRow({required this.label, required this.code});
+class _CompactInviteCodesRow extends StatelessWidget {
+  const _CompactInviteCodesRow({
+    required this.inviteCode,
+    required this.managersInviteCode,
+  });
+
+  final String inviteCode;
+  final String managersInviteCode;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _InviteCodeChip(
+            label: "Convite",
+            code: inviteCode,
+          ),
+        ),
+        const SizedBox(width: Spacing.space_xs),
+        Expanded(
+          child: _InviteCodeChip(
+            label: "Gerente",
+            code: managersInviteCode,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _InviteCodeChip extends StatelessWidget {
+  const _InviteCodeChip({required this.label, required this.code});
 
   final String label;
   final String code;
@@ -462,51 +478,41 @@ class _InviteCodeRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: Spacing.space_sm,
-        vertical: Spacing.space_xs,
+        horizontal: Spacing.space_xs,
+        vertical: Spacing.space_4xs,
       ),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: Radii.radiusSm,
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.qr_code_rounded,
-            size: 16,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-          const SizedBox(width: Spacing.space_2xs),
           Text(
-            label,
-            style: AppTypography.bodySmall.copyWith(
+            "$label: ",
+            style: AppTypography.labelSmall.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
-          const Spacer(),
-          // Flexible allows the long invite/manager code
-          // (e.g. "managers_invite_fulano_block") to ellipsize when the
-          // available width is too tight. The copy icon still works since
-          // it triggers the same code copy action.
           Flexible(
             child: Text(
               code,
-              style: AppTypography.titleMedium.copyWith(
+              style: AppTypography.bodySmall.copyWith(
                 color: Theme.of(context).colorScheme.primary,
-                letterSpacing: 2,
+                letterSpacing: 1,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          const SizedBox(width: Spacing.space_2xs),
+          const SizedBox(width: Spacing.space_4xs),
           GestureDetector(
             onTap: () {
               AppSnackbar.info(context, message: "Codigo copiado");
             },
             child: Icon(
               Icons.copy_rounded,
-              size: 16,
+              size: 12,
               color: Theme.of(context).colorScheme.primary,
             ),
           ),
@@ -782,230 +788,189 @@ class _MembersSection extends StatelessWidget {
         .where((m) => m.role != 1 && m.role != 2)
         .toList();
 
+    // Build flat list: group headers + member rows
+    final List<Widget> items = [];
+
+    if (admins.isNotEmpty) {
+      items.add(_MemberGroupHeader(
+        title: "Admins",
+        count: admins.length,
+        color: roleColor(1),
+      ));
+      for (final member in admins) {
+        items.add(_MemberRow(
+          member: member,
+          entity: memberEntities[member.memberId],
+          isDeleting: deletingMemberId == member.id,
+          canManageMembers: canManageMembers,
+          onDelete: () => onDeleteMember(member),
+        ));
+      }
+      if (moderators.isNotEmpty || regularMembers.isNotEmpty) {
+        items.add(Divider(
+          height: 1,
+          color: Theme.of(context).colorScheme.outlineVariant,
+        ));
+      }
+    }
+
+    if (moderators.isNotEmpty) {
+      items.add(_MemberGroupHeader(
+        title: "Moderadores",
+        count: moderators.length,
+        color: roleColor(2),
+      ));
+      for (final member in moderators) {
+        items.add(_MemberRow(
+          member: member,
+          entity: memberEntities[member.memberId],
+          isDeleting: deletingMemberId == member.id,
+          canManageMembers: canManageMembers,
+          onDelete: () => onDeleteMember(member),
+        ));
+      }
+      if (regularMembers.isNotEmpty) {
+        items.add(Divider(
+          height: 1,
+          color: Theme.of(context).colorScheme.outlineVariant,
+        ));
+      }
+    }
+
+    if (regularMembers.isNotEmpty) {
+      items.add(_MemberGroupHeader(
+        title: "Membros",
+        count: regularMembers.length,
+        color: roleColor(0),
+      ));
+      for (final member in regularMembers) {
+        items.add(_MemberRow(
+          member: member,
+          entity: memberEntities[member.memberId],
+          isDeleting: deletingMemberId == member.id,
+          canManageMembers: canManageMembers,
+          onDelete: () => onDeleteMember(member),
+        ));
+      }
+    }
+
     return AppCard(
       elevation: AppCardElevation.sm,
       padding: EdgeInsets.zero,
-      child: Column(
-        children: [
-          if (admins.isNotEmpty) ...[
-            _MemberGroup(
-              title: "Admins",
-              members: admins,
-              memberEntities: memberEntities,
-              canManageMembers: canManageMembers,
-              deletingMemberId: deletingMemberId,
-              onDeleteMember: onDeleteMember,
-              roleColor: roleColor,
-              roleLabel: roleLabel,
-            ),
-            if (moderators.isNotEmpty || regularMembers.isNotEmpty)
-              Divider(
-                height: 1,
-                color: Theme.of(context).colorScheme.outlineVariant,
-              ),
-          ],
-          if (moderators.isNotEmpty) ...[
-            _MemberGroup(
-              title: "Moderadores",
-              members: moderators,
-              memberEntities: memberEntities,
-              canManageMembers: canManageMembers,
-              deletingMemberId: deletingMemberId,
-              onDeleteMember: onDeleteMember,
-              roleColor: roleColor,
-              roleLabel: roleLabel,
-            ),
-            if (regularMembers.isNotEmpty)
-              Divider(
-                height: 1,
-                color: Theme.of(context).colorScheme.outlineVariant,
-              ),
-          ],
-          if (regularMembers.isNotEmpty)
-            _MemberGroup(
-              title: "Membros",
-              members: regularMembers,
-              memberEntities: memberEntities,
-              canManageMembers: canManageMembers,
-              deletingMemberId: deletingMemberId,
-              onDeleteMember: onDeleteMember,
-              roleColor: roleColor,
-              roleLabel: roleLabel,
-            ),
-        ],
+      child: ListView.separated(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: items.length,
+        separatorBuilder: (context, index) => const SizedBox.shrink(),
+        itemBuilder: (context, index) => items[index],
       ),
     );
   }
 }
 
-class _MemberTile extends StatelessWidget {
-  const _MemberTile({
-    required this.member,
-    required this.roleLabel,
-    required this.roleColor,
-    required this.isDeleting,
-    required this.canManageMembers,
-    required this.onDelete,
+class _MemberGroupHeader extends StatelessWidget {
+  const _MemberGroupHeader({
+    required this.title,
+    required this.count,
+    required this.color,
   });
 
-  final MembersEntity member;
-  final String roleLabel;
-  final Color roleColor;
-  final bool isDeleting;
-  final bool canManageMembers;
-  final VoidCallback onDelete;
+  final String title;
+  final int count;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: Spacing.space_sm,
-        vertical: Spacing.space_2xs,
+        vertical: Spacing.space_xs,
       ),
-      child: AppCard(
-        elevation: AppCardElevation.sm,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            AppAvatar(
-              imageUrl: member.profileImage,
-              name: member.name,
-              size: AvatarSize.md,
-              imageCacheVersion: member.updatedAt,
-            ),
-            const SizedBox(width: Spacing.space_md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    member.name ?? "Sem nome",
-                    style: AppTypography.titleMedium,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  if (member.email != null) ...[
-                    const SizedBox(height: Spacing.space_4xs),
-                    Text(
-                      member.email!,
-                      style: AppTypography.bodySmall.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            const SizedBox(width: Spacing.space_sm),
-            AppChip(
-              label: roleLabel,
-              variant: ChipVariant.filled,
-              color: roleColor,
-            ),
-            if (isDeleting) ...[
-              const SizedBox(width: Spacing.space_2xs),
-              const SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            ] else if (canManageMembers) ...[
-              const SizedBox(width: Spacing.space_2xs),
-              IconButton(
-                icon: Icon(
-                  Icons.delete_rounded,
-                  color: AppColors.error,
-                  size: 20,
-                ),
-                onPressed: onDelete,
-              ),
-            ],
-          ],
-        ),
+      child: Text(
+        "$title ($count)",
+        style: AppTypography.titleSmall.copyWith(color: color),
       ),
     );
   }
 }
 
-class _MemberGroup extends StatelessWidget {
-  const _MemberGroup({
-    required this.title,
-    required this.members,
-    required this.memberEntities,
+class _MemberRow extends StatelessWidget {
+  const _MemberRow({
+    required this.member,
+    required this.entity,
+    required this.isDeleting,
     required this.canManageMembers,
-    required this.deletingMemberId,
-    required this.onDeleteMember,
-    required this.roleColor,
-    required this.roleLabel,
+    required this.onDelete,
   });
 
-  final String title;
-  final List<CarnivalBlockMembersEntity> members;
-  final Map<int, MembersEntity> memberEntities;
+  final CarnivalBlockMembersEntity member;
+  final MembersEntity? entity;
+  final bool isDeleting;
   final bool canManageMembers;
-  final int? deletingMemberId;
-  final void Function(CarnivalBlockMembersEntity) onDeleteMember;
-  final Color Function(int) roleColor;
-  final String Function(int) roleLabel;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
-    final groupRoleColor = roleColor(members.first.role);
+    final name = entity?.name ?? "Membro";
+    final email = entity?.email;
+    final profileImage = entity?.profileImage;
+    final updatedAt = entity?.updatedAt;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: Spacing.space_sm,
-            vertical: Spacing.space_xs,
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Spacing.space_sm,
+        vertical: Spacing.space_xs,
+      ),
+      child: Row(
+        children: [
+          AppAvatar(
+            imageUrl: profileImage,
+            name: name,
+            size: AvatarSize.md,
+            imageCacheVersion: updatedAt,
           ),
-          child: Text(
-            "$title (${members.length})",
-            style: AppTypography.titleSmall.copyWith(color: groupRoleColor),
-          ),
-        ),
-        ...members.map((member) {
-          final isDeleting = deletingMemberId == member.id;
-          final entity = memberEntities[member.memberId];
-
-          if (entity != null) {
-            return _MemberTile(
-              member: entity,
-              roleLabel: roleLabel(member.role),
-              roleColor: roleColor(member.role),
-              isDeleting: isDeleting,
-              canManageMembers: canManageMembers,
-              onDelete: () => onDeleteMember(member),
-            );
-          }
-
-          // Fallback: display minimal member info
-          return AppListTile(
-            leading: AppAvatar(name: "Membro", size: AvatarSize.md),
-            title: "Membro",
-            trailing: isDeleting
-                ? const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : canManageMembers
-                ? IconButton(
-                    icon: Icon(
-                      Icons.delete_rounded,
-                      color: AppColors.error,
-                      size: 20,
+          const SizedBox(width: Spacing.space_sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  name,
+                  style: AppTypography.titleMedium,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (email != null) ...[
+                  const SizedBox(height: Spacing.space_4xs),
+                  Text(
+                    email,
+                    style: AppTypography.bodySmall.copyWith(
+                      color: AppColors.textSecondary,
                     ),
-                    onPressed: () => onDeleteMember(member),
-                  )
-                : null,
-          );
-        }),
-      ],
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ],
+            ),
+          ),
+          if (isDeleting) ...[
+            const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          ] else if (canManageMembers) ...[
+            AppIconButton(
+              icon: Icons.delete_rounded,
+              color: AppColors.error,
+              size: AppIconButtonSize.sm,
+              onPressed: onDelete,
+            ),
+          ],
+        ],
+      ),
     );
   }
 }

@@ -107,7 +107,8 @@ class AppBottomNav extends StatelessWidget {
     // highlighted with the primary color.
     final effectiveIndicatorColor = indicatorColor ?? Colors.transparent;
     final effectiveSelectedIconColor =
-        selectedIconColor ?? (isDark ? AppColors.primaryLight : AppColors.primary);
+        selectedIconColor ??
+        (isDark ? AppColors.primaryLight : AppColors.primary);
     final effectiveUnselectedIconColor =
         unselectedIconColor ?? theme.colorScheme.onSurfaceVariant;
 

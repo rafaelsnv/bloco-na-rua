@@ -1,8 +1,6 @@
-import "package:flutter/material.dart";
-
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
+import "package:flutter/material.dart";
 
 /// Size variants for [AppFAB].
 enum AppFabSize {
@@ -29,7 +27,7 @@ enum AppFabColor {
 }
 
 /// A design-system-compliant FAB widget supporting basic and extended variants,
-/// with press and hover feedback, respecting accessibility animation preferences.
+/// using [FloatingActionButton] which provides native press feedback.
 class AppFAB extends StatelessWidget {
   /// Creates an [AppFAB].
   ///
@@ -94,24 +92,18 @@ class AppFAB extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final animationsDisabled = MediaQuery.disableAnimationsOf(context);
-
-    final fab = label == null
-        ? _buildBasicFab(context)
-        : _buildExtendedFab(context);
-
-    if (animationsDisabled) {
-      return fab;
-    }
-
-    return _PressFeedbackWrapper(child: fab);
+    final effectiveKey = key ?? Key('app_fab_$label');
+    return label == null
+        ? _buildBasicFab(context, effectiveKey)
+        : _buildExtendedFab(context, effectiveKey);
   }
 
-  Widget _buildBasicFab(BuildContext context) {
+  Widget _buildBasicFab(BuildContext context, Key effectiveKey) {
     return SizedBox(
       width: _diameter,
       height: _diameter,
       child: FloatingActionButton(
+        key: effectiveKey,
         onPressed: onPressed,
         backgroundColor: _backgroundColor,
         foregroundColor: Colors.white,
@@ -123,8 +115,9 @@ class AppFAB extends StatelessWidget {
     );
   }
 
-  Widget _buildExtendedFab(BuildContext context) {
+  Widget _buildExtendedFab(BuildContext context, Key effectiveKey) {
     return FloatingActionButton.extended(
+      key: effectiveKey,
       onPressed: onPressed,
       backgroundColor: _backgroundColor,
       foregroundColor: Colors.white,
@@ -133,51 +126,6 @@ class AppFAB extends StatelessWidget {
       heroTag: null,
       icon: Icon(icon, size: _iconSize),
       label: Text(label!),
-    );
-  }
-}
-
-class _PressFeedbackWrapper extends StatefulWidget {
-  const _PressFeedbackWrapper({required this.child});
-
-  final Widget child;
-
-  @override
-  State<_PressFeedbackWrapper> createState() => _PressFeedbackWrapperState();
-}
-
-class _PressFeedbackWrapperState extends State<_PressFeedbackWrapper> {
-  bool _isPressed = false;
-
-  void _handleTapDown(TapDownDetails details) {
-    setState(() => _isPressed = true);
-  }
-
-  void _handleTapUp(TapUpDetails details) {
-    setState(() => _isPressed = false);
-  }
-
-  void _handleTapCancel() {
-    setState(() => _isPressed = false);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: _handleTapDown,
-      onTapUp: _handleTapUp,
-      onTapCancel: _handleTapCancel,
-      child: AnimatedScale(
-        duration: AppDurations.fast,
-        curve: AppCurves.standard,
-        scale: _isPressed ? 0.95 : 1.0,
-        child: AnimatedOpacity(
-          duration: AppDurations.fast,
-          curve: AppCurves.standard,
-          opacity: _isPressed ? 0.9 : 1.0,
-          child: widget.child,
-        ),
-      ),
     );
   }
 }

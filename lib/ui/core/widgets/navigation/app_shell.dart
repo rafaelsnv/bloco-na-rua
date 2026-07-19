@@ -65,10 +65,8 @@ class AppShell extends StatelessWidget {
       bottomNavigationBar: AppBottomNav(
         items: items,
         currentIndex: navigationShell.currentIndex,
-        onTap: (index) => navigationShell.goBranch(
-          index,
-          initialLocation: index == navigationShell.currentIndex,
-        ),
+        onTap: (index) =>
+            navigationShell.goBranch(index, initialLocation: false),
       ),
     );
   }

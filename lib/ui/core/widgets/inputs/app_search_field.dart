@@ -68,6 +68,7 @@ class _AppSearchFieldState extends State<AppSearchField> {
     final colorScheme = theme.colorScheme;
 
     return TextFormField(
+      key: widget.key ?? Key('app_search_field_${widget.hint}'),
       controller: _controller,
       autofocus: widget.autofocus,
       onChanged: widget.onChanged,
@@ -83,7 +84,7 @@ class _AppSearchFieldState extends State<AppSearchField> {
           child: _controller.text.isEmpty
               ? const SizedBox.shrink(key: ValueKey("empty"))
               : IconButton(
-                  key: ValueKey("clear"),
+                  key: const ValueKey("clear"),
                   icon: Icon(
                     Icons.close_rounded,
                     color: colorScheme.onSurfaceVariant,

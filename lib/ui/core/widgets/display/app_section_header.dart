@@ -1,6 +1,6 @@
-import "package:flutter/material.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:flutter/material.dart";
 
 class AppSectionHeader extends StatelessWidget {
   const AppSectionHeader({
@@ -27,17 +27,18 @@ class AppSectionHeader extends StatelessWidget {
         vertical: Spacing.space_sm,
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (leading != null) ...[
             leading!,
             const SizedBox(width: Spacing.space_xs),
           ],
-          Expanded(child: Text(title, style: AppTypography.headlineSmall)),
-          if (action != null) ...[
-            const SizedBox(width: Spacing.space_sm),
-            action!,
-          ],
+          Expanded(
+            flex: 2,
+            child: Text(title, style: AppTypography.headlineSmall),
+          ),
+          if (action != null) ...[Flexible(child: action!)],
         ],
       ),
     );

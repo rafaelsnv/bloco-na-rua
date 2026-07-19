@@ -81,11 +81,7 @@ class AppChip extends StatelessWidget {
       onPressed: onPressed,
       onDeleted: onDeleted,
       deleteIcon: onDeleted != null
-          ? Icon(
-              Icons.close_rounded,
-              size: 16,
-              color: AppColors.textSecondary,
-            )
+          ? Icon(Icons.close_rounded, size: 16, color: AppColors.textSecondary)
           : null,
       backgroundColor: background,
       deleteIconColor: AppColors.textSecondary,
@@ -117,7 +113,11 @@ class AppChip extends StatelessWidget {
         // brand primary color, mirroring the mockup (lines 373: dark Todos
         // chip uses bg-primary-light text-primary-dark).
         if (isDark && effectiveColor == AppColors.primary) {
-          return (AppColors.primaryDark, AppColors.primaryLight, BorderSide.none);
+          return (
+            AppColors.primaryDark,
+            AppColors.primaryLight,
+            BorderSide.none,
+          );
         }
         return (Colors.white, effectiveColor, BorderSide.none);
 
@@ -134,7 +134,9 @@ class AppChip extends StatelessWidget {
         // for proper contrast on the 20% opacity background.
         Color foreground = effectiveColor;
         if (effectiveColor == AppColors.secondary) {
-          foreground = isDark ? AppColors.secondaryLight : AppColors.secondaryDark;
+          foreground = isDark
+              ? AppColors.secondaryLight
+              : AppColors.secondaryDark;
         }
         // Background always uses the effective (input) color at 20% opacity,
         // not the swapped foreground — this matches the mockup's

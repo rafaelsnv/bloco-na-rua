@@ -90,9 +90,12 @@ class AppIconButton extends StatelessWidget {
       constraints = const BoxConstraints(minWidth: 48, minHeight: 48);
     }
 
+    final effectiveKey = key ?? Key('app_icon_button_$tooltip');
+
     final Widget button = Opacity(
       opacity: isDisabled ? 0.5 : 1.0,
       child: IconButton(
+        key: effectiveKey,
         icon: Icon(icon, size: iconSize, color: color ?? _iconColor(context)),
         onPressed: effectiveOnPressed,
         visualDensity: visualDensity,
@@ -105,11 +108,7 @@ class AppIconButton extends StatelessWidget {
       ),
     );
 
-    if (tooltip != null) {
-      return Tooltip(message: tooltip, child: button);
-    }
-
-    return button;
+    return tooltip != null ? Tooltip(message: tooltip, child: button) : button;
   }
 
   Color _iconColor(BuildContext context) {

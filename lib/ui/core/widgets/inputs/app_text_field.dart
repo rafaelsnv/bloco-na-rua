@@ -108,6 +108,7 @@ class AppTextField extends StatelessWidget {
     final effectiveMaxLines = isMultiline ? null : (maxLines ?? 1);
 
     return TextFormField(
+      key: key ?? Key('app_text_field_$label'),
       controller: controller,
       onChanged: onChanged,
       onFieldSubmitted: onSubmitted,

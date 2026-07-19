@@ -30,6 +30,10 @@ class AppListTile extends StatelessWidget {
   /// vertical: Spacing.listItemVerticalPadding)`.
   ///
   /// When [onTap] is null the widget renders in a disabled visual state.
+  ///
+  /// [semanticKey] defaults to a kebab-case version of [title] prefixed with
+  /// "app_list_tile_" (e.g., title "Settings" → Key('app_list_tile_settings')).
+  /// Override with an explicit key for unique test selectors.
   const AppListTile({
     super.key,
     required this.title,
@@ -40,7 +44,11 @@ class AppListTile extends StatelessWidget {
     this.onLongPress,
     this.isThreeLine = false,
     this.padding,
-  });
+    String? semanticKey,
+  }) : _semanticKey = semanticKey;
+
+  /// Fallback semantic key derived from [title] when [super.key] is not provided.
+  final String? _semanticKey;
 
   /// The primary text line displayed in the list tile.
   ///
@@ -82,6 +90,17 @@ class AppListTile extends StatelessWidget {
   /// vertical: Spacing.listItemVerticalPadding)`.
   final EdgeInsetsGeometry? padding;
 
+  /// Converts [title] to a kebab-case semantic key prefix.
+  ///
+  /// E.g., "Settings" → "app_list_tile_settings", "User Profile" → "app_list_tile_user_profile".
+  Key _defaultKey() {
+    final slug = title
+        .toLowerCase()
+        .replaceAll(RegExp(r'[\s_]+'), '-')
+        .replaceAll(RegExp(r'[^a-z0-9-]'), '');
+    return Key('app_list_tile_$slug');
+  }
+
   @override
   Widget build(BuildContext context) {
     final effectivePadding =
@@ -91,7 +110,11 @@ class AppListTile extends StatelessWidget {
           vertical: Spacing.listItemVerticalPadding,
         );
 
+    final resolvedKey =
+        super.key ?? (_semanticKey != null ? Key(_semanticKey) : _defaultKey());
+
     return ListTile(
+      key: resolvedKey,
       enabled: onTap != null,
       contentPadding: effectivePadding,
       leading: leading,

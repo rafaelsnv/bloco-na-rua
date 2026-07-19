@@ -1,9 +1,9 @@
-import "package:flutter/material.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:flutter/material.dart";
 
 /// Button variant taxonomy.
 enum AppButtonVariant {
@@ -157,6 +157,7 @@ class AppButton extends StatelessWidget {
       effectiveOnPressed,
       effectiveOpacity,
       animationsDisabled,
+      key ?? Key('app_button_$label'),
     );
 
     if (animationsDisabled) {
@@ -214,6 +215,7 @@ class AppButton extends StatelessWidget {
     VoidCallback? effectiveOnPressed,
     double effectiveOpacity,
     bool animationsDisabled,
+    Key effectiveKey,
   ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final foreground = _foregroundColor(context);
@@ -235,6 +237,7 @@ class AppButton extends StatelessWidget {
 
     final button = switch (variant) {
       AppButtonVariant.primary => FilledButton(
+        key: effectiveKey,
         onPressed: effectiveOnPressed,
         style: buttonStyle.copyWith(
           backgroundColor: WidgetStateProperty.all(AppColors.primary),
@@ -243,6 +246,7 @@ class AppButton extends StatelessWidget {
         child: content,
       ),
       AppButtonVariant.accent => FilledButton(
+        key: effectiveKey,
         onPressed: effectiveOnPressed,
         style: buttonStyle.copyWith(
           backgroundColor: WidgetStateProperty.all(
@@ -257,6 +261,7 @@ class AppButton extends StatelessWidget {
         child: content,
       ),
       AppButtonVariant.secondary => OutlinedButton(
+        key: effectiveKey,
         onPressed: effectiveOnPressed,
         style: buttonStyle.copyWith(
           backgroundColor: WidgetStateProperty.all(Colors.transparent),
@@ -268,6 +273,7 @@ class AppButton extends StatelessWidget {
         child: content,
       ),
       AppButtonVariant.tertiary => FilledButton.tonal(
+        key: effectiveKey,
         onPressed: effectiveOnPressed,
         style: buttonStyle.copyWith(
           foregroundColor: WidgetStateProperty.all(foreground),
@@ -275,6 +281,7 @@ class AppButton extends StatelessWidget {
         child: content,
       ),
       AppButtonVariant.ghost => TextButton(
+        key: effectiveKey,
         onPressed: effectiveOnPressed,
         style: buttonStyle.copyWith(
           backgroundColor: WidgetStateProperty.all(Colors.transparent),
