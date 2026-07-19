@@ -1,15 +1,17 @@
+import 'package:flutter/widgets.dart';
 import 'package:dio/dio.dart';
 
 import 'package:bloco_na_rua/core/error_messages.dart';
 import 'package:bloco_na_rua/core/error_types.dart';
 
 /// Centralized API error class that encapsulates error information
-/// with user-friendly messages in pt_BR.
-class ApiError {
+/// with user-friendly messages.
+class ApiError implements Exception {
   /// The type/category of the error
   final ApiErrorType type;
 
-  /// Human-readable message in pt_BR for display to users
+  /// Human-readable fallback message (non-localized, used when no context available).
+  /// Defaults to English from ARB catalog.
   final String userMessage;
 
   /// Technical message for logging and debugging
@@ -25,8 +27,16 @@ class ApiError {
     this.statusCode,
   });
 
-  /// Returns the user-facing message
-  String toUserMessage() => userMessage;
+  /// Returns the user-facing message.
+  ///
+  /// If [context] is provided, returns the localized message for the current locale.
+  /// Otherwise returns the non-localized fallback (English by default).
+  String toUserMessage([BuildContext? context]) {
+    if (context != null) {
+      return ErrorMessages.forType(context, type, statusCode);
+    }
+    return userMessage;
+  }
 
   /// Creates an ApiError from a DioException
   factory ApiError.fromDioException(DioException exception) {
@@ -36,7 +46,7 @@ class ApiError {
       case DioExceptionType.receiveTimeout:
         return ApiError(
           type: ApiErrorType.timeout,
-          userMessage: ErrorMessages.timeout,
+          userMessage: 'Slow connection. Check your internet or try again.',
           technicalMessage: exception.message,
           statusCode: exception.response?.statusCode,
         );
@@ -44,7 +54,7 @@ class ApiError {
       case DioExceptionType.connectionError:
         return ApiError(
           type: ApiErrorType.network,
-          userMessage: ErrorMessages.network,
+          userMessage: 'No internet connection. Check your Wi-Fi.',
           technicalMessage: exception.message,
         );
 
@@ -54,14 +64,14 @@ class ApiError {
       case DioExceptionType.cancel:
         return ApiError(
           type: ApiErrorType.unknown,
-          userMessage: ErrorMessages.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
           technicalMessage: 'Request cancelled: ${exception.message}',
         );
 
       case DioExceptionType.badCertificate:
         return ApiError(
           type: ApiErrorType.network,
-          userMessage: ErrorMessages.network,
+          userMessage: 'No internet connection. Check your Wi-Fi.',
           technicalMessage: 'Certificate error: ${exception.message}',
         );
 
@@ -72,13 +82,13 @@ class ApiError {
             msg.contains('ConnectionRefused')) {
           return ApiError(
             type: ApiErrorType.network,
-            userMessage: ErrorMessages.network,
+            userMessage: 'No internet connection. Check your Wi-Fi.',
             technicalMessage: exception.message,
           );
         }
         return ApiError(
           type: ApiErrorType.unknown,
-          userMessage: ErrorMessages.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
           technicalMessage: exception.message,
         );
     }
@@ -91,7 +101,7 @@ class ApiError {
     if (statusCode == null) {
       return ApiError(
         type: ApiErrorType.unknown,
-        userMessage: ErrorMessages.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
         technicalMessage: 'Response with no status code',
       );
     }
@@ -100,7 +110,7 @@ class ApiError {
       case 400:
         return ApiError(
           type: ApiErrorType.validation,
-          userMessage: ErrorMessages.validation,
+          userMessage: 'Invalid data. Check the information.',
           technicalMessage: response?.statusMessage ?? '',
           statusCode: statusCode,
         );
@@ -108,7 +118,7 @@ class ApiError {
       case 401:
         return ApiError(
           type: ApiErrorType.auth,
-          userMessage: ErrorMessages.authExpired,
+          userMessage: 'Session expired. Please log in again.',
           technicalMessage: response?.statusMessage ?? '',
           statusCode: statusCode,
         );
@@ -116,7 +126,7 @@ class ApiError {
       case 403:
         return ApiError(
           type: ApiErrorType.auth,
-          userMessage: ErrorMessages.authForbidden,
+          userMessage: "You don't have permission for this action.",
           technicalMessage: response?.statusMessage ?? '',
           statusCode: statusCode,
         );
@@ -124,7 +134,7 @@ class ApiError {
       case 404:
         return ApiError(
           type: ApiErrorType.notFound,
-          userMessage: ErrorMessages.notFound,
+          userMessage: 'Resource not found.',
           technicalMessage: response?.statusMessage ?? '',
           statusCode: statusCode,
         );
@@ -132,7 +142,7 @@ class ApiError {
       case 503:
         return ApiError(
           type: ApiErrorType.server,
-          userMessage: ErrorMessages.server503,
+          userMessage: 'Server temporarily unavailable. Try again later.',
           technicalMessage: response?.statusMessage ?? '',
           statusCode: statusCode,
         );
@@ -141,7 +151,7 @@ class ApiError {
         if (statusCode >= 500) {
           return ApiError(
             type: ApiErrorType.server,
-            userMessage: ErrorMessages.server5xx,
+            userMessage: 'Server error. Try again later.',
             technicalMessage: response?.statusMessage ?? '',
             statusCode: statusCode,
           );
@@ -149,7 +159,7 @@ class ApiError {
 
         return ApiError(
           type: ApiErrorType.unknown,
-          userMessage: ErrorMessages.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
           technicalMessage: response?.statusMessage ?? '',
           statusCode: statusCode,
         );

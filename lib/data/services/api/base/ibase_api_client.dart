@@ -1,3 +1,4 @@
+import 'package:bloco_na_rua/core/api_error.dart';
 import 'package:dio/dio.dart';
 
 abstract class IBaseApiClient {
@@ -6,5 +7,5 @@ abstract class IBaseApiClient {
   BaseOptions? get options;
   Dio Function(BaseOptions?)? get clientFactory;
 
-  Exception formatError(Response<dynamic> response);
+  ApiError formatError(Response<dynamic> response);
 }

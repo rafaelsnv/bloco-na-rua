@@ -1,35 +1,40 @@
-/// Catalog of user-facing error messages in pt_BR.
-/// Used by ApiError to provide consistent, localized error messaging.
+import 'package:flutter/widgets.dart';
+import 'package:bloco_na_rua/l10n/app_localizations.dart';
+
+import 'package:bloco_na_rua/core/error_types.dart';
+
+/// Catalog of user-facing error messages via AppLocalizations.
+/// Use [forType] to get a localized message given an error type and status code.
 class ErrorMessages {
   ErrorMessages._();
 
-  /// No internet connection or socket error
-  static const network =
-      'Sem conexão com a internet. Verifique sua rede Wi-Fi.';
+  /// Returns the localized message for the given error type and HTTP status code.
+  ///
+  /// The [type] is the API error type. The [statusCode] is used to distinguish
+  /// between semantically different messages that share the same type (e.g.
+  /// 401 vs 403 for auth, 503 vs other 5xx for server).
+  static String forType(BuildContext context, ApiErrorType type, int? statusCode) {
+    final l10n = AppLocalizations.of(context)!;
 
-  /// Connection timeout
-  static const timeout =
-      'Conexão lenta. Verifique sua internet ou tente novamente.';
-
-  /// Server temporarily unavailable (503)
-  static const server503 =
-      'Servidor temporariamente indisponível. Tente novamente mais tarde.';
-
-  /// Generic 5xx server errors
-  static const server5xx = 'Erro no servidor. Tente novamente mais tarde.';
-
-  /// Authentication expired (401)
-  static const authExpired = 'Sessão expirada. Faça login novamente.';
-
-  /// Authorization forbidden (403)
-  static const authForbidden = 'Você não tem permissão para esta ação.';
-
-  /// Resource not found (404)
-  static const notFound = 'Recurso não encontrado.';
-
-  /// Validation error (400)
-  static const validation = 'Dados inválidos. Verifique as informações.';
-
-  /// Unknown or unexpected error
-  static const unknown = 'Algo inesperado aconteceu. Tente novamente.';
+    switch (type) {
+      case ApiErrorType.network:
+        return l10n.network;
+      case ApiErrorType.timeout:
+        return l10n.timeout;
+      case ApiErrorType.validation:
+        return l10n.validation;
+      case ApiErrorType.notFound:
+        return l10n.notFound;
+      case ApiErrorType.unknown:
+        return l10n.unknown;
+      case ApiErrorType.server:
+        // Distinguish 503 from generic 5xx
+        if (statusCode == 503) return l10n.server503;
+        return l10n.server5xx;
+      case ApiErrorType.auth:
+        // Distinguish 401 (expired) from 403 (forbidden)
+        if (statusCode == 401) return l10n.authExpired;
+        return l10n.authForbidden;
+    }
+  }
 }

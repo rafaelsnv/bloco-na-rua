@@ -1,3 +1,4 @@
+import 'package:bloco_na_rua/core/api_error.dart';
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
 import 'package:dio/dio.dart';
 
@@ -16,9 +17,7 @@ class BaseApiClient implements IBaseApiClient {
   final String basePath = '/api/v1/';
 
   @override
-  Exception formatError(Response response) {
-    return Exception(
-      'Request failed: ${response.statusCode} - ${response.statusMessage}',
-    );
+  ApiError formatError(Response response) {
+    return ApiError.fromResponse(response);
   }
 }
