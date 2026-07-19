@@ -30,3 +30,11 @@ final class AuthFailure extends AuthState {
   @override
   List<Object?> get props => [message];
 }
+
+final class AuthEmailVerificationSent extends AuthState {
+  final String email;
+  const AuthEmailVerificationSent({required this.email});
+
+  @override
+  List<Object?> get props => [email];
+}

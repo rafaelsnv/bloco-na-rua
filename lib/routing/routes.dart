@@ -27,6 +27,10 @@ class Routes {
   static const String profile = '/profile';
   static const String settings = '/settings';
 
+  // Rotas de autenticação
+  static const String verifyEmail = '/verify-email';
+  static const String onboarding = '/onboarding';
+
   // Rotas de erro
   static const String notFound = '/404';
   static const String error = '/error';

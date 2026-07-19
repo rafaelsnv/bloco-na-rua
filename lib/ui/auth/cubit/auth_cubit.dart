@@ -45,13 +45,29 @@ class AuthCubit extends Cubit<AuthState> {
     result.fold(
       (success) {
         _log.info("Sign up successful");
-        emit(const AuthSuccess(message: "Conta criada com sucesso!"));
-        emit(AuthAuthenticated());
+        emit(AuthEmailVerificationSent(email: signUpRequest.email));
         _authListenable.notify();
       },
       (error) {
         final message = error.toString();
         _log.warning("Sign up failed: $message");
+        emit(AuthFailure(message));
+      },
+    );
+  }
+
+  Future<void> resendVerification(String email) async {
+    emit(AuthLoading());
+    final result = await _authRepository.resendVerification(email);
+
+    result.fold(
+      (success) {
+        _log.info("Verification email resent");
+        emit(const AuthSuccess(message: "E-mail de verificação reenviado!"));
+      },
+      (error) {
+        final message = error.toString();
+        _log.warning("Failed to resend verification: $message");
         emit(AuthFailure(message));
       },
     );

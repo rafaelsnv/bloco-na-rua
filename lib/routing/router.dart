@@ -9,12 +9,14 @@ import "package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart";
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/auth/login/widgets/login_screen.dart";
 import "package:bloco_na_rua/ui/auth/signUp/widgets/signup_screen.dart";
+import "package:bloco_na_rua/ui/auth/verifyEmail/widgets/verify_email_screen.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/addMember/cubit/add_member_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/addMember/widgets/add_member_screen.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockDetails/widgets/block_details_screen.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockList/widgets/block_list_screen.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/createBlock/widgets/create_block_screen.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/editBlock/cubit/edit_block_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/editBlock/widgets/edit_block_screen.dart";
@@ -32,9 +34,8 @@ import "package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_cu
 import "package:bloco_na_rua/ui/meetings/meetingDetails/widgets/meeting_details_screen.dart";
 import "package:bloco_na_rua/ui/meetings/userMeetings/cubit/user_meetings_cubit.dart";
 import "package:bloco_na_rua/ui/meetings/userMeetings/widgets/user_meetings_screen.dart";
-import "package:bloco_na_rua/ui/members/cubit/members_cubit.dart";
-import "package:bloco_na_rua/ui/members/widgets/members_screen.dart";
 import "package:bloco_na_rua/ui/not_found/widgets/not_found_screen.dart";
+import "package:bloco_na_rua/ui/onboarding/onboarding_wrapper.dart";
 import "package:bloco_na_rua/ui/profile/cubit/profile_cubit.dart";
 import "package:bloco_na_rua/ui/profile/widgets/profile_screen.dart";
 import "package:bloco_na_rua/ui/settings/widgets/settings_screen.dart";
@@ -49,7 +50,6 @@ const _shellNavItems = <AppBottomNavItem>[
   AppBottomNavItem(icon: Icons.home_rounded, label: "Início"),
   AppBottomNavItem(icon: Icons.celebration_rounded, label: "Blocos"),
   AppBottomNavItem(icon: Icons.event_rounded, label: "Reuniões"),
-  AppBottomNavItem(icon: Icons.people_rounded, label: "Membros"),
   AppBottomNavItem(icon: Icons.person_rounded, label: "Perfil"),
 ];
 
@@ -59,6 +59,7 @@ CustomTransitionPage<void> _buildPageWithSlideTransition({
   required GoRouterState state,
   required Widget child,
 }) {
+  _logger.info('Navigating to: ${state.matchedLocation}');
   return CustomTransitionPage<void>(
     key: state.pageKey,
     child: child,
@@ -89,8 +90,19 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
       path: Routes.register,
       builder: (context, state) => const SignUpScreen(),
     ),
+    GoRoute(
+      path: Routes.verifyEmail,
+      builder: (context, state) {
+        final email = state.uri.queryParameters["email"] ?? "";
+        return VerifyEmailScreen(email: email);
+      },
+    ),
+    GoRoute(
+      path: Routes.onboarding,
+      builder: (context, state) => const OnboardingWrapper(),
+    ),
 
-    // Shell with 5 branches
+    // Shell with 4 branches
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) => AppShell(
         navigationShell: navigationShell,
@@ -152,25 +164,7 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
             ),
           ],
         ),
-        // Branch 3: Members
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: Routes.members,
-              pageBuilder: (context, state) => _buildPageWithSlideTransition(
-                context: context,
-                state: state,
-                child: BlocProvider(
-                  create: (context) =>
-                      MembersCubit(membersRepository: context.read())
-                        ..loadMembers(),
-                  child: const MembersScreen(),
-                ),
-              ),
-            ),
-          ],
-        ),
-        // Branch 4: Profile
+        // Branch 3: Profile
         StatefulShellBranch(
           routes: [
             GoRoute(
@@ -279,7 +273,15 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
       pageBuilder: (context, state) => _buildPageWithSlideTransition(
         context: context,
         state: state,
-        child: const CreateBlockScreen(),
+        child: BlocProvider(
+          create: (context) => CreateBlockCubit(
+            carnivalBlocksRepository: context.read<ICarnivalBlocksRepository>(),
+            carnivalBlockMembersRepository: context
+                .read<ICarnivalBlockMembersRepository>(),
+            getCurrentUserData: context.read<GetCurrentUserData>(),
+          ),
+          child: const CreateBlockScreen(),
+        ),
       ),
     ),
     GoRoute(

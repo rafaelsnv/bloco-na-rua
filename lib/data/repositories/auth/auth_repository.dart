@@ -76,6 +76,11 @@ class AuthRepository implements IAuthRepository {
   MembersEntity? get currentMember => _currentMember;
 
   @override
+  void setCurrentMember(MembersEntity member) {
+    _currentMember = member;
+  }
+
+  @override
   Future<bool> validateSession() async {
     final uuid = await currentUuid;
     if (uuid == null || uuid.isEmpty) {
@@ -257,6 +262,18 @@ class AuthRepository implements IAuthRepository {
     }
 
     _log.info("Password reset email sent");
+    return result;
+  }
+
+  @override
+  AsyncResult<void> resendVerification(String email) async {
+    final result = await _authApiClient.resendVerification(email);
+    if (result.isError()) {
+      _log.severe("Failed to resend verification email");
+      return result;
+    }
+
+    _log.info("Verification email resent");
     return result;
   }
 

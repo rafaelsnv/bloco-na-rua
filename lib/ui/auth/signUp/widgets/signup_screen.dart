@@ -86,6 +86,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
               context,
               message: state.message.replaceAll("Exception: ", ""),
             );
+          } else if (state is AuthEmailVerificationSent) {
+            context.go(
+              "${Routes.verifyEmail}?email=${Uri.encodeComponent(state.email)}",
+            );
           } else if (state is AuthAuthenticated) {
             context.go(Routes.home);
           } else if (state is AuthSuccess) {
