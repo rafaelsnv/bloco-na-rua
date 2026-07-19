@@ -2,8 +2,10 @@ import "package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entit
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_state.dart";
+import "package:bloco_na_rua/ui/core/cubit/fab_state.dart";
+import "package:bloco_na_rua/ui/core/cubit/fab_state_cubit.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
-import "package:bloco_na_rua/ui/core/widgets/buttons/app_fab.dart";
+import "package:bloco_na_rua/ui/core/widgets/buttons/add_block_fab.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/block_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_empty.dart";
@@ -34,15 +36,21 @@ class BlockListScreen extends StatelessWidget {
   }
 }
 
-class _BlockListScreenContent extends StatelessWidget {
+class _BlockListScreenContent extends StatefulWidget {
   const _BlockListScreenContent();
 
   @override
+  State<_BlockListScreenContent> createState() => _BlockListScreenContentState();
+}
+
+class _BlockListScreenContentState extends State<_BlockListScreenContent> {
+  final _fabKey = GlobalKey();
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const AppAppBar(title: "Blocos", showBackButton: false),
-      body: SafeArea(
-        child: BlocConsumer<BlockListCubit, BlockListState>(
+    return BlocBuilder<FabStateCubit, FabState>(
+      builder: (context, fabState) {
+        return BlocConsumer<BlockListCubit, BlockListState>(
           listener: (context, state) {
             if (state.status == BlockListStatus.failure &&
                 state.errorMessage != null) {
@@ -57,45 +65,74 @@ class _BlockListScreenContent extends StatelessWidget {
             }
           },
           builder: (context, state) {
-            switch (state.status) {
-              case BlockListStatus.initial:
-              case BlockListStatus.loading:
-                if (state.blocks.isEmpty) {
-                  return const AppLoading(message: "Carregando blocos...");
+            return Listener(
+              onPointerDown: (event) {
+                if (!fabState.expanded) return;
+                final fabBox = _fabKey.currentContext?.findRenderObject() as RenderBox?;
+                if (fabBox == null) return;
+                final localPos = fabBox.globalToLocal(event.position);
+                if (localPos.dx >= 0 &&
+                    localPos.dy >= 0 &&
+                    localPos.dx <= fabBox.size.width &&
+                    localPos.dy <= fabBox.size.height) {
+                  return; // Tap on FAB — its onPressed handles toggle
                 }
-                return _BlockListView(blocks: state.blocks);
-
-              case BlockListStatus.failure:
-                if (state.blocks.isEmpty) {
-                  return AppError(
-                    message: state.errorMessage,
-                    onRetry: () => context.read<BlockListCubit>().loadBlocks(),
-                  );
-                }
-                return _BlockListView(blocks: state.blocks);
-
-              case BlockListStatus.success:
-                if (state.blocks.isEmpty) {
-                  return AppEmpty(
-                    title: "Nenhum bloco ainda",
-                    message:
-                        "Crie um bloco para comecar a organizar seu carnaval",
-                    icon: Icons.celebration_outlined,
-                    actionLabel: "Criar bloco",
-                    onAction: () => context.push(Routes.createBlock),
-                  );
-                }
-                return _BlockListView(blocks: state.blocks);
-            }
+                context.read<FabStateCubit>().dismiss();
+              },
+              child: Scaffold(
+                appBar: const AppAppBar(title: "Blocos", showBackButton: false),
+                body: SafeArea(
+                  child: _buildBody(context, state),
+                ),
+                floatingActionButton: AddBlockFab(
+                  key: _fabKey,
+                  isExpanded: fabState.expanded,
+                  shouldAnimate: fabState.shouldAnimate,
+                  onFabPressed: () => context.read<FabStateCubit>().toggle(),
+                  onExpandedChanged: (expanded) {
+                    if (!expanded) {
+                      context.read<FabStateCubit>().dismiss();
+                    }
+                  },
+                ),
+              ),
+            );
           },
-        ),
-      ),
-      floatingActionButton: AppFAB(
-        icon: Icons.add_rounded,
-        label: "Criar bloco",
-        onPressed: () => context.push(Routes.createBlock),
-      ),
+        );
+      },
     );
+  }
+
+  Widget _buildBody(BuildContext context, BlockListState state) {
+    switch (state.status) {
+      case BlockListStatus.initial:
+      case BlockListStatus.loading:
+        if (state.blocks.isEmpty) {
+          return const AppLoading(message: "Carregando blocos...");
+        }
+        return _BlockListView(blocks: state.blocks);
+
+      case BlockListStatus.failure:
+        if (state.blocks.isEmpty) {
+          return AppError(
+            message: state.errorMessage,
+            onRetry: () => context.read<BlockListCubit>().loadBlocks(),
+          );
+        }
+        return _BlockListView(blocks: state.blocks);
+
+      case BlockListStatus.success:
+        if (state.blocks.isEmpty) {
+          return AppEmpty(
+            title: "Nenhum bloco ainda",
+            message: "Crie um bloco para comecar a organizar seu carnaval",
+            icon: Icons.celebration_outlined,
+            actionLabel: "Criar bloco",
+            onAction: () => context.push(Routes.createBlock),
+          );
+        }
+        return _BlockListView(blocks: state.blocks);
+    }
   }
 }
 
