@@ -1,0 +1,39 @@
+{
+  "@@locale": "pt",
+  "network": "Sem conexão com a internet. Verifique sua rede Wi-Fi.",
+  "@network": {
+    "description": "No internet connection or socket error"
+  },
+  "timeout": "Conexão lenta. Verifique sua internet ou tente novamente.",
+  "@timeout": {
+    "description": "Connection timeout"
+  },
+  "server503": "Servidor temporariamente indisponível. Tente novamente mais tarde.",
+  "@server503": {
+    "description": "Server temporarily unavailable (503)"
+  },
+  "server5xx": "Erro no servidor. Tente novamente mais tarde.",
+  "@server5xx": {
+    "description": "Generic 5xx server errors"
+  },
+  "authExpired": "Sessão expirada. Faça login novamente.",
+  "@authExpired": {
+    "description": "Authentication expired (401)"
+  },
+  "authForbidden": "Você não tem permissão para esta ação.",
+  "@authForbidden": {
+    "description": "Authorization forbidden (403)"
+  },
+  "notFound": "Recurso não encontrado.",
+  "@notFound": {
+    "description": "Resource not found (404)"
+  },
+  "validation": "Dados inválidos. Verifique as informações.",
+  "@validation": {
+    "description": "Validation error (400)"
+  },
+  "unknown": "Algo inesperado aconteceu. Tente novamente.",
+  "@unknown": {
+    "description": "Unknown or unexpected error"
+  }
+}

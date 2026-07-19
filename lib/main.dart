@@ -1,4 +1,5 @@
 import 'package:bloco_na_rua/config/dependencies.dart';
+import 'package:bloco_na_rua/core/errors/user_message.dart';
 import 'package:bloco_na_rua/main_app.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,9 @@ Future<void> main() async {
   } else {
     WidgetsFlutterBinding.ensureInitialized();
   }
+
+  // Initialize locale for i18n before any error messages are extracted
+  initializeLocale();
 
   await dotenv.load(fileName: ".env");
 

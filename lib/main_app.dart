@@ -3,19 +3,28 @@
 // user toggles via the Settings screen.
 
 import "package:bloco_na_rua/data/repositories/auth/auth_listenable.dart";
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/routing/router.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_cubit.dart";
 import "package:bloco_na_rua/ui/core/theme/app_theme.dart";
 import "package:bloco_na_rua/ui/core/theme/theme_cubit.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_localizations/flutter_localizations.dart";
+import "package:flutter/foundation.dart";
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Debug: Log device locale
+    final deviceLocale = PlatformDispatcher.instance.locale;
+    if (kDebugMode) {
+      debugPrint('[DEBUG i18n] Device locale: $deviceLocale');
+      debugPrint('[DEBUG i18n] Language: ${deviceLocale.languageCode}, Country: ${deviceLocale.countryCode}');
+      debugPrint('[DEBUG i18n] Supported locales: ${AppLocalizations.supportedLocales}');
+    }
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -34,15 +43,8 @@ class MainApp extends StatelessWidget {
             theme: AppTheme.light(),
             darkTheme: AppTheme.dark(),
             routerConfig: router(context.read<AuthListenable>()),
-            localizationsDelegates: const [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: [
-              const Locale("pt", "BR"),
-              const Locale("en", ""),
-            ],
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
           );
         },
       ),
