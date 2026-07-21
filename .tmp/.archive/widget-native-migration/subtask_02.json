@@ -1,0 +1,72 @@
+{
+  "seq": 2,
+  "title": "AppButton — replace Container+GestureDetector with FilledButton/OutlinedButton/TextButton",
+  "status": "pending",
+  "parallel": true,
+  "depends_on": [1],
+  "estimated_effort": "medium",
+  "objective": "Refactor lib/ui/core/widgets/buttons/app_button.dart so the visual block uses Material 3 FilledButton (primary), OutlinedButton (secondary), and TextButton (ghost/tertiary) widgets instead of a hand-rolled Container + BoxDecoration + GestureDetector stack. Public API stays identical: same constructor, same AppButtonVariant, same AppButtonSize, same isLoading/isDisabled/isFullWidth/icon/trailingIcon parameters.",
+  "description": "The current implementation builds a Container with BoxDecoration (color, border, borderRadius) wrapped in GestureDetector to handle taps, then layers _HoverOpacityWrapper and _PressScaleWrapper on top for press feedback. After this batch, the underlying visual block is a real Material button (FilledButton.icon / OutlinedButton / TextButton) whose style is computed from the AppButtonVariant. The hover/press wrappers are preserved (they are token-driven and respect MediaQuery.disableAnimationsOf) but become cosmetic layers around the Material widget rather than the click target. icon + trailingIcon + label become the Material widget's child (Row). The CircularProgressIndicator in isLoading is preserved as the child when loading.",
+  "context_files": [
+    "lib/ui/core/theme/app_theme.dart",
+    "lib/ui/core/tokens/app_radius.dart",
+    "lib/ui/core/tokens/app_colors.dart",
+    "lib/ui/core/tokens/app_typography.dart",
+    "lib/ui/core/tokens/app_duration.dart",
+    "lib/ui/core/tokens/app_spacing.dart"
+  ],
+  "reference_files": [
+    {
+      "path": "lib/ui/core/widgets/buttons/app_button.dart",
+      "lines": "1-381",
+      "anchors": [
+        "lines 26-50 — AppButtonVariant + AppButtonSize enums (keep verbatim, this is the public API)",
+        "lines 103-131 — _sizeTokens / _horizontalPaddingTokens / _verticalPaddingTokens / _iconLabelGapTokens / _iconSizeTokens (keep verbatim, replace lookup site in build)",
+        "lines 137-181 — _backgroundColor/_foregroundColor/_borderColor/_borderWidth (refactor to return ButtonStyle values consumed by filledButtonTheme/styles)",
+        "lines 187-227 — build() (replace _buildButtonChild body to return a Material button widget; keep _HoverOpacityWrapper + _PressScaleWrapper composition)",
+        "lines 229-266 — _buildContent (becomes the child passed to the Material widget — keep Row layout and CircularProgressIndicator behavior identical)",
+        "lines 268-304 — _buildButtonChild (DELETE this method; build returns the Material button directly)",
+        "lines 316-381 — _HoverOpacityWrapper + _PressScaleWrapper (keep verbatim, they remain the cosmetic feedback layer)"
+      ]
+    }
+  ],
+  "variant_to_widget_mapping": {
+    "primary": "FilledButton.icon (or FilledButton with Row child) — AppColors.cta background, white foreground",
+    "secondary": "OutlinedButton.icon — transparent background, primary indigo border 1.5px, primary indigo foreground",
+    "tertiary": "FilledButton.tonalIcon or TextButton.icon (default to TextButton.icon when running on surface) — surface fill, text-primary foreground",
+    "ghost": "TextButton.icon — transparent background, primary indigo foreground"
+  },
+  "size_to_style_mapping": {
+    "sm": "height 36px, padding 8/12 (Spacing.space_2xs / Spacing.space_xs), icon 16px, label buttonSmall",
+    "md": "height 44px, padding 12/16 (Spacing.space_xs / Spacing.space_sm), icon 20px, label buttonMedium",
+    "lg": "height 52px, padding 16/20 (Spacing.space_sm / 20.0), icon 24px, label buttonLarge"
+  },
+  "loading_state": "When isLoading=true, replace the label Text with a 20x20 CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation(foreground)) — this row becomes the Material button's child.",
+  "disabled_state": "When isDisabled=true, set onPressed=null AND wrap child in Opacity(0.5). Preserve existing effectiveOnPressed/effectiveOpacity logic verbatim.",
+  "full_width_state": "When isFullWidth=true, set SizedBox(width: double.infinity) around the Material button (the Material button itself has a built-in default minimum width; the SizedBox enforces parent fill).",
+  "acceptance_criteria": [
+    "lib/ui/core/widgets/buttons/app_button.dart compiles without errors (no reference to deleted _buildButtonChild or its Container/GestureDetector stack in build)",
+    "The visible widget is one of: FilledButton(.icon), OutlinedButton(.icon), or TextButton(.icon) — chosen by AppButtonVariant",
+    "AppButtonVariant.primary renders FilledButton.icon with backgroundColor AppColors.cta and white foreground",
+    "AppButtonVariant.secondary renders OutlinedButton.icon with transparent background and primary indigo border (width 1.5)",
+    "AppButtonVariant.tertiary renders FilledButton.tonalIcon or equivalent (surface fill, text-primary foreground, theme-inherited)",
+    "AppButtonVariant.ghost renders TextButton.icon with primary indigo foreground and transparent fill",
+    "Each Material button's style uses Radii.button borderRadius (not a hardcoded number)",
+    "isLoading=true replaces the label with a 20x20 CircularProgressIndicator (strokeWidth 2, valueColor foreground) inside the row",
+    "isDisabled=true sets onPressed=null and applies Opacity(0.5) on the child",
+    "isFullWidth=true wraps the Material button in SizedBox(width: double.infinity)",
+    "Public class signature (constructor parameter list, AppButtonVariant enum, AppButtonSize enum, all named-parameter defaults) is unchanged from the pre-batch version — existing call sites compile without change",
+    "_HoverOpacityWrapper (lines 316-349) and _PressScaleWrapper (lines 351-381) are preserved as the outer cosmetic layer — they still gate on MediaQuery.disableAnimationsOf(context)",
+    "Animation tokens (AppDurations.fast, AppCurves.standard) are still used inside _PressScaleWrapper and _HoverOpacityWrapper — no hardcoded Duration or Curve",
+    "flutter analyze lib/ui/core/widgets/buttons/app_button.dart returns no errors",
+    "Existing call sites anywhere under lib/ that use AppButton still compile unchanged (constructor signature preserved)"
+  ],
+  "validation": {
+    "static_analysis": "flutter analyze lib/ui/core/widgets/buttons/app_button.dart",
+    "expected_exit_code": 0,
+    "signature_preservation": "Diff the constructor signature line-for-line; only private helper implementations should change",
+    "grep_evidence": "grep -n \"FilledButton\\|OutlinedButton\\|TextButton\" lib/ui/core/widgets/buttons/app_button.dart should return at least one non-import match",
+    "no_raw_stack": "grep -n \"GestureDetector\\|BoxDecoration\" lib/ui/core/widgets/buttons/app_button.dart should return zero matches in build()"
+  },
+  "search_for_callers": "Run `rg \"AppButton\\(\" lib/` and confirm no call sites need updating beyond the existing public API."
+}

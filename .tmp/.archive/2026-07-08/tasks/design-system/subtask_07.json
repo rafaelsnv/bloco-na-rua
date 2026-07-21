@@ -1,0 +1,41 @@
+{
+  "id": "design-system-07",
+  "seq": "07",
+  "title": "Create app_text_themes.dart",
+  "status": "completed",
+  "depends_on": ["05"],
+  "parallel": false,
+  "suggested_agent": "CoderAgent",
+  "agent": "CoderAgent",
+  "context_files": [
+    "design-system/bloco-na-rua/MASTER.md",
+    "design-system/bloco-na-rua/DESIGN_PLAN.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md"
+  ],
+  "reference_files": [
+    "lib/ui/core/tokens/app_typography.dart"
+  ],
+  "target_files": [
+    "lib/ui/core/theme/app_text_themes.dart"
+  ],
+  "deliverables": [
+    "lib/ui/core/theme/app_text_themes.dart"
+  ],
+  "description": "Create the TextTheme wrappers at lib/ui/core/theme/app_text_themes.dart. Apply the GoogleFonts styles from `AppTypography` and assign onSurface colors per brightness. File structure: imports `package:flutter/material.dart` and `package:bloco_na_rua/ui/core/tokens/app_colors.dart` (for the two onSurface values) and `package:bloco_na_rua/ui/core/tokens/app_typography.dart` (for AppTypography getters). Define a private builder helper `_buildTextTheme({required Color onSurfaceColor, required Color displayColor})` that constructs a `TextTheme(...)` with all 15 slots mapped to the corresponding `AppTypography.xxx` getter calls, applied via `.apply(bodyColor: onSurfaceColor, displayColor: displayColor)`. Then expose top-level: `TextTheme lightTextTheme = _buildTextTheme(onSurfaceColor: AppColors.textPrimaryLight, displayColor: AppColors.textPrimaryLight);` and `TextTheme darkTextTheme = _buildTextTheme(onSurfaceColor: AppColors.textPrimaryDark, displayColor: AppColors.textPrimaryDark);` — these cannot be const because AppTypography returns runtime TextStyles. Top-of-file doc comment: explains Fredoka/Nunito pairing + why we wrap GoogleFonts in this TextTheme layer (single touch-point if we ever swap fonts).",
+  "acceptance_criteria": [
+    "File exists at lib/ui/core/theme/app_text_themes.dart",
+    "Three imports present: material.dart, app_colors.dart (for onSurface values), app_typography.dart (for AppTypography)",
+    "Private helper function `_buildTextTheme` accepts `onSurfaceColor` and `displayColor` parameters and returns a complete TextTheme (all 15 slots filled)",
+    "Each TextTheme slot uses `AppTypography.xxx` to source its TextStyle",
+    "`TextTheme lightTextTheme` declared (sourced from textPrimaryLight onSurface)",
+    "`TextTheme darkTextTheme` declared (sourced from textPrimaryDark onSurface)",
+    "Both text themes apply `.apply(bodyColor:, displayColor:)`",
+    "All string literals use double quotes",
+    "No emojis anywhere in the file",
+    "Top-of-file doc comment explains the wrapping strategy",
+    "`flutter analyze lib/ui/core/theme/app_text_themes.dart` returns 0 errors"
+  ],
+  "started_at": "2026-07-03T00:00:00Z",
+  "completed_at": "2026-07-03T00:00:00Z",
+  "completion_summary": "Created lib/ui/core/theme/app_text_themes.dart with _buildTextTheme helper + lightTextTheme + darkTextTheme (all 15 styles). Note: Used copyWith(color:) instead of .apply(bodyColor:, displayColor:) because those parameters are not available on TextStyle.apply() in Flutter 3.41.6 - flutter analyze passes with 0 errors."
+}

@@ -113,8 +113,7 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
 
       final data = {
         'meetingId': int.parse(meetingId),
-        'memberId':
-            0, // Will be resolved by the API from X-Logged-Member header
+        'carnivalBlockId': currentState.meeting.carnivalBlockId,
         'isPresent': isPresent,
       };
 

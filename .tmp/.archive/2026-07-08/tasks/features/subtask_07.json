@@ -1,0 +1,36 @@
+{
+  "id": "features-07",
+  "seq": "07",
+  "title": "Rewrite meeting_presences_screen.dart using design system",
+  "status": "completed",
+  "depends_on": [],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "agent": "CoderAgent",
+  "context_files": [
+    ".tmp/sessions/2026-07-03-design-system/context.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md"
+  ],
+  "reference_files": [
+    "lib/ui/meeting_presences/widgets/meeting_presences_screen.dart (original)"
+  ],
+  "target_files": [
+    "lib/ui/meeting_presences/widgets/meeting_presences_screen.dart"
+  ],
+  "deliverables": [
+    "lib/ui/meeting_presences/widgets/meeting_presences_screen.dart"
+  ],
+  "description": "Rewrite meeting_presences_screen.dart using the new design system primitives. Replace raw Material Scaffold/AppBar with AppAppBar, replace placeholder content with AppEmpty placeholder. Preserve the StatelessWidget class structure.",
+  "acceptance_criteria": [
+    "File rewritten at exact path lib/ui/meeting_presences/widgets/meeting_presences_screen.dart",
+    "flutter analyze passes with 0 errors on the file",
+    "Uses AppAppBar for the top navigation bar",
+    "Uses AppEmpty for the placeholder empty state",
+    "Navigation uses context.go(Routes.userMeetings)",
+    "Double quotes used throughout, no emojis",
+    "Top-of-file doc comment present"
+  ],
+  "started_at": "2026-07-07T23:46:00Z",
+  "completed_at": "2026-07-07T23:47:00Z",
+  "completion_summary": "Rewrote meeting_presences_screen.dart using AppAppBar and AppEmpty design system components with placeholder pattern preserved."
+}

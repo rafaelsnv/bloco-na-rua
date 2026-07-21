@@ -1,0 +1,96 @@
+{
+  "seq": 11,
+  "id": "M4",
+  "feature": "code-quality-phase2-4",
+  "title": "Fix freezed orphan files — add @freezed annotation or delete stale .freezed.dart",
+  "status": "pending",
+  "priority": "medium",
+  "estimated_effort": "small",
+  "parallel": true,
+  "depends_on": [],
+  "objective": "Audit every *.freezed.dart file under lib/ and either (a) confirm its parent source file declares the matching @freezed annotation, or (b) delete the orphan generated file when no parent annotation exists. No file may keep a .freezed.dart sibling without a corresponding @freezed-decorated class.",
+  "description": "Running `find lib -name '*.freezed.dart'` produces 12 files. For each one, find the sibling `.dart` source file and confirm it contains `@freezed`. Per the session context for widget-native-migration, every .freezed.dart sibling is expected to have a parent. The fix is mechanical: for each orphan (sibling exists but no @freezed annotation), inspect why — common causes are (1) the source file used to declare @freezed but the annotation was removed during a refactor; the file should either be re-annotated OR the orphan deleted; (2) the source file is the data layer's hand-written mixin that imports the .freezed.dart sibling — in this case no annotation is needed and the file is correct, no action required. The subtask is an audit-and-clean pass.",
+  "context_files": [
+    "lib/core/api_error.dart"
+  ],
+  "reference_files": [
+    {
+      "path": "lib/data/services/api/members/create/member_create.dart",
+      "lines": "1-22",
+      "reason": "Has @freezed — OK. Sibling member_create.freezed.dart stays."
+    },
+    {
+      "path": "lib/data/services/api/members/update/member_update.dart",
+      "lines": "1-30",
+      "reason": "Has @freezed — OK. Sibling stays."
+    },
+    {
+      "path": "lib/data/services/auth/models/login_request/login_request.dart",
+      "lines": "1-30",
+      "reason": "Has @freezed — OK."
+    },
+    {
+      "path": "lib/data/services/auth/models/login_response/login_response.dart",
+      "lines": "1-30",
+      "reason": "Has @freezed — OK."
+    },
+    {
+      "path": "lib/data/services/auth/models/signup_request/signup_request.dart",
+      "lines": "1-30",
+      "reason": "Has @freezed — OK."
+    },
+    {
+      "path": "lib/domain/entities/carnivalBlock/carnival_blocks_entity.dart",
+      "lines": "1-40",
+      "reason": "Has @freezed — OK."
+    },
+    {
+      "path": "lib/domain/entities/carnivalBlockMembers/carnival_block_members_entity.dart",
+      "lines": "1-40",
+      "reason": "Has @freezed — OK."
+    },
+    {
+      "path": "lib/domain/entities/meetingPresences/meeting_presences_entity.dart",
+      "lines": "1-40",
+      "reason": "Has @freezed — OK."
+    },
+    {
+      "path": "lib/domain/entities/meetings/meetings_entity.dart",
+      "lines": "1-25",
+      "reason": "Has @freezed — OK."
+    },
+    {
+      "path": "lib/domain/entities/members/members_entity.dart",
+      "lines": "1-23",
+      "reason": "Has @freezed — OK."
+    },
+    {
+      "path": "lib/ui/meeting_presences/cubit/meeting_presences_cubit.dart",
+      "lines": "1-11",
+      "reason": "M3 may delete this whole directory — if so, the sibling .freezed.dart goes with it. Otherwise this file MUST declare @freezed (it currently imports freezed_annotation but does NOT declare @freezed) — investigate: either add the annotation + regenerate, or delete the orphan .freezed.dart."
+    },
+    {
+      "path": "lib/ui/profile/cubit/profile_cubit.dart",
+      "lines": "1-50",
+      "reason": "Same audit — confirm @freezed is on a state class declared here, OR on profile_state.dart which lives next to it."
+    }
+  ],
+  "audit_procedure": "For every directory that contains a .freezed.dart file, run `rg -n '@freezed' <sibling>.dart <state_file>.dart`. If exactly one file in the directory declares @freezed, the directory is healthy. If zero files declare it, delete the .freezed.dart sibling AND its matching .g.dart sibling. If two files declare it, that is also a bug (one should not be freezed) — fix by removing the annotation from the wrong file and regenerating.",
+  "acceptance_criteria": [
+    "Every .freezed.dart file under lib/ has a sibling source file that declares @freezed",
+    "No orphan .freezed.dart files survive (no file in lib/ is a generated freezed mixin without a parent @freezed class)",
+    "If audit found no orphans: this subtask is a no-op, recorded as completed",
+    "If audit found orphans: they are either fixed (re-add @freezed) or deleted (along with their .g.dart siblings)",
+    "flutter analyze lib/ returns no errors",
+    "build_runner regeneration produces no further diff (i.e. the audit and cleanup are consistent with what build_runner would produce)"
+  ],
+  "validation": {
+    "static_analysis": "flutter analyze",
+    "expected_exit_code": 0,
+    "grep_evidence": [
+      "for every .freezed.dart file under lib/, the sibling source file MUST contain a line matching `^@freezed`",
+      "`find lib -name '*.freezed.dart' | wc -l` equals the number of `@freezed` annotations found by `rg -nc '@freezed' lib/` (plus 0 for any hand-written mixins that don't @freezed)"
+    ]
+  },
+  "no_op_outside_scope": "Do not regenerate any other freezed file. Do not change existing @freezed declarations. Do not introduce new freezed classes."
+}

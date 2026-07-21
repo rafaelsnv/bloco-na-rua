@@ -1,0 +1,45 @@
+{
+  "seq": 3,
+  "name": "app-fab",
+  "title": "AppFAB + AppFabSize enum",
+  "output_file": "C:\\Repos\\bloco-na-rua\\lib\\ui\\core\\widgets\\buttons\\app_fab.dart",
+  "class_name": "AppFAB",
+  "status": "completed",
+  "agent_id": "coder-agent",
+  "completion_summary": "Implemented AppFAB widget with AppFabSize enum (sm=40px, md=56px, lg=72px), basic FAB when label is null, ExtendedFloatingActionButton when label provided, CTA color, Radii.fab border radius, press feedback via AnimatedScale 0.95 + AnimatedOpacity 0.9, MediaQuery.disableAnimationsOf guard",
+  "completed_at": "2026-07-03T00:00:00Z",
+  "public_api": {
+    "constructor": "AppFAB({\n  required IconData icon,\n  String? label,\n  required VoidCallback onPressed,\n  AppFabSize size = AppFabSize.md,\n})",
+    "enum": "enum AppFabSize { sm, md, lg }"
+  },
+  "tokens_consumed": {
+    "AppColors": ["cta"],
+    "Radii": ["fab"],
+    "AppDurations": ["fast"],
+    "AppCurves": ["standard"]
+  },
+  "dependencies_on_other_phase2_widgets": [],
+  "conventions_reminder": [
+    "snake_case.dart file",
+    "class AppFAB extends StatelessWidget",
+    "Extended FAB: when label is non-null, show label alongside icon with smooth width transition",
+    "All colors/spacings/radii/durations via tokens — no hardcoded values",
+    "MediaQuery.disableAnimationsOf(context) before any animation",
+    "Press feedback: AnimatedScale scale 0.95 with disableAnimations guard",
+    "Double quotes on all string literals",
+    "Top-of-file doc comment explaining purpose + state behavior"
+  ],
+  "acceptance_criteria": [
+    "flutter analyze passes (0 errors)",
+    "Size enum has sm/md/lg with appropriate icon size and padding",
+    "Extended FAB shows label when provided (non-null)",
+    "Default state: CTA color background",
+    "All colors via AppColors tokens",
+    "All spacing via Spacing tokens",
+    "All radii via Radii tokens",
+    "All durations via AppDurations tokens",
+    "All curves via AppCurves tokens"
+  ],
+  "batch": 1,
+  "parallel": true
+}

@@ -1,0 +1,47 @@
+{
+  "id": "code-review-fix-04",
+  "seq": "04",
+  "issue_key": "H4",
+  "phase": "Phase 2",
+  "priority": "high",
+  "title": "Fix MeetingPresencesRepository getAllAsync sentinel 404 behavior",
+  "status": "pending",
+  "depends_on": ["03"],
+  "parallel": false,
+  "context_files": [
+    ".opencode/context/standards/overrides.md",
+    ".opencode/context/project-intelligence/concepts/architecture.md",
+    ".opencode/context/project-intelligence/technical-component-pattern.md",
+    ".opencode/context/project-intelligence/concepts/bloc-state-pattern.md",
+    ".opencode/context/project-intelligence/concepts/freezed-entity.md",
+    ".opencode/context/project-intelligence/concepts/result-handling.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md",
+    ".opencode/context/project-intelligence/lookup/token-discipline.md"
+  ],
+  "reference_files": [
+    "lib/data/repositories/meetingPresences/imeeting_presences_repository.dart",
+    "lib/data/repositories/meetingPresences/meeting_presences_repository.dart",
+    "lib/data/services/api/meetingPresences/imeeting_presences_api_client.dart",
+    "lib/data/services/api/meetingPresences/meeting_presences_api_client.dart"
+  ],
+  "objective": "Remove getByMeetingId(0) sentinel behavior from getAllAsync and replace it with a real list-all endpoint or explicit unimplemented Failure.",
+  "acceptance_criteria": [
+    "MeetingPresencesRepository.getAllAsync no longer calls getByMeetingId(0)",
+    "If a real list-all endpoint exists, getAllAsync delegates to an explicit API client method for that endpoint",
+    "If no list-all endpoint exists, getAllAsync returns Failure with a clear use getByMeetingId message and a TODO(backend) comment",
+    "Existing getByMeetingId, createAsync, and delete methods keep their public behavior",
+    "The repository interface matches the implementation after H3 explicit repository changes",
+    "flutter analyze for meetingPresences repository/API reports no new errors"
+  ],
+  "deliverables": [
+    "Updated MeetingPresencesRepository getAllAsync implementation",
+    "Updated meeting presences repository/API contracts if a real list-all endpoint is implemented"
+  ],
+  "validation_commands": [
+    "flutter analyze lib/data/repositories/meetingPresences/ lib/data/services/api/meetingPresences/"
+  ],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

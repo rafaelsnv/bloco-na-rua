@@ -1,0 +1,41 @@
+{
+  "id": "design-system-03",
+  "seq": "03",
+  "title": "Create app_radius.dart token file",
+  "status": "completed",
+  "depends_on": [],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "agent": "CoderAgent",
+  "started_at": "2026-07-03T00:00:00Z",
+  "completed_at": "2026-07-03T00:00:00Z",
+  "completion_summary": "Created lib/ui/core/tokens/app_radius.dart with 7 numeric radii + 6 generic + 8 component-specific BorderRadius presets, flutter analyze passes",
+  "context_files": [
+    "design-system/bloco-na-rua/MASTER.md",
+    "design-system/bloco-na-rua/DESIGN_PLAN.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md"
+  ],
+  "reference_files": [],
+  "target_files": [
+    "lib/ui/core/tokens/app_radius.dart"
+  ],
+  "deliverables": [
+    "lib/ui/core/tokens/app_radius.dart"
+  ],
+  "description": "Create radius tokens at lib/ui/core/tokens/app_radius.dart. Wrap in class `Radii` with private constructor `Radii._();`. File imports: `import 'package:flutter/material.dart';`. Required members: (a) `static const double` values: `none` = 0.0, `xs` = 4.0, `sm` = 8.0, `md` = 12.0, `lg` = 16.0, `xl` = 24.0, `full` = 9999.0; (b) `static const BorderRadius` instances: `radiusXs`, `radiusSm`, `radiusMd`, `radiusLg`, `radiusXl`, `radiusFull` (each `BorderRadius.circular(<value>)`); (c) pre-built component-specific `static const BorderRadius`: `button` (= radiusSm), `card` (= radiusMd), `input` (= radiusSm), `fab` (= radiusLg), `chip` (= radiusLg), `avatar` (= radiusFull), `modal` (= radiusLg), `bottomSheet` (= `BorderRadius.only(topLeft: Radius.circular(xl), topRight: Radius.circular(xl))`). The component-specific presets use `radiusSm` etc. as base (NOT a literal — important so future radius scale changes propagate). Top-of-file doc comment: explains scale + lists each component's radius.",
+  "acceptance_criteria": [
+    "File exists at lib/ui/core/tokens/app_radius.dart",
+    "Import statement is `import 'package:flutter/material.dart';`",
+    "All constants declared inside class `Radii` (with private constructor `Radii._();`)",
+    "Radius numeric values present and correct: none 0.0, xs 4.0, sm 8.0, md 12.0, lg 16.0, xl 24.0, full 9999.0",
+    "All `static const double` numeric values AND `static const BorderRadius` instances present",
+    "Pre-built BorderRadius presets present: radiusXs, radiusSm, radiusMd, radiusLg, radiusXl, radiusFull",
+    "Component-specific BorderRadius presets present: button (= radiusSm), card (= radiusMd), input (= radiusSm), fab (= radiusLg), chip (= radiusLg), avatar (= radiusFull), modal (= radiusLg), bottomSheet (= top-only circular(xl))",
+    "Component presets reference other Radii members (not literal numbers) so updates propagate",
+    "All identifiers use camelCase",
+    "All string literals use double quotes",
+    "No emojis anywhere in the file",
+    "Top-of-file doc comment describes scale + component assignments",
+    "`flutter analyze lib/ui/core/tokens/app_radius.dart` returns 0 errors"
+  ],
+}

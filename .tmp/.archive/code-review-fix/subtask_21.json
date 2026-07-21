@@ -1,0 +1,43 @@
+{
+  "id": "code-review-fix-21",
+  "seq": "21",
+  "issue_key": "L6",
+  "phase": "Phase 4",
+  "priority": "low",
+  "title": "Gate root logging level by build mode",
+  "status": "pending",
+  "depends_on": [],
+  "parallel": true,
+  "context_files": [
+    ".opencode/context/standards/overrides.md",
+    ".opencode/context/project-intelligence/concepts/architecture.md",
+    ".opencode/context/project-intelligence/technical-component-pattern.md",
+    ".opencode/context/project-intelligence/concepts/bloc-state-pattern.md",
+    ".opencode/context/project-intelligence/concepts/freezed-entity.md",
+    ".opencode/context/project-intelligence/concepts/result-handling.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md",
+    ".opencode/context/project-intelligence/lookup/token-discipline.md"
+  ],
+  "reference_files": [
+    "lib/main.dart"
+  ],
+  "objective": "Set Logger.root.level according to Flutter build mode so release builds suppress verbose logs while debug builds keep diagnostics.",
+  "acceptance_criteria": [
+    "main.dart imports Flutter foundation build-mode constants as needed",
+    "Logger.root.level is conditional on kReleaseMode, kDebugMode, or equivalent build-mode checks",
+    "Release builds suppress verbose INFO diagnostics",
+    "Debug/profile behavior remains useful for local diagnostics",
+    "Existing Supabase and dotenv initialization order is preserved",
+    "flutter analyze lib/main.dart reports no new errors"
+  ],
+  "deliverables": [
+    "Build-mode gated logging setup in lib/main.dart"
+  ],
+  "validation_commands": [
+    "flutter analyze lib/main.dart"
+  ],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

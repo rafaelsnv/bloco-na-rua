@@ -1,0 +1,43 @@
+{
+  "id": "features-04",
+  "seq": "04",
+  "title": "Rewrite logout_button.dart with design system",
+  "status": "completed",
+  "depends_on": [],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "agent": "CoderAgent",
+  "agent_id": "coder-agent",
+  "started_at": "2026-07-07T00:00:00Z",
+  "completed_at": "2026-07-07T00:00:00Z",
+  "completion_summary": "Rewrote logout_button.dart using AppButton, AppDialog.confirm, AppSnackbar.error, and BlocConsumer pattern; flutter analyze passes with 0 errors",
+  "context_files": [
+    "design-system/bloco-na-rua/MASTER.md",
+    "design-system/bloco-na-rua/DESIGN_PLAN.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md"
+  ],
+  "reference_files": [
+    "lib/ui/auth/logout/widgets/logout_button.dart",
+    "lib/ui/auth/cubit/auth_cubit.dart",
+    "lib/ui/auth/cubit/auth_state.dart",
+    "lib/ui/core/widgets/buttons/app_button.dart",
+    "lib/ui/core/widgets/feedback/app_snackbar.dart",
+    "lib/ui/core/widgets/feedback/app_dialog.dart",
+    "lib/ui/core/tokens/app_colors.dart",
+    "lib/ui/core/tokens/app_spacing.dart"
+  ],
+  "target_files": [
+    "lib/ui/auth/logout/widgets/logout_button.dart"
+  ],
+  "deliverables": [
+    "lib/ui/auth/logout/widgets/logout_button.dart"
+  ],
+  "acceptance_criteria": [
+    "File rewritten at exact path",
+    "flutter analyze passes (0 errors)",
+    "Uses AppButton + AppDialog.confirm + AppSnackbar from design system",
+    "BlocConsumer pattern for state handling",
+    "Confirmation dialog before logout",
+    "Double quotes, no emojis"
+  ]
+}

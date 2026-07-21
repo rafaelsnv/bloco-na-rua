@@ -1,0 +1,42 @@
+{
+  "seq": 19,
+  "name": "app-app-bar",
+  "title": "AppAppBar (themed AppBar with PreferredSizeWidget)",
+  "output_file": "C:\\Repos\\bloco-na-rua\\lib\\ui\\core\\widgets\\navigation\\app_app_bar.dart",
+  "class_name": "AppAppBar",
+  "public_api": {
+    "constructor": "AppAppBar({\n  required String title,\n  Widget? leading,\n  List<Widget>? actions,\n  bool centerTitle = false,\n  Color? backgroundColor,\n  Color? foregroundColor,\n  double? elevation,\n  bool showBackButton = true,\n  PreferredSizeWidget? bottom,\n})"
+  },
+  "tokens_consumed": {
+    "AppTypography": ["titleLarge"],
+    "Spacing": ["space_2xs"]
+  },
+  "dependencies_on_other_phase2_widgets": [],
+  "conventions_reminder": [
+    "snake_case.dart file",
+    "class AppAppBar extends StatelessWidget implements PreferredSizeWidget",
+    "preferredSize getter returns Size.fromHeight(kToolbarHeight + (bottom?.preferredSize.height ?? 0))",
+    "Uses Material AppBar with backgroundColor, foregroundColor, elevation, scrolledUnderElevation: 1, centerTitle",
+    "Title uses AppTypography.titleLarge with foregroundColor",
+    "Back button: IconButton(icon: Icon(Icons.arrow_back_rounded), onPressed: () => Navigator.maybePop(context))",
+    "Actions wrapped with Padding(padding: EdgeInsets.only(right: Spacing.space_2xs), child: action)",
+    "Double quotes on all string literals",
+    "Top-of-file doc comment"
+  ],
+  "acceptance_criteria": [
+    "flutter analyze passes (0 errors)",
+    "Implements PreferredSizeWidget via preferredSize getter",
+    "Public API matches: title (required), leading (Widget?), actions (List<Widget>?), centerTitle (bool=false), backgroundColor (Color?), foregroundColor (Color?), elevation (double?), showBackButton (bool=true), bottom (PreferredSizeWidget?)",
+    "Uses AppTypography.titleLarge for title style",
+    "Uses Spacing.space_2xs for action padding",
+    "Back button uses Icons.arrow_back_rounded and Navigator.maybePop",
+    "All colors via Theme.of(context).colorScheme tokens"
+  ],
+  "batch": 1,
+  "parallel": true,
+  "status": "completed",
+  "agent_id": "coder-agent",
+  "started_at": "2026-07-03T00:00:00Z",
+  "completed_at": "2026-07-07T00:00:00Z",
+  "completion_summary": "Created AppAppBar widget at lib/ui/core/widgets/navigation/app_app_bar.dart implementing PreferredSizeWidget. Uses Material AppBar with design system tokens: AppTypography.titleLarge for title, Spacing.space_2xs for action padding, backgroundColor/foregroundColor from ColorScheme, scrolledUnderElevation: 1, automatic back button via Navigator.maybePop when canPop and showBackButton is true."
+}

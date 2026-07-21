@@ -1,0 +1,51 @@
+{
+  "id": "code-review-fix-16",
+  "seq": "16",
+  "issue_key": "M10",
+  "phase": "Phase 3",
+  "priority": "medium",
+  "title": "Add mounted guards after async gaps in widgets",
+  "status": "pending",
+  "depends_on": ["07", "01", "06", "12"],
+  "parallel": false,
+  "suggested_agent": "OpenFrontendSpecialist",
+  "context_files": [
+    ".opencode/context/standards/overrides.md",
+    ".opencode/context/project-intelligence/concepts/architecture.md",
+    ".opencode/context/project-intelligence/technical-component-pattern.md",
+    ".opencode/context/project-intelligence/concepts/bloc-state-pattern.md",
+    ".opencode/context/project-intelligence/concepts/freezed-entity.md",
+    ".opencode/context/project-intelligence/concepts/result-handling.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md",
+    ".opencode/context/project-intelligence/lookup/token-discipline.md",
+    "~/.config/opencode/context/ui/web/ui-styling-standards.md",
+    "~/.config/opencode/context/core/workflows/design-iteration-overview.md"
+  ],
+  "reference_files": [
+    "lib/ui/auth/login/widgets/login_screen.dart",
+    "lib/ui/carnivalBlock/blockDetails/widgets/block_details_screen.dart",
+    "lib/ui/meetings/createMeeting/widgets/create_meeting_screen.dart",
+    "lib/ui/meetings/editMeeting/widgets/edit_meeting_screen.dart",
+    "lib/ui/meetings/userMeetings/widgets/user_meetings_screen.dart"
+  ],
+  "objective": "Guard setState and dialog/navigation side effects that occur after awaits with mounted checks.",
+  "acceptance_criteria": [
+    "Every setState call that can execute after an await is guarded by if (!mounted) return or an equivalent mounted branch",
+    "Every showDialog/navigation context use after an await is guarded by mounted or context.mounted as appropriate",
+    "Synchronous setState handlers are not unnecessarily refactored",
+    "Existing UI behavior remains unchanged except preventing disposed-widget side effects",
+    "Follows 4-stage design workflow",
+    "Responsive at all breakpoints",
+    "flutter analyze lib/ui/ reports no new use_build_context_synchronously or setState-after-dispose related warnings"
+  ],
+  "deliverables": [
+    "Mounted guards in affected StatefulWidget files"
+  ],
+  "validation_commands": [
+    "flutter analyze lib/ui/"
+  ],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

@@ -36,6 +36,32 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+class AuthInterceptor extends Interceptor {
+  AuthInterceptor(this._secureStorage);
+
+  final SecureStorageService _secureStorage;
+  String? _cachedToken;
+
+  @override
+  Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
+    // Use cached token if available, otherwise fetch from storage
+    final token =
+        _cachedToken ?? (await _secureStorage.fetchToken()).getOrNull();
+    _cachedToken = token;
+    if (token != null) {
+      options.headers['Authorization'] = 'Bearer $token';
+    }
+    handler.next(options);
+  }
+
+  void clearCache() {
+    _cachedToken = null;
+  }
+}
+
 var baseOptions = BaseOptions(
   baseUrl: dotenv.env['API_URL']!,
   receiveDataWhenStatusError: true,
@@ -49,21 +75,28 @@ List<SingleChildWidget> get providers {
     // Core
     Provider<SupabaseClient>(create: (context) => supabaseClient),
     Provider(create: (context) => SecureStorageService()),
-    Provider(
-      create: (context) =>
-          AuthApiClient(supabaseClient: context.read<SupabaseClient>()),
-    ),
     Provider<IBaseApiClient>(
       create: (context) => BaseApiClient(
         clientFactory: (options) {
           final client = Dio(options);
           client.interceptors.add(
-            PrettyDioLogger(compact: true, request: false, responseBody: false),
+            AuthInterceptor(context.read<SecureStorageService>()),
+          );
+          client.interceptors.add(
+            PrettyDioLogger(
+              compact: false,
+              request: false,
+              responseBody: false,
+            ),
           );
           return client;
         },
         options: baseOptions,
       ),
+    ),
+    Provider(
+      create: (context) =>
+          AuthApiClient(baseApiClient: context.read<IBaseApiClient>()),
     ),
 
     // Meetings
@@ -115,13 +148,11 @@ List<SingleChildWidget> get providers {
     ),
 
     // Auth
-    Provider(
-      create: (context) => AuthApiClient(supabaseClient: supabaseClient),
-    ),
     Provider<IAuthRepository>(
       create: (context) => AuthRepository(
         membersRepository: context.read(),
         authApiClient: context.read(),
+        baseApiClient: context.read<IBaseApiClient>(),
         sharedPreferencesService: context.read(),
       ),
     ),

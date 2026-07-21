@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
 
+/// Line-height follows a 4px baseline grid (4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64).
 class AppTypography {
   AppTypography._();
 
@@ -68,10 +69,10 @@ class AppTypography {
     height: 24 / 16,
   );
 
-  /// DM Sans w500, 14px, lineHeight 20/14, letterSpacing 0.1
+  /// DM Sans w600, 14px, lineHeight 20/14, letterSpacing 0.1
   static TextStyle get titleSmall => GoogleFonts.dmSans(
     fontSize: 14,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w600,
     letterSpacing: 0.1,
     height: 20 / 14,
   );
@@ -124,7 +125,8 @@ class AppTypography {
     height: 16 / 11,
   );
 
-  /// Button small: DM Sans w600, 14px, lineHeight 20/14.
+  /// @deprecated Use AppTypography.labelLarge instead. Will be removed in next major version.
+  @Deprecated('Use AppTypography.labelLarge instead')
   static TextStyle get buttonSmall => GoogleFonts.dmSans(
     fontSize: 14,
     fontWeight: FontWeight.w600,
@@ -132,7 +134,8 @@ class AppTypography {
     height: 20 / 14,
   );
 
-  /// Button medium: DM Sans w600, 16px, lineHeight 24/16.
+  /// @deprecated Use AppTypography.labelLarge instead. Will be removed in next major version.
+  @Deprecated('Use AppTypography.labelLarge instead')
   static TextStyle get buttonMedium => GoogleFonts.dmSans(
     fontSize: 16,
     fontWeight: FontWeight.w600,
@@ -140,7 +143,8 @@ class AppTypography {
     height: 24 / 16,
   );
 
-  /// Button large: DM Sans w600, 18px, lineHeight 24/18.
+  /// @deprecated Use AppTypography.labelLarge instead. Will be removed in next major version.
+  @Deprecated('Use AppTypography.labelLarge instead')
   static TextStyle get buttonLarge => GoogleFonts.dmSans(
     fontSize: 18,
     fontWeight: FontWeight.w600,

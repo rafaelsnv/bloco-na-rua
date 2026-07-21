@@ -1,0 +1,43 @@
+{
+  "seq": 8,
+  "name": "app-search-field",
+  "title": "AppSearchField",
+  "output_file": "C:\\Repos\\bloco-na-rua\\lib\\ui\\core\\widgets\\inputs\\app_search_field.dart",
+  "class_name": "AppSearchField",
+  "public_api": {
+    "constructor": "AppSearchField({\n  String? hint = \"Pesquisar...\",\n  TextEditingController? controller,\n  ValueChanged<String>? onChanged,\n  ValueChanged<String>? onSubmitted,\n  bool autofocus = false,\n})",
+    "note": "Stateful search field with search icon prefix and clear-button suffix"
+  },
+  "tokens_consumed": {
+    "AppColors": [],
+    "Spacing": [],
+    "Radii": [],
+    "AppDurations": ["fast"],
+    "AppCurves": []
+  },
+  "dependencies_on_other_phase2_widgets": [],
+  "conventions_reminder": [
+    "snake_case.dart file",
+    "class AppSearchField extends StatefulWidget",
+    "prefixIcon: Icons.search_rounded",
+    "Clear button appears when text is non-empty (suffixIcon with IconButton)",
+    "All colors/spacings/radii/durations via tokens — no hardcoded values",
+    "MediaQuery.disableAnimationsOf(context) before any animation",
+    "Double quotes on all string literals",
+    "Top-of-file doc comment explaining purpose + state behavior"
+  ],
+  "acceptance_criteria": [
+    "flutter analyze passes (0 errors)",
+    "Is a StatefulWidget with internal TextEditingController management",
+    "Has prefixIcon: Icons.search_rounded",
+    "Has clear button suffix when text is non-empty",
+    "All colors via theme.colorScheme",
+    "All durations via AppDurations.fast",
+    "Clear button calls onChanged and clears controller"
+  ],
+  "batch": 2,
+  "parallel": true,
+  "status": "completed",
+  "completion_summary": "Created AppSearchField StatefulWidget with search prefix icon, animated clear button suffix, external controller support, and proper dispose logic",
+  "completed_at": "2026-07-07T00:00:00Z"
+}

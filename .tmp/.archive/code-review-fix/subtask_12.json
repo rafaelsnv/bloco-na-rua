@@ -1,0 +1,47 @@
+{
+  "id": "code-review-fix-12",
+  "seq": "12",
+  "issue_key": "M6",
+  "phase": "Phase 3",
+  "priority": "medium",
+  "title": "Type _MeetingInfoCard meeting parameter",
+  "status": "pending",
+  "depends_on": ["07", "06"],
+  "parallel": false,
+  "suggested_agent": "OpenFrontendSpecialist",
+  "context_files": [
+    ".opencode/context/standards/overrides.md",
+    ".opencode/context/project-intelligence/concepts/architecture.md",
+    ".opencode/context/project-intelligence/technical-component-pattern.md",
+    ".opencode/context/project-intelligence/concepts/bloc-state-pattern.md",
+    ".opencode/context/project-intelligence/concepts/freezed-entity.md",
+    ".opencode/context/project-intelligence/concepts/result-handling.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md",
+    ".opencode/context/project-intelligence/lookup/token-discipline.md",
+    "~/.config/opencode/context/ui/web/ui-styling-standards.md",
+    "~/.config/opencode/context/core/workflows/design-iteration-overview.md"
+  ],
+  "reference_files": [
+    "lib/ui/meetings/meetingDetails/widgets/meeting_details_screen.dart"
+  ],
+  "objective": "Replace _MeetingInfoCard's dynamic meeting field with the concrete MeetingsEntity type.",
+  "acceptance_criteria": [
+    "_MeetingInfoCard.meeting is typed as MeetingsEntity instead of dynamic",
+    "meeting_details_screen.dart imports MeetingsEntity if needed",
+    "All _MeetingInfoCard call sites compile without casts or dynamic access",
+    "No dynamic meeting declaration remains in MeetingDetailsScreen",
+    "Follows 4-stage design workflow",
+    "Responsive at all breakpoints",
+    "flutter analyze for meeting details feature reports no new errors"
+  ],
+  "deliverables": [
+    "Updated _MeetingInfoCard type annotation in meeting_details_screen.dart"
+  ],
+  "validation_commands": [
+    "flutter analyze lib/ui/meetings/meetingDetails/"
+  ],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

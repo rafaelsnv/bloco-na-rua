@@ -60,6 +60,9 @@ class AppCard extends StatelessWidget {
   /// Overrides the default surface color from the current theme.
   final Color? color;
 
+  /// Card outline width — 1.5px for clear visual boundary.
+  static const double outlineWidth = 1.5;
+
   static const Map<AppCardElevation, double> _elevationTokens = {
     AppCardElevation.none: 0.0,
     AppCardElevation.xs: 1.0,
@@ -81,7 +84,7 @@ class AppCard extends StatelessWidget {
         borderRadius: computedRadius,
         side: BorderSide(
           color: Theme.of(context).colorScheme.outline,
-          width: 1.5,
+          width: outlineWidth,
         ),
       ),
       color: color ?? defaultColor,

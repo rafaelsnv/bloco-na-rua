@@ -58,13 +58,11 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
     try {
       final data = {
         'carnivalBlockId': carnivalBlockId,
-        'memberId': memberId,
         'role': role,
       };
       final response = await baseApiClient.client.post(
         _basePath,
         data: data,
-        options: Options(headers: {'X-Logged-Member': memberId.toString()}),
       );
       if (response.statusCode != 201 && response.statusCode != 200) {
         return Failure(baseApiClient.formatError(response));
@@ -91,13 +89,11 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
     try {
       final data = {
         'carnivalBlockId': carnivalBlockId,
-        'memberId': memberId,
         'role': role,
       };
       final response = await baseApiClient.client.put(
         '$_basePath/$id',
         data: data,
-        options: Options(headers: {'X-Logged-Member': memberId.toString()}),
       );
       if (response.statusCode != 200 && response.statusCode != 201) {
         return Failure(baseApiClient.formatError(response));
@@ -119,7 +115,6 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
     try {
       final response = await baseApiClient.client.delete(
         '$_basePath/$id',
-        options: Options(headers: {'X-Logged-Member': memberId.toString()}),
       );
       if (response.statusCode != 200 && response.statusCode != 204) {
         return Failure(baseApiClient.formatError(response));

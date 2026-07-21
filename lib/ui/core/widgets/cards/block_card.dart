@@ -97,10 +97,10 @@ class BlockCard extends StatelessWidget {
                   : _buildEmojiPlaceholder(surfaceVariant),
             ),
             const SizedBox(width: Spacing.space_xs),
-            // Content column — tight fit, no Expanded to avoid stretching row height
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   block.name,
@@ -121,6 +121,7 @@ class BlockCard extends StatelessWidget {
                   ),
                 _buildBadgeRow(surfaceVariant, textSecondary, textTertiary),
               ],
+            ),
             ),
           ],
         ),

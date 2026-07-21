@@ -1,0 +1,12 @@
+{
+  "seq": 1,
+  "name": "update_app_colors",
+  "file_path": "lib/ui/core/tokens/app_colors.dart",
+  "status": "pending",
+  "parallel": true,
+  "depends_on": [],
+  "changes_summary": "Update color tokens to Fireworks on Velvet palette:\n\nGroup 1 Primary (Violet):\n- primary: #6D28D9 → #7C3AED\n- primaryLight: #A78BFA (unchanged)\n- primaryDark: #4C1D95 → #5B21B6\n\nGroup 2 Secondary (Magenta, replaces Rose):\n- secondary: #BE123C → #E11D74 (AA-passing on white)\n- secondaryLight: #FBA4B0 → #FF3D81 (brand magenta, decorative only)\n- secondaryDark: #7B1D31 → #831843\n\nGroup 3 Accent/CTA (Gold, replaces Orange):\n- accent: #EA580C → #D97706 (AA-passing on white)\n- accentLight: #FB923C → #FBBF24 (brand gold, decorative only)\n- accentDark: #7C2D12 → #92400E\n\nGroup 4 Tertiary (Cyan, replaces Teal):\n- tertiary: #0F766E → #0E7490 (AA-passing on white)\n- tertiaryDark: #00504A → #164E63\n- tertiaryContainerLight: #CCFBF1 → #CFFAFE\n- tertiaryContainerDark: #134E4A → #164E63\n\nGroup 6 Surface Light: adjust tonal ladder to match new violet primary\n- surfaceVariantLight: #F6F4FC (unchanged)\n- surfaceContainerLight: #ECE7F7 → #F5F3FF\n- surfaceContainerHighLight: #E3DAF4 → #EDE9FE\n- surfaceContainerHighestLight: #D9CCEE → #DDD6FE\n- borderLight: #DCD2F0 → #C4B5FD\n\nGroup 7 Surface Dark: switch from violet-tinted to slate-based\n- backgroundDark: #0B0716 → #111827\n- surfaceDark: #15101F → #1F2937\n- surfaceVariantDark: #1E1830 → #2D3042\n- surfaceContainerDark: #2A2142 (unchanged)\n- surfaceContainerHighDark: #2A2436 → #374151\n- surfaceContainerHighestDark: #353043 → #4B5563\n- surfaceNeutralDark: #1A1626 → #1F2937\n- borderDark: #3B2F5C → #374151\n\nDoc comment update: 'Carnaval Sunset' → 'Fireworks on Velvet'",
+  "reference_files": [
+    "lib/ui/core/tokens/app_colors.dart"
+  ]
+}

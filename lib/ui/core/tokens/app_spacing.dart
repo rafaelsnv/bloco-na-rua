@@ -15,6 +15,7 @@ class Spacing {
   Spacing._();
 
   // Base spacing tokens (4px grid)
+  static const double space_0 = 0.0;
   static const double space_4xs = 2.0;
   static const double space_3xs = 4.0;
   static const double space_2xs = 8.0;
@@ -25,6 +26,10 @@ class Spacing {
   static const double space_xl = 48.0;
   static const double space_2xl = 64.0;
   static const double space_3xl = 80.0;
+  static const double space_4xl = 96.0;
+
+  // Semantic tokens for specific use cases
+  static const double buttonPaddingVLg = 16.0;
 
   // Common layout combinations
   static const double pagePaddingMobile = 16.0;

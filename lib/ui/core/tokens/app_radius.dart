@@ -68,11 +68,17 @@ class Radii {
   /// FAB: 16px all corners.
   static final BorderRadius fab = radiusLg;
 
-  /// Chips: 16px all corners (pill shape when height allows).
-  static final BorderRadius chip = radiusLg;
-
   /// Avatars: circular/pill shape.
   static final BorderRadius avatar = radiusFull;
+
+  /// Primary, secondary, tertiary, ghost buttons: 8px all corners.
+  static final BorderRadius buttonPrimary = radiusSm;
+
+  /// Accent button: 12px all corners (slightly more rounded).
+  static final BorderRadius buttonAccent = radiusMd;
+
+  /// Chip: pill shape — uses full radius for festive Carnaval look.
+  static final BorderRadius chip = radiusFull;
 
   /// Modals: 16px all corners.
   static final BorderRadius modal = radiusLg;

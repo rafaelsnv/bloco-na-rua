@@ -1,5 +1,6 @@
 import "package:bloco_na_rua/data/repositories/auth/iauth_repository.dart";
 import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart";
+import "package:bloco_na_rua/data/services/api/base/ibase_api_client.dart";
 import "package:bloco_na_rua/data/services/api/members/create/member_create.dart";
 import "package:bloco_na_rua/data/services/auth/auth_api_client.dart";
 import "package:bloco_na_rua/data/services/auth/models/login_request/login_request.dart";
@@ -7,6 +8,7 @@ import "package:bloco_na_rua/data/services/auth/models/login_response/login_resp
 import "package:bloco_na_rua/data/services/auth/models/signup_request/signup_request.dart";
 import "package:bloco_na_rua/data/services/secure_storage_service.dart";
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
+import "package:dio/dio.dart";
 import "package:logging/logging.dart";
 import "package:result_dart/result_dart.dart";
 
@@ -14,13 +16,16 @@ class AuthRepository implements IAuthRepository {
   AuthRepository({
     required IMembersRepository membersRepository,
     required AuthApiClient authApiClient,
+    required IBaseApiClient baseApiClient,
     required SecureStorageService sharedPreferencesService,
   }) : _membersRepository = membersRepository,
        _authApiClient = authApiClient,
+       _baseApiClient = baseApiClient,
        _secureStorageService = sharedPreferencesService;
 
   final IMembersRepository _membersRepository;
   final AuthApiClient _authApiClient;
+  final IBaseApiClient _baseApiClient;
   final SecureStorageService _secureStorageService;
 
   bool? _isAuthenticated;
@@ -142,7 +147,7 @@ class AuthRepository implements IAuthRepository {
     _currentMember = null;
 
     var userIdResult = await _secureStorageService.saveUuid(
-      loginResponse.userUuid,
+      loginResponse.userId,
     );
     if (userIdResult.isError()) {
       _log.severe("Failed to save User UUID", userIdResult.exceptionOrNull());
@@ -176,10 +181,10 @@ class AuthRepository implements IAuthRepository {
       return Failure(Exception("User data is null"));
     }
 
-    var membersResult = await _registerMember(signUpRequest, userData.userUuid);
+    var membersResult = await _registerMember(signUpRequest, userData.userId);
     if (membersResult.isError()) {
-      // Option C: Clean up Supabase auth user if member creation failed
-      _authApiClient.deleteUser(userData.userUuid);
+      // Clean up Supabase auth user via backend endpoint if member creation failed
+      await _signupCleanup(userData.userId);
       return Failure(membersResult.exceptionOrNull()!);
     }
 
@@ -193,7 +198,7 @@ class AuthRepository implements IAuthRepository {
     _currentMember = null;
 
     var userIdResult = await _secureStorageService.saveUuid(
-      userData.userUuid,
+      userData.userId,
     );
     if (userIdResult.isError()) {
       _log.severe("Failed to save User ID", userIdResult.exceptionOrNull());
@@ -294,11 +299,28 @@ class AuthRepository implements IAuthRepository {
         "Failed to register member",
         membersResult.exceptionOrNull() ?? membersResult.getOrNull(),
       );
-      _authApiClient.deleteUser(model.uuid);
+      await _signupCleanup(model.uuid);
       await _secureStorageService.saveToken(null);
       return Failure(membersResult.exceptionOrNull()!);
     }
     _log.info("Member registered successfully");
     return membersResult;
+  }
+
+  Future<void> _signupCleanup(String uuid) async {
+    try {
+      // Use the stored token if available, otherwise try to fetch it
+      final token = _authToken ?? (await _secureStorageService.fetchToken()).getOrNull();
+      if (token == null) {
+        _log.warning("No token available for signup cleanup");
+        return;
+      }
+      await _baseApiClient.client.delete(
+        '/api/v1/admin/signup-cleanup/$uuid',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+    } catch (e) {
+      _log.severe("Signup cleanup failed", e);
+    }
   }
 }

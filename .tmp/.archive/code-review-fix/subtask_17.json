@@ -1,0 +1,53 @@
+{
+  "id": "code-review-fix-17",
+  "seq": "17",
+  "issue_key": "M11",
+  "phase": "Phase 3",
+  "priority": "medium",
+  "title": "Replace UI magic spacing and duration literals with tokens",
+  "status": "pending",
+  "depends_on": ["07", "06", "12", "16"],
+  "parallel": false,
+  "suggested_agent": "OpenFrontendSpecialist",
+  "context_files": [
+    ".opencode/context/standards/overrides.md",
+    ".opencode/context/project-intelligence/concepts/architecture.md",
+    ".opencode/context/project-intelligence/technical-component-pattern.md",
+    ".opencode/context/project-intelligence/concepts/bloc-state-pattern.md",
+    ".opencode/context/project-intelligence/concepts/freezed-entity.md",
+    ".opencode/context/project-intelligence/concepts/result-handling.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md",
+    ".opencode/context/project-intelligence/lookup/token-discipline.md",
+    "~/.config/opencode/context/ui/web/ui-styling-standards.md",
+    "~/.config/opencode/context/core/workflows/design-iteration-overview.md"
+  ],
+  "reference_files": [
+    "lib/ui/meeting_presences/widgets/meeting_presences_screen.dart",
+    "lib/ui/meetings/userMeetings/widgets/user_meetings_screen.dart",
+    "lib/ui/meetings/meetingDetails/widgets/meeting_details_screen.dart",
+    "lib/ui/meetings/editMeeting/widgets/edit_meeting_screen.dart",
+    "lib/ui/core/widgets/inputs/app_search_field.dart",
+    "lib/ui/core/widgets/feedback/app_snackbar.dart",
+    "lib/ui/core/widgets/feedback/app_loading_indicator.dart"
+  ],
+  "objective": "Replace hardcoded spacing, sizing, radius, and duration literals in UI code with existing design tokens.",
+  "acceptance_criteria": [
+    "Hardcoded EdgeInsets, SizedBox, Radius/BorderRadius, and Duration literals in edited UI files are replaced with Spacing, Radii, or AppDurations tokens where matching tokens exist",
+    "No new design tokens are added unless an existing token cannot represent the value and the addition follows token naming conventions",
+    "No hardcoded colors are introduced",
+    "Animation behavior continues to respect existing reduced-motion handling where applicable",
+    "Follows 4-stage design workflow",
+    "Responsive at all breakpoints",
+    "flutter analyze for edited UI files reports no new errors"
+  ],
+  "deliverables": [
+    "Tokenized spacing/duration/radius usage in affected UI files"
+  ],
+  "validation_commands": [
+    "flutter analyze lib/ui/"
+  ],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

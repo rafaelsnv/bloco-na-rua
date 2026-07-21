@@ -1,0 +1,47 @@
+{
+  "seq": 6,
+  "name": "app-text-field",
+  "title": "AppTextField",
+  "output_file": "C:\\Repos\\bloco-na-rua\\lib\\ui\\core\\widgets\\inputs\\app_text_field.dart",
+  "class_name": "AppTextField",
+  "public_api": {
+    "constructor": "AppTextField({\n  required String label,\n  String? hint,\n  String? helperText,\n  String? errorText,\n  IconData? prefixIcon,\n  Widget? suffixIcon,\n  bool obscureText = false,\n  TextInputType? keyboardType,\n  TextInputAction? textInputAction,\n  TextEditingController? controller,\n  ValueChanged<String>? onChanged,\n  ValueChanged<String>? onSubmitted,\n  FormFieldValidator<String>? validator,\n  bool isMultiline = false,\n  bool isEnabled = true,\n})"
+  },
+  "tokens_consumed": {
+    "AppColors": ["primary", "error", "textPrimaryLight", "textSecondaryLight", "textDisabledLight", "surfaceVariantLight", "surfaceVariantDark", "textPrimaryDark", "textSecondaryDark", "textDisabledDark"],
+    "Spacing": ["space_sm", "space_xs", "space_md"],
+    "Radii": ["input"],
+    "AppDurations": ["fast", "normal"],
+    "AppCurves": ["standard"]
+  },
+  "dependencies_on_other_phase2_widgets": [],
+  "conventions_reminder": [
+    "snake_case.dart file",
+    "class AppTextField extends StatelessWidget",
+    "All colors/spacings/radii/durations via tokens — no hardcoded values",
+    "MediaQuery.disableAnimationsOf(context) before any animation",
+    "Focus states: primary color border with subtle primary tint shadow",
+    "Error states: error color border with error tint shadow",
+    "Double quotes on all string literals",
+    "Top-of-file doc comment explaining purpose + state behavior"
+  ],
+  "acceptance_criteria": [
+    "flutter analyze passes (0 errors)",
+    "Has all specified constructor params",
+    "Default radius uses Radii.input",
+    "Default content padding uses Spacing.space_md horizontal, Spacing.space_sm vertical",
+    "Disabled state: opacity 0.5, isEnabled false",
+    "All colors via AppColors tokens",
+    "All spacing via Spacing tokens",
+    "All radii via Radii tokens",
+    "All durations via AppDurations tokens",
+    "All curves via AppCurves tokens"
+  ],
+  "batch": 2,
+  "parallel": true,
+  "status": "completed",
+  "agent_id": "coder-agent",
+  "started_at": "2026-07-07T00:00:00Z",
+  "completed_at": "2026-07-07T00:00:00Z",
+  "completion_summary": "Implemented AppTextField widget as StatelessWidget wrapping TextFormField with all specified props: label, hint, helperText, errorText, prefixIcon (IconData), suffixIcon (Widget), obscureText, keyboardType, textInputAction, controller, onChanged, onSubmitted, validator, isMultiline, isEnabled, maxLines, autofocus. isMultiline sets maxLines:null, minLines:3, TextInputType.multiline. Enabled=false maps to TextFormField enabled param. Decoration (border/padding/fill) comes from theme. Double quotes, no emojis. flutter analyze: 0 issues."
+}

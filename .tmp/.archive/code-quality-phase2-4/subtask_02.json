@@ -1,0 +1,71 @@
+{
+  "seq": 2,
+  "id": "H2a",
+  "feature": "code-quality-phase2-4",
+  "title": "Add getByInviteCodeAsync endpoint to CarnivalBlocks API + repository",
+  "status": "pending",
+  "priority": "high",
+  "estimated_effort": "small",
+  "parallel": true,
+  "depends_on": [],
+  "objective": "Expose GET /CarnivalBlocks/by-invite-code/{inviteCode} as a typed method on the CarnivalBlocks API client and repository, so the join-block flow can look up exactly one block by its invite code instead of pulling every block in the system and filtering client-side.",
+  "description": "Currently JoinBlockCubit calls _carnivalBlocksRepository.getAllAsync() and then filters by inviteCode with .where((b) => b.inviteCode == inviteCode).first. This downloads the entire blocks collection (including blocks the user is not a member of, blocks they are a member of, and the metadata of every other carnival block) on every join attempt. The fix adds a dedicated endpoint, plumbs it through the API client interface, the concrete client, the repository interface, and the repository. The Swagger contract in swagger.json should be inspected first; if the backend already exposes by-invite-code (or by-manager-invite-code), this is purely client-side wiring. If it does NOT, the subtask surfaces a `// TODO(backend): add GET /CarnivalBlocks/by-invite-code/{code}` comment so H2b can still call a typed method that throws UnimplementedError until the backend ships — preserving type safety in JoinBlockCubit.",
+  "context_files": [
+    "lib/core/api_error.dart",
+    "lib/core/error_messages.dart",
+    "lib/core/entity_base.dart"
+  ],
+  "reference_files": [
+    {
+      "path": "lib/data/services/api/carnivalBlocks/icarnival_blocks_api_client.dart",
+      "lines": "1-21",
+      "reason": "Add the new abstract method signature here."
+    },
+    {
+      "path": "lib/data/services/api/carnivalBlocks/carnival_blocks_api_client.dart",
+      "lines": "1-87",
+      "reason": "Concrete implementation. Mirror the existing getByIdAsync shape (lines 19-31) for the new method."
+    },
+    {
+      "path": "lib/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart",
+      "lines": "1-30",
+      "reason": "Add the new abstract method signature on the repository."
+    },
+    {
+      "path": "lib/data/repositories/carnivalBlocks/carnival_blocks_repository.dart",
+      "lines": "1-50",
+      "reason": "Concrete repository implementation. Delegate to the API client."
+    },
+    {
+      "path": "swagger.json",
+      "lines": "1-200",
+      "reason": "Inspect the /CarnivalBlocks paths. If by-invite-code exists, use its exact route + response schema. If not, document a TODO(backend)."
+    }
+  ],
+  "fix_shape": {
+    "api_client_interface": "AsyncResult<CarnivalBlocksEntity> getByInviteCodeAsync(String inviteCode);",
+    "api_client_implementation": "Try GET $_basePath/by-invite-code/$inviteCode (URL-encode inviteCode); treat 200 as Success(CarnivalBlocksEntity.fromJson(response.data)); treat 404 as Failure(ApiError.fromResponse(response)); on any other non-200 use baseApiClient.formatError(response); on Exception, Failure(Exception('An error occurred: $e')).",
+    "repository_interface": "AsyncResult<CarnivalBlocksEntity> getByInviteCodeAsync(String inviteCode);",
+    "repository_implementation": "delegate to apiClient.getByInviteCodeAsync(inviteCode)",
+    "swagger_check": "Open swagger.json. If the path exists, use its literal route. If not, add a TODO(backend): comment above the new method explaining what endpoint is expected, and have the implementation throw UnimplementedError (returned as Failure) until the backend lands the route."
+  },
+  "acceptance_criteria": [
+    "ICarnivalBlocksApiClient declares AsyncResult<CarnivalBlocksEntity> getByInviteCodeAsync(String inviteCode) with dartdoc explaining the HTTP route it wraps",
+    "CarnivalBlocksApiClient.getByInviteCodeAsync exists and either calls the real backend route (per swagger.json) or returns Failure(UnimplementedError('TODO(backend): GET /CarnivalBlocks/by-invite-code/{code}'))",
+    "ICarnivalBlocksRepository declares AsyncResult<CarnivalBlocksEntity> getByInviteCodeAsync(String inviteCode)",
+    "CarnivalBlocksRepository.getByInviteCodeAsync delegates to the API client",
+    "If the backend route does not yet exist, a single-line TODO(backend): comment is added above the API client method body identifying the missing route",
+    "The existing getAllAsync, getByIdAsync, createAsync, updateAsync, deleteAsync signatures are unchanged",
+    "flutter analyze lib/data/services/api/carnivalBlocks/ lib/data/repositories/carnivalBlocks/ returns no errors"
+  ],
+  "validation": {
+    "static_analysis": "flutter analyze lib/data/services/api/carnivalBlocks/ lib/data/repositories/carnivalBlocks/",
+    "expected_exit_code": 0,
+    "grep_evidence": [
+      "rg -n 'getByInviteCodeAsync' lib/data/ must return at least 4 matches (interface API + impl API + interface repo + impl repo)",
+      "rg -n 'getByInviteCodeAsync|by-invite-code' swagger.json should return at least one match if the backend already exposes the route"
+    ],
+    "swagger_check": "Run `rg -n 'by-invite|invite-code|InviteCode' swagger.json | head` to confirm whether the backend route exists. Result dictates whether the implementation calls a real route or returns UnimplementedError."
+  },
+  "no_op_outside_scope": "Do not modify JoinBlockCubit — that is H2b. Do not modify any other repository, API client, or entity."
+}

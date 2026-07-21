@@ -1,0 +1,41 @@
+{
+  "id": "design-system-04",
+  "seq": "04",
+  "title": "Create app_duration.dart token file",
+  "status": "completed",
+  "depends_on": [],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "agent": "CoderAgent",
+  "agent_id": "coder-agent",
+  "started_at": "2026-07-03T00:00:00Z",
+  "completed_at": "2026-07-03T00:00:00Z",
+  "completion_summary": "Created lib/ui/core/tokens/app_duration.dart with AppDurations (5 tokens) and AppCurves (4 tokens), flutter analyze passes",
+  "context_files": [
+    "design-system/bloco-na-rua/MASTER.md",
+    "design-system/bloco-na-rua/DESIGN_PLAN.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md"
+  ],
+  "reference_files": [],
+  "target_files": [
+    "lib/ui/core/tokens/app_duration.dart"
+  ],
+  "deliverables": [
+    "lib/ui/core/tokens/app_duration.dart"
+  ],
+  "description": "Create motion tokens at lib/ui/core/tokens/app_duration.dart. File imports: `import 'package:flutter/material.dart';` (for Curves). Two token classes, both with private constructors: (1) `AppDurations`: `static const Duration instant` = `Duration.zero`, `static const Duration fast` = `Duration(milliseconds: 150)`, `static const Duration normal` = `Duration(milliseconds: 200)`, `static const Duration slow` = `Duration(milliseconds: 300)`, `static const Duration slower` = `Duration(milliseconds: 400)`. (2) `AppCurves`: `static const Curve standard` = `Curves.easeOutCubic`, `static const Curve entering` = `Curves.easeOutCubic`, `static const Curve exiting` = `Curves.easeInCubic`, `static const Curve bounce` = `Curves.elasticOut`. Top-of-file doc comment: explains motion principles (150-300ms micro-interactions, easeOutCubic, respect disableAnimations) and lists tokens.",
+  "acceptance_criteria": [
+    "File exists at lib/ui/core/tokens/app_duration.dart",
+    "Import statement is `import 'package:flutter/material.dart';` (for Curves)",
+    "Class `AppDurations` present with private constructor `AppDurations._();`",
+    "Class `AppCurves` present with private constructor `AppCurves._();`",
+    "AppDurations constants correct: instant = Duration.zero, fast = 150ms, normal = 200ms, slow = 300ms, slower = 400ms",
+    "AppCurves constants correct: standard = Curves.easeOutCubic, entering = Curves.easeOutCubic, exiting = Curves.easeInCubic, bounce = Curves.elasticOut",
+    "All constants are `static const` (compile-time evaluable)",
+    "All identifiers use camelCase (no `k` prefix, no snake_case)",
+    "All string literals use double quotes",
+    "No emojis anywhere in the file",
+    "Top-of-file doc comment describes motion principles and lists tokens",
+    "`flutter analyze lib/ui/core/tokens/app_duration.dart` returns 0 errors"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "seq": 26,
+  "name": "presence-chip",
+  "title": "PresenceChip widget with PresenceVariant enum",
+  "output_file": "C:\\Repos\\bloco-na-rua\\lib\\ui\\core\\widgets\\display\\presence_chip.dart",
+  "class_name": "PresenceChip",
+  "public_api": {
+    "constructor": "PresenceChip({\n  required PresenceVariant variant,\n  required String label,\n  bool showIcon = true,\n})",
+    "factory_constructors": [
+      "PresenceChip.present({String? label})",
+      "PresenceChip.absent({String? label})",
+      "PresenceChip.pending({String? label})"
+    ],
+    "enum": "enum PresenceVariant { present, absent, pending }"
+  },
+  "tokens_consumed": {
+    "AppColors": ["success", "error", "warning"],
+    "Spacing": [],
+    "Radii": [],
+    "AppDurations": [],
+    "AppCurves": []
+  },
+  "dependencies_on_other_phase2_widgets": ["AppChip"],
+  "conventions_reminder": [
+    "snake_case.dart file",
+    "enum PresenceVariant defined at top-level (not nested)",
+    "class PresenceChip extends StatelessWidget",
+    "3 named factory constructors delegating to default",
+    "showIcon toggles icon visibility via avatar parameter",
+    "Double quotes on all string literals",
+    "Top-of-file doc comment explaining purpose",
+    "Default labels: Presente/Ausente/Pendente in pt-BR"
+  ],
+  "acceptance_criteria": [
+    "flutter analyze passes (0 errors)",
+    "Public API: PresenceChip({required PresenceVariant variant, required String label, bool showIcon = true})",
+    "3 factory constructors: PresenceChip.present/absent/pending with optional label override",
+    "Each variant uses correct semantic color (present=success, absent=error, pending=warning)",
+    "showIcon=false renders chip without icon using base AppChip constructor"
+  ],
+  "batch": 4,
+  "parallel": true,
+  "status": "completed",
+  "completion_summary": "Implemented PresenceChip with PresenceVariant enum (present/absent/pending), 3 factory constructors with pt-BR defaults, showIcon toggle, delegates to AppChip with semantic colors (success/error/warning) and appropriate icons",
+  "completed_at": "2026-07-07T00:00:00Z"
+}

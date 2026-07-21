@@ -1,0 +1,44 @@
+{
+  "id": "code-review-fix-27",
+  "seq": "27",
+  "issue_key": "L1",
+  "phase": "Phase 4",
+  "priority": "low",
+  "title": "Enforce formatting and single-quote style",
+  "status": "pending",
+  "depends_on": ["26"],
+  "parallel": false,
+  "context_files": [
+    ".opencode/context/standards/overrides.md",
+    ".opencode/context/project-intelligence/concepts/architecture.md",
+    ".opencode/context/project-intelligence/technical-component-pattern.md",
+    ".opencode/context/project-intelligence/concepts/bloc-state-pattern.md",
+    ".opencode/context/project-intelligence/concepts/freezed-entity.md",
+    ".opencode/context/project-intelligence/concepts/result-handling.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md",
+    ".opencode/context/project-intelligence/lookup/token-discipline.md"
+  ],
+  "reference_files": [
+    "lib/"
+  ],
+  "objective": "Run final Dart formatting and normalize string literals to the configured single-quote style where analyzer/lints require it.",
+  "acceptance_criteria": [
+    "dart format --set-exit-if-changed lib/ succeeds after formatting is applied",
+    "Analyzer/lint feedback no longer reports avoidable double-quote style issues in lib/",
+    "Generated files are not manually style-edited beyond what build_runner/dart format produces",
+    "No functional code changes are mixed into this mechanical formatting task",
+    "flutter analyze lib/ reports no new errors"
+  ],
+  "deliverables": [
+    "Formatted lib/ Dart source files",
+    "Single-quote style cleanup where applicable"
+  ],
+  "validation_commands": [
+    "dart format --set-exit-if-changed lib/",
+    "flutter analyze lib/"
+  ],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

@@ -98,7 +98,7 @@ class AppButton extends StatelessWidget {
   static const Map<AppButtonSize, double> _verticalPaddingTokens = {
     AppButtonSize.sm: Spacing.space_xs,
     AppButtonSize.md: Spacing.space_sm,
-    AppButtonSize.lg: 20.0,
+    AppButtonSize.lg: Spacing.buttonPaddingVLg,
   };
 
   static const Map<AppButtonSize, double> _iconLabelGapTokens = {
@@ -231,7 +231,7 @@ class AppButton extends StatelessWidget {
       padding: WidgetStateProperty.all(padding),
       textStyle: WidgetStateProperty.all(textStyle),
       shape: WidgetStateProperty.all(
-        RoundedRectangleBorder(borderRadius: Radii.button),
+        RoundedRectangleBorder(borderRadius: Radii.buttonPrimary),
       ),
     );
 
@@ -255,7 +255,7 @@ class AppButton extends StatelessWidget {
           foregroundColor: WidgetStateProperty.all(foreground),
           elevation: WidgetStateProperty.all(isDark ? 0.0 : 6.0),
           shape: WidgetStateProperty.all(
-            RoundedRectangleBorder(borderRadius: Radii.radiusMd),
+            RoundedRectangleBorder(borderRadius: Radii.buttonAccent),
           ),
         ),
         child: content,

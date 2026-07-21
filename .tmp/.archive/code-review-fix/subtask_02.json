@@ -1,0 +1,51 @@
+{
+  "id": "code-review-fix-02",
+  "seq": "02",
+  "issue_key": "H2",
+  "phase": "Phase 2",
+  "priority": "high",
+  "title": "Use invite-code endpoint in JoinBlockCubit flow",
+  "status": "pending",
+  "depends_on": [],
+  "parallel": true,
+  "context_files": [
+    ".opencode/context/standards/overrides.md",
+    ".opencode/context/project-intelligence/concepts/architecture.md",
+    ".opencode/context/project-intelligence/technical-component-pattern.md",
+    ".opencode/context/project-intelligence/concepts/bloc-state-pattern.md",
+    ".opencode/context/project-intelligence/concepts/freezed-entity.md",
+    ".opencode/context/project-intelligence/concepts/result-handling.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md",
+    ".opencode/context/project-intelligence/lookup/token-discipline.md"
+  ],
+  "reference_files": [
+    "lib/data/services/api/carnivalBlocks/icarnival_blocks_api_client.dart",
+    "lib/data/services/api/carnivalBlocks/carnival_blocks_api_client.dart",
+    "lib/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart",
+    "lib/data/repositories/carnivalBlocks/carnival_blocks_repository.dart",
+    "lib/ui/carnivalBlock/joinBlock/cubit/join_block_cubit.dart"
+  ],
+  "objective": "Add a typed invite-code lookup path and refactor JoinBlockCubit away from getAllAsync plus client-side inviteCode filtering.",
+  "acceptance_criteria": [
+    "ICarnivalBlocksApiClient declares getByInviteCodeAsync(String inviteCode)",
+    "CarnivalBlocksApiClient implements getByInviteCodeAsync with explicit route handling or a clear backend TODO Failure if the route is unavailable",
+    "ICarnivalBlocksRepository declares getByInviteCodeAsync(String inviteCode)",
+    "CarnivalBlocksRepository delegates getByInviteCodeAsync to the API client",
+    "JoinBlockCubit calls getByInviteCodeAsync exactly once for the submitted invite code",
+    "JoinBlockCubit no longer calls _carnivalBlocksRepository.getAllAsync for invite-code lookup",
+    "JoinBlockCubit preserves current-user lookup, role-0 join creation, success state, and error state semantics",
+    "flutter analyze for carnivalBlocks repository/API and joinBlock cubit reports no new errors"
+  ],
+  "deliverables": [
+    "Updated carnival blocks API client interface and implementation",
+    "Updated carnival blocks repository interface and implementation",
+    "Updated JoinBlockCubit invite-code lookup"
+  ],
+  "validation_commands": [
+    "flutter analyze lib/data/services/api/carnivalBlocks/ lib/data/repositories/carnivalBlocks/ lib/ui/carnivalBlock/joinBlock/"
+  ],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

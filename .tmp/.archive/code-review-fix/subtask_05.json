@@ -1,0 +1,43 @@
+{
+  "id": "code-review-fix-05",
+  "seq": "05",
+  "issue_key": "H5",
+  "phase": "Phase 2",
+  "priority": "high",
+  "title": "Cache AuthRepository currentUuid in-flight Future",
+  "status": "pending",
+  "depends_on": [],
+  "parallel": true,
+  "context_files": [
+    ".opencode/context/standards/overrides.md",
+    ".opencode/context/project-intelligence/concepts/architecture.md",
+    ".opencode/context/project-intelligence/technical-component-pattern.md",
+    ".opencode/context/project-intelligence/concepts/bloc-state-pattern.md",
+    ".opencode/context/project-intelligence/concepts/freezed-entity.md",
+    ".opencode/context/project-intelligence/concepts/result-handling.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md",
+    ".opencode/context/project-intelligence/lookup/token-discipline.md"
+  ],
+  "reference_files": [
+    "lib/data/repositories/auth/auth_repository.dart"
+  ],
+  "objective": "Prevent concurrent currentUuid callers from racing duplicate SharedPreferences reads by caching the in-flight Future instead of only caching the resolved value.",
+  "acceptance_criteria": [
+    "AuthRepository replaces the String? currentUuid cache with a Future<String?>? in-flight cache or equivalent single-flight mechanism",
+    "currentUuid concurrent callers share the same in-flight SharedPreferences fetch",
+    "isAuthenticated uses compatible cache semantics or remains correct with the new single-flight token/uuid fetch",
+    "login, signUp, logout, and validateSession invalidate or refresh the Future cache when auth state changes",
+    "IAuthRepository public getters and method signatures remain unchanged",
+    "flutter analyze for auth repository files reports no new errors"
+  ],
+  "deliverables": [
+    "Updated AuthRepository auth cache fields and getters"
+  ],
+  "validation_commands": [
+    "flutter analyze lib/data/repositories/auth/"
+  ],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

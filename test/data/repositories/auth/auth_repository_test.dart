@@ -1,9 +1,11 @@
 import "package:bloco_na_rua/data/repositories/auth/auth_repository.dart";
 import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart";
+import "package:bloco_na_rua/data/services/api/base/ibase_api_client.dart";
 import "package:bloco_na_rua/data/services/auth/auth_api_client.dart";
 import "package:bloco_na_rua/data/services/auth/models/login_request/login_request.dart";
 import "package:bloco_na_rua/data/services/auth/models/login_response/login_response.dart";
 import "package:bloco_na_rua/data/services/secure_storage_service.dart";
+import "package:dio/dio.dart";
 import "package:mocktail/mocktail.dart";
 import "package:result_dart/result_dart.dart";
 import "package:test/test.dart";
@@ -14,6 +16,11 @@ class MockAuthApiClient extends Mock implements AuthApiClient {}
 
 class MockSecureStorageService extends Mock
     implements SecureStorageService {}
+
+class MockIBaseApiClient extends Mock implements IBaseApiClient {
+  @override
+  late Dio client;
+}
 
 void main() {
   late AuthRepository authRepository;
@@ -32,10 +39,12 @@ void main() {
     mockMembersRepository = MockIMembersRepository();
     mockAuthApiClient = MockAuthApiClient();
     mockSecureStorageService = MockSecureStorageService();
+    final mockBaseApiClient = MockIBaseApiClient();
 
     authRepository = AuthRepository(
       membersRepository: mockMembersRepository,
       authApiClient: mockAuthApiClient,
+      baseApiClient: mockBaseApiClient,
       sharedPreferencesService: mockSecureStorageService,
     );
   });
@@ -119,7 +128,7 @@ void main() {
       // Act: Login with new credentials
       final loginResponse = LoginResponse(
         accessToken: "new-token",
-        userUuid: "new-uuid",
+        userId: "new-uuid",
       );
 
       when(

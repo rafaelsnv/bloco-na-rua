@@ -1,0 +1,10 @@
+{
+  "id": "subtask_01",
+  "task_id": "design-system-analysis",
+  "title": "Architecture exploration",
+  "status": "completed",
+  "description": "Explore lib/ directory structure",
+  "parallel": true,
+  "completed_at": "2026-07-20T00:00:00Z",
+  "notes": "Mapped lib/ structure: core/theme, core/tokens, core/widgets, home/, auth/, etc."
+}

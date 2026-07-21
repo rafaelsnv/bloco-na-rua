@@ -1,0 +1,79 @@
+{
+  "id": "code-review-fix-28",
+  "seq": "28",
+  "issue_key": "L7",
+  "phase": "Phase 4",
+  "priority": "low",
+  "title": "Add final unit tests for fixed pure logic",
+  "status": "pending",
+  "depends_on": [
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
+    "23",
+    "24",
+    "25",
+    "26",
+    "27"
+  ],
+  "parallel": false,
+  "context_files": [
+    ".opencode/context/standards/overrides.md",
+    ".opencode/context/project-intelligence/concepts/architecture.md",
+    ".opencode/context/project-intelligence/technical-component-pattern.md",
+    ".opencode/context/project-intelligence/concepts/bloc-state-pattern.md",
+    ".opencode/context/project-intelligence/concepts/freezed-entity.md",
+    ".opencode/context/project-intelligence/concepts/result-handling.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md",
+    ".opencode/context/project-intelligence/lookup/token-discipline.md"
+  ],
+  "reference_files": [
+    "lib/core/errors/user_message.dart",
+    "lib/ui/core/widgets/display/image_url_validator.dart",
+    "lib/ui/core/widgets/display/safe_network_image.dart",
+    "test/widget_test.dart",
+    "test/core/errors/user_message_test.dart",
+    "test/ui/core/widgets/display/image_url_validator_test.dart"
+  ],
+  "objective": "Add focused unit tests after all fixes land to validate shared pure helpers and guard against regressions.",
+  "acceptance_criteria": [
+    "At least one new unit test file is added under test/",
+    "extractUserMessage is tested for null, ApiError, Exception with prefix, Exception without prefix, and generic object inputs",
+    "isValidImageUrl or SafeNetworkImage pure guard behavior is tested for valid HTTP(S), null, empty, and placeholder values",
+    "Tests do not require live backend services or real network calls",
+    "flutter test passes",
+    "dart analyze passes clean after tests are added",
+    "This task remains last and validates all prior Phase 2, Phase 3, and Phase 4 fix work"
+  ],
+  "deliverables": [
+    "New unit tests under test/",
+    "Updated test imports for fixed helper locations"
+  ],
+  "validation_commands": [
+    "flutter test",
+    "dart analyze"
+  ],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

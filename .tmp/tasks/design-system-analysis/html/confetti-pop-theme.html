@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confetti Pop — Light & Dark Themes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      line-height: 1.6;
+    }
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+    .theme-panel {
+      padding: 40px;
+      position: relative;
+    }
+    .theme-panel.light {
+      background: #FAFAF9;
+      color: #1C1917;
+    }
+    .theme-panel.dark {
+      background: #0C0A1D;
+      color: #FAFAF9;
+    }
+    .theme-label {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .light .theme-label {
+      background: #FF2D55;
+      color: white;
+    }
+    .dark .theme-label {
+      background: #FF2D55;
+      color: white;
+    }
+    .theme-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      padding-top: 60px;
+    }
+    .theme-subtitle {
+      font-size: 14px;
+      opacity: 0.7;
+      margin-bottom: 32px;
+    }
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      opacity: 0.6;
+    }
+    .surface-section { margin-bottom: 24px; }
+    .surface-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .surface-chip {
+      flex: 1;
+      height: 50px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 6px;
+      font-size: 9px;
+    }
+    .surface-hex { font-family: monospace; opacity: 0.6; }
+    .palette {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .color-chip {
+      flex: 1;
+      aspect-ratio: 1;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 8px;
+      font-size: 10px;
+      font-weight: 600;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    }
+    .color-hex { font-weight: 400; opacity: 0.8; }
+    .button-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+    .card {
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .light .card { background: white; border: 1px solid #E5E5E5; }
+    .dark .card { background: #15101F; border: 1px solid #2A2142; }
+    .card h4 { font-size: 14px; margin-bottom: 6px; }
+    .card p { font-size: 13px; opacity: 0.7; }
+    @media (max-width: 900px) {
+      .comparison { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="comparison">
+    <!-- Light Theme -->
+    <div class="theme-panel light">
+      <span class="theme-label">Light</span>
+      <h1 class="theme-title">Confetti Pop</h1>
+      <p class="theme-subtitle">Vibrant celebration palette</p>
+
+      <!-- Surfaces -->
+      <div class="surface-section">
+        <div class="section-title">Surfaces</div>
+        <div class="surface-row">
+          <div class="surface-chip" style="background: #FAFAF9; color: #1C1917; border: 1px solid #E5E5E5;">
+            <span>BG</span>
+            <span class="surface-hex">#FAFAF9</span>
+          </div>
+          <div class="surface-chip" style="background: #FFFFFF; color: #1C1917; border: 1px solid #E5E5E5;">
+            <span>Surface</span>
+            <span class="surface-hex">#FFF</span>
+          </div>
+          <div class="surface-chip" style="background: #FFF0F3; color: #1C1917;">
+            <span>Tint</span>
+            <span class="surface-hex">#FFF0F3</span>
+          </div>
+          <div class="surface-chip" style="background: #E8F8FF; color: #1C1917;">
+            <span>Blue</span>
+            <span class="surface-hex">#E8F8FF</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Palette -->
+      <div class="section-title">Colors</div>
+      <div class="palette">
+        <div class="color-chip" style="background: #FF2D55;">
+          <span class="color-hex">#FF2D55</span>
+        </div>
+        <div class="color-chip" style="background: #FFB000; color: #1C1917;">
+          <span class="color-hex">#FFB000</span>
+        </div>
+        <div class="color-chip" style="background: #00C2FF;">
+          <span class="color-hex">#00C2FF</span>
+        </div>
+        <div class="color-chip" style="background: #00D084;">
+          <span class="color-hex">#00D084</span>
+        </div>
+        <div class="color-chip" style="background: #2B2D42;">
+          <span class="color-hex">#2B2D42</span>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="button-row">
+        <button class="btn" style="background: #FF2D55;">Pink</button>
+        <button class="btn" style="background: #FFB000; color: #1C1917;">Gold</button>
+        <button class="btn" style="background: #00C2FF;">Blue</button>
+        <button class="btn" style="background: #00D084;">Mint</button>
+        <button class="btn" style="background: #2B2D42;">Navy</button>
+      </div>
+
+      <!-- Card -->
+      <div class="card">
+        <h4>Celebration Time!</h4>
+        <p>Confetti pop brings energy to your app.</p>
+      </div>
+    </div>
+
+    <!-- Dark Theme -->
+    <div class="theme-panel dark">
+      <span class="theme-label">Dark</span>
+      <h1 class="theme-title">Confetti Pop</h1>
+      <p class="theme-subtitle">Vibrant celebration palette</p>
+
+      <!-- Surfaces -->
+      <div class="surface-section">
+        <div class="section-title">Surfaces</div>
+        <div class="surface-row">
+          <div class="surface-chip" style="background: #0C0A1D; color: #FAFAF9; border: 1px solid #2A2142;">
+            <span>BG</span>
+            <span class="surface-hex">#0C0A1D</span>
+          </div>
+          <div class="surface-chip" style="background: #15101F; color: #FAFAF9; border: 1px solid #2A2142;">
+            <span>Surface</span>
+            <span class="surface-hex">#15101F</span>
+          </div>
+          <div class="surface-chip" style="background: #1F1A2A; color: #FAFAF9;">
+            <span>Container</span>
+            <span class="surface-hex">#1F1A2A</span>
+          </div>
+          <div class="surface-chip" style="background: #2A2142; color: #FAFAF9;">
+            <span>Elevated</span>
+            <span class="surface-hex">#2A2142</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Palette -->
+      <div class="section-title">Colors</div>
+      <div class="palette">
+        <div class="color-chip" style="background: #FF2D55;">
+          <span class="color-hex">#FF2D55</span>
+        </div>
+        <div class="color-chip" style="background: #FFB000; color: #1C1917;">
+          <span class="color-hex">#FFB000</span>
+        </div>
+        <div class="color-chip" style="background: #00C2FF;">
+          <span class="color-hex">#00C2FF</span>
+        </div>
+        <div class="color-chip" style="background: #00D084;">
+          <span class="color-hex">#00D084</span>
+        </div>
+        <div class="color-chip" style="background: #2B2D42;">
+          <span class="color-hex">#2B2D42</span>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="button-row">
+        <button class="btn" style="background: #FF2D55;">Pink</button>
+        <button class="btn" style="background: #FFB000; color: #1C1917;">Gold</button>
+        <button class="btn" style="background: #00C2FF;">Blue</button>
+        <button class="btn" style="background: #00D084;">Mint</button>
+        <button class="btn" style="background: #2B2D42;">Navy</button>
+      </div>
+
+      <!-- Card -->
+      <div class="card">
+        <h4>Celebration Time!</h4>
+        <p>Confetti pop brings energy to your app.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
