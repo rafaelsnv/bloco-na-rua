@@ -1,0 +1,45 @@
+{
+  "seq": 2,
+  "name": "app-icon-button",
+  "title": "AppIconButton + AppIconButtonSize enum",
+  "output_file": "C:\\Repos\\bloco-na-rua\\lib\\ui\\core\\widgets\\buttons\\app_icon_button.dart",
+  "class_name": "AppIconButton",
+  "public_api": {
+    "constructor": "AppIconButton({\n  required IconData icon,\n  AppIconButtonSize size = AppIconButtonSize.md,\n  Color? color,\n  VoidCallback? onPressed,\n  String? tooltip,\n})",
+    "enum": "enum AppIconButtonSize { sm(36), md(44), lg(52) } // size in pixels"
+  },
+  "tokens_consumed": {
+    "AppColors": ["primary", "surfaceVariantLight", "surfaceVariantDark"],
+    "Spacing": ["space_2xs", "space_xs", "space_sm"],
+    "Radii": ["radiusSm"],
+    "AppDurations": ["fast"],
+    "AppCurves": ["standard"]
+  },
+  "dependencies_on_other_phase2_widgets": [],
+  "conventions_reminder": [
+    "snake_case.dart file",
+    "class AppIconButton extends StatelessWidget",
+    "All colors/spacings/radii/durations via tokens — no hardcoded values",
+    "MediaQuery.disableAnimationsOf(context) before any animation",
+    "Hover feedback: subtle background highlight via opacity or color change (NOT scale)",
+    "Press feedback: scale 0.95 via AnimatedScale with disableAnimations guard",
+    "Double quotes on all string literals",
+    "Top-of-file doc comment explaining purpose + state behavior"
+  ],
+  "acceptance_criteria": [
+    "flutter analyze passes (0 errors)",
+    "Size enum has sm(36)/md(44)/lg(52) pixel values",
+    "tooltip passed to Tooltip widget for accessibility",
+    "Disabled state: opacity 0.5 and onPressed null",
+    "All colors via AppColors tokens",
+    "All spacing via Spacing tokens",
+    "All radii via Radii.tokens",
+    "All durations via AppDurations tokens",
+    "All curves via AppCurves tokens"
+  ],
+  "status": "completed",
+  "agent_id": "coder-agent",
+  "started_at": "2026-07-03T00:00:00Z",
+  "completed_at": "2026-07-03T12:00:00Z",
+  "completion_summary": "Implemented AppIconButton with sm/md/lg sizes, tooltip, hover opacity 0.9, press scale 0.95, disabled opacity 0.5"
+}

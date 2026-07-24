@@ -1,24 +1,35 @@
-import 'package:bloco_na_rua/firebase_options.dart';
-import 'package:bloco_na_rua/src/app_module.dart';
-import 'package:bloco_na_rua/src/features/home/ui/widgets/app_widget.dart';
-// ignore: unused_import
-import 'package:dcdg/dcdg.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:bloco_na_rua/config/dependencies.dart';
+import 'package:bloco_na_rua/core/errors/user_message.dart';
+import 'package:bloco_na_rua/main_app.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:logging/logging.dart';
+import 'package:marionette_flutter/marionette_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await GetStorage.init();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+Future<void> main() async {
+  if (kDebugMode) {
+    MarionetteBinding.ensureInitialized();
+  } else {
+    WidgetsFlutterBinding.ensureInitialized();
+  }
 
-  runApp(
-    ModularApp(
-      module: AppModule(),
-      child: const AppWidget(),
+  // Initialize locale for i18n before any error messages are extracted
+  initializeLocale();
+
+  await dotenv.load(fileName: ".env");
+
+  await Supabase.initialize(
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+    realtimeClientOptions: RealtimeClientOptions(
+      logLevel: RealtimeLogLevel.warn,
     ),
   );
+
+  Logger.root.level = kDebugMode ? Level.INFO : Level.WARNING;
+
+  runApp(MultiProvider(providers: providers, child: const MainApp()));
 }

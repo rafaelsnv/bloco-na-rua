@@ -1,0 +1,65 @@
+{
+  "id": "design-system-analysis",
+  "name": "Design System Analysis & Theme Proposal",
+  "status": "completed",
+  "objective": "Audit the Flutter app's existing design system and propose a new color palette, typography scale, and spacing tokens grounded in the current codebase.",
+  "context_files": [
+    "lib/ui/core/tokens/app_colors.dart",
+    "lib/ui/core/tokens/app_typography.dart",
+    "lib/ui/core/tokens/app_spacing.dart",
+    "lib/ui/core/tokens/app_radius.dart",
+    "lib/ui/core/theme/app_theme.dart",
+    "lib/ui/core/theme/app_color_schemes.dart",
+    "lib/ui/core/theme/app_text_themes.dart"
+  ],
+  "reference_files": [
+    "lib/ui/core/theme/app_theme.dart",
+    "lib/ui/core/theme/app_color_schemes.dart",
+    "lib/ui/core/theme/app_text_themes.dart",
+    "lib/ui/core/tokens/app_colors.dart",
+    "lib/ui/core/tokens/app_typography.dart",
+    "lib/ui/core/tokens/app_spacing.dart",
+    "lib/ui/core/tokens/app_radius.dart",
+    "lib/ui/core/tokens/app_duration.dart",
+    "lib/ui/core/widgets/buttons/app_button.dart",
+    "lib/ui/core/widgets/cards/app_card.dart",
+    "lib/ui/core/widgets/inputs/app_text_field.dart"
+  ],
+  "exit_criteria": [
+    "Current design system (colors, typography, spacing, components) fully documented with file/line citations",
+    "New design system proposal includes named color tokens, typography scale, and spacing scale",
+    "Final report delivered at .tmp/tasks/design-system-analysis/REPORT.md",
+    "Phase 1-5 implementation completed"
+  ],
+  "subtask_count": 10,
+  "completed_count": 10,
+  "created_at": "2026-07-20T00:00:00Z",
+  "completed_at": "2026-07-20T00:00:00Z",
+  "summary": "Completed 5-phase design system overhaul. Phase 1: Fixed WCAG AA contrast issues (secondary #FB7185→#BE123C, tertiary, accent). Phase 2: Typography fixes (titleSmall w600, deprecated button styles). Phase 3: Token harmonization (semantic radius aliases, spacing tokens). Phase 4: New AppElevation + AppMotion token classes. Phase 5: Documentation. Also explored alternative themes (Confetti Pop, Fireworks on Velvet).",
+  "files_created": [
+    "lib/ui/core/tokens/app_elevation.dart (NEW)",
+    "lib/ui/core/tokens/app_motion.dart (NEW)",
+    ".tmp/tasks/design-system-analysis/REPORT.md",
+    ".tmp/tasks/design-system-analysis/findings/05-colors.md",
+    ".tmp/tasks/design-system-analysis/findings/06-typography.md",
+    ".tmp/tasks/design-system-analysis/findings/07-spacing-components.md",
+    ".tmp/tasks/design-system-analysis/findings/08-synthesis.md",
+    ".tmp/tasks/design-system-analysis/findings/09-proposal.md",
+    ".tmp/tasks/design-system-analysis/html/design-system-comparison.html",
+    ".tmp/tasks/design-system-analysis/html/design-system-light.html",
+    ".tmp/tasks/design-system-analysis/html/light-dark-comparison.html",
+    ".tmp/tasks/design-system-analysis/html/swapped-colors.html",
+    ".tmp/tasks/design-system-analysis/html/confetti-pop-merged.html",
+    ".tmp/tasks/design-system-analysis/html/fireworks-velvet-merged.html"
+  ],
+  "files_modified": [
+    "lib/ui/core/tokens/app_colors.dart",
+    "lib/ui/core/tokens/app_typography.dart",
+    "lib/ui/core/tokens/app_spacing.dart",
+    "lib/ui/core/tokens/app_radius.dart",
+    "lib/ui/core/theme/app_color_schemes.dart",
+    "lib/ui/core/theme/app_theme.dart",
+    "lib/ui/core/widgets/buttons/app_button.dart",
+    "lib/ui/core/widgets/cards/app_card.dart"
+  ]
+}

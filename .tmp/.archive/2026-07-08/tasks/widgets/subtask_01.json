@@ -1,0 +1,49 @@
+{
+  "seq": 1,
+  "name": "app-button",
+  "title": "AppButton + AppButtonVariant enum + AppButtonSize enum",
+  "output_file": "C:\\Repos\\bloco-na-rua\\lib\\ui\\core\\widgets\\buttons\\app_button.dart",
+  "class_name": "AppButton",
+  "public_api": {
+    "constructor": "AppButton({\n  required String label,\n  AppButtonVariant variant = AppButtonVariant.primary,\n  AppButtonSize size = AppButtonSize.md,\n  Widget? icon,\n  Widget? trailingIcon,\n  VoidCallback? onPressed,\n  bool isLoading = false,\n  bool isDisabled = false,\n  bool isFullWidth = false,\n})",
+    "enums": [
+      "enum AppButtonVariant { primary, secondary, tertiary, ghost }",
+      "enum AppButtonSize { sm, md, lg }"
+    ]
+  },
+  "tokens_consumed": {
+    "AppColors": ["primary", "cta", "surfaceLight", "surfaceDark", "textPrimaryLight", "textPrimaryDark", "primaryLight"],
+    "Spacing": ["space_sm", "space_md", "space_xs"],
+    "Radii": ["button"],
+    "AppDurations": ["fast", "normal"],
+    "AppCurves": ["standard"]
+  },
+  "dependencies_on_other_phase2_widgets": [],
+  "conventions_reminder": [
+    "snake_case.dart file",
+    "class AppButton extends StatelessWidget",
+    "All colors/spacings/radii/durations via tokens — no hardcoded values",
+    "MediaQuery.disableAnimationsOf(context) before any animation",
+    "Hover feedback via opacity 0.9 (NOT scale transform)",
+    "Press feedback: AnimatedScale scale 0.97 with AnimatedContainer for elevation",
+    "Double quotes on all string literals",
+    "Top-of-file doc comment explaining purpose + state behavior"
+  ],
+  "acceptance_criteria": [
+    "flutter analyze passes (0 errors)",
+    "Variant enum has primary/secondary/tertiary/ghost",
+    "Size enum has sm/md/lg with appropriate height/padding per size",
+    "isLoading shows AppLoadingIndicator(size: 20) replacing label",
+    "isDisabled sets opacity 0.5 and onPressed to null",
+    "All colors via AppColors tokens — no Color() literals",
+    "All spacing via Spacing tokens",
+    "All radii via Radii tokens",
+    "All durations via AppDurations tokens",
+    "All curves via AppCurves tokens"
+  ],
+  "batch": 1,
+  "parallel": true,
+  "status": "completed",
+  "completion_summary": "Implemented AppButton with 4 variants (primary/secondary/tertiary/ghost) and 3 sizes (sm/md/lg), isLoading state with CircularProgressIndicator(20px), isDisabled opacity 0.5, hover opacity 0.9 feedback, press AnimatedScale 0.97 animation, all via design tokens",
+  "completed_at": "2026-07-03T12:00:00Z"
+}

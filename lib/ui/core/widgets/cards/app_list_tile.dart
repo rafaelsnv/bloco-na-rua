@@ -1,0 +1,136 @@
+import "package:flutter/material.dart";
+
+import "../../tokens/app_spacing.dart";
+import "../../tokens/app_typography.dart";
+
+/// A design-system-compliant list tile widget.
+///
+/// Wraps Material [ListTile] with consistent spacing, typography, and
+/// color tokens from the Bloco na Rua design system.
+///
+/// Example:
+/// ```dart
+/// AppListTile(
+///   leading: AppAvatar(name: "Maria"),
+///   title: "Maria Silva",
+///   subtitle: "Bateria",
+///   trailing: Icon(Icons.chevron_right_rounded),
+///   onTap: () => navigateToMember("maria-id"),
+/// )
+/// ```
+class AppListTile extends StatelessWidget {
+  /// Creates an [AppListTile].
+  ///
+  /// [title] is required and displayed using [AppTypography.titleMedium].
+  ///
+  /// [subtitle] is optional and displayed using [AppTypography.bodyMedium]
+  /// with the onSurfaceVariant color from the current [ColorScheme].
+  ///
+  /// [padding] defaults to `EdgeInsets.symmetric(horizontal: Spacing.space_sm,
+  /// vertical: Spacing.listItemVerticalPadding)`.
+  ///
+  /// When [onTap] is null the widget renders in a disabled visual state.
+  ///
+  /// [semanticKey] defaults to a kebab-case version of [title] prefixed with
+  /// "app_list_tile_" (e.g., title "Settings" → Key('app_list_tile_settings')).
+  /// Override with an explicit key for unique test selectors.
+  const AppListTile({
+    super.key,
+    required this.title,
+    this.subtitle,
+    this.leading,
+    this.trailing,
+    this.onTap,
+    this.onLongPress,
+    this.isThreeLine = false,
+    this.padding,
+    String? semanticKey,
+  }) : _semanticKey = semanticKey;
+
+  /// Fallback semantic key derived from [title] when [super.key] is not provided.
+  final String? _semanticKey;
+
+  /// The primary text line displayed in the list tile.
+  ///
+  /// Rendered using [AppTypography.titleMedium].
+  final String title;
+
+  /// Optional secondary text line displayed below the [title].
+  ///
+  /// Rendered using [AppTypography.bodyMedium] with the onSurfaceVariant
+  /// color from the current [ColorScheme].
+  final String? subtitle;
+
+  /// Optional widget displayed before the title and subtitle.
+  ///
+  /// Typically an [AppAvatar] or an [Icon].
+  final Widget? leading;
+
+  /// Optional widget displayed after the title and subtitle.
+  ///
+  /// Typically an [Icon] such as a chevron or action icon.
+  final Widget? trailing;
+
+  /// Callback fired when the tile is tapped.
+  ///
+  /// When null, the tile renders in a disabled visual state.
+  final VoidCallback? onTap;
+
+  /// Callback fired when the tile is long-pressed.
+  final VoidCallback? onLongPress;
+
+  /// Whether the subtitle should span two lines.
+  ///
+  /// Defaults to false, meaning the subtitle is single-line.
+  final bool isThreeLine;
+
+  /// The internal padding of the list tile's content.
+  ///
+  /// Defaults to `EdgeInsets.symmetric(horizontal: Spacing.space_sm,
+  /// vertical: Spacing.listItemVerticalPadding)`.
+  final EdgeInsetsGeometry? padding;
+
+  /// Converts [title] to a kebab-case semantic key prefix.
+  ///
+  /// E.g., "Settings" → "app_list_tile_settings", "User Profile" → "app_list_tile_user_profile".
+  Key _defaultKey() {
+    final slug = title
+        .toLowerCase()
+        .replaceAll(RegExp(r'[\s_]+'), '-')
+        .replaceAll(RegExp(r'[^a-z0-9-]'), '');
+    return Key('app_list_tile_$slug');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final effectivePadding =
+        padding ??
+        EdgeInsets.symmetric(
+          horizontal: Spacing.space_sm,
+          vertical: Spacing.listItemVerticalPadding,
+        );
+
+    final resolvedKey =
+        super.key ?? (_semanticKey != null ? Key(_semanticKey) : _defaultKey());
+
+    return ListTile(
+      key: resolvedKey,
+      enabled: onTap != null,
+      contentPadding: effectivePadding,
+      leading: leading,
+      title: Text(title, style: AppTypography.titleMedium),
+      subtitle: subtitle != null
+          ? Text(
+              subtitle!,
+              style: AppTypography.bodyMedium.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            )
+          : null,
+      trailing: trailing,
+      onTap: onTap,
+      onLongPress: onLongPress,
+      isThreeLine: isThreeLine,
+    );
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "code-review-fix",
+  "name": "Code Review Fix Phase 2-4",
+  "status": "active",
+  "objective": "Fix remaining high, medium, and low priority code review issues across the Flutter/Dart codebase while skipping backend-dependent Phase 1 critical items.",
+  "context_files": [
+    ".opencode/context/standards/overrides.md",
+    ".opencode/context/project-intelligence/concepts/architecture.md",
+    ".opencode/context/project-intelligence/technical-component-pattern.md",
+    ".opencode/context/project-intelligence/concepts/bloc-state-pattern.md",
+    ".opencode/context/project-intelligence/concepts/freezed-entity.md",
+    ".opencode/context/project-intelligence/concepts/result-handling.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md",
+    ".opencode/context/project-intelligence/lookup/token-discipline.md"
+  ],
+  "reference_files": [],
+  "exit_criteria": [
+    "Phase 2 H1-H6 issues are fixed and validated",
+    "Phase 3 M1-M11 issues are fixed and validated",
+    "Phase 4 L1-L11 issues are fixed and validated",
+    "Phase 1 C1-C4 remains skipped because backend API changes are required",
+    "No standards paths appear in reference_files and no source files appear in context_files",
+    "No new lint warnings are introduced",
+    "dart analyze passes clean"
+  ],
+  "subtask_count": 28,
+  "completed_count": 0,
+  "created_at": "2026-07-11T00:00:00Z",
+  "completed_at": null,
+  "phase_scope": ["Phase 2", "Phase 3", "Phase 4"],
+  "skipped_scope": ["Phase 1 C1-C4 backend-dependent critical items"],
+  "dependency_notes": [
+    "H1 and H2 have no dependency on H3-H6.",
+    "H4 depends on H3 because H3 changes repository/base API structure.",
+    "M1 is the required helper extraction dependency for M2-M11.",
+    "L7 is sequenced last and depends on every other subtask."
+  ]
+}

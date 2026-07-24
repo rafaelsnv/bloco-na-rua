@@ -1,0 +1,35 @@
+{
+  "seq": 25,
+  "name": "block-card",
+  "title": "BlockCard compound widget",
+  "output_file": "C:\\Repos\\bloco-na-rua\\lib\\ui\\core\\widgets\\cards\\block_card.dart",
+  "class_name": "BlockCard",
+  "public_api": {
+    "constructor": "BlockCard({\n  required CarnivalBlocksEntity block,\n  VoidCallback? onTap,\n  int? memberCount,\n  List<String>? tags,\n})"
+  },
+  "tokens_consumed": {
+    "Spacing": ["space_xs", "space_sm", "space_2xs", "cardPadding"],
+    "Radii": ["card"],
+    "AppTypography": ["titleMedium", "bodySmall"]
+  },
+  "dependencies_on_other_phase2_widgets": ["AppCard", "AppChip"],
+  "conventions_reminder": [
+    "snake_case.dart file",
+    "class BlockCard extends StatelessWidget",
+    "All colors/spacings/radii via design tokens",
+    "Double quotes on all string literals",
+    "Top-of-file doc comment",
+    "CachedNetworkImage with surfaceContainerHighest placeholder"
+  ],
+  "acceptance_criteria": [
+    "flutter analyze passes (0 errors)",
+    "Public API: BlockCard({required CarnivalBlocksEntity block, VoidCallback? onTap, int? memberCount, List<String>? tags})",
+    "Renders image (120px) + name + member count + invite code + optional tags",
+    "Image uses CachedNetworkImage with surfaceContainerHighest placeholder"
+  ],
+  "batch": 4,
+  "parallel": true,
+  "status": "completed",
+  "completion_summary": "Implemented BlockCard compound widget with image (120px, CachedNetworkImage, shimmer placeholder), block name (titleMedium), member count or 'Sem membros', invite code with qr_code icon when present, and optional soft tag chips. Uses design tokens throughout, AppCard elevation sm, padding zero.",
+  "completed_at": "2026-07-07T00:00:00Z"
+}

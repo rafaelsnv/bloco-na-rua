@@ -1,0 +1,48 @@
+{
+  "id": "code-review-fix-06",
+  "seq": "06",
+  "issue_key": "H6",
+  "phase": "Phase 2",
+  "priority": "high",
+  "title": "Add listenWhen for markPresence snackbar transitions",
+  "status": "pending",
+  "depends_on": [],
+  "parallel": true,
+  "suggested_agent": "OpenFrontendSpecialist",
+  "context_files": [
+    ".opencode/context/standards/overrides.md",
+    ".opencode/context/project-intelligence/concepts/architecture.md",
+    ".opencode/context/project-intelligence/technical-component-pattern.md",
+    ".opencode/context/project-intelligence/concepts/bloc-state-pattern.md",
+    ".opencode/context/project-intelligence/concepts/freezed-entity.md",
+    ".opencode/context/project-intelligence/concepts/result-handling.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md",
+    ".opencode/context/project-intelligence/lookup/token-discipline.md",
+    "~/.config/opencode/context/ui/web/ui-styling-standards.md",
+    "~/.config/opencode/context/core/workflows/design-iteration-overview.md"
+  ],
+  "reference_files": [
+    "lib/ui/meetings/meetingDetails/widgets/meeting_details_screen.dart"
+  ],
+  "objective": "Guard MeetingDetailsScreen BlocConsumer listener so markPresence success/error snackbars fire once per status transition instead of replaying on follow-up state emissions.",
+  "acceptance_criteria": [
+    "MeetingDetailsScreen BlocConsumer includes listenWhen or equivalent transition gating",
+    "markPresence success snackbar fires exactly once per successful mark action",
+    "markPresence error snackbar fires exactly once per failed mark action",
+    "deleteMeeting navigation and snackbar side effects remain transition-gated and do not replay",
+    "Existing listener body behavior is preserved except for duplicate replay prevention",
+    "Follows 4-stage design workflow",
+    "Responsive at all breakpoints",
+    "flutter analyze for meeting details feature reports no new errors"
+  ],
+  "deliverables": [
+    "Updated MeetingDetailsScreen BlocConsumer listener gating"
+  ],
+  "validation_commands": [
+    "flutter analyze lib/ui/meetings/meetingDetails/"
+  ],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

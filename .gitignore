@@ -5,9 +5,11 @@
 *.swp
 .DS_Store
 .atom/
+.build/
 .buildlog/
 .history
 .svn/
+.swiftpm/
 migrate_working_dir/
 
 # IntelliJ related
@@ -42,3 +44,43 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Generated files (build_runner, freezed, json_serializable)
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+
+# Coverage
+coverage/
+
+# Temporary files
+*.temp
+# .tmp/
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Other
+# /architecture_summary.md
+*AGENTS.md
+/.ignore
+# /.opencode
+# *opencode.json*

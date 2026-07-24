@@ -1,0 +1,74 @@
+{
+  "seq": 2,
+  "title": "AppLoadingIndicator.pulse — revert to AnimationController.repeat(reverse: true)",
+  "status": "completed",
+  "agent_id": "coder-agent",
+  "started_at": "2026-07-11T00:00:00Z",
+  "completed_at": "2026-07-11T00:00:00Z",
+  "completion_summary": "AppLoadingIndicator.pulse fixed - replaced TweenAnimationBuilder with AnimationController.repeat(reverse: true)",
+  "parallel": true,
+  "depends_on": [],
+  "estimated_effort": "small",
+  "objective": "Rewrite _PulseIndicator in lib/ui/core/widgets/feedback/app_loading_indicator.dart as a StatefulWidget that owns an AnimationController with vsync (SingleTickerProviderStateMixin) and calls repeat(reverse: true), driving a continuous 0.6 -> 1.0 -> 0.6 scale loop. Respect MediaQuery.disableAnimationsOf(context) by rendering a static dot.",
+  "description": "The current implementation uses TweenAnimationBuilder<double> with a custom _SinePulseTween and a 2s duration. TweenAnimationBuilder animates from begin to end exactly once per tween instance — it has no built-in repeat. After 2 seconds the controller settles at the end of the sine curve (scale 1.0) and the pulse visually freezes. The fix replaces this with an AnimationController + repeat(reverse: true), which is the standard Flutter pattern for continuous looping animations. The static dot path (when disableAnimations is true) stays unchanged. _SinePulseTween is no longer needed and is deleted.",
+  "context_files": [
+    "lib/ui/core/theme/app_theme.dart",
+    "lib/ui/core/tokens/app_colors.dart",
+    "lib/ui/core/tokens/app_duration.dart"
+  ],
+  "reference_files": [
+    {
+      "path": "lib/ui/core/widgets/feedback/app_loading_indicator.dart",
+      "lines": "1-167",
+      "anchors": [
+        "lines 1-9 — file header comment block (update the doc-comment that describes the pulse mechanism; the 'no AnimationController' line must be inverted)",
+        "lines 13-20 — AppLoadingIndicatorVariant enum (DO NOT EDIT)",
+        "lines 37-100 — AppLoadingIndicator class (DO NOT EDIT — public API surface)",
+        "lines 102-114 — _SinePulseTween (DELETE entirely; AnimationController handles the tween curve directly)",
+        "lines 116-167 — _PulseIndicator (REWRITE — convert from StatelessWidget to StatefulWidget with SingleTickerProviderStateMixin, own an AnimationController(vsync: this, duration: const Duration(milliseconds: 1000)), call repeat(reverse: true) in initState, dispose() in dispose, and drive Transform.scale from controller.value mapped through Curves.easeInOut)"
+      ]
+    }
+  ],
+  "animation_spec": {
+    "duration_ms": 1000,
+    "curve": "Curves.easeInOut (applied per half-cycle via controller.value; the controller's repeat(reverse: true) gives a smooth ping-pong)",
+    "scale_range": "0.6 -> 1.0 -> 0.6",
+    "map_value_to_scale": "0.6 + (1.0 - 0.6) * controller.value",
+    "vsync": "SingleTickerProviderStateMixin",
+    "static_path": "When MediaQuery.of(context).disableAnimations is true, skip the AnimationController entirely and render a SizedBox(width: size, height: size, child: DecoratedBox(decoration: BoxDecoration(color: color, shape: BoxShape.circle))). This matches the existing static branch at lines 134-143."
+  },
+  "state_management": {
+    "initState": "_controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1000)); _controller.repeat(reverse: true);",
+    "dispose": "_controller.dispose();",
+    "build": "AnimatedBuilder(animation: _controller, builder: (context, child) { final scale = 0.6 + 0.4 * _controller.value; return Transform.scale(scale: scale, child: child); }, child: <static Circle>) — the static circle is hoisted into the child slot so AnimatedBuilder does not rebuild it on every tick."
+  },
+  "acceptance_criteria": [
+    "lib/ui/core/widgets/feedback/app_loading_indicator.dart compiles without errors",
+    "_PulseIndicator (formerly lines 116-167) is now a StatefulWidget subclass with State that mixes in SingleTickerProviderStateMixin",
+    "_PulseIndicatorState owns a private AnimationController field initialized in initState with duration: const Duration(milliseconds: 1000) and vsync: this",
+    "_controller.repeat(reverse: true) is called exactly once in initState — no other place starts the controller",
+    "_controller.dispose() is called in dispose() — preventing ticker leaks",
+    "_SinePulseTween class (lines 102-114) is deleted from the file — no remaining references to it",
+    "dart:math import is removed if and only if it is no longer used elsewhere in the file (currently only _SinePulseTween uses math.sin / math.pi, so the import should be deleted)",
+    "The visible widget uses Transform.scale whose scale factor is 0.6 + 0.4 * _controller.value (or equivalent range 0.6 -> 1.0 -> 0.6)",
+    "When MediaQuery.of(context).disableAnimations is true, the static SizedBox + DecoratedBox circle is returned — the AnimationController is never constructed in that branch (gate the StatefulWidget's child construction so the ticker is only created when animations are enabled; the cleanest implementation is to keep the static branch as-is and only instantiate the stateful path inside the AnimatedBuilder's parent)",
+    "AppLoadingIndicator public class (lines 37-100) is unchanged: same constructor, same AppLoadingIndicator.circular factory, same AppLoadingIndicator.pulse factory, same named-parameter defaults",
+    "AppLoadingIndicatorVariant enum (lines 13-20) is unchanged",
+    "The 'pulse' variant routes through the rewritten _PulseIndicator in _buildIndicator (lines 86-100)",
+    "The file header doc comment no longer claims 'no AnimationController' — it now correctly states that AnimationController.repeat(reverse: true) is used for the pulse",
+    "flutter analyze lib/ui/core/widgets/feedback/app_loading_indicator.dart returns no errors",
+    "All existing call sites under lib/ that use AppLoadingIndicator.pulse(...) still compile unchanged"
+  ],
+  "validation": {
+    "static_analysis": "flutter analyze lib/ui/core/widgets/feedback/app_loading_indicator.dart",
+    "expected_exit_code": 0,
+    "grep_evidence": [
+      "rg -n 'AnimationController' lib/ui/core/widgets/feedback/app_loading_indicator.dart must return matches in _PulseIndicatorState (initState / dispose)",
+      "rg -n 'repeat\\(reverse: true\\)' lib/ui/core/widgets/feedback/app_loading_indicator.dart must return exactly one match (inside initState)",
+      "rg -n '_SinePulseTween|dart:math' lib/ui/core/widgets/feedback/app_loading_indicator.dart must return zero matches",
+      "rg -n 'TweenAnimationBuilder' lib/ui/core/widgets/feedback/app_loading_indicator.dart must return zero matches"
+    ],
+    "manual_visual_check": "Render AppLoadingIndicator.pulse on a real device/emulator and confirm the dot scales continuously without freezing at scale 1.0 after 2 seconds. Toggle the system 'Remove animations' accessibility setting and confirm a static dot is shown."
+  },
+  "no_op_outside_scope": "Do not modify AppLoadingIndicator, AppLoadingIndicatorVariant, or the public factories. Do not introduce a MultiTickerProviderStateMixin (a single ticker suffices). Do not add new tokens or animation duration constants — the 1000ms value is acceptable inline or extracted to AppDurations only if AppDurations already exposes a matching token."
+}

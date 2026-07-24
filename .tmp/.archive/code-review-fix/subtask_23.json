@@ -1,0 +1,53 @@
+{
+  "id": "code-review-fix-23",
+  "seq": "23",
+  "issue_key": "L9",
+  "phase": "Phase 4",
+  "priority": "low",
+  "title": "Promote image URL guard into SafeNetworkImage wrapper",
+  "status": "pending",
+  "depends_on": ["19", "20"],
+  "parallel": false,
+  "suggested_agent": "OpenFrontendSpecialist",
+  "context_files": [
+    ".opencode/context/standards/overrides.md",
+    ".opencode/context/project-intelligence/concepts/architecture.md",
+    ".opencode/context/project-intelligence/technical-component-pattern.md",
+    ".opencode/context/project-intelligence/concepts/bloc-state-pattern.md",
+    ".opencode/context/project-intelligence/concepts/freezed-entity.md",
+    ".opencode/context/project-intelligence/concepts/result-handling.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md",
+    ".opencode/context/project-intelligence/lookup/token-discipline.md",
+    "~/.config/opencode/context/ui/web/ui-styling-standards.md",
+    "~/.config/opencode/context/core/workflows/design-iteration-overview.md"
+  ],
+  "reference_files": [
+    "lib/ui/core/widgets/display/image_url_validator.dart",
+    "lib/ui/core/widgets/display/safe_network_image.dart",
+    "lib/ui/core/widgets/display/app_avatar.dart",
+    "lib/ui/core/widgets/cards/block_card.dart",
+    "lib/ui/carnivalBlock/blockDetails/widgets/block_details_screen.dart"
+  ],
+  "objective": "Wrap URL validation and cached-network-image behavior in a reusable SafeNetworkImage widget so call sites cannot skip validation.",
+  "acceptance_criteria": [
+    "lib/ui/core/widgets/display/safe_network_image.dart exists",
+    "SafeNetworkImage uses isValidImageUrl before constructing cached network image providers/widgets",
+    "SafeNetworkImage preserves cacheKey and finite maxAge behavior from L3 and L4",
+    "Existing app_avatar, block_card, and block_details image call sites use SafeNetworkImage or the wrapper's provider path where appropriate",
+    "Invalid or placeholder image URLs render the existing fallback UI without asynchronous image-provider crashes",
+    "Follows 4-stage design workflow",
+    "Responsive at all breakpoints",
+    "flutter analyze for edited display/card files reports no new errors"
+  ],
+  "deliverables": [
+    "New SafeNetworkImage wrapper",
+    "Updated image call sites to use the wrapper"
+  ],
+  "validation_commands": [
+    "flutter analyze lib/ui/core/widgets/display/ lib/ui/core/widgets/cards/ lib/ui/carnivalBlock/blockDetails/"
+  ],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

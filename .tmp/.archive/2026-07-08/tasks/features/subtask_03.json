@@ -1,0 +1,54 @@
+{
+  "id": "features-settings-03",
+  "seq": "03",
+  "title": "Rewrite settings_screen.dart with design system",
+  "status": "completed",
+  "depends_on": [],
+  "parallel": true,
+  "suggested_agent": "CoderAgent",
+  "agent": "CoderAgent",
+  "agent_id": "coder-agent",
+  "started_at": "2026-07-07T00:00:00Z",
+  "completed_at": "2026-07-07T00:00:00Z",
+  "completion_summary": "Rewrote settings_screen.dart using AppAppBar, AppCard, AppListTile, AppSectionHeader, AppDialog.confirm, AppSnackbar, BlocBuilder<AuthCubit, AuthState>; theme mode toggle with SharedPreferences persistence; flutter analyze passes with 0 errors",
+  "context_files": [
+    "design-system/bloco-na-rua/MASTER.md",
+    "design-system/bloco-na-rua/DESIGN_PLAN.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md"
+  ],
+  "reference_files": [
+    "lib/ui/settings/widgets/settings_screen.dart",
+    "lib/ui/auth/cubit/auth_cubit.dart",
+    "lib/ui/auth/cubit/auth_state.dart",
+    "lib/ui/auth/logout/widgets/logout_button.dart",
+    "lib/ui/core/widgets/navigation/app_app_bar.dart",
+    "lib/ui/core/widgets/cards/app_card.dart",
+    "lib/ui/core/widgets/cards/app_list_tile.dart",
+    "lib/ui/core/widgets/display/app_section_header.dart",
+    "lib/ui/core/widgets/buttons/app_button.dart",
+    "lib/ui/core/widgets/feedback/app_snackbar.dart",
+    "lib/ui/core/widgets/feedback/app_dialog.dart",
+    "lib/ui/core/tokens/app_colors.dart",
+    "lib/ui/core/tokens/app_spacing.dart",
+    "lib/ui/core/tokens/app_radius.dart",
+    "lib/ui/core/tokens/app_typography.dart"
+  ],
+  "target_files": [
+    "lib/ui/settings/widgets/settings_screen.dart"
+  ],
+  "deliverables": [
+    "lib/ui/settings/widgets/settings_screen.dart"
+  ],
+  "acceptance_criteria": [
+    "File rewritten at exact path",
+    "flutter analyze passes (0 errors)",
+    "All behavior preserved (theme mode toggle, logout with confirmation dialog)",
+    "Uses AppAppBar + AppCard + AppListTile + AppSectionHeader from design system",
+    "Uses AppDialog.confirm for logout confirmation",
+    "Uses AppSnackbar for theme change feedback",
+    "Uses BlocBuilder<AuthCubit, AuthState> for AuthLoading state on logout",
+    "All colors/spacings/radii via tokens",
+    "Double quotes, no emojis",
+    "ThemeMode persistence via SharedPreferences"
+  ]
+}

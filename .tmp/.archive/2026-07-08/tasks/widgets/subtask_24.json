@@ -1,0 +1,51 @@
+{
+  "seq": 24,
+  "name": "meeting-card",
+  "title": "MeetingCard compound widget — title + datetime + location + optional description + optional presence chips",
+  "output_file": "C:\\Repos\\bloco-na-rua\\lib\\ui\\core\\widgets\\cards\\meeting_card.dart",
+  "class_name": "MeetingCard",
+  "public_api": {
+    "constructor": "MeetingCard({\n  required MeetingsEntity meeting,\n  VoidCallback? onTap,\n  int? totalPresences,\n  int? confirmedPresences,\n  bool showDescription = false,\n})"
+  },
+  "tokens_consumed": {
+    "AppColors": ["primary", "warning", "textSecondaryLight"],
+    "Spacing": ["space_4xs", "space_xs"],
+    "Radii": [],
+    "AppDurations": [],
+    "AppCurves": []
+  },
+  "dependencies_on_other_phase2_widgets": [
+    "AppCard (cards/app_card.dart)",
+    "AppBadge (display/app_badge.dart)",
+    "AppChip (display/app_chip.dart)"
+  ],
+  "conventions_reminder": [
+    "snake_case.dart file",
+    "class MeetingCard extends StatelessWidget",
+    "All colors/spacings via design tokens — no hardcoded values",
+    "Double quotes on all string literals",
+    "Top-of-file doc comment",
+    "ISO 8601 datetime parsed via DateTime.tryParse; invalid/null returns 'Data nao definida'",
+    "DateTime formatted via DateFormat('dd MMM yyyy • HH:mm', 'pt_BR') from intl package",
+    "Private helpers: _formatDateTime, _icon, _gap",
+    "No emojis as icons"
+  ],
+  "acceptance_criteria": [
+    "flutter analyze passes on meeting_card.dart (0 errors)",
+    "Public API: MeetingCard({required MeetingsEntity meeting, VoidCallback? onTap, int? totalPresences, int? confirmedPresences, bool showDescription = false})",
+    "Renders meeting name (or 'Reuniao' fallback) + AppBadge with meetingCode if non-null",
+    "Renders datetime row with Icons.event_rounded + _formatDateTime output",
+    "Renders location row with Icons.location_on_rounded if meeting.location is non-null",
+    "Renders description (maxLines: 2) if showDescription && meeting.description != null",
+    "Renders presence chips row when totalPresences && confirmedPresences are both non-null: AppChip('$confirmedPresences/$totalPresences presencas', soft, primary) + status chip (Confirmada/Pendente/Parcial)",
+    "DateTime parsing handles null and invalid gracefully (returns 'Data nao definida')",
+    "All colors via AppColors tokens",
+    "All spacing via Spacing tokens",
+    "No hardcoded color or spacing values"
+  ],
+  "batch": 4,
+  "parallel": true,
+  "status": "completed",
+  "completion_summary": "Implemented MeetingCard compound widget: AppCard wrapper with title + optional AppBadge for meetingCode, datetime row (Icons.event_rounded + DateFormat pt-BR), optional location row, optional description row (showDescription flag), and optional presence chips row with status logic (Confirmada/Pendente/Parcial). All via design tokens, handles null/invalid datetime gracefully.",
+  "completed_at": "2026-07-07T00:00:00Z"
+}

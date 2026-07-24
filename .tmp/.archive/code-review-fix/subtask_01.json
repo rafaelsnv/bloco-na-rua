@@ -1,0 +1,48 @@
+{
+  "id": "code-review-fix-01",
+  "seq": "01",
+  "issue_key": "H1",
+  "phase": "Phase 2",
+  "priority": "high",
+  "title": "Fix N+1 member loading in BlockDetailsScreen",
+  "status": "pending",
+  "depends_on": [],
+  "parallel": true,
+  "suggested_agent": "OpenFrontendSpecialist",
+  "context_files": [
+    ".opencode/context/standards/overrides.md",
+    ".opencode/context/project-intelligence/concepts/architecture.md",
+    ".opencode/context/project-intelligence/technical-component-pattern.md",
+    ".opencode/context/project-intelligence/concepts/bloc-state-pattern.md",
+    ".opencode/context/project-intelligence/concepts/freezed-entity.md",
+    ".opencode/context/project-intelligence/concepts/result-handling.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md",
+    ".opencode/context/project-intelligence/lookup/token-discipline.md",
+    "~/.config/opencode/context/ui/web/ui-styling-standards.md",
+    "~/.config/opencode/context/core/workflows/design-iteration-overview.md"
+  ],
+  "reference_files": [
+    "lib/ui/carnivalBlock/blockDetails/widgets/block_details_screen.dart"
+  ],
+  "objective": "Replace sequential per-member awaits in BlockDetailsScreen member loading with concurrent fetching while preserving loading and error state behavior.",
+  "acceptance_criteria": [
+    "BlockDetailsScreen member loading no longer awaits membersRepo.getByIdAsync inside a sequential loop",
+    "Member entity fetches are dispatched concurrently with Future.wait or an equivalent concurrent pattern",
+    "Existing placeholder fallback behavior for missing member entities is preserved",
+    "Existing mounted guard around post-await setState behavior is preserved",
+    "Pull-to-refresh still reloads both members and meetings",
+    "Follows 4-stage design workflow",
+    "Responsive at all breakpoints",
+    "flutter analyze for the block details feature reports no new errors"
+  ],
+  "deliverables": [
+    "Updated lib/ui/carnivalBlock/blockDetails/widgets/block_details_screen.dart"
+  ],
+  "validation_commands": [
+    "flutter analyze lib/ui/carnivalBlock/blockDetails/"
+  ],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

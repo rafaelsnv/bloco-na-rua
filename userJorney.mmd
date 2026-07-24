@@ -1,0 +1,50 @@
+flowchart LR
+
+	n1@{ shape: "circle", label: "Start" }
+	n2["LoginScreen<br>/login"]
+
+	n1 --> n2
+
+	%% Auth Flow
+	n2 --> n3["SignUpScreen<br>/register"]
+
+	%% Main App Shell (5 tabs)
+	n2 --> n4["MainPage<br>/home<br>(Início)"]
+
+	style n1 color:#000000,fill:#C1FF72,stroke:#00BF63
+
+	%% Bottom Navigation
+	n4 --> n5["Blocos Page<br>/carnival-blocks"]
+	n4 --> n6["Reuniões Page<br>/user-meetings"]
+	n4 --> n7["Membros Page<br>/members"]
+	n4 --> n8["Perfil Page<br>/profile"]
+	n4 --> n9["Settings<br>/settings"]
+
+	%% Blocos Flow
+	n5 --> n10["Criar Bloco<br>→ CreateBlockScreen"]
+	n5 --> n11["Entrar em Bloco<br>→ JoinBlockModal"]
+	n5 --> n12["BlockDetails<br>/carnival-block/:id"]
+
+	n12 --> n13["CreateMeeting<br>/create-meeting/:blockId"]
+	n12 --> n14["EditBlock<br>/edit-block/:id"]
+	n12 --> n15["AddMember<br>/add-member/:blockId"]
+
+	%% Reuniões Flow
+	n6 --> n16["MeetingDetails<br>/meeting/:id"]
+	n16 --> n17["EditMeeting<br>/edit-meeting/:id"]
+
+	%% Decision Diamonds
+	n16 --> n18@{ shape: "diam", label: "Confirm<br>Presence?" }
+	style n18 fill:,stroke:#FF914D
+	n18 --> n19["Presença Confirmada"]
+	n18 --> n20["Presença Recusada"]
+
+	%% Membros Flow
+	n7 --> n21["MemberDetails"]
+
+	%% Modals/Forms
+	n10 --> n12
+	n11 --> n12
+	n13 --> n12
+	n14 --> n12
+	n15 --> n12

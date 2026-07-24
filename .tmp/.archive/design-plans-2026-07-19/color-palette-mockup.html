@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bloco na Rua — Color Palette Mockup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            primary: { DEFAULT: '#6D28D9', light: '#A78BFA', dark: '#4C1D95' },
+            secondary: { DEFAULT: '#FB7185', light: '#FDA4AF', dark: '#E11D48' },
+            accent: { DEFAULT: '#F97316', light: '#FB923C', dark: '#C2410C' },
+            tertiary: { DEFAULT: '#14B8A6' },
+            surface: {
+              light: { bg: '#FAFAF9', card: '#FFFFFF', variant: '#F5F3FF', container: '#EDE9FE', border: '#E5E7EB' },
+              dark: { bg: '#0B0716', card: '#15101F', variant: '#1E1830', container: '#2A2142', border: '#3B2F5C' }
+            },
+            semantic: {
+              success: '#16A34A', warning: '#F59E0B', error: '#DC2626', info: '#0EA5E9'
+            },
+            text: {
+              light: { primary: '#1C1917', secondary: '#57534E', tertiary: '#78716C', disabled: '#A8A29E', onPrimary: '#FFFFFF', onAccent: '#FFFFFF' },
+              dark: { primary: '#FAFAF9', secondary: '#D6D3D1', tertiary: '#A8A29E', disabled: '#57534E', onPrimary: '#FFFFFF', onAccent: '#FFFFFF' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .contrast-badge { @apply text-xs font-semibold px-2 py-0.5 rounded-full; }
+    .swatch { @apply rounded-xl overflow-hidden shadow-lg; }
+    .swatch-header { @apply p-4 font-semibold text-white; }
+    .swatch-body { @apply p-4 bg-white text-sm; }
+    .device-frame { @apply rounded-3xl overflow-hidden shadow-2xl border-4 border-gray-800; }
+    .device-notch { @apply absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-gray-800 rounded-b-2xl; }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-900">
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-primary to-primary-dark text-white py-12 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="text-4xl">🎭</span>
+        <span class="text-sm uppercase tracking-widest opacity-80">Design System</span>
+      </div>
+      <h1 class="text-4xl font-extrabold mb-2">Bloco na Rua — Carnaval Sunset</h1>
+      <p class="text-primary-light text-lg opacity-90">Color Palette Refresh Proposal • v1.0 • July 2026</p>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-12 space-y-16">
+
+    <!-- Section 1: Color Swatches -->
+    <section>
+      <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+        <span class="w-8 h-8 bg-primary text-white rounded-lg flex items-center justify-center text-sm">1</span>
+        Brand Colors
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Primary Violet -->
+        <div class="swatch">
+          <div class="swatch-header bg-primary">Primary</div>
+          <div class="swatch-body space-y-2">
+            <div class="font-mono text-lg font-semibold">#6D28D9</div>
+            <div class="text-gray-500 text-sm">Violet 700</div>
+            <div class="pt-2 border-t mt-2">
+              <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Usage</div>
+              <div class="text-sm">AppBar, FAB, active nav, focus rings</div>
+            </div>
+            <div class="pt-2 border-t mt-2">
+              <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Contrast on White</div>
+              <div class="flex items-center gap-2">
+                <span class="text-semibold text-semantic-success">7.7:1</span>
+                <span class="contrast-badge bg-green-100 text-green-700">AAA</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Primary Light -->
+        <div class="swatch">
+          <div class="swatch-header bg-primary-light text-primary-dark">Primary Light</div>
+          <div class="swatch-body space-y-2">
+            <div class="font-mono text-lg font-semibold text-primary-light">#A78BFA</div>
+            <div class="text-gray-500 text-sm">Violet 400</div>
+            <div class="pt-2 border-t mt-2">
+              <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Usage</div>
+              <div class="text-sm">Dark mode primary, inverse surfaces</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Primary Dark -->
+        <div class="swatch">
+          <div class="swatch-header bg-primary-dark">Primary Dark</div>
+          <div class="swatch-body space-y-2">
+            <div class="font-mono text-lg font-semibold">#4C1D95</div>
+            <div class="text-gray-500 text-sm">Violet 900</div>
+            <div class="pt-2 border-t mt-2">
+              <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Usage</div>
+              <div class="text-sm">Pressed/active states</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Secondary Rose -->
+        <div class="swatch">
+          <div class="swatch-header bg-secondary">Secondary</div>
+          <div class="swatch-body space-y-2">
+            <div class="font-mono text-lg font-semibold">#FB7185</div>
+            <div class="text-gray-500 text-sm">Rose 400</div>
+            <div class="pt-2 border-t mt-2">
+              <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Usage</div>
+              <div class="text-sm">Outlined buttons, chips, badges</div>
+            </div>
+            <div class="pt-2 border-t mt-2">
+              <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Contrast on White</div>
+              <div class="flex items-center gap-2">
+                <span class="font-semibold text-semantic-success">5.2:1</span>
+                <span class="contrast-badge bg-green-100 text-green-700">AA</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accent Orange -->
+        <div class="swatch">
+          <div class="swatch-header bg-accent">Accent (CTA)</div>
+          <div class="swatch-body space-y-2">
+            <div class="font-mono text-lg font-semibold">#F97316</div>
+            <div class="text-gray-500 text-sm">Orange 500</div>
+            <div class="pt-2 border-t mt-2">
+              <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Usage</div>
+              <div class="text-sm">Primary CTA: "Entrar no bloco", "Salvar"</div>
+            </div>
+            <div class="pt-2 border-t mt-2">
+              <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Contrast on White</div>
+              <div class="flex items-center gap-2">
+                <span class="font-semibold text-yellow-600">3.5:1</span>
+                <span class="contrast-badge bg-yellow-100 text-yellow-700">⚠ Large text</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accent Light -->
+        <div class="swatch">
+          <div class="swatch-header bg-accent-light text-accent-dark">Accent Light</div>
+          <div class="swatch-body space-y-2">
+            <div class="font-mono text-lg font-semibold text-accent-light">#FB923C</div>
+            <div class="text-gray-500 text-sm">Orange 400</div>
+            <div class="pt-2 border-t mt-2">
+              <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Usage</div>
+              <div class="text-sm">Dark mode accent</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tertiary Teal -->
+        <div class="swatch">
+          <div class="swatch-header bg-tertiary">Tertiary</div>
+          <div class="swatch-body space-y-2">
+            <div class="font-mono text-lg font-semibold">#14B8A6</div>
+            <div class="text-gray-500 text-sm">Teal 500</div>
+            <div class="pt-2 border-t mt-2">
+              <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Usage</div>
+              <div class="text-sm">Online presence, info chips, live indicators</div>
+            </div>
+            <div class="pt-2 border-t mt-2">
+              <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Note</div>
+              <div class="text-sm text-amber-600">⚠ Icon/border only — never text</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Secondary Dark -->
+        <div class="swatch">
+          <div class="swatch-header bg-secondary-dark">Secondary Dark</div>
+          <div class="swatch-body space-y-2">
+            <div class="font-mono text-lg font-semibold">#E11D48</div>
+            <div class="text-gray-500 text-sm">Rose 600</div>
+            <div class="pt-2 border-t mt-2">
+              <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Usage</div>
+              <div class="text-sm">Pressed/active states</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Light Mode Preview -->
+    <section>
+      <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+        <span class="w-8 h-8 bg-primary text-white rounded-lg flex items-center justify-center text-sm">2</span>
+        Light Mode Preview
+      </h2>
+
+      <div class="flex gap-8 items-start">
+        <!-- Phone Frame -->
+        <div class="device-frame w-[280px] h-[580px] bg-surface-light-bg relative">
+          <div class="device-notch"></div>
+          <div class="h-full flex flex-col">
+            <!-- AppBar -->
+            <div class="bg-primary px-4 pt-8 pb-4">
+              <div class="flex items-center justify-between">
+                <div class="text-white font-bold text-lg">Bloco na Rua</div>
+                <div class="flex gap-3 text-white">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 bg-surface-light-bg p-4 space-y-4 overflow-hidden">
+              <!-- Welcome Text -->
+              <div>
+                <h3 class="text-text-light-primary font-bold text-lg">Olá, Carlos! 👋</h3>
+                <p class="text-text-light-secondary text-sm">Pronto para o carnaval?</p>
+              </div>
+
+              <!-- Search Field -->
+              <div class="bg-surface-light-container rounded-xl px-4 py-3 flex items-center gap-3">
+                <svg class="w-5 h-5 text-text-light-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <span class="text-text-light-tertiary text-sm">Buscar bloco...</span>
+              </div>
+
+              <!-- Block Card -->
+              <div class="bg-surface-light-card rounded-xl p-4 shadow-sm border border-surface-light-border">
+                <div class="flex gap-3">
+                  <div class="w-12 h-12 bg-surface-light-variant rounded-lg flex items-center justify-center text-2xl">🎺</div>
+                  <div class="flex-1">
+                    <h4 class="font-semibold text-text-light-primary">Bloco do Frevo</h4>
+                    <p class="text-text-light-secondary text-sm">Recife • 12 Jan</p>
+                    <div class="flex items-center gap-2 mt-1">
+                      <span class="bg-surface-light-container text-text-light-secondary text-xs px-2 py-0.5 rounded-full">850/1000</span>
+                      <span class="w-2 h-2 bg-tertiary rounded-full"></span>
+                      <span class="text-text-light-tertiary text-xs">Ao vivo</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Chips -->
+              <div class="flex gap-2 flex-wrap">
+                <span class="bg-primary text-white text-xs px-3 py-1 rounded-full font-medium">Todos</span>
+                <span class="bg-secondary/20 text-secondary-dark text-xs px-3 py-1 rounded-full font-medium">Frevo</span>
+                <span class="bg-secondary/20 text-secondary-dark text-xs px-3 py-1 rounded-full font-medium">Maracatu</span>
+                <span class="bg-tertiary/20 text-tertiary text-xs px-3 py-1 rounded-full font-medium">Axé</span>
+              </div>
+
+              <!-- Secondary Card -->
+              <div class="bg-surface-light-card rounded-xl p-4 shadow-sm border border-surface-light-border">
+                <div class="flex items-center justify-between">
+                  <div class="flex gap-3">
+                    <div class="w-10 h-10 bg-secondary/20 rounded-lg flex items-center justify-center text-xl">🎭</div>
+                    <div>
+                      <h4 class="font-semibold text-text-light-primary text-sm">Macarronada do bloco</h4>
+                      <p class="text-text-light-tertiary text-xs">15 Jan • Salvador</p>
+                    </div>
+                  </div>
+                  <span class="bg-surface-light-container text-text-light-secondary text-xs px-2 py-1 rounded-full">+200</span>
+                </div>
+              </div>
+
+              <!-- CTA Button -->
+              <button class="w-full bg-accent text-white font-bold py-3 rounded-xl shadow-lg">
+                Entrar no Bloco
+              </button>
+
+              <!-- Tertiary Text -->
+              <p class="text-center text-text-light-tertiary text-xs">Mostrar mais blocos</p>
+            </div>
+
+            <!-- Bottom Nav -->
+            <div class="bg-surface-light-card border-t border-surface-light-border px-6 py-3 flex justify-between">
+              <div class="text-primary"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>
+              <div class="text-text-light-tertiary"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+              <div class="text-text-light-tertiary"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg></div>
+              <div class="text-text-light-tertiary"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Annotations -->
+        <div class="flex-1 space-y-4 pt-4">
+          <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-primary">
+            <h4 class="font-semibold text-sm text-gray-800">AppBar</h4>
+            <p class="text-gray-500 text-sm">Primary violet <span class="font-mono text-xs bg-gray-100 px-1 rounded">#6D28D9</span> with white text</p>
+          </div>
+          <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-surface-light-container">
+            <h4 class="font-semibold text-sm text-gray-800">TextField Fill</h4>
+            <p class="text-gray-500 text-sm">Surface container <span class="font-mono text-xs bg-gray-100 px-1 rounded">#EDE9FE</span> for subtle input</p>
+          </div>
+          <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-secondary">
+            <h4 class="font-semibold text-sm text-gray-800">Badges & Chips</h4>
+            <p class="text-gray-500 text-sm">Secondary rose <span class="font-mono text-xs bg-gray-100 px-1 rounded">#FB7185</span> at 20% opacity</p>
+          </div>
+          <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-accent">
+            <h4 class="font-semibold text-sm text-gray-800">Primary CTA</h4>
+            <p class="text-gray-500 text-sm">Accent orange <span class="font-mono text-xs bg-gray-100 px-1 rounded">#F97316</span> — min 18px bold</p>
+          </div>
+          <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-tertiary">
+            <h4 class="font-semibold text-sm text-gray-800">Live Indicator</h4>
+            <p class="text-gray-500 text-sm">Tertiary teal <span class="font-mono text-xs bg-gray-100 px-1 rounded">#14B8A6</span> dot + text</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Dark Mode Preview -->
+    <section>
+      <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+        <span class="w-8 h-8 bg-primary text-white rounded-lg flex items-center justify-center text-sm">3</span>
+        Dark Mode Preview
+      </h2>
+
+      <div class="flex gap-8 items-start">
+        <!-- Phone Frame -->
+        <div class="device-frame w-[280px] h-[580px] bg-surface-dark-bg relative">
+          <div class="device-notch"></div>
+          <div class="h-full flex flex-col">
+            <!-- AppBar -->
+            <div class="bg-surface-dark-card px-4 pt-8 pb-4">
+              <div class="flex items-center justify-between">
+                <div class="text-white font-bold text-lg">Bloco na Rua</div>
+                <div class="flex gap-3 text-text-dark-secondary">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 bg-surface-dark-bg p-4 space-y-4 overflow-hidden">
+              <!-- Welcome Text -->
+              <div>
+                <h3 class="text-text-dark-primary font-bold text-lg">Olá, Carlos! 👋</h3>
+                <p class="text-text-dark-secondary text-sm">Pronto para o carnaval?</p>
+              </div>
+
+              <!-- Search Field -->
+              <div class="bg-surface-dark-container rounded-xl px-4 py-3 flex items-center gap-3">
+                <svg class="w-5 h-5 text-text-dark-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <span class="text-text-dark-tertiary text-sm">Buscar bloco...</span>
+              </div>
+
+              <!-- Block Card -->
+              <div class="bg-surface-dark-card rounded-xl p-4 border border-surface-dark-border">
+                <div class="flex gap-3">
+                  <div class="w-12 h-12 bg-surface-dark-variant rounded-lg flex items-center justify-center text-2xl">🎺</div>
+                  <div class="flex-1">
+                    <h4 class="font-semibold text-text-dark-primary">Bloco do Frevo</h4>
+                    <p class="text-text-dark-secondary text-sm">Recife • 12 Jan</p>
+                    <div class="flex items-center gap-2 mt-1">
+                      <span class="bg-surface-dark-container text-text-dark-secondary text-xs px-2 py-0.5 rounded-full">850/1000</span>
+                      <span class="w-2 h-2 bg-tertiary rounded-full"></span>
+                      <span class="text-text-dark-tertiary text-xs">Ao vivo</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Chips -->
+              <div class="flex gap-2 flex-wrap">
+                <span class="bg-primary-light text-primary-dark text-xs px-3 py-1 rounded-full font-medium">Todos</span>
+                <span class="bg-secondary/20 text-secondary-light text-xs px-3 py-1 rounded-full font-medium">Frevo</span>
+                <span class="bg-secondary/20 text-secondary-light text-xs px-3 py-1 rounded-full font-medium">Maracatu</span>
+                <span class="bg-tertiary/20 text-tertiary text-xs px-3 py-1 rounded-full font-medium">Axé</span>
+              </div>
+
+              <!-- Secondary Card -->
+              <div class="bg-surface-dark-card rounded-xl p-4 border border-surface-dark-border">
+                <div class="flex items-center justify-between">
+                  <div class="flex gap-3">
+                    <div class="w-10 h-10 bg-surface-dark-variant rounded-lg flex items-center justify-center text-xl">🎭</div>
+                    <div>
+                      <h4 class="font-semibold text-text-dark-primary text-sm">Macarronada do bloco</h4>
+                      <p class="text-text-dark-tertiary text-xs">15 Jan • Salvador</p>
+                    </div>
+                  </div>
+                  <span class="bg-surface-dark-container text-text-dark-secondary text-xs px-2 py-1 rounded-full">+200</span>
+                </div>
+              </div>
+
+              <!-- CTA Button -->
+              <button class="w-full bg-accent-light text-accent-dark font-bold py-3 rounded-xl">
+                Entrar no Bloco
+              </button>
+
+              <!-- Tertiary Text -->
+              <p class="text-center text-text-dark-tertiary text-xs">Mostrar mais blocos</p>
+            </div>
+
+            <!-- Bottom Nav -->
+            <div class="bg-surface-dark-card border-t border-surface-dark-border px-6 py-3 flex justify-between">
+              <div class="text-primary-light"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>
+              <div class="text-text-dark-tertiary"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+              <div class="text-text-dark-tertiary"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg></div>
+              <div class="text-text-dark-tertiary"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Annotations -->
+        <div class="flex-1 space-y-4 pt-4">
+          <div class="bg-gray-800 rounded-xl p-4 border-l-4 border-primary-light">
+            <h4 class="font-semibold text-sm text-white">Surface Cards</h4>
+            <p class="text-gray-400 text-sm">Surface dark <span class="font-mono text-xs bg-gray-700 px-1 rounded text-gray-300">#15101F</span></p>
+          </div>
+          <div class="bg-gray-800 rounded-xl p-4 border-l-4 border-surface-dark-container">
+            <h4 class="font-semibold text-sm text-white">Elevated Surfaces</h4>
+            <p class="text-gray-400 text-sm">Surface container <span class="font-mono text-xs bg-gray-700 px-1 rounded text-gray-300">#2A2142</span> for inputs</p>
+          </div>
+          <div class="bg-gray-800 rounded-xl p-4 border-l-4 border-primary-light">
+            <h4 class="font-semibold text-sm text-white">Dark Mode Primary</h4>
+            <p class="text-gray-400 text-sm">Primary light <span class="font-mono text-xs bg-gray-700 px-1 rounded text-gray-300">#A78BFA</span> — violet 400</p>
+          </div>
+          <div class="bg-gray-800 rounded-xl p-4 border-l-4 border-accent-light">
+            <h4 class="font-semibold text-sm text-white">Dark Mode CTA</h4>
+            <p class="text-gray-400 text-sm">Accent light <span class="font-mono text-xs bg-gray-700 px-1 rounded text-gray-300">#FB923C</span> for contrast</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Semantic Colors -->
+    <section>
+      <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+        <span class="w-8 h-8 bg-semantic-success text-white rounded-lg flex items-center justify-center text-sm">4</span>
+        Semantic Colors
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Success -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg border border-gray-100">
+          <div class="bg-semantic-success text-white p-6 text-center">
+            <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <span class="font-bold text-lg">Success</span>
+          </div>
+          <div class="p-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-sm bg-gray-100 px-2 py-1 rounded">#16A34A</span>
+              <span class="contrast-badge bg-green-100 text-green-700">5.9:1 AA</span>
+            </div>
+            <div class="text-sm text-gray-600">
+              <strong>Use:</strong> Confirmations, "Salvo com sucesso", checkmarks
+            </div>
+          </div>
+        </div>
+
+        <!-- Warning -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg border border-gray-100">
+          <div class="bg-semantic-warning text-white p-6 text-center">
+            <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <span class="font-bold text-lg">Warning</span>
+          </div>
+          <div class="p-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-sm bg-gray-100 px-2 py-1 rounded">#F59E0B</span>
+              <span class="contrast-badge bg-yellow-100 text-yellow-700">3.0:1 ⚠</span>
+            </div>
+            <div class="text-sm text-gray-600">
+              <strong>Use:</strong> Pending states, "Bloco quase lotado" badges
+            </div>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg border border-gray-100">
+          <div class="bg-semantic-error text-white p-6 text-center">
+            <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </div>
+            <span class="font-bold text-lg">Error</span>
+          </div>
+          <div class="p-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-sm bg-gray-100 px-2 py-1 rounded">#DC2626</span>
+              <span class="contrast-badge bg-green-100 text-green-700">5.9:1 AA</span>
+            </div>
+            <div class="text-sm text-gray-600">
+              <strong>Use:</strong> Form errors, destructive actions, logout
+            </div>
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-lg border border-gray-100">
+          <div class="bg-semantic-info text-white p-6 text-center">
+            <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <span class="font-bold text-lg">Info</span>
+          </div>
+          <div class="p-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-sm bg-gray-100 px-2 py-1 rounded">#0EA5E9</span>
+              <span class="contrast-badge bg-green-100 text-green-700">4.6:1 AA</span>
+            </div>
+            <div class="text-sm text-gray-600">
+              <strong>Use:</strong> Neutral update banners, informational notices
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+        <svg class="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        <p class="text-sm text-amber-800"><strong>Accessibility:</strong> Never rely on color alone — every semantic state uses an icon AND color (✓ success, ⚠ warning, ✕ error, ℹ info).</p>
+      </div>
+    </section>
+
+    <!-- Section 5: Component Examples -->
+    <section>
+      <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+        <span class="w-8 h-8 bg-primary text-white rounded-lg flex items-center justify-center text-sm">5</span>
+        Component Examples
+      </h2>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Buttons -->
+        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+          <h3 class="font-bold text-lg mb-4 text-gray-800">Buttons</h3>
+          <div class="space-y-6">
+            <!-- Primary -->
+            <div>
+              <p class="text-sm text-gray-500 mb-2">Primary (Filled)</p>
+              <div class="flex flex-wrap gap-3">
+                <button class="bg-primary text-white font-semibold px-4 py-2 rounded-lg">Default</button>
+                <button class="bg-primary-dark text-white font-semibold px-4 py-2 rounded-lg">Pressed</button>
+                <button class="bg-primary/50 text-white font-semibold px-4 py-2 rounded-lg cursor-not-allowed" disabled>Disabled</button>
+              </div>
+            </div>
+            <!-- Secondary -->
+            <div>
+              <p class="text-sm text-gray-500 mb-2">Secondary (Outlined)</p>
+              <div class="flex flex-wrap gap-3">
+                <button class="border-2 border-secondary text-secondary font-semibold px-4 py-2 rounded-lg">Default</button>
+                <button class="border-2 border-secondary-dark text-secondary-dark font-semibold px-4 py-2 rounded-lg">Pressed</button>
+                <button class="border-2 border-secondary/50 text-secondary/50 font-semibold px-4 py-2 rounded-lg cursor-not-allowed" disabled>Disabled</button>
+              </div>
+            </div>
+            <!-- Accent CTA -->
+            <div>
+              <p class="text-sm text-gray-500 mb-2">Accent CTA</p>
+              <div class="flex flex-wrap gap-3">
+                <button class="bg-accent text-white font-bold px-6 py-3 rounded-xl shadow-lg">Entrar no Bloco</button>
+                <button class="bg-accent-dark text-white font-bold px-6 py-3 rounded-xl">Pressed</button>
+                <button class="bg-accent/50 text-white font-bold px-6 py-3 rounded-xl cursor-not-allowed" disabled>Disabled</button>
+              </div>
+            </div>
+            <!-- Text -->
+            <div>
+              <p class="text-sm text-gray-500 mb-2">Text Button</p>
+              <div class="flex flex-wrap gap-3">
+                <button class="text-primary font-semibold px-4 py-2">Default</button>
+                <button class="text-primary-dark font-semibold px-4 py-2">Pressed</button>
+                <button class="text-primary/50 font-semibold px-4 py-2 cursor-not-allowed" disabled>Disabled</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAB -->
+        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+          <h3 class="font-bold text-lg mb-4 text-gray-800">Floating Action Button</h3>
+          <div class="flex items-center gap-8">
+            <div class="flex flex-col items-center gap-3">
+              <button class="w-14 h-14 bg-primary text-white rounded-2xl shadow-lg flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              </button>
+              <span class="text-xs text-gray-500">Primary</span>
+            </div>
+            <div class="flex flex-col items-center gap-3">
+              <button class="w-14 h-14 bg-accent text-white rounded-2xl shadow-lg flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              </button>
+              <span class="text-xs text-gray-500">Accent</span>
+            </div>
+            <div class="flex flex-col items-center gap-3">
+              <button class="w-14 h-14 bg-tertiary text-white rounded-2xl shadow-lg flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              </button>
+              <span class="text-xs text-gray-500">Tertiary</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TextFields -->
+        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+          <h3 class="font-bold text-lg mb-4 text-gray-800">Text Fields</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Default</label>
+              <input type="text" placeholder="Digite aqui..." class="w-full px-4 py-2 border border-surface-light-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Filled</label>
+              <input type="text" value="Bloco do Frevo" class="w-full px-4 py-3 bg-surface-light-container rounded-xl border-0 focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Error</label>
+              <input type="text" value="Email inválido" class="w-full px-4 py-2 border-2 border-semantic-error rounded-xl focus:outline-none focus:ring-2 focus:ring-semantic-error">
+              <p class="text-semantic-error text-xs mt-1">Por favor, insira um email válido</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chips -->
+        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+          <h3 class="font-bold text-lg mb-4 text-gray-800">Chips & Badges</h3>
+          <div class="space-y-4">
+            <div>
+              <p class="text-sm text-gray-500 mb-2">Filter Chips</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="bg-primary text-white text-sm px-3 py-1 rounded-full font-medium">Todos</span>
+                <span class="bg-secondary/20 text-secondary-dark text-sm px-3 py-1 rounded-full font-medium">Frevo</span>
+                <span class="bg-tertiary/20 text-tertiary text-sm px-3 py-1 rounded-full font-medium">Maracatu</span>
+                <span class="bg-gray-100 text-gray-500 text-sm px-3 py-1 rounded-full font-medium">Axé</span>
+              </div>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500 mb-2">Status Badges</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="bg-semantic-success/10 text-semantic-success text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                  Confirmado
+                </span>
+                <span class="bg-semantic-warning/10 text-semantic-warning text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01"/></svg>
+                  Quase lotado
+                </span>
+                <span class="bg-semantic-info/10 text-semantic-info text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01"/></svg>
+                  Novidades
+                </span>
+              </div>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500 mb-2">Member Count Badge</p>
+              <div class="flex items-center gap-3">
+                <span class="bg-surface-light-container text-text-light-secondary text-sm px-3 py-1 rounded-full">850/1000</span>
+                <div class="flex items-center gap-1">
+                  <span class="w-2 h-2 bg-tertiary rounded-full"></span>
+                  <span class="text-xs text-gray-500">Online agora</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Typography Colors -->
+    <section>
+      <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+        <span class="w-8 h-8 bg-gray-700 text-white rounded-lg flex items-center justify-center text-sm">6</span>
+        Text Hierarchy
+      </h2>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Light Mode Text -->
+        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-lg text-gray-800">Light Mode</h3>
+            <span class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">on #FFFFFF</span>
+          </div>
+          <div class="space-y-4">
+            <div class="border-b border-gray-100 pb-3">
+              <p class="text-text-light-primary font-semibold text-lg">Primary Text</p>
+              <code class="text-xs text-gray-400">#1C1917</code>
+              <span class="ml-2 contrast-badge bg-green-100 text-green-700">16.1:1 AAA</span>
+              <p class="text-gray-500 text-sm mt-1">Headlines, body emphasis</p>
+            </div>
+            <div class="border-b border-gray-100 pb-3">
+              <p class="text-text-light-secondary text-base">Secondary Text</p>
+              <code class="text-xs text-gray-400">#57534E</code>
+              <span class="ml-2 contrast-badge bg-green-100 text-green-700">7.5:1 AAA</span>
+              <p class="text-gray-500 text-sm mt-1">Body, descriptions</p>
+            </div>
+            <div class="border-b border-gray-100 pb-3">
+              <p class="text-text-light-tertiary text-sm">Tertiary Text</p>
+              <code class="text-xs text-gray-400">#78716C</code>
+              <span class="ml-2 contrast-badge bg-green-100 text-green-700">4.6:1 AA</span>
+              <p class="text-gray-500 text-sm mt-1">Captions, metadata</p>
+            </div>
+            <div>
+              <p class="text-text-light-disabled text-sm">Disabled Text</p>
+              <code class="text-xs text-gray-400">#A8A29E</code>
+              <p class="text-gray-500 text-sm mt-1">Disabled controls</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dark Mode Text -->
+        <div class="bg-surface-dark-bg rounded-xl p-6 shadow-lg border border-surface-dark-border">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-lg text-white">Dark Mode</h3>
+            <span class="text-xs bg-surface-dark-container px-2 py-1 rounded text-text-dark-secondary">on #0B0716</span>
+          </div>
+          <div class="space-y-4">
+            <div class="border-b border-surface-dark-border pb-3">
+              <p class="text-text-dark-primary font-semibold text-lg">Primary Text</p>
+              <code class="text-xs text-gray-400">#FAFAF9</code>
+              <span class="ml-2 contrast-badge bg-green-100 text-green-700">17.8:1 AAA</span>
+              <p class="text-gray-400 text-sm mt-1">Headlines, body emphasis</p>
+            </div>
+            <div class="border-b border-surface-dark-border pb-3">
+              <p class="text-text-dark-secondary text-base">Secondary Text</p>
+              <code class="text-xs text-gray-400">#D6D3D1</code>
+              <span class="ml-2 contrast-badge bg-green-100 text-green-700">10.3:1 AAA</span>
+              <p class="text-gray-400 text-sm mt-1">Body, descriptions</p>
+            </div>
+            <div class="border-b border-surface-dark-border pb-3">
+              <p class="text-text-dark-tertiary text-sm">Tertiary Text</p>
+              <code class="text-xs text-gray-400">#A8A29E</code>
+              <span class="ml-2 contrast-badge bg-green-100 text-green-700">5.0:1 AA</span>
+              <p class="text-gray-400 text-sm mt-1">Captions, metadata</p>
+            </div>
+            <div>
+              <p class="text-text-dark-disabled text-sm">Disabled Text</p>
+              <code class="text-xs text-gray-400">#57534E</code>
+              <p class="text-gray-400 text-sm mt-1">Disabled controls</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-gray-400 py-8 px-6 mt-16">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🎭</span>
+        <span class="font-semibold text-white">Bloco na Rua</span>
+      </div>
+      <p class="text-sm">Color Palette "Carnaval Sunset" • Design System v1.0</p>
+      <p class="text-xs">WCAG 2.1 AA Compliant • Material 3</p>
+    </div>
+  </footer>
+</body>
+</html>

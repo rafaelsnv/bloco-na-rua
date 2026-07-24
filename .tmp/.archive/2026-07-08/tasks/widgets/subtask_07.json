@@ -1,0 +1,47 @@
+{
+  "seq": 7,
+  "name": "app-dropdown",
+  "title": "AppDropdown<T> + AppDropdownItem<T>",
+  "output_file": "C:\\Repos\\bloco-na-rua\\lib\\ui\\core\\widgets\\inputs\\app_dropdown.dart",
+  "class_name": "AppDropdown",
+  "public_api": {
+    "constructor": "AppDropdown<T>({\n  required String label,\n  T? value,\n  required List<AppDropdownItem<T>> items,\n  ValueChanged<T?>? onChanged,\n  String? hint,\n  String? errorText,\n  bool isEnabled = true,\n})",
+    "helper_classes": [
+      "class AppDropdownItem<T> {\n  final T value;\n  final String label;\n  final Widget? leading;\n}"
+    ]
+  },
+  "tokens_consumed": {
+    "AppColors": ["primary", "error", "textPrimaryLight", "textSecondaryLight", "textDisabledLight", "surfaceVariantLight", "surfaceVariantDark", "textPrimaryDark", "textSecondaryDark", "textDisabledDark"],
+    "Spacing": ["space_sm", "space_xs", "space_md"],
+    "Radii": ["input"],
+    "AppDurations": ["fast", "normal"],
+    "AppCurves": ["standard"]
+  },
+  "dependencies_on_other_phase2_widgets": [],
+  "conventions_reminder": [
+    "snake_case.dart file",
+    "class AppDropdown<T> extends StatelessWidget",
+    "Typed dropdown using generics <T>",
+    "All colors/spacings/radii/durations via tokens — no hardcoded values",
+    "MediaQuery.disableAnimationsOf(context) before any animation",
+    "Double quotes on all string literals",
+    "Top-of-file doc comment explaining purpose + state behavior"
+  ],
+  "acceptance_criteria": [
+    "flutter analyze passes (0 errors)",
+    "Is a generic class AppDropdown<T>",
+    "Has AppDropdownItem<T> helper class with value, label, leading",
+    "Default radius uses Radii.input",
+    "Disabled state: opacity 0.5, onChanged null",
+    "All colors via AppColors tokens",
+    "All spacing via Spacing tokens",
+    "All radii via Radii tokens",
+    "All durations via AppDurations tokens",
+    "All curves via AppCurves tokens"
+  ],
+  "batch": 2,
+  "parallel": true,
+  "status": "completed",
+  "completed_at": "2026-07-07T00:00:00Z",
+  "completion_summary": "Implemented generic AppDropdown<T> with AppDropdownItem<T> helper class using DropdownButtonFormField, tokens for spacing/colors, and full disabled state support"
+}

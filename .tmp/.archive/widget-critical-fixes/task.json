@@ -1,0 +1,70 @@
+{
+  "feature": "widget-critical-fixes",
+  "title": "Widget Critical Fixes",
+  "description": "Four targeted regression fixes in lib/ui/core/widgets/ and lib/ui/core/theme/ following the partially-completed widget-native-migration. Each fix is independent and addresses a concrete bug or violation of the design-system rules captured in the session context (preserve public API, respect MediaQuery.disableAnimationsOf, use tokens from lib/ui/core/tokens/, no hardcoded colors). All four subtasks can run in parallel because they edit disjoint files with no shared mutable state.",
+  "session_id": "2026-07-11-widget-native-migration",
+  "status": "in_progress",
+  "created_at": "2026-07-11",
+  "sdk_version": "Flutter 3.8.1",
+  "batches": 1,
+  "total_subtasks": 4,
+  "parallel_strategy": "All four subtasks run in a single parallel batch. They touch disjoint files (app_button.dart, app_loading_indicator.dart, app_chip.dart, app_theme.dart) and have no shared dependencies. A single executor can pick up any one of them; multiple executors can run all four simultaneously.",
+  "exit_criteria": [
+    "lib/ui/core/widgets/buttons/app_button.dart uses FilledButton (primary), OutlinedButton (secondary), FilledButton.tonalIcon or equivalent (tertiary), and TextButton (ghost) inside _buildButtonChild — no Container + GestureDetector click stack remains",
+    "AppButton public API is byte-identical to the pre-fix version (same constructor signature, same AppButtonVariant, same AppButtonSize, same isLoading/isDisabled/isFullWidth/icon/trailingIcon defaults)",
+    "AppButtonVariant.primary renders with AppColors.cta background",
+    "lib/ui/core/widgets/feedback/app_loading_indicator.dart: _PulseIndicator is a StatefulWidget that drives a 0.6 -> 1.0 -> 0.6 scale loop via AnimationController.repeat(reverse: true) — pulse no longer freezes after one cycle",
+    "AppLoadingIndicator.pulse renders a static dot when MediaQuery.disableAnimationsOf(context) is true",
+    "lib/ui/core/widgets/display/app_chip.dart: the _PressableChip wrapper class is deleted; RawChip is returned directly with its built-in onPressed (no outer GestureDetector around a chip that already handles taps)",
+    "lib/ui/core/theme/app_theme.dart: progressIndicatorTheme.color is lightColorScheme.primary inside the light() builder and darkColorScheme.primary inside the dark() builder",
+    "All four files compile without errors (flutter analyze returns exit code 0)",
+    "No new packages added to pubspec.yaml",
+    "No hardcoded Color values introduced in the fix; every color reference points to a ColorScheme or a token in lib/ui/core/tokens/app_colors.dart"
+  ],
+  "constraints": {
+    "public_api_must_not_change": true,
+    "respect_disable_animations": "MediaQuery.disableAnimationsOf(context)",
+    "tokens_from_lib/ui/core/tokens/": "no hardcoded color or numeric values where a token exists",
+    "no_new_packages": true,
+    "no_existing_tests": "none to update",
+    "scope_discipline": "Each subtask edits exactly the file(s) named in its reference_files. Do not refactor adjacent code, do not rename tokens, do not introduce new abstractions."
+  },
+  "subtasks": [
+    {
+      "seq": 1,
+      "title": "AppButton — replace Container+GestureDetector with FilledButton/OutlinedButton/FilledButton.tonalIcon/TextButton",
+      "status": "pending",
+      "parallel": true,
+      "depends_on": [],
+      "estimated_effort": "medium",
+      "summary": "Refactor _buildButtonChild in lib/ui/core/widgets/buttons/app_button.dart to return a Material button (FilledButton / OutlinedButton / FilledButton.tonalIcon / TextButton) selected by AppButtonVariant, instead of the current Container + BoxDecoration + GestureDetector stack."
+    },
+    {
+      "seq": 2,
+      "title": "AppLoadingIndicator.pulse — revert to AnimationController.repeat(reverse: true)",
+      "status": "pending",
+      "parallel": true,
+      "depends_on": [],
+      "estimated_effort": "small",
+      "summary": "Rewrite _PulseIndicator in lib/ui/core/widgets/feedback/app_loading_indicator.dart as a StatefulWidget that owns an AnimationController with vsync and calls repeat(reverse: true), driving a 0.6 -> 1.0 -> 0.6 scale loop continuously. Drop _SinePulseTween (TweenAnimationBuilder only animates once and freezes after 2s)."
+    },
+    {
+      "seq": 3,
+      "title": "AppChip — remove _PressableChip wrapper to fix double-gesture conflict",
+      "status": "pending",
+      "parallel": true,
+      "depends_on": [],
+      "estimated_effort": "small",
+      "summary": "Delete the _PressableChip wrapper class and its surrounding if-block in lib/ui/core/widgets/display/app_chip.dart so RawChip is returned directly. RawChip already owns onPressed handling and its own splash feedback; the outer GestureDetector was double-firing taps."
+    },
+    {
+      "seq": 4,
+      "title": "app_theme.dart — make progressIndicatorTheme.color theme-aware",
+      "status": "pending",
+      "parallel": true,
+      "depends_on": [],
+      "estimated_effort": "trivial",
+      "summary": "Replace the hardcoded color: AppColors.primary in both light() and dark() progressIndicatorTheme blocks (lines 89 and 191) with lightColorScheme.primary and darkColorScheme.primary respectively. linearTrackColor / circularTrackColor already use the ColorScheme and need no change."
+    }
+  ]
+}

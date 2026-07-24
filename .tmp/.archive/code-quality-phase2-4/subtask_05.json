@@ -1,0 +1,60 @@
+{
+  "seq": 5,
+  "id": "H4",
+  "feature": "code-quality-phase2-4",
+  "title": "Fix MeetingPresencesRepository.getAllAsync 404 handling — return Failure, not getByMeetingId(0)",
+  "status": "pending",
+  "priority": "high",
+  "estimated_effort": "trivial",
+  "parallel": false,
+  "depends_on": ["H3"],
+  "objective": "Make MeetingPresencesRepository.getAllAsync() return a Failure(ApiError.notFound) (or UnimplementedError if the backend does not expose a list-all endpoint), instead of the current silent call to getByMeetingId(0) which would return either an empty list or — worse — a 500 because meetingId=0 does not exist.",
+  "description": "MeetingPresencesRepository.getAllAsync (lib/data/repositories/meetingPresences/meeting_presences_repository.dart, lines 27-30) currently calls `meetingPresencesApiClient.getByMeetingId(0)`. After H3 deletes RepositoryBase / IRepositoryBase, this method may no longer satisfy the interface (if it inherited from IRepositoryBase). The fix has two acceptable shapes: (a) if the backend exposes GET /MeetingPresences (a real list-all endpoint), implement it directly via a new API client method; (b) otherwise return Failure(ApiError(type: ApiErrorType.notFound, userMessage: ErrorMessages.notFound)) — or throw UnimplementedError('No list-all endpoint for MeetingPresences; use getByMeetingId instead') returned as a Failure. Either way, the method MUST NOT call getByMeetingId(0) — that is a sentinel value that produces undefined backend behaviour.",
+  "context_files": [
+    "lib/core/api_error.dart",
+    "lib/core/error_messages.dart",
+    "lib/core/error_types.dart"
+  ],
+  "reference_files": [
+    {
+      "path": "lib/data/repositories/meetingPresences/meeting_presences_repository.dart",
+      "lines": "27-30",
+      "reason": "The buggy getAllAsync method. REWRITE."
+    },
+    {
+      "path": "lib/data/repositories/meetingPresences/imeeting_presences_repository.dart",
+      "lines": "1-30",
+      "reason": "After H3, this interface may need to drop `implements IRepositoryBase<MeetingPresencesEntity>`. Update if so."
+    },
+    {
+      "path": "lib/data/services/api/meetingPresences/meeting_presences_api_client.dart",
+      "lines": "1-72",
+      "reason": "Source for adding a real list-all endpoint if the backend exposes one. Otherwise this file is read-only context."
+    },
+    {
+      "path": "swagger.json",
+      "lines": "1-200",
+      "reason": "Inspect /MeetingPresences paths to decide between fix shape (a) and (b)."
+    }
+  ],
+  "fix_shape": {
+    "shape_a_backend_has_list_all": "Add IMeetingPresencesApiClient.getAllAsync() that calls GET $_basePath with the same 200/404 handling as getByMeetingId; call it from the repository's getAllAsync.",
+    "shape_b_backend_has_no_list_all": "Return Failure(Exception('MeetingPresencesRepository.getAllAsync is not implemented; use getByMeetingId(meetingId) instead')) with a `// TODO(backend): GET /MeetingPresences` comment above the method."
+  },
+  "acceptance_criteria": [
+    "MeetingPresencesRepository.getAllAsync no longer calls meetingPresencesApiClient.getByMeetingId(0)",
+    "Either the method dispatches GET /MeetingPresences (shape a) or it returns Failure with a clear UnimplementedError-style message + TODO(backend) comment (shape b)",
+    "The repository's other methods (getByMeetingId, createAsync, deleteAsync, deleteByIdAsync) are unchanged",
+    "If H3 dropped IRepositoryBase from the interface, the getAllAsync signature here matches whatever the new interface declares — typically `AsyncResult<List<MeetingPresencesEntity>> getAllAsync()`",
+    "flutter analyze lib/data/repositories/meetingPresences/ returns no errors"
+  ],
+  "validation": {
+    "static_analysis": "flutter analyze lib/data/repositories/meetingPresences/",
+    "expected_exit_code": 0,
+    "grep_evidence": [
+      "rg -n 'getByMeetingId\\(0\\)' lib/ must return zero matches",
+      "rg -n 'TODO\\(backend\\): GET /MeetingPresences' lib/data/repositories/meetingPresences/meeting_presences_repository.dart must return at least one match if shape (b) is chosen"
+    ]
+  },
+  "no_op_outside_scope": "Do not touch getByMeetingId / createAsync / deleteAsync / deleteByIdAsync on MeetingPresencesRepository. Do not touch any other repository. The dependency on H3 means this subtask cannot start until H3 lands."
+}

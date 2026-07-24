@@ -1,0 +1,21 @@
+{
+  "name": "fireworks-velvet-implementation",
+  "title": "Fireworks on Velvet Theme Implementation",
+  "description": "Apply Fireworks on Velvet color palette to Bloco na Rua design system tokens",
+  "created": "2026-07-21",
+  "status": "planned",
+  "components": [
+    "app_colors.dart",
+    "app_color_schemes.dart"
+  ],
+  "constraints": [
+    "Additive-only migrations (no token renames)",
+    "WCAG AA minimum contrast (4.5:1)",
+    "Maintain existing token structure in app_color_schemes.dart"
+  ],
+  "exit_criteria": [
+    "All AppColors constants updated to new palette",
+    "Color scheme mapping verified correct",
+    "Build passes without errors"
+  ]
+}

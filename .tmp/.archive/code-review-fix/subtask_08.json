@@ -1,0 +1,48 @@
+{
+  "id": "code-review-fix-08",
+  "seq": "08",
+  "issue_key": "M2",
+  "phase": "Phase 3",
+  "priority": "medium",
+  "title": "Remove profileImage TODO literal from member registration",
+  "status": "pending",
+  "depends_on": ["07", "05"],
+  "parallel": false,
+  "context_files": [
+    ".opencode/context/standards/overrides.md",
+    ".opencode/context/project-intelligence/concepts/architecture.md",
+    ".opencode/context/project-intelligence/technical-component-pattern.md",
+    ".opencode/context/project-intelligence/concepts/bloc-state-pattern.md",
+    ".opencode/context/project-intelligence/concepts/freezed-entity.md",
+    ".opencode/context/project-intelligence/concepts/result-handling.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md",
+    ".opencode/context/project-intelligence/lookup/token-discipline.md"
+  ],
+  "reference_files": [
+    "lib/data/services/api/members/create/member_create.dart",
+    "lib/data/services/api/members/create/member_create.freezed.dart",
+    "lib/data/services/api/members/create/member_create.g.dart",
+    "lib/data/repositories/auth/auth_repository.dart"
+  ],
+  "objective": "Stop sending the literal profileImage TODO sentinel to the backend during sign-up member registration.",
+  "acceptance_criteria": [
+    "MemberCreate.profileImage is nullable or optional instead of requiring a non-null TODO sentinel",
+    "AuthRepository._registerMember no longer passes profileImage: 'TODO'",
+    "Generated MemberCreate files are regenerated consistently with the source model change",
+    "No profileImage TODO literal remains under lib/",
+    "AuthRepository sign-up and member registration signatures remain compatible with existing callers",
+    "flutter analyze lib/ reports no new errors"
+  ],
+  "deliverables": [
+    "Updated MemberCreate model source and generated files",
+    "Updated AuthRepository member registration call site"
+  ],
+  "validation_commands": [
+    "dart run build_runner build --delete-conflicting-outputs",
+    "flutter analyze lib/"
+  ],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

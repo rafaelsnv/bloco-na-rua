@@ -1,0 +1,58 @@
+{
+  "seq": 8,
+  "id": "M1",
+  "feature": "code-quality-phase2-4",
+  "title": "Extract _extractUserMessage to lib/core/errors/user_message.dart",
+  "status": "pending",
+  "priority": "medium",
+  "estimated_effort": "small",
+  "parallel": true,
+  "depends_on": [],
+  "objective": "Promote the private _extractUserMessage(Object?) helper duplicated in JoinBlockCubit and MeetingDetailsCubit into a shared top-level function in a new lib/core/errors/user_message.dart module, and replace both private copies with an import.",
+  "description": "JoinBlockCubit (lib/ui/carnivalBlock/joinBlock/cubit/join_block_cubit.dart, lines 22-31) and MeetingDetailsCubit (lib/ui/meetings/meetingDetails/cubit/meeting_details_cubit.dart, lines 30-39) define byte-identical _extractUserMessage(Object?) helpers. They both strip the 'Exception: ' prefix and unwrap ApiError. The fix creates lib/core/errors/user_message.dart with one exported top-level function `String extractUserMessage(Object? error)` (public, no underscore), updates the import list of both cubits, and deletes the private methods. The function signature, semantics, and return values are preserved byte-identically — every existing call site (JoinBlockCubit lines 45, 53, 77, 80; MeetingDetailsCubit lines 64, 143, 153) keeps producing the same strings.",
+  "context_files": [
+    "lib/core/api_error.dart",
+    "lib/core/error_messages.dart",
+    "lib/core/error_types.dart"
+  ],
+  "reference_files": [
+    {
+      "path": "lib/ui/carnivalBlock/joinBlock/cubit/join_block_cubit.dart",
+      "lines": "22-31",
+      "reason": "The private _extractUserMessage to delete. Also touch every call site (lines 45, 53, 77, 80) to use the new top-level function."
+    },
+    {
+      "path": "lib/ui/meetings/meetingDetails/cubit/meeting_details_cubit.dart",
+      "lines": "30-39",
+      "reason": "Same — private _extractUserMessage to delete. Touch call sites at lines 64, 143, 153."
+    },
+    {
+      "path": "lib/core/api_error.dart",
+      "lines": "1-161",
+      "reason": "Read-only context. The new module's first branch (`if (error is ApiError) return error.userMessage;`) consumes ApiError.userMessage."
+    }
+  ],
+  "fix_shape": {
+    "new_file": "lib/core/errors/user_message.dart — declares `import 'package:bloco_na_rua/core/api_error.dart';` and exposes `String extractUserMessage(Object? error) { if (error == null) return 'Erro desconhecido'; if (error is ApiError) return error.userMessage; if (error is Exception) { final msg = error.toString(); if (msg.startsWith('Exception: ')) return msg.substring(11); return msg; } return error.toString(); }`. The 'Erro desconhecido' literal and the 'Exception: ' prefix-strip logic are preserved byte-identically.",
+    "join_block_cubit_changes": "Replace lines 22-31 with `import 'package:bloco_na_rua/core/errors/user_message.dart';`. Replace every `_extractUserMessage(` with `extractUserMessage(`.",
+    "meeting_details_cubit_changes": "Same — replace lines 30-39, replace every `_extractUserMessage(` with `extractUserMessage(`."
+  },
+  "acceptance_criteria": [
+    "lib/core/errors/user_message.dart exists and exports a top-level `String extractUserMessage(Object? error)` function",
+    "The new function's body is byte-identical to the union of the two private copies (the bodies were already identical; this subtask just promotes one to public)",
+    "JoinBlockCubit no longer declares a private _extractUserMessage method",
+    "MeetingDetailsCubit no longer declares a private _extractUserMessage method",
+    "Every call site that previously called _extractUserMessage(...) now calls extractUserMessage(...) — search `rg -n '_extractUserMessage' lib/` returns zero matches",
+    "The lib/core/errors/ directory is created (it may not exist before this subtask)",
+    "flutter analyze lib/ returns no errors"
+  ],
+  "validation": {
+    "static_analysis": "flutter analyze",
+    "expected_exit_code": 0,
+    "grep_evidence": [
+      "rg -n '_extractUserMessage' lib/ must return zero matches",
+      "rg -n 'extractUserMessage' lib/ must return at least 5 matches (1 in user_message.dart + 4 call sites in JoinBlockCubit + 3 call sites in MeetingDetailsCubit)"
+    ]
+  },
+  "no_op_outside_scope": "Do not change the function's semantics. Do not add tests (L7 will add them). Do not change any cubit's emit logic or error strings. Do not touch other cubits that may have their own _extractUserMessage (search `rg -n 'String _extractUserMessage' lib/` first — if a third copy exists, include it)."
+}

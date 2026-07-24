@@ -1,0 +1,56 @@
+{
+  "seq": 22,
+  "name": "router-stateful-shell",
+  "title": "Rewrite router.dart to use StatefulShellRoute.indexedStack with 5 branches",
+  "output_file": "C:\\Repos\\bloco-na-rua\\lib\\routing\\router.dart",
+  "class_name": "router (function)",
+  "public_api": {
+    "function": "router(IAuthRepository authRepository) => GoRouter(...)",
+    "returns": "GoRouter with StatefulShellRoute.indexedStack",
+    "branches": [
+      "Branch 0: Home (Routes.home) — HomeCubit + HomeScreen",
+      "Branch 1: Blocks placeholder (Routes.carnivalBlocks) — AppEmpty widget",
+      "Branch 2: Meetings (Routes.userMeetings) — UserMeetingsCubit + UserMeetingsScreen",
+      "Branch 3: Members (Routes.members) — MembersCubit + MembersScreen",
+      "Branch 4: Profile (Routes.profile) — ProfileCubit + ProfileScreen"
+    ],
+    "shell_nav_items": "const _shellNavItems = <AppBottomNavItem>[home, blocos, reuniões, membros, perfil]"
+  },
+  "dependencies": [
+    "app_shell.dart (AppShell)",
+    "app_bottom_nav.dart (AppBottomNavItem)",
+    "app_empty.dart (AppEmpty)",
+    "Routes class from routes.dart",
+    "All existing screen/cubit/repo imports from original router.dart"
+  ],
+  "conventions_reminder": [
+    "All imports preserved from original router.dart plus new navigation imports",
+    "_buildPageWithSlideTransition helper preserved EXACTLY as-is",
+    "_redirect logic preserved EXACTLY as-is",
+    "_errorBuilder extracted to named function (preserves logic)",
+    "Double quotes on all string literals",
+    "StatefulShellRoute.indexedStack with 5 StatefulShellBranch instances",
+    "Auth routes (login, register) are plain GoRoute (no pageBuilder)",
+    "Modal/detail routes OUTSIDE shell use pageBuilder + _buildPageWithSlideTransition"
+  ],
+  "acceptance_criteria": [
+    "flutter analyze passes on lib/routing/router.dart (0 errors)",
+    "GoRouter uses StatefulShellRoute.indexedStack with 5 branches",
+    "_shellNavItems const list at top level with 5 AppBottomNavItem entries",
+    "Branch 0: Home — BlocProvider(HomeCubit) + HomeScreen at Routes.home",
+    "Branch 1: Blocks — AppEmpty placeholder at Routes.carnivalBlocks",
+    "Branch 2: Meetings — BlocProvider(UserMeetingsCubit) + UserMeetingsScreen at Routes.userMeetings",
+    "Branch 3: Members — BlocProvider(MembersCubit) + MembersScreen at Routes.members",
+    "Branch 4: Profile — BlocProvider(ProfileCubit) + ProfileScreen at Routes.profile",
+    "Auth routes (login, register) use plain builder (no slide transition)",
+    "All modal/detail routes (carnivalBlock/:id, meeting/:id, editMeeting/:id, editBlock/:id, joinBlock, createBlock, /create-meeting/:blockId, /add-member/:blockId, settings, meetingPresences) use _buildPageWithSlideTransition",
+    "_redirect logic identical to original",
+    "_buildPageWithSlideTransition identical to original",
+    "All Routes.x constants used (no hardcoded path strings except /create-meeting/:blockId and /add-member/:blockId)"
+  ],
+  "batch": 3,
+  "parallel": true,
+  "status": "completed",
+  "completion_summary": "Rewrote router.dart to use StatefulShellRoute.indexedStack with 5 branches (Home, Blocks-placeholder, Meetings, Members, Profile). Preserved all existing imports, _buildPageWithSlideTransition, _redirect logic, modal routes with slide transitions, and auth redirect behavior.",
+  "completed_at": "2026-07-07T00:00:00Z"
+}

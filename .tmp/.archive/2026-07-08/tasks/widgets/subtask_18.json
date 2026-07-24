@@ -1,0 +1,48 @@
+{
+  "seq": 18,
+  "name": "app-empty",
+  "title": "AppEmpty (full-screen empty with optional CTA)",
+  "output_file": "C:\\Repos\\bloco-na-rua\\lib\\ui\\core\\widgets\\state\\app_empty.dart",
+  "class_name": "AppEmpty",
+  "public_api": {
+    "constructor": "AppEmpty({\n  required String message,\n  String? title,\n  String? ctaLabel,\n  VoidCallback? onCta,\n  IconData icon = Icons.inbox_rounded,\n})"
+  },
+  "tokens_consumed": {
+    "AppColors": ["textSecondaryLight", "textSecondaryDark", "textPrimaryLight", "textPrimaryDark", "surfaceVariantLight", "surfaceVariantDark"],
+    "Spacing": ["space_sm", "space_md", "space_lg", "space_xs"],
+    "Radii": ["button"],
+    "AppDurations": ["normal", "fast"],
+    "AppCurves": ["standard"]
+  },
+  "dependencies_on_other_phase2_widgets": [],
+  "conventions_reminder": [
+    "snake_case.dart file",
+    "class AppEmpty extends StatelessWidget",
+    "Full-screen centered empty state with icon, message, and optional CTA",
+    "Icon uses muted/textSecondary color",
+    "All colors/spacings/radii/durations via tokens — no hardcoded values",
+    "MediaQuery.disableAnimationsOf(context) before any animation",
+    "Double quotes on all string literals",
+    "Top-of-file doc comment explaining purpose + state behavior"
+  ],
+  "acceptance_criteria": [
+    "flutter analyze passes (0 errors)",
+    "Full-screen centered layout using Center + Column",
+    "Shows icon with muted/textSecondary color",
+    "Shows title (optional, default: 'Nenhum item encontrado')",
+    "Shows message (required)",
+    "Shows CTA button when ctaLabel + onCta are provided",
+    "All colors via AppColors tokens",
+    "All spacing via Spacing tokens",
+    "All radii via Radii tokens",
+    "All durations via AppDurations tokens",
+    "All curves via AppCurves tokens"
+  ],
+  "batch": 1,
+  "parallel": true,
+  "status": "completed",
+  "agent_id": "coder-agent",
+  "started_at": "2026-07-03T00:00:00Z",
+  "completed_at": "2026-07-03T00:00:00Z",
+  "completion_summary": "Created AppEmpty widget at lib/ui/core/widgets/state/app_empty.dart with icon (96px primaryLight), title (default Nada por aqui), optional message, and optional CTA button via FilledButton.icon with Radii.button and AppDurations.fast hover. Public API matches spec: title/message/icon/actionLabel/onAction all optional except message is String?."
+}

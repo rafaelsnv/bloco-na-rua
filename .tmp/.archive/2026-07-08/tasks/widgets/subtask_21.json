@@ -1,0 +1,39 @@
+{
+  "seq": 21,
+  "name": "app-shell",
+  "title": "AppShell widget wrapping StatefulNavigationShell with Scaffold and AppBottomNav",
+  "output_file": "C:\\Repos\\bloco-na-rua\\lib\\ui\\core\\widgets\\navigation\\app_shell.dart",
+  "class_name": "AppShell",
+  "public_api": {
+    "constructor": "AppShell({\n  required StatefulNavigationShell navigationShell,\n  required List<AppBottomNavItem> items,\n  bool showAppBar = true,\n})",
+    "properties": [
+      "navigationShell: StatefulNavigationShell (required) — from go_router StatefulShellRoute.indexedStack",
+      "items: List<AppBottomNavItem> (required, 3-5 items)",
+      "showAppBar: bool (default true) — when true, renders AppAppBar above branch content"
+    ]
+  },
+  "dependencies": [
+    "app_app_bar.dart (AppAppBar widget)",
+    "app_bottom_nav.dart (AppBottomNav + AppBottomNavItem)"
+  ],
+  "conventions_reminder": [
+    "snake_case.dart file",
+    "class AppShell extends StatelessWidget",
+    "Double quotes on all string literals",
+    "Top-of-file doc comment explaining purpose and behavior",
+    "StatefulNavigationShell from package:go_router"
+  ],
+  "acceptance_criteria": [
+    "flutter analyze passes (0 errors, 0 warnings)",
+    "Public API: AppShell({required StatefulNavigationShell navigationShell, required List<AppBottomNavItem> items, bool showAppBar = true})",
+    "Renders bottom nav with correct selected state via navigationShell.currentIndex",
+    "onTap calls navigationShell.goBranch with initialLocation reset behavior (initialLocation: index == navigationShell.currentIndex)",
+    "When showAppBar is true, AppAppBar is rendered with title from items[navigationShell.currentIndex].label",
+    "Body is Column with AppAppBar (conditionally) and Expanded(navigationShell)"
+  ],
+  "batch": 3,
+  "parallel": true,
+  "status": "completed",
+  "completion_summary": "Implemented AppShell as a StatelessWidget wrapping StatefulNavigationShell with a Scaffold. Renders optional AppAppBar (title from current nav item label) and AppBottomNav with correct selected index. onTap uses goBranch with initialLocation reset behavior.",
+  "completed_at": "2026-07-07T00:00:00Z"
+}

@@ -1,0 +1,144 @@
+flowchart LR
+    %% ============================================
+    %% USER JOURNEY v2 - Bloco na Rua
+    %% P0 + P1 Improvements Applied
+    %% ============================================
+
+    %% Entry Points
+    n0@{ shape: "circle", label: "Start" }
+    nDeepLink["DeepLink<br>(push/QR)"]
+
+    %% Auth Flow
+    n0 --> n1["LoginScreen<br>/login"]
+    nDeepLink --> n1
+    nDeepLink --> n12["BlockDetails<br>/carnival-block/:id"]
+    nDeepLink --> n16["MeetingDetails<br>/meeting/:id"]
+
+    n1 --> n2["SignUpScreen<br>/register"]
+    n2 --> nVerify["VerifyEmail<br>/verify-email"]
+    nVerify -. verified .-> nOnboard1
+
+    %% Onboarding Flow (NEW)
+    nOnboard1["Onboarding 1/3<br>'O que é um bloco?'"]
+    nOnboard2["Onboarding 2/3<br>'Crie ou entre em um bloco'"]
+    nOnboard3["Onboarding 3/3<br>'Confirme presença nas reuniões'"]
+    nOnboard1 --> nOnboard2 --> nOnboard3 --> n4
+
+    %% Forgot Password (NEW)
+    n1 --> nForgot["ForgotPassword<br>/forgot-password"]
+    nForgot -. reset .-> n1
+
+    %% SignUp back to Login
+    n2 -. back .-> n1
+
+    %% ============================================
+    %% Main App Shell (5 tabs - reduced from 6)
+    %% Settings merged into Perfil (gear icon)
+    %% ============================================
+    n4["MainPage<br>/home<br>(Início)"]
+
+    style n0 color:#000000,fill:#C1FF72,stroke:#00BF63
+
+    %% Bottom Navigation (5 tabs)
+    n4 --> n5["Blocos<br>/carnival-blocks"]
+    n4 --> n6["Reuniões<br>/user-meetings"]
+    n4 --> n7["Membros<br>/members"]
+    n4 --> n8["Perfil<br>/profile<br>⚙️ (gear = Settings)"]
+
+    %% Empty States (NEW)
+    n5 -. empty .-> nE1(["Empty: Nenhum bloco<br>+ Criar | + Entrar"])
+    n6 -. empty .-> nE2(["Empty: Nenhuma reunião<br>agendada"])
+    n7 -. empty .-> nE3(["Empty: Nenhum membro<br>adicionado"])
+    n4 -. empty .-> nE4(["Empty: Bem-vindo!<br>Comece criando um bloco"])
+
+    %% ============================================
+    %% Blocos Flow
+    %% ============================================
+    n5 --> n10["Criar Bloco<br>/create-block"]
+    n5 --> n11["Entrar em Bloco<br>/join-block"]
+    n5 --> n12
+
+    n10 --> n12
+    n11 --> n12
+
+    n12["BlockDetails<br>/carnival-block/:id"]
+    n12 --> n13["CreateMeeting<br>/create-meeting/:blockId"]
+    n12 --> n14["EditBlock<br>/edit-block/:id"]
+    n12 --> n15["AddMember<br>/add-member/:blockId"]
+    n12 --> nMeetings["Reuniões do Bloco<br>(filtered list)"]
+
+    %% Cross-tab link: Block → its meetings
+    nMeetings -. tap .-> n16["MeetingDetails<br>/meeting/:id"]
+
+    %% Create meeting also available from Reuniões tab (NEW)
+    n6 --> n13
+
+    %% ============================================
+    %% Reuniões Flow
+    %% ============================================
+    n6 --> n16["MeetingDetails<br>/meeting/:id"]
+    n16 --> n17["EditMeeting<br>/edit-meeting/:id"]
+    n16 -. back .-> n6
+
+    %% Decision Diamond - 3 options (IMPROVED)
+    n16 --> n18@{ shape: "diam", label: "Confirmar<br>Presença?" }
+    style n18 fill:,stroke:#FF914D
+    n18 --> n19["✓ Vou<br>Presença Confirmada"]
+    n18 --> n19b["? Talvez<br>Talvez Confirmada"]
+    n18 --> n20["✕ Não Vou<br>Presença Recusada"]
+
+    %% RSVP is reversible (NEW)
+    n19 -. change .-> n18
+    n19b -. change .-> n18
+    n20 -. change .-> n18
+
+    %% ============================================
+    %% Membros Flow
+    %% ============================================
+    n7 --> n21["MemberDetails<br>/member/:id"]
+    n21 -. back .-> n7
+
+    %% ============================================
+    %% Perfil + Settings (merged)
+    %% ============================================
+    n8 --> nEditProfile["EditProfile<br>/edit-profile"]
+    n8 --> nChangePassword["ChangePassword<br>/change-password"]
+    n8 --> nDeleteAccount["DeleteAccount<br>(confirmation modal)"]
+
+    %% ============================================
+    %% Error States (NEW)
+    %% ============================================
+    n1 -. error: creds inválidos .-> n1
+    n10 -. error: offline .-> n10_err["CreateBlockScreen<br>(+ mensagem erro)"]
+    n11 -. error: código inválido .-> n11_err["JoinBlockModal<br>(+ mensagem erro)"]
+    n19 -. error: rede .-> n19_err["Presença Confirmada<br>(retry)"]
+
+    n10_err -. retry .-> n10
+    n11_err -. retry .-> n11
+    n19_err -. retry .-> n19
+
+    %% ============================================
+    %% Terminal States
+    %% ============================================
+    n8 --> nLogout["ConfirmLogout<br>(modal)"]
+    nLogout -. logout .-> n1
+    nDeleteAccount -. deleted .-> n1
+
+    %% Success Feedback (NEW - dashed return)
+    n10 -. success: Bloco criado .-> n12
+    n11 -. success: Entrou no bloco .-> n12
+    n13 -. success: Reunião criada .-> n12
+    n14 -. success: Bloco atualizado .-> n12
+    n15 -. success: Membro adicionado .-> n12
+    n17 -. success: Reunião atualizada .-> n16
+    n19 -. success: RSVP confirmado .-> n16
+    n19b -. success: RSVP 'talvez' .-> n16
+    n20 -. success: RSVP recusado .-> n16
+
+    %% Back-edges (implicit navigation)
+    n12 -. back .-> n5
+    n13 -. back/cancel .-> n12
+    n14 -. back/cancel .-> n12
+    n15 -. back/cancel .-> n12
+    n17 -. back/cancel .-> n16
+    nVerify -. resend .-> nVerify

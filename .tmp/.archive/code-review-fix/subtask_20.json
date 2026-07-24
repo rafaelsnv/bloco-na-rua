@@ -1,0 +1,42 @@
+{
+  "id": "code-review-fix-20",
+  "seq": "20",
+  "issue_key": "L5",
+  "phase": "Phase 4",
+  "priority": "low",
+  "title": "Guard HomeCubit DateTime.parse with FormatException handling",
+  "status": "pending",
+  "depends_on": ["19"],
+  "parallel": false,
+  "context_files": [
+    ".opencode/context/standards/overrides.md",
+    ".opencode/context/project-intelligence/concepts/architecture.md",
+    ".opencode/context/project-intelligence/technical-component-pattern.md",
+    ".opencode/context/project-intelligence/concepts/bloc-state-pattern.md",
+    ".opencode/context/project-intelligence/concepts/freezed-entity.md",
+    ".opencode/context/project-intelligence/concepts/result-handling.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md",
+    ".opencode/context/project-intelligence/lookup/token-discipline.md"
+  ],
+  "reference_files": [
+    "lib/ui/home/cubit/home_cubit.dart"
+  ],
+  "objective": "Prevent malformed meetingDateTime strings from crashing HomeCubit sorting/filtering by wrapping DateTime.parse in safe parsing logic.",
+  "acceptance_criteria": [
+    "HomeCubit no longer calls DateTime.parse without FormatException handling",
+    "Malformed or null meetingDateTime values are handled with a null/sentinel fallback instead of throwing",
+    "HomeStatus success/failure semantics are preserved",
+    "No generated .g.dart DateTime.parse calls are modified manually",
+    "flutter analyze for HomeCubit reports no new errors"
+  ],
+  "deliverables": [
+    "Safe DateTime parsing in lib/ui/home/cubit/home_cubit.dart"
+  ],
+  "validation_commands": [
+    "flutter analyze lib/ui/home/cubit/"
+  ],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}

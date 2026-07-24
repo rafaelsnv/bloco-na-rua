@@ -1,0 +1,46 @@
+{
+  "id": "code-review-fix-22",
+  "seq": "22",
+  "issue_key": "L8",
+  "phase": "Phase 4",
+  "priority": "low",
+  "title": "Remove or stub integration_test dependency",
+  "status": "pending",
+  "depends_on": [],
+  "parallel": true,
+  "context_files": [
+    ".opencode/context/standards/overrides.md",
+    ".opencode/context/project-intelligence/concepts/architecture.md",
+    ".opencode/context/project-intelligence/technical-component-pattern.md",
+    ".opencode/context/project-intelligence/concepts/bloc-state-pattern.md",
+    ".opencode/context/project-intelligence/concepts/freezed-entity.md",
+    ".opencode/context/project-intelligence/concepts/result-handling.md",
+    ".opencode/context/project-intelligence/lookup/naming-conventions.md",
+    ".opencode/context/project-intelligence/lookup/token-discipline.md"
+  ],
+  "reference_files": [
+    "pubspec.yaml",
+    "integration_test/driver.dart",
+    "integration_test/block_details_journey_test.dart",
+    "integration_test/app_test.dart"
+  ],
+  "objective": "Ensure integration_test is either removed when unused or backed by a minimal passing placeholder suite.",
+  "acceptance_criteria": [
+    "integration_test dependency is removed from pubspec.yaml if no integration tests are retained",
+    "If integration_test remains, integration_test/ contains only tests that can pass in the current frontend-only environment",
+    "No broken driver-only integration test entry point remains",
+    "flutter test can run without failing because of integration_test configuration",
+    "pubspec.lock is updated if dependency changes require it"
+  ],
+  "deliverables": [
+    "Updated pubspec/integration_test configuration",
+    "Removed or placeholder integration tests"
+  ],
+  "validation_commands": [
+    "flutter test"
+  ],
+  "agent_id": null,
+  "started_at": null,
+  "completed_at": null,
+  "completion_summary": null
+}
