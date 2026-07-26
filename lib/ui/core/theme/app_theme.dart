@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/theme/app_color_schemes.dart";
+import "package:bloco_na_rua/ui/core/theme/app_text_colors.dart";
 import "package:bloco_na_rua/ui/core/theme/app_text_themes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
@@ -14,18 +15,19 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
+      extensions: const [AppTextColors.light],
       colorScheme: lightColorScheme,
       textTheme: lightTextTheme,
       scaffoldBackgroundColor: AppColors.backgroundLight,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        foregroundColor: AppColors.textOnPrimary,
         elevation: 0,
         scrolledUnderElevation: 1,
         centerTitle: false,
         titleTextStyle: lightTextTheme.headlineMedium?.copyWith(
-          color: Colors.white,
+          color: AppColors.textOnPrimary,
         ),
       ),
       cardTheme: CardThemeData(
@@ -128,6 +130,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
+      extensions: const [AppTextColors.dark],
       colorScheme: darkColorScheme,
       textTheme: darkTextTheme,
       scaffoldBackgroundColor: AppColors.backgroundDark,
