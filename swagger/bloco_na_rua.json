@@ -58,19 +58,27 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "application/x-www-form-urlencoded": {
               "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
+                "type": "object",
+                "properties": {
+                  "Email": {
+                    "type": "string",
+                    "example": "teste@teste.com"
+                  },
+                  "Password": {
+                    "type": "string",
+                    "example": "123456"
+                  }
+                }
+              },
+              "encoding": {
+                "Email": {
+                  "style": "form"
+                },
+                "Password": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -2762,20 +2770,6 @@
         },
         "additionalProperties": false
       },
-      "LoginRequest": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "password": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "LoginResponse": {
         "type": "object",
         "properties": {
@@ -2966,15 +2960,11 @@
             "nullable": true
           },
           "email": {
-            "pattern": "^[\\w\\.-]+@[\\w\\.-]+\\.\\w{2,}$",
             "type": "string",
-            "format": "email",
             "nullable": true
           },
           "phone": {
-            "pattern": "^\\+?[\\d\\s\\-]{8,20}$",
             "type": "string",
-            "format": "tel",
             "nullable": true
           },
           "profileImage": {

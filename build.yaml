@@ -1,0 +1,16 @@
+targets:
+  $default:
+    sources:
+      - lib/**
+      - swagger/**
+      - $package$
+    builders:
+      swagger_dart_code_generator:
+        options:
+          input_folder: "swagger/"
+          output_folder: "lib/api/"
+          date_format: "iso8601"
+          include_if_null: false
+          use_path_for_request_names: true
+          build_only_models: true
+          separate_models: true
