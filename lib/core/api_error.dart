@@ -1,8 +1,7 @@
-import 'package:flutter/widgets.dart';
-import 'package:dio/dio.dart';
-
 import 'package:bloco_na_rua/core/error_messages.dart';
 import 'package:bloco_na_rua/core/error_types.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart';
 
 /// Centralized API error class that encapsulates error information
 /// with user-friendly messages.
@@ -91,6 +90,9 @@ class ApiError implements Exception {
           userMessage: 'Something unexpected happened. Try again.',
           technicalMessage: exception.message,
         );
+      case DioExceptionType.transformTimeout:
+        // TO-DO: Handle this case.
+        throw UnimplementedError();
     }
   }
 

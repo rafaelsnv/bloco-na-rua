@@ -51,7 +51,7 @@ void main() {
             name: "Meeting 1",
             description: "Description",
             location: "Location",
-            meetingDateTime: "2026-12-25T14:00:00Z",
+            meetingDateTime: DateTime.parse("2026-12-25T14:00:00Z"),
             carnivalBlockId: 1,
           ),
         ];
@@ -108,7 +108,7 @@ void main() {
             name: "Meeting 1",
             description: "Description 1",
             location: "Location 1",
-            meetingDateTime: "not-a-valid-date",
+            meetingDateTime: null, // malformed - null date
             carnivalBlockId: 1,
           ),
           // Valid meeting
@@ -117,7 +117,7 @@ void main() {
             name: "Meeting 2",
             description: "Description 2",
             location: "Location 2",
-            meetingDateTime: "2026-12-25T14:00:00Z",
+            meetingDateTime: DateTime.parse("2026-12-25T14:00:00Z"),
             carnivalBlockId: 1,
           ),
         ];

@@ -8,7 +8,7 @@ class SecureStorageService {
   static const _uuidKey = 'UUID';
   final _logger = Logger('SecureStorageService');
   final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    aOptions: AndroidOptions(),
     iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
   );
 

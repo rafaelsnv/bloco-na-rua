@@ -37,28 +37,17 @@ import 'package:provider/single_child_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthInterceptor extends Interceptor {
-  AuthInterceptor(this._secureStorage);
-
-  final SecureStorageService _secureStorage;
-  String? _cachedToken;
-
   @override
   Future<void> onRequest(
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    // Use cached token if available, otherwise fetch from storage
-    final token =
-        _cachedToken ?? (await _secureStorage.fetchToken()).getOrNull();
-    _cachedToken = token;
-    if (token != null) {
+    final session = Supabase.instance.client.auth.currentSession;
+    final token = session?.accessToken;
+    if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
     }
     handler.next(options);
-  }
-
-  void clearCache() {
-    _cachedToken = null;
   }
 }
 
@@ -79,14 +68,13 @@ List<SingleChildWidget> get providers {
       create: (context) => BaseApiClient(
         clientFactory: (options) {
           final client = Dio(options);
-          client.interceptors.add(
-            AuthInterceptor(context.read<SecureStorageService>()),
-          );
+          client.interceptors.add(AuthInterceptor());
           client.interceptors.add(
             PrettyDioLogger(
               compact: false,
-              request: false,
-              responseBody: false,
+              request: true,
+              requestBody: true,
+              responseBody: true,
             ),
           );
           return client;

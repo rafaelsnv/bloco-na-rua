@@ -1,9 +1,8 @@
+import "package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart";
 import "package:bloco_na_rua/data/repositories/auth/auth_repository.dart";
 import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart";
 import "package:bloco_na_rua/data/services/api/base/ibase_api_client.dart";
 import "package:bloco_na_rua/data/services/auth/auth_api_client.dart";
-import "package:bloco_na_rua/data/services/auth/models/login_request/login_request.dart";
-import "package:bloco_na_rua/data/services/auth/models/login_response/login_response.dart";
 import "package:bloco_na_rua/data/services/secure_storage_service.dart";
 import "package:dio/dio.dart";
 import "package:mocktail/mocktail.dart";
