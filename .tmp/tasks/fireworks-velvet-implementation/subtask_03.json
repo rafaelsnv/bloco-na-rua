@@ -1,9 +1,0 @@
-{
-  "seq": 3,
-  "name": "verify_build",
-  "status": "pending",
-  "depends_on": ["subtask_01", "subtask_02"],
-  "changes_summary": "Run Flutter build to verify theme changes compile correctly",
-  "verification": "flutter analyze lib/ui/core/tokens/app_colors.dart lib/ui/core/theme/app_color_schemes.dart",
-  "reference_files": []
-}
