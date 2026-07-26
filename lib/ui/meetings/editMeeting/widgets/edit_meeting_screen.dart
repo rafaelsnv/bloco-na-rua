@@ -55,13 +55,9 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
     _titleController.text = meeting.name ?? "";
     _locationController.text = meeting.location ?? "";
 
-    final dateTimeStr = meeting.meetingDateTime;
-    if (dateTimeStr != null && dateTimeStr.isNotEmpty) {
-      try {
-        _selectedDateTime = DateTime.parse(dateTimeStr);
-      } catch (_) {
-        _selectedDateTime = DateTime.now();
-      }
+    final dateTime = meeting.meetingDateTime;
+    if (dateTime != null) {
+      _selectedDateTime = dateTime;
     } else {
       _selectedDateTime = DateTime.now();
     }

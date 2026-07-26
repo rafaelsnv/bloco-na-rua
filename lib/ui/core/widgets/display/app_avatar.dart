@@ -84,13 +84,13 @@ TextStyle _getInitialsStyle(AvatarSize size) {
   switch (size) {
     case AvatarSize.xs:
     case AvatarSize.sm:
-      return AppTypography.labelSmall.copyWith(color: Colors.white);
+      return AppTypography.labelSmall.copyWith(color: AppColors.textOnPrimary);
     case AvatarSize.md:
-      return AppTypography.labelMedium.copyWith(color: Colors.white);
+      return AppTypography.labelMedium.copyWith(color: AppColors.textOnPrimary);
     case AvatarSize.lg:
-      return AppTypography.titleSmall.copyWith(color: Colors.white);
+      return AppTypography.titleSmall.copyWith(color: AppColors.textOnPrimary);
     case AvatarSize.xl:
-      return AppTypography.titleMedium.copyWith(color: Colors.white);
+      return AppTypography.titleMedium.copyWith(color: AppColors.textOnPrimary);
   }
 }
 
@@ -149,7 +149,7 @@ class AppAvatar extends StatelessWidget {
         return Icon(
           Icons.person_rounded,
           size: diameter * 0.5,
-          color: Colors.white,
+          color: AppColors.textOnPrimary,
         );
       }
 

@@ -3,6 +3,7 @@ import "package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entit
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
 
+import "../../theme/app_text_colors.dart";
 import "../../tokens/app_colors.dart";
 import "../../tokens/app_radius.dart";
 import "../../tokens/app_spacing.dart";
@@ -52,9 +53,10 @@ class BlockCard extends StatelessWidget {
       context,
     ).colorScheme.surfaceContainerHighest;
     final textSecondary = Theme.of(context).colorScheme.onSurfaceVariant;
+    final textColors = Theme.of(context).extension<AppTextColors>()!;
     final textTertiary = Theme.of(context).brightness == Brightness.dark
-        ? AppColors.textTertiaryDark
-        : AppColors.textTertiary;
+        ? textColors.textTertiaryDark
+        : textColors.textTertiary;
 
     return AppCard(
       key: Key('block_card_${block.id}'),
@@ -101,27 +103,27 @@ class BlockCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  block.name,
-                  style: AppTypography.labelLarge.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                if (location != null || date != null)
+                children: [
                   Text(
-                    [location, date].whereType<String>().join(" • "),
-                    style: AppTypography.bodySmall.copyWith(
-                      color: textSecondary,
+                    block.name,
+                    style: AppTypography.labelLarge.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                _buildBadgeRow(surfaceVariant, textSecondary, textTertiary),
-              ],
-            ),
+                  if (location != null || date != null)
+                    Text(
+                      [location, date].whereType<String>().join(" • "),
+                      style: AppTypography.bodySmall.copyWith(
+                        color: textSecondary,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  _buildBadgeRow(surfaceVariant, textSecondary, textTertiary),
+                ],
+              ),
             ),
           ],
         ),

@@ -48,9 +48,7 @@ class HomeCubit extends Cubit<HomeState> {
           (meetingsResult.getOrNull() as List?)?.cast<MeetingsEntity>().where((
             m,
           ) {
-            final meetingDate = m.meetingDateTime != null
-                ? DateTime.tryParse(m.meetingDateTime!)
-                : null;
+            final meetingDate = m.meetingDateTime;
             if (meetingDate == null) return false;
             final meetingDay = DateTime(
               meetingDate.year,

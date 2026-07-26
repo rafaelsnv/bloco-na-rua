@@ -102,19 +102,21 @@ class AppSnackbar {
       SnackBar(
         content: Row(
           children: [
-            Icon(icon, color: Colors.white, size: 24),
+            Icon(icon, color: AppColors.textOnPrimary, size: 24),
             SizedBox(width: Spacing.space_sm),
             Expanded(
               child: Text(
                 message,
-                style: AppTypography.bodyMedium.copyWith(color: Colors.white),
+                style: AppTypography.bodyMedium.copyWith(
+                  color: AppColors.textOnPrimary,
+                ),
               ),
             ),
             if (actionLabel != null)
               TextButton(
                 onPressed: onAction,
                 style: TextButton.styleFrom(
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppColors.textOnPrimary,
                   padding: EdgeInsets.symmetric(horizontal: Spacing.space_sm),
                 ),
                 child: Text(actionLabel),
