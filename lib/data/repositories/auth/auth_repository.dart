@@ -1,7 +1,7 @@
 import "package:bloco_na_rua/data/repositories/auth/iauth_repository.dart";
 import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart";
 import "package:bloco_na_rua/data/services/api/base/ibase_api_client.dart";
-import "package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart";
+import "package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart" show ApiV1AuthLoginPost$RequestBody, LoginResponse, MemberCreate;
 import "package:bloco_na_rua/data/services/auth/auth_api_client.dart";
 import "package:bloco_na_rua/data/services/auth/models/signup_request/signup_request.dart";
 import "package:bloco_na_rua/data/services/secure_storage_service.dart";
@@ -119,7 +119,7 @@ class AuthRepository implements IAuthRepository {
     required String password,
     String? phone = "",
   }) async {
-    final loginRequest = LoginRequest(email: email, password: password);
+    final loginRequest = ApiV1AuthLoginPost$RequestBody(email: email, password: password);
 
     final loginResult = await _authApiClient.logIn(loginRequest);
 

@@ -1,4 +1,4 @@
-import 'package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart';
+import 'package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart' show ApiV1AuthLoginPost$RequestBody, LoginResponse;
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
 import 'package:bloco_na_rua/data/services/auth/models/signup_request/signup_request.dart';
 import 'package:logging/logging.dart';
@@ -10,7 +10,7 @@ class AuthApiClient {
 
   final _logger = Logger('AuthApiClient');
 
-  AsyncResult<LoginResponse> logIn(LoginRequest loginRequest) async {
+  AsyncResult<LoginResponse> logIn(ApiV1AuthLoginPost$RequestBody loginRequest) async {
     try {
       final response = await Supabase.instance.client.auth.signInWithPassword(
         email: loginRequest.email!,

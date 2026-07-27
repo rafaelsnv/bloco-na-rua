@@ -1,4 +1,4 @@
-import "package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart";
+import "package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart" show ApiV1AuthLoginPost$RequestBody, LoginResponse;
 import "package:bloco_na_rua/data/repositories/auth/auth_repository.dart";
 import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart";
 import "package:bloco_na_rua/data/services/api/base/ibase_api_client.dart";
@@ -30,7 +30,7 @@ void main() {
   setUpAll(() {
     // Register fallback value for LoginRequest (sealed freezed class)
     registerFallbackValue(
-      LoginRequest(email: "fallback@test.com", password: "fallback"),
+      ApiV1AuthLoginPost$RequestBody(email: "fallback@test.com", password: "fallback"),
     );
   });
 

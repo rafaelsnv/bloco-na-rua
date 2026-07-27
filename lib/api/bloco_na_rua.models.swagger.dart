@@ -544,64 +544,6 @@ extension $CarnivalBlockUpdateExtension on CarnivalBlockUpdate {
 }
 
 @JsonSerializable(explicitToJson: true)
-class LoginRequest {
-  const LoginRequest({this.email, this.password});
-
-  factory LoginRequest.fromJson(Map<String, dynamic> json) =>
-      _$LoginRequestFromJson(json);
-
-  static const toJsonFactory = _$LoginRequestToJson;
-  Map<String, dynamic> toJson() => _$LoginRequestToJson(this);
-
-  @JsonKey(name: 'email', includeIfNull: false)
-  final String? email;
-  @JsonKey(name: 'password', includeIfNull: false)
-  final String? password;
-  static const fromJsonFactory = _$LoginRequestFromJson;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other is LoginRequest &&
-            (identical(other.email, email) ||
-                const DeepCollectionEquality().equals(other.email, email)) &&
-            (identical(other.password, password) ||
-                const DeepCollectionEquality().equals(
-                  other.password,
-                  password,
-                )));
-  }
-
-  @override
-  String toString() => jsonEncode(this);
-
-  @override
-  int get hashCode =>
-      const DeepCollectionEquality().hash(email) ^
-      const DeepCollectionEquality().hash(password) ^
-      runtimeType.hashCode;
-}
-
-extension $LoginRequestExtension on LoginRequest {
-  LoginRequest copyWith({String? email, String? password}) {
-    return LoginRequest(
-      email: email ?? this.email,
-      password: password ?? this.password,
-    );
-  }
-
-  LoginRequest copyWithWrapped({
-    Wrapped<String?>? email,
-    Wrapped<String?>? password,
-  }) {
-    return LoginRequest(
-      email: (email != null ? email.value : this.email),
-      password: (password != null ? password.value : this.password),
-    );
-  }
-}
-
-@JsonSerializable(explicitToJson: true)
 class LoginResponse {
   const LoginResponse({
     this.accessToken,
@@ -1718,6 +1660,65 @@ extension $ProblemDetailsExtension on ProblemDetails {
       status: (status != null ? status.value : this.status),
       detail: (detail != null ? detail.value : this.detail),
       instance: (instance != null ? instance.value : this.instance),
+    );
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class ApiV1AuthLoginPost$RequestBody {
+  const ApiV1AuthLoginPost$RequestBody({this.email, this.password});
+
+  factory ApiV1AuthLoginPost$RequestBody.fromJson(Map<String, dynamic> json) =>
+      _$ApiV1AuthLoginPost$RequestBodyFromJson(json);
+
+  static const toJsonFactory = _$ApiV1AuthLoginPost$RequestBodyToJson;
+  Map<String, dynamic> toJson() => _$ApiV1AuthLoginPost$RequestBodyToJson(this);
+
+  @JsonKey(name: 'Email', includeIfNull: false)
+  final String? email;
+  @JsonKey(name: 'Password', includeIfNull: false)
+  final String? password;
+  static const fromJsonFactory = _$ApiV1AuthLoginPost$RequestBodyFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is ApiV1AuthLoginPost$RequestBody &&
+            (identical(other.email, email) ||
+                const DeepCollectionEquality().equals(other.email, email)) &&
+            (identical(other.password, password) ||
+                const DeepCollectionEquality().equals(
+                  other.password,
+                  password,
+                )));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(email) ^
+      const DeepCollectionEquality().hash(password) ^
+      runtimeType.hashCode;
+}
+
+extension $ApiV1AuthLoginPost$RequestBodyExtension
+    on ApiV1AuthLoginPost$RequestBody {
+  ApiV1AuthLoginPost$RequestBody copyWith({String? email, String? password}) {
+    return ApiV1AuthLoginPost$RequestBody(
+      email: email ?? this.email,
+      password: password ?? this.password,
+    );
+  }
+
+  ApiV1AuthLoginPost$RequestBody copyWithWrapped({
+    Wrapped<String?>? email,
+    Wrapped<String?>? password,
+  }) {
+    return ApiV1AuthLoginPost$RequestBody(
+      email: (email != null ? email.value : this.email),
+      password: (password != null ? password.value : this.password),
     );
   }
 }
