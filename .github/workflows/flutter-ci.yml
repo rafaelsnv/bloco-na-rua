@@ -17,7 +17,7 @@ jobs:
           pub-cache: true
 
       - run: flutter pub get
-      - run: dart run build_runner build --delete-conflicting-outputs
+      - run: dart run build_runner build
       - run: flutter analyze --no-fatal-infos --no-fatal-warnings
       - run: flutter test
 
