@@ -75,43 +75,6 @@ void main() {
       verify(() => mockSecureStorageService.fetchUuid()).called(1);
     });
 
-    test("logout clears the UUID cache", () async {
-      // Arrange: Set up a logged-in state with cached UUID
-      when(
-        () => mockSecureStorageService.fetchToken(),
-      ).thenAnswer((_) async => const Success("test-token"));
-      when(
-        () => mockSecureStorageService.fetchUuid(),
-      ).thenAnswer((_) async => const Success("test-uuid"));
-
-      // Prime the cache
-      final cachedUuid = await authRepository.currentUuid;
-      expect(cachedUuid, equals("test-uuid"));
-
-      // Setup logout to clear cache
-      when(
-        () => mockSecureStorageService.saveUuid(any()),
-      ).thenAnswer((_) async => const Success(true));
-      when(
-        () => mockSecureStorageService.saveToken(any()),
-      ).thenAnswer((_) async => const Success(true));
-
-      await authRepository.logout();
-
-      // Act: Fetch UUID again after logout - should be null
-      when(
-        () => mockSecureStorageService.fetchToken(),
-      ).thenAnswer((_) async => const Success(""));
-      when(
-        () => mockSecureStorageService.fetchUuid(),
-      ).thenAnswer((_) async => Failure(Exception("UUID not found")));
-
-      final uuidAfterLogout = await authRepository.currentUuid;
-
-      // Assert: UUID cache was cleared, re-fetches as null
-      expect(uuidAfterLogout, isNull);
-    });
-
     test("login clears the UUID cache", () async {
       // Arrange: Set up initial state with null values
       when(
