@@ -58,6 +58,7 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
     try {
       final data = {
         'carnivalBlockId': carnivalBlockId,
+        'memberId': memberId,
         'role': role,
       };
       final response = await baseApiClient.client.post(
@@ -89,6 +90,7 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
     try {
       final data = {
         'carnivalBlockId': carnivalBlockId,
+        'memberId': memberId,
         'role': role,
       };
       final response = await baseApiClient.client.put(

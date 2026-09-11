@@ -25,7 +25,6 @@ dependencies:
   command_it: ^9.5.1
   gotrue: ^2.14.0
   brasil_fields: ^1.14.0
-  pretty_dio_logger: ^1.4.0
   flutter_dotenv: ^6.0.0
   carousel_slider: ^5.1.1
   intl: any

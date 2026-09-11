@@ -1,7 +1,8 @@
 import 'package:bloco_na_rua/core/api_error.dart';
 import 'package:bloco_na_rua/core/error_types.dart';
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
-import 'package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart';
+import 'package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart'
+    show MemberCreate, MemberResponse;
 import 'package:bloco_na_rua/data/services/api/members/imembers_api_client.dart';
 import 'package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart';
 import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';
@@ -28,8 +29,27 @@ class MembersApiClient implements IMembersApiClient {
       if (response.statusCode != 201) {
         return Failure(baseApiClient.formatError(response));
       }
-      final data = await response.data;
-      final result = MembersEntity.fromJson(data as Map<String, dynamic>);
+      final data = response.data;
+      if (data == null) {
+        return Failure(ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Unexpected empty response from server',
+          technicalMessage: 'API returned 201 with null body',
+        ));
+      }
+      // Use swagger-generated MemberResponse model
+      final memberResponse = MemberResponse.fromJson(data as Map<String, dynamic>);
+      // Convert to domain entity
+      final result = MembersEntity(
+        id: memberResponse.id ?? 0,
+        name: memberResponse.name,
+        email: memberResponse.email,
+        phone: memberResponse.phone,
+        profileImage: memberResponse.profileImage,
+        uuid: memberResponse.uuid,
+        createdAt: memberResponse.createdAt,
+        updatedAt: memberResponse.updatedAt,
+      );
       return Success(result);
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
@@ -49,8 +69,28 @@ class MembersApiClient implements IMembersApiClient {
       if (response.statusCode != 200) {
         return Failure(baseApiClient.formatError(response));
       }
-      final data = await response.data;
-      final result = MembersEntity.fromJson(data as Map<String, dynamic>);
+      final data = response.data;
+      // Handle null/empty response (soft 404 from backend)
+      if (data == null) {
+        return Failure(ApiError(
+          type: ApiErrorType.notFound,
+          userMessage: 'Member not found',
+          technicalMessage: 'API returned 200 with null body for uuid: $uuid',
+        ));
+      }
+      // Use swagger-generated MemberResponse model
+      final memberResponse = MemberResponse.fromJson(data as Map<String, dynamic>);
+      // Convert to domain entity
+      final result = MembersEntity(
+        id: memberResponse.id ?? (throw Exception('Missing id in MemberResponse')),
+        name: memberResponse.name,
+        email: memberResponse.email,
+        phone: memberResponse.phone,
+        profileImage: memberResponse.profileImage,
+        uuid: memberResponse.uuid,
+        createdAt: memberResponse.createdAt,
+        updatedAt: memberResponse.updatedAt,
+      );
       return Success(result);
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));

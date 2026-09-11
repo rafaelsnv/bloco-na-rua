@@ -31,12 +31,14 @@ import 'package:bloco_na_rua/domain/use_cases/meetings/get_user_meetings_use_cas
 import 'package:bloco_na_rua/ui/profile/cubit/profile_cubit.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthInterceptor extends Interceptor {
+  final Logger _logger = Logger('AuthInterceptor');
+
   @override
   Future<void> onRequest(
     RequestOptions options,
@@ -44,6 +46,10 @@ class AuthInterceptor extends Interceptor {
   ) async {
     final session = Supabase.instance.client.auth.currentSession;
     final token = session?.accessToken;
+    assert(() {
+      _logger.fine('[AuthInterceptor] ${options.uri} auth=${token != null}');
+      return true;
+    }());
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
     }
@@ -54,7 +60,7 @@ class AuthInterceptor extends Interceptor {
 var baseOptions = BaseOptions(
   baseUrl: dotenv.env['API_URL']!,
   receiveDataWhenStatusError: true,
-  validateStatus: (status) => status != null && status >= 200 && status < 500,
+  validateStatus: (status) => status != null && status >= 200 && status < 300,
 );
 
 var supabaseClient = Supabase.instance.client;
@@ -69,14 +75,6 @@ List<SingleChildWidget> get providers {
         clientFactory: (options) {
           final client = Dio(options);
           client.interceptors.add(AuthInterceptor());
-          client.interceptors.add(
-            PrettyDioLogger(
-              compact: false,
-              request: true,
-              requestBody: true,
-              responseBody: true,
-            ),
-          );
           return client;
         },
         options: baseOptions,

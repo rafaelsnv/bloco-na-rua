@@ -30,6 +30,21 @@ final class EditBlockSaving extends EditBlockState {}
 
 final class EditBlockSuccess extends EditBlockState {}
 
+final class EditBlockDeleting extends EditBlockState {
+  final int id;
+  final String name;
+  final String carnivalBlockImage;
+
+  const EditBlockDeleting({
+    required this.id,
+    required this.name,
+    required this.carnivalBlockImage,
+  });
+
+  @override
+  List<Object?> get props => [id, name, carnivalBlockImage];
+}
+
 final class EditBlockError extends EditBlockState {
   final String message;
 
@@ -38,3 +53,5 @@ final class EditBlockError extends EditBlockState {
   @override
   List<Object?> get props => [message];
 }
+
+final class EditBlockDeleted extends EditBlockState {}

@@ -79,9 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               body: SafeArea(
                 child: RefreshIndicator(
-                  onRefresh: () async {
-                    context.read<HomeCubit>().loadHomeData();
-                  },
+                  onRefresh: () => context.read<HomeCubit>().loadHomeData(),
                   child: BlocBuilder<HomeCubit, HomeState>(
                     builder: (context, state) {
                       switch (state.status) {

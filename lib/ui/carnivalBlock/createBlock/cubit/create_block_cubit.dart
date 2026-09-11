@@ -35,11 +35,12 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
 
       // 2. Create the block with user as owner
       final inviteCode = _generateInviteCode();
+      final managersInviteCode = _generateManagersInviteCode();
       final data = {
         'name': name,
         'ownerId': user.id,
         'inviteCode': inviteCode,
-        'managersInviteCode': inviteCode,
+        'managersInviteCode': managersInviteCode,
         'carnivalBlockImage': '',
       };
 
@@ -47,7 +48,7 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
 
       // Handle result
       result.fold(
-        (_) => emit(CreateBlockSuccess()),
+        (block) => emit(CreateBlockSuccess(block.id)),
         (failure) => emit(CreateBlockError(extractUserMessage(failure))),
       );
     } catch (e) {
@@ -57,7 +58,13 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
 
   String _generateInviteCode() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    final random = Random();
+    final random = Random.secure();
     return List.generate(6, (_) => chars[random.nextInt(chars.length)]).join();
+  }
+
+  String _generateManagersInviteCode() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    final random = Random.secure();
+    return List.generate(8, (_) => chars[random.nextInt(chars.length)]).join();
   }
 }

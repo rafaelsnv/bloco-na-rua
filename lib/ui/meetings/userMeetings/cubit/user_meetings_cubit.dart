@@ -1,16 +1,19 @@
 import 'package:bloco_na_rua/core/errors/user_message.dart';
 import 'package:bloco_na_rua/domain/use_cases/meetings/get_user_meetings_use_case.dart';
 import 'package:bloco_na_rua/ui/meetings/userMeetings/cubit/user_meetings_state.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloco_na_rua/ui/core/cubit/resumable_cubit_mixin.dart';
 import 'package:logging/logging.dart';
 
-class UserMeetingsCubit extends Cubit<UserMeetingsState> {
+class UserMeetingsCubit extends ResumableCubit<UserMeetingsState> {
   UserMeetingsCubit({required GetUserMeetingsUseCase getUserMeetingsUseCase})
     : _getUserMeetingsUseCase = getUserMeetingsUseCase,
       super(const UserMeetingsState());
 
   final GetUserMeetingsUseCase _getUserMeetingsUseCase;
   final _log = Logger('UserMeetingsCubit');
+
+  @override
+  Future<void> onResumed() => loadMeetings();
 
   Future<void> loadMeetings() async {
     emit(state.copyWith(status: UserMeetingsStatus.loading));
