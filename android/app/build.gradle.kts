@@ -37,7 +37,7 @@ android {
 
 kotlin {
     compilerOptions {
-        jvmTarget.set(JavaVersion.VERSION_17)
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 
