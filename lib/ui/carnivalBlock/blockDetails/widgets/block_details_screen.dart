@@ -546,9 +546,7 @@ class _MeetingsSection extends StatelessWidget {
         ),
         itemBuilder: (context, index) {
           final meeting = meetings[index];
-          final meetingDateTime = meeting.meetingDateTime != null
-              ? DateTime.parse(meeting.meetingDateTime!)
-              : null;
+          final meetingDateTime = meeting.meetingDateTime;
 
           return AppListTile(
             leading: Container(

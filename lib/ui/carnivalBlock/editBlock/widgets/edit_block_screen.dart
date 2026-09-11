@@ -2,6 +2,7 @@ import "package:bloco_na_rua/ui/carnivalBlock/editBlock/cubit/edit_block_cubit.d
 import "package:bloco_na_rua/ui/carnivalBlock/editBlock/cubit/edit_block_state.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
+import "package:bloco_na_rua/ui/core/widgets/feedback/app_dialog.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
 import "package:bloco_na_rua/ui/core/widgets/inputs/app_text_field.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
@@ -40,10 +41,12 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
       listener: (context, state) {
         if (state is EditBlockSuccess) {
           AppSnackbar.success(context, message: "Bloco atualizado com sucesso");
-          context.read<EditBlockCubit>().loadBlock();
           context.pop();
         } else if (state is EditBlockError) {
           AppSnackbar.error(context, message: state.message);
+        } else if (state is EditBlockDeleted) {
+          AppSnackbar.success(context, message: "Bloco excluído com sucesso");
+          context.pop();
         } else if (state is EditBlockLoaded && !_initialized) {
           _nameController.text = state.name;
           _currentImage = state.carnivalBlockImage;
@@ -58,6 +61,24 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
         );
       },
     );
+  }
+
+  Future<void> _deleteBlock(BuildContext context) async {
+    final cubit = context.read<EditBlockCubit>();
+    final confirmed = await AppDialog.confirm(
+      context,
+      title: "Excluir bloco",
+      message:
+          "Tem certeza que deseja excluir este bloco? Esta ação não pode ser desfeita.",
+      confirmLabel: "Excluir",
+      cancelLabel: "Cancelar",
+      isDestructive: true,
+    );
+
+    if (confirmed != true) return;
+
+    if (!mounted) return;
+    cubit.deleteBlock();
   }
 
   Widget _buildBody(BuildContext context, EditBlockState state) {
@@ -77,6 +98,7 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
     }
 
     final isSaving = state is EditBlockSaving;
+    final isDeleting = state is EditBlockDeleting;
     final currentName = _nameController.text.trim();
     final isUnchanged = currentName.isEmpty || currentName == _originalName;
 
@@ -116,6 +138,14 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
                     },
               isLoading: isSaving,
               isFullWidth: true,
+            ),
+            const SizedBox(height: Spacing.space_md),
+            AppButton(
+              label: "Excluir bloco",
+              onPressed: isDeleting ? null : () => _deleteBlock(context),
+              isLoading: isDeleting,
+              isFullWidth: true,
+              variant: AppButtonVariant.secondary,
             ),
           ],
         ),

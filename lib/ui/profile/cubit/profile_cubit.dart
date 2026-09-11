@@ -1,14 +1,14 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:bloco_na_rua/core/errors/user_message.dart';
 import 'package:bloco_na_rua/data/repositories/auth/iauth_repository.dart';
 import 'package:bloco_na_rua/data/repositories/members/imembers_repository.dart';
 import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';
+import 'package:bloco_na_rua/ui/core/cubit/resumable_cubit_mixin.dart';
 
 part 'profile_cubit.freezed.dart';
 part 'profile_state.dart';
 
-class ProfileCubit extends Cubit<ProfileState> {
+class ProfileCubit extends ResumableCubit<ProfileState> {
   ProfileCubit({
     required IAuthRepository authRepository,
     required IMembersRepository membersRepository,
@@ -18,6 +18,9 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   final IAuthRepository _authRepository;
   final IMembersRepository _membersRepository;
+
+  @override
+  Future<void> onResumed() => loadProfile();
 
   Future<void> loadProfile() async {
     emit(const ProfileState.loading());

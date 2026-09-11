@@ -19,8 +19,16 @@ class EditBlockCubit extends Cubit<EditBlockState> {
   Future<void> loadBlock() async {
     emit(EditBlockLoading());
 
+    int blockId;
+    try {
+      blockId = int.parse(_carnivalBlockId);
+    } catch (_) {
+      emit(EditBlockError('ID do bloco inválido'));
+      return;
+    }
+
     final result = await _carnivalBlocksRepository.getByIdAsync(
-      int.parse(_carnivalBlockId),
+      blockId,
     );
 
     result.fold(
@@ -50,6 +58,36 @@ class EditBlockCubit extends Cubit<EditBlockState> {
 
     result.fold(
       (_) => emit(EditBlockSuccess()),
+      (failure) => emit(EditBlockError(extractUserMessage(failure))),
+    );
+  }
+
+  Future<void> deleteBlock() async {
+    final currentState = state;
+    if (currentState is! EditBlockLoaded) return;
+
+    emit(
+      EditBlockDeleting(
+        id: currentState.id,
+        name: currentState.name,
+        carnivalBlockImage: currentState.carnivalBlockImage,
+      ),
+    );
+
+    int blockId;
+    try {
+      blockId = int.parse(_carnivalBlockId);
+    } catch (_) {
+      emit(EditBlockError('ID do bloco inválido'));
+      return;
+    }
+
+    final result = await _carnivalBlocksRepository.deleteByIdAsync(
+      blockId,
+    );
+
+    result.fold(
+      (_) => emit(EditBlockDeleted()),
       (failure) => emit(EditBlockError(extractUserMessage(failure))),
     );
   }

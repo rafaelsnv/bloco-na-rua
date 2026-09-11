@@ -1,0 +1,28 @@
+name: Build iOS
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+          pub-cache: true
+
+      - run: flutter pub get
+
+      - name: Build
+        run: flutter build ios --release --no-codesign
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios-build-${{ github.ref_name }}
+          path: build/ios/iphoneos/Runner.ipa

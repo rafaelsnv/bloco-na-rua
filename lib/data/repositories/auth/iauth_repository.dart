@@ -1,4 +1,4 @@
-import "package:bloco_na_rua/data/services/auth/models/login_response/login_response.dart";
+import "package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart";
 import "package:bloco_na_rua/data/services/auth/models/signup_request/signup_request.dart";
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
 import "package:result_dart/result_dart.dart";

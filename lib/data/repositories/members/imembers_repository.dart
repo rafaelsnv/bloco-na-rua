@@ -1,4 +1,4 @@
-import 'package:bloco_na_rua/data/services/api/members/create/member_create.dart';
+import 'package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart';
 import 'package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart';
 import 'package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart';
 import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';

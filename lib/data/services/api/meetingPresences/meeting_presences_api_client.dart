@@ -23,16 +23,20 @@ class MeetingPresencesApiClient implements IMeetingPresencesApiClient {
   ) async {
     try {
       final response = await baseApiClient.client.get(
-        '$_basePath/meeting/$meetingId',
+        '$_basePath/$meetingId',
       );
       final List<MeetingPresencesEntity> result = [];
       switch (response.statusCode) {
         case 200:
-          result.addAll(
-            (response.data as List<dynamic>).map(
-              (e) => MeetingPresencesEntity.fromJson(e),
-            ),
-          );
+          if (response.data is List) {
+            result.addAll(
+              (response.data as List<dynamic>).map(
+                (e) => MeetingPresencesEntity.fromJson(e as Map<String, dynamic>),
+              ),
+            );
+          } else {
+            result.add(MeetingPresencesEntity.fromJson(response.data));
+          }
         case 404:
           // No presences for this meeting - return empty list
           break;
@@ -60,7 +64,7 @@ class MeetingPresencesApiClient implements IMeetingPresencesApiClient {
       if (response.statusCode != 201 && response.statusCode != 200) {
         return Failure(baseApiClient.formatError(response));
       }
-      return Success(MeetingPresencesEntity.fromJson(response.data));
+      return Success(MeetingPresencesEntity.fromJson(response.data as Map<String, dynamic>));
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {

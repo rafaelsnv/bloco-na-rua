@@ -92,7 +92,7 @@ class _ConfirmDialogContent extends StatelessWidget {
                 onPressed: () => Navigator.of(context).pop(true),
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.error,
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppColors.textOnPrimary,
                   shape: RoundedRectangleBorder(borderRadius: Radii.button),
                 ),
                 child: Text(confirmLabel),

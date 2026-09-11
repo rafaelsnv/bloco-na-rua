@@ -10,6 +10,7 @@ import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
+import "package:bloco_na_rua/routing/routes.dart";
 
 class CreateBlockScreen extends StatefulWidget {
   const CreateBlockScreen({super.key});
@@ -34,7 +35,7 @@ class _CreateBlockScreenState extends State<CreateBlockScreen> {
       listener: (context, state) {
         if (state is CreateBlockSuccess) {
           AppSnackbar.success(context, message: "Bloco criado com sucesso!");
-          context.pop();
+          context.pushReplacement("${Routes.carnivalBlock}/${state.blockId}");
         } else if (state is CreateBlockError) {
           AppSnackbar.error(context, message: state.message);
         }

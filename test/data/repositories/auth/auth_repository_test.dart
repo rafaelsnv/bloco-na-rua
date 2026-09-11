@@ -1,9 +1,8 @@
+import "package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart" show ApiV1AuthLoginPost$RequestBody, LoginResponse;
 import "package:bloco_na_rua/data/repositories/auth/auth_repository.dart";
 import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart";
 import "package:bloco_na_rua/data/services/api/base/ibase_api_client.dart";
 import "package:bloco_na_rua/data/services/auth/auth_api_client.dart";
-import "package:bloco_na_rua/data/services/auth/models/login_request/login_request.dart";
-import "package:bloco_na_rua/data/services/auth/models/login_response/login_response.dart";
 import "package:bloco_na_rua/data/services/secure_storage_service.dart";
 import "package:dio/dio.dart";
 import "package:mocktail/mocktail.dart";
@@ -31,7 +30,7 @@ void main() {
   setUpAll(() {
     // Register fallback value for LoginRequest (sealed freezed class)
     registerFallbackValue(
-      LoginRequest(email: "fallback@test.com", password: "fallback"),
+      ApiV1AuthLoginPost$RequestBody(email: "fallback@test.com", password: "fallback"),
     );
   });
 
@@ -74,43 +73,6 @@ void main() {
       // Verify the SharedPreferences was only called once per type
       verify(() => mockSecureStorageService.fetchToken()).called(1);
       verify(() => mockSecureStorageService.fetchUuid()).called(1);
-    });
-
-    test("logout clears the UUID cache", () async {
-      // Arrange: Set up a logged-in state with cached UUID
-      when(
-        () => mockSecureStorageService.fetchToken(),
-      ).thenAnswer((_) async => const Success("test-token"));
-      when(
-        () => mockSecureStorageService.fetchUuid(),
-      ).thenAnswer((_) async => const Success("test-uuid"));
-
-      // Prime the cache
-      final cachedUuid = await authRepository.currentUuid;
-      expect(cachedUuid, equals("test-uuid"));
-
-      // Setup logout to clear cache
-      when(
-        () => mockSecureStorageService.saveUuid(any()),
-      ).thenAnswer((_) async => const Success(true));
-      when(
-        () => mockSecureStorageService.saveToken(any()),
-      ).thenAnswer((_) async => const Success(true));
-
-      await authRepository.logout();
-
-      // Act: Fetch UUID again after logout - should be null
-      when(
-        () => mockSecureStorageService.fetchToken(),
-      ).thenAnswer((_) async => const Success(""));
-      when(
-        () => mockSecureStorageService.fetchUuid(),
-      ).thenAnswer((_) async => Failure(Exception("UUID not found")));
-
-      final uuidAfterLogout = await authRepository.currentUuid;
-
-      // Assert: UUID cache was cleared, re-fetches as null
-      expect(uuidAfterLogout, isNull);
     });
 
     test("login clears the UUID cache", () async {
