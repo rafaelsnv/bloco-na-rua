@@ -4,7 +4,6 @@ import "package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart";
 import "package:bloco_na_rua/domain/use_cases/home/get_home_data_use_case.dart";
 import "package:bloco_na_rua/ui/home/cubit/home_cubit.dart";
 import "package:bloco_na_rua/ui/home/cubit/home_state.dart";
-import "package:flutter/widgets.dart" show WidgetsBinding;
 import "package:flutter_test/flutter_test.dart" show TestWidgetsFlutterBinding;
 import "package:mocktail/mocktail.dart";
 import "package:result_dart/result_dart.dart";

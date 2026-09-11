@@ -19,6 +19,9 @@ jobs:
 
       - run: flutter pub get
 
+      - name: Generate code
+        run: dart run build_runner build
+
       - name: Decode keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
