@@ -45,6 +45,7 @@ jobs:
           pub-cache: true
 
       - run: flutter pub get
+      - run: dart run build_runner build
       - run: flutter build apk --debug
 
   ios:
@@ -61,4 +62,5 @@ jobs:
           pub-cache: true
 
       - run: flutter pub get
+      - run: dart run build_runner build
       - run: flutter build ios --release --no-codesign
