@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Bloco na Rua — Confetti Burst logo">
+  <title>Bloco na Rua — Confetti Burst</title>
+  <desc>A radial burst of confetti around a central sun, capturing the moment a carnival block explodes into music and color.</desc>
+
+  <defs>
+    <radialGradient id="lbl-violet-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"  stop-color="#A78BFA"/>
+      <stop offset="60%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#5B21B6"/>
+    </radialGradient>
+    <radialGradient id="lbl-sun" cx="50%" cy="50%" r="55%">
+      <stop offset="0%"  stop-color="#FDE68A"/>
+      <stop offset="60%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Rounded badge background -->
+  <rect x="8" y="8" width="240" height="240" rx="56" ry="56" fill="url(#lbl-violet-glow)"/>
+
+  <!-- Subtle inner ring -->
+  <circle cx="128" cy="128" r="92" fill="none" stroke="#C4B5FD" stroke-opacity="0.35" stroke-width="2"/>
+  <circle cx="128" cy="128" r="76" fill="none" stroke="#FFFFFF" stroke-opacity="0.18" stroke-width="1.5" stroke-dasharray="3 6"/>
+
+  <!-- Confetti streamers radiating outward -->
+  <g stroke-linecap="round">
+    <!-- top -->
+    <line x1="128" y1="128" x2="128" y2="42"  stroke="#FBBF24" stroke-width="6"/>
+    <line x1="128" y1="128" x2="86"  y2="48"  stroke="#FF3D81" stroke-width="6"/>
+    <line x1="128" y1="128" x2="170" y2="48"  stroke="#FFFFFF" stroke-width="6" stroke-opacity="0.85"/>
+    <!-- sides -->
+    <line x1="128" y1="128" x2="46"  y2="92"  stroke="#FF3D81" stroke-width="6"/>
+    <line x1="128" y1="128" x2="210" y2="92"  stroke="#FBBF24" stroke-width="6"/>
+    <line x1="128" y1="128" x2="46"  y2="164" stroke="#FBBF24" stroke-width="6"/>
+    <line x1="128" y1="128" x2="210" y2="164" stroke="#FF3D81" stroke-width="6"/>
+    <!-- bottom -->
+    <line x1="128" y1="128" x2="128" y2="214" stroke="#FFFFFF" stroke-width="6" stroke-opacity="0.85"/>
+    <line x1="128" y1="128" x2="86"  y2="208" stroke="#FF3D81" stroke-width="6"/>
+    <line x1="128" y1="128" x2="170" y2="208" stroke="#FBBF24" stroke-width="6"/>
+  </g>
+
+  <!-- Confetti chips at streamer tips -->
+  <g>
+    <circle cx="128" cy="42"  r="6" fill="#FBBF24"/>
+    <circle cx="86"  cy="48"  r="6" fill="#FF3D81"/>
+    <circle cx="170" cy="48"  r="6" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="46"  cy="92"  r="6" fill="#FF3D81"/>
+    <circle cx="210" cy="92"  r="6" fill="#FBBF24"/>
+    <circle cx="46"  cy="164" r="6" fill="#FBBF24"/>
+    <circle cx="210" cy="164" r="6" fill="#FF3D81"/>
+    <circle cx="128" cy="214" r="6" fill="#FFFFFF" opacity="0.9"/>
+    <circle cx="86"  cy="208" r="6" fill="#FF3D81"/>
+    <circle cx="170" cy="208" r="6" fill="#FBBF24"/>
+
+    <!-- Diagonal shimmer chips -->
+    <rect x="58"  y="58"  width="10" height="10" rx="2" fill="#FBBF24" transform="rotate(20 63 63)"/>
+    <rect x="188" y="58"  width="10" height="10" rx="2" fill="#FF3D81" transform="rotate(-20 193 63)"/>
+    <rect x="58"  y="188" width="10" height="10" rx="2" fill="#FF3D81" transform="rotate(-20 63 193)"/>
+    <rect x="188" y="188" width="10" height="10" rx="2" fill="#FBBF24" transform="rotate(20 193 193)"/>
+  </g>
+
+  <!-- Central sun -->
+  <circle cx="128" cy="128" r="34" fill="url(#lbl-sun)"/>
+  <circle cx="128" cy="128" r="34" fill="none" stroke="#FFFFFF" stroke-opacity="0.6" stroke-width="2"/>
+  <circle cx="120" cy="120" r="8"  fill="#FFFFFF" fill-opacity="0.5"/>
+</svg>

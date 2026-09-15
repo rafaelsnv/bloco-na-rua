@@ -36,6 +36,8 @@ dependencies:
   marionette_flutter: ^0.6.0
   flutter_driver:
     sdk: flutter
+  shared_preferences_android: 2.4.28
+  url_launcher_android: 6.3.33
 dev_dependencies:
   flutter_test:
     sdk: flutter
