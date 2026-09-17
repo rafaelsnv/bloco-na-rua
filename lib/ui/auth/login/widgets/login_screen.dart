@@ -28,6 +28,11 @@ class _LoginScreenState extends State<LoginScreen> {
   final ValueNotifier<bool> _isFormValidNotifier = ValueNotifier<bool>(false);
   bool _obscurePassword = true;
 
+  bool _isValidEmail(String value) {
+    final trimmed = value.trim();
+    return RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(trimmed);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -70,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (state is AuthFailure) {
           AppSnackbar.error(
             context,
-            message: state.message.replaceAll("Exception: ", ""),
+            message: state.message,
           );
         } else if (state is AuthAuthenticated) {
           context.go(Routes.home);
@@ -137,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (value == null || value.isEmpty) {
                                 return "Por favor, insira um e-mail";
                               }
-                              if (!value.contains("@")) {
+                              if (!_isValidEmail(value)) {
                                 return "E-mail inválido";
                               }
                               return null;
@@ -261,6 +266,11 @@ class _ForgotPasswordDialogState extends State<_ForgotPasswordDialog> {
   final TextEditingController _emailController = TextEditingController();
   bool _isFormValid = false;
 
+  bool _isValidEmail(String value) {
+    final trimmed = value.trim();
+    return RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(trimmed);
+  }
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -313,7 +323,7 @@ class _ForgotPasswordDialogState extends State<_ForgotPasswordDialog> {
                   if (value == null || value.isEmpty) {
                     return "Por favor, insira um e-mail";
                   }
-                  if (!value.contains("@")) {
+                  if (!_isValidEmail(value)) {
                     return "E-mail inválido";
                   }
                   return null;

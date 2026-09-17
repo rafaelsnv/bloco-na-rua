@@ -18,8 +18,12 @@ class JoinBlockCubit extends Cubit<JoinBlockState> {
   final ICarnivalBlocksRepository _carnivalBlocksRepository;
   final ICarnivalBlockMembersRepository _carnivalBlockMembersRepository;
   final GetCurrentUserData _getCurrentUserData;
+  bool _isLoading = false;
 
   Future<void> joinBlock(String inviteCode) async {
+    if (_isLoading) return;
+    _isLoading = true;
+
     if (inviteCode.isEmpty) {
       emit(const JoinBlockError('O código de convite não pode estar vazio.'));
       return;
@@ -73,6 +77,8 @@ class JoinBlockCubit extends Cubit<JoinBlockState> {
       );
     } catch (e) {
       emit(JoinBlockError('Erro inesperado: ${extractUserMessage(e)}'));
+    } finally {
+      _isLoading = false;
     }
   }
 }

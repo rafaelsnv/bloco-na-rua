@@ -56,65 +56,57 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             }
           },
-          child: Listener(
-            onPointerDown: (event) {
-              if (!fabState.expanded) return;
-              // Dismiss only if tap is outside the FAB bounds
-              final fabBox = _fabKey.currentContext?.findRenderObject() as RenderBox?;
-              if (fabBox == null) return;
-              final localPos = fabBox.globalToLocal(event.position);
-              if (localPos.dx >= 0 &&
-                  localPos.dy >= 0 &&
-                  localPos.dx <= fabBox.size.width &&
-                  localPos.dy <= fabBox.size.height) {
-                return; // Tap on FAB — its onPressed handles toggle
-              }
-              context.read<FabStateCubit>().dismiss();
-            },
-            child: Scaffold(
-              appBar: AppAppBar(
-                title: "Bloco na Rua",
-                centerTitle: false,
-                showBackButton: false,
-              ),
-              body: SafeArea(
-                child: RefreshIndicator(
-                  onRefresh: () => context.read<HomeCubit>().loadHomeData(),
-                  child: BlocBuilder<HomeCubit, HomeState>(
-                    builder: (context, state) {
-                      switch (state.status) {
-                        case HomeStatus.initial:
-                        case HomeStatus.loading:
-                          return const AppLoading(message: "Carregando...");
+          child: Stack(
+            children: [
+              Scaffold(
+                appBar: AppAppBar(
+                  title: "Bloco na Rua",
+                  centerTitle: false,
+                  showBackButton: false,
+                ),
+                body: SafeArea(
+                  child: RefreshIndicator(
+                    onRefresh: () => context.read<HomeCubit>().loadHomeData(),
+                    child: BlocBuilder<HomeCubit, HomeState>(
+                      builder: (context, state) {
+                        switch (state.status) {
+                          case HomeStatus.initial:
+                          case HomeStatus.loading:
+                            return const AppLoading(message: "Carregando...");
 
-                        case HomeStatus.failure:
-                          return AppError(
-                            message: state.errorMessage,
-                            onRetry: () =>
-                                context.read<HomeCubit>().loadHomeData(),
-                          );
+                          case HomeStatus.failure:
+                            return AppError(
+                              message: state.errorMessage,
+                              onRetry: () =>
+                                  context.read<HomeCubit>().loadHomeData(),
+                            );
 
-                        case HomeStatus.success:
-                          return _buildContent(context, state);
-                      }
-                    },
+                          case HomeStatus.success:
+                            return _buildContent(context, state);
+                        }
+                      },
+                    ),
                   ),
                 ),
+                floatingActionButton: AddBlockFab(
+                  key: _fabKey,
+                  isExpanded: fabState.expanded,
+                  shouldAnimate: fabState.shouldAnimate,
+                  onFabPressed: () => context.read<FabStateCubit>().toggle(),
+                  onExpandedChanged: (expanded) {
+                    if (!expanded) {
+                      context.read<FabStateCubit>().dismiss();
+                    }
+                  },
+                ),
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.endFloat,
               ),
-              floatingActionButton: AddBlockFab(
-                key: _fabKey,
-                isExpanded: fabState.expanded,
-                shouldAnimate: fabState.shouldAnimate,
-                onFabPressed: () => context.read<FabStateCubit>().toggle(),
-                onExpandedChanged: (expanded) {
-                  if (!expanded) {
-                    context.read<FabStateCubit>().dismiss();
-                  }
-                },
-              ),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.endFloat,
-            ),
+              if (fabState.expanded)
+                ModalBarrier(
+                  onDismiss: () => context.read<FabStateCubit>().dismiss(),
+                ),
+            ],
           ),
         );
       },

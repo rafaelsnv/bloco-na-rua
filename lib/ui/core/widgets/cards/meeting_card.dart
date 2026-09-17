@@ -69,7 +69,7 @@ class MeetingCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  meeting.name ?? "Reuniao",
+                  meeting.name ?? "Reunião",
                   style: AppTypography.titleMedium,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

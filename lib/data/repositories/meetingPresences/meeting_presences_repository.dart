@@ -35,7 +35,7 @@ class MeetingPresencesRepository implements IMeetingPresencesRepository {
 
   @override
   AsyncResult<MeetingPresencesEntity> getByIdAsync(int id) async {
-    return Failure(Exception(UnimplementedError()));
+    return Failure(Exception('Not implemented'));
   }
 
   @override

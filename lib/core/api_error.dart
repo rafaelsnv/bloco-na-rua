@@ -91,8 +91,12 @@ class ApiError implements Exception {
           technicalMessage: exception.message,
         );
       case DioExceptionType.transformTimeout:
-        // TO-DO: Handle this case.
-        throw UnimplementedError();
+        return ApiError(
+          type: ApiErrorType.timeout,
+          userMessage: 'Slow connection. Check your internet or try again.',
+          technicalMessage: exception.message,
+          statusCode: exception.response?.statusCode,
+        );
     }
   }
 

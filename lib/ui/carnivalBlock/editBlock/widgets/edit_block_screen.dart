@@ -37,29 +37,34 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<EditBlockCubit, EditBlockState>(
+    return BlocListener<EditBlockCubit, EditBlockState>(
+      listenWhen: (prev, curr) => prev is! EditBlockLoaded && curr is EditBlockLoaded && !_initialized,
       listener: (context, state) {
-        if (state is EditBlockSuccess) {
-          AppSnackbar.success(context, message: "Bloco atualizado com sucesso");
-          context.pop();
-        } else if (state is EditBlockError) {
-          AppSnackbar.error(context, message: state.message);
-        } else if (state is EditBlockDeleted) {
-          AppSnackbar.success(context, message: "Bloco excluído com sucesso");
-          context.pop();
-        } else if (state is EditBlockLoaded && !_initialized) {
-          _nameController.text = state.name;
-          _currentImage = state.carnivalBlockImage;
-          _originalName = state.name;
-          _initialized = true;
-        }
+        final loaded = state as EditBlockLoaded;
+        _nameController.text = loaded.name;
+        _currentImage = loaded.carnivalBlockImage;
+        _originalName = loaded.name;
+        _initialized = true;
       },
-      builder: (context, state) {
-        return Scaffold(
-          appBar: AppAppBar(title: "Editar bloco", showBackButton: true),
-          body: _buildBody(context, state),
-        );
-      },
+      child: BlocConsumer<EditBlockCubit, EditBlockState>(
+        listener: (context, state) {
+          if (state is EditBlockSuccess) {
+            AppSnackbar.success(context, message: "Bloco atualizado com sucesso");
+            context.pop();
+          } else if (state is EditBlockError) {
+            AppSnackbar.error(context, message: state.message);
+          } else if (state is EditBlockDeleted) {
+            AppSnackbar.success(context, message: "Bloco excluído com sucesso");
+            context.pop();
+          }
+        },
+        builder: (context, state) {
+          return Scaffold(
+            appBar: AppAppBar(title: "Editar bloco", showBackButton: true),
+            body: _buildBody(context, state),
+          );
+        },
+      ),
     );
   }
 

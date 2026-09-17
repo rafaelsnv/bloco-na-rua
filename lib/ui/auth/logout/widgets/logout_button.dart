@@ -38,7 +38,7 @@ class LogoutButton extends StatelessWidget {
         if (state is AuthFailure) {
           AppSnackbar.error(
             context,
-            message: state.message.replaceAll("Exception: ", ""),
+            message: state.message,
           );
         }
       },

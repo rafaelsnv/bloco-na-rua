@@ -1,5 +1,3 @@
-import "package:bloco_na_rua/data/repositories/auth/auth_listenable.dart";
-import "package:bloco_na_rua/data/repositories/auth/iauth_repository.dart";
 import "package:bloco_na_rua/data/services/auth/models/signup_request/signup_request.dart";
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_cubit.dart";
@@ -31,6 +29,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _password = TextEditingController();
   final TextEditingController _phone = TextEditingController();
   final ValueNotifier<bool> _isFormValidNotifier = ValueNotifier<bool>(false);
+
+  bool _isValidEmail(String value) {
+    final trimmed = value.trim();
+    return RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(trimmed);
+  }
 
   @override
   void initState() {
@@ -74,29 +77,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthCubit(
-        authRepository: context.read<IAuthRepository>(),
-        authListenable: context.read<AuthListenable>(),
-      ),
-      child: BlocListener<AuthCubit, AuthState>(
-        listener: (context, state) {
-          if (state is AuthFailure) {
-            AppSnackbar.error(
-              context,
-              message: state.message.replaceAll("Exception: ", ""),
-            );
-          } else if (state is AuthEmailVerificationSent) {
-            context.go(
-              "${Routes.verifyEmail}?email=${Uri.encodeComponent(state.email)}",
-            );
-          } else if (state is AuthAuthenticated) {
-            context.go(Routes.home);
-          } else if (state is AuthSuccess) {
-            AppSnackbar.success(context, message: state.message ?? "Sucesso!");
-          }
-        },
-        child: Scaffold(
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is AuthFailure) {
+          AppSnackbar.error(
+            context,
+            message: state.message,
+          );
+        } else if (state is AuthEmailVerificationSent) {
+          context.go(
+            "${Routes.verifyEmail}?email=${Uri.encodeComponent(state.email)}",
+          );
+        } else if (state is AuthAuthenticated) {
+          context.go(Routes.home);
+        } else if (state is AuthSuccess) {
+          AppSnackbar.success(context, message: state.message ?? "Sucesso!");
+        }
+      },
+      child: Scaffold(
           backgroundColor: Theme.of(context).colorScheme.surface,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
@@ -162,7 +160,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 if (value == null || value.isEmpty) {
                                   return "Por favor, insira um e-mail";
                                 }
-                                if (!value.contains("@")) {
+                                if (!_isValidEmail(value)) {
                                   return "E-mail inválido";
                                 }
                                 return null;
@@ -176,13 +174,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               prefixIcon: Icons.lock_rounded,
                               keyboardType: TextInputType.visiblePassword,
                               obscureText: true,
-                              helperText: "Mínimo 6 caracteres",
+                              helperText: "Mínimo 8 caracteres",
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return "Por favor, insira uma senha";
                                 }
-                                if (value.length < 6) {
-                                  return "A senha deve ter no mínimo 6 caracteres";
+                                if (value.length < 8) {
+                                  return "A senha deve ter no mínimo 8 caracteres";
                                 }
                                 return null;
                               },
@@ -257,7 +255,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
           ),
-        ),
       ),
     );
   }

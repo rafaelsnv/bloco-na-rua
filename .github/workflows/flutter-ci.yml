@@ -44,6 +44,16 @@ jobs:
           cache: true
           pub-cache: true
 
+      - name: Create .env file
+        env:
+          API_URL: ${{ secrets.API_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          echo "API_URL=$API_URL" > .env
+          echo "SUPABASE_URL=$SUPABASE_URL" >> .env
+          echo "SUPABASE_PUBLISHABLE_KEY=$SUPABASE_PUBLISHABLE_KEY" >> .env
+
       - run: flutter pub get
       - run: dart run build_runner build
       - run: flutter build apk --debug
@@ -61,8 +71,18 @@ jobs:
           cache: true
           pub-cache: true
 
+      - name: Create .env file
+        env:
+          API_URL: ${{ secrets.API_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          echo "API_URL=$API_URL" > .env
+          echo "SUPABASE_URL=$SUPABASE_URL" >> .env
+          echo "SUPABASE_PUBLISHABLE_KEY=$SUPABASE_PUBLISHABLE_KEY" >> .env
+
       - run: flutter pub get
       - run: dart run build_runner build
       - name: Enable iOS platform
         run: flutter create --platforms=ios .
-      - run: flutter build ios --release --no-codesign
+      - run: flutter build ios --simulator

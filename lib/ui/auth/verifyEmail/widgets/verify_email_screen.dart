@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_cubit.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_state.dart";
@@ -10,6 +12,7 @@ import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
+import "package:supabase_flutter/supabase_flutter.dart" hide AuthState;
 
 class VerifyEmailScreen extends StatefulWidget {
   const VerifyEmailScreen({super.key, required this.email});
@@ -21,15 +24,29 @@ class VerifyEmailScreen extends StatefulWidget {
 }
 
 class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
+  StreamSubscription<dynamic>? _authSubscription;
+
   @override
   void initState() {
     super.initState();
     _startListeningForVerification();
   }
 
+  @override
+  void dispose() {
+    _authSubscription?.cancel();
+    super.dispose();
+  }
+
   void _startListeningForVerification() {
-    // Listen for auth state changes to detect email verification
-    // The parent context's AuthListenable will notify when user is verified
+    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen(
+      (response) {
+        if (response.event == AuthChangeEvent.signedIn && response.session != null) {
+          // Email verified and user signed in - navigate to home
+          _navigateAfterVerification();
+        }
+      },
+    );
   }
 
   void _resendVerification() {
@@ -43,7 +60,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
         if (state is AuthFailure) {
           AppSnackbar.error(
             context,
-            message: state.message.replaceAll("Exception: ", ""),
+            message: state.message,
           );
         } else if (state is AuthSuccess) {
           AppSnackbar.success(context, message: state.message ?? "Sucesso!");
@@ -59,7 +76,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_rounded),
-            onPressed: () => context.go(Routes.login),
+            onPressed: () => context.pop(),
           ),
           title: Text(
             "Bloco na Rua",

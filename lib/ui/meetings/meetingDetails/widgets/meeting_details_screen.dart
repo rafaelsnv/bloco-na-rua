@@ -25,74 +25,93 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 import "package:intl/intl.dart";
 
-class MeetingDetailsScreen extends StatelessWidget {
+class MeetingDetailsScreen extends StatefulWidget {
   const MeetingDetailsScreen({super.key, required this.meetingId});
 
   final String meetingId;
 
   @override
+  State<MeetingDetailsScreen> createState() => _MeetingDetailsScreenState();
+}
+
+class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<MeetingDetailsCubit>().loadMeeting();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocConsumer<MeetingDetailsCubit, MeetingDetailsState>(
+    return BlocListener<MeetingDetailsCubit, MeetingDetailsState>(
       listenWhen: (previous, current) {
-        if (previous is MeetingDetailsLoaded &&
-            current is MeetingDetailsLoaded) {
-          return previous.markingPresenceStatus !=
-              current.markingPresenceStatus;
+        if (previous is MeetingDetailsLoaded && current is MeetingDetailsLoaded) {
+          return previous.presencesStatus == PresencesStatus.initial &&
+              current.presencesStatus != PresencesStatus.initial;
         }
         return false;
       },
       listener: (context, state) {
-        if (state is! MeetingDetailsLoaded) return;
-
-        if (state.markingPresenceStatus == MarkingPresenceStatus.success) {
-          AppSnackbar.success(
-            context,
-            message: "Presença atualizada com sucesso!",
-          );
-        } else if (state.markingPresenceStatus == MarkingPresenceStatus.error &&
-            state.markingPresenceError != null) {
-          AppSnackbar.error(context, message: state.markingPresenceError!);
-        } else if (state.deleteStatus == DeleteStatus.success) {
-          context.pop();
-        } else if (state.deleteStatus == DeleteStatus.failure) {
-          AppSnackbar.error(context, message: "Erro ao excluir reunião");
+        if (state is MeetingDetailsLoaded &&
+            state.presencesStatus == PresencesStatus.initial) {
+          context.read<MeetingDetailsCubit>().loadPresences();
         }
       },
-      builder: (context, state) {
-        if (state is MeetingDetailsInitial) {
-          context.read<MeetingDetailsCubit>().loadMeeting();
-          return Scaffold(
-            appBar: const AppAppBar(title: "Detalhes da Reunião"),
-            body: const AppLoading(),
-          );
-        }
+      child: BlocConsumer<MeetingDetailsCubit, MeetingDetailsState>(
+        listenWhen: (previous, current) {
+          if (previous is MeetingDetailsLoaded &&
+              current is MeetingDetailsLoaded) {
+            return previous.markingPresenceStatus !=
+                current.markingPresenceStatus;
+          }
+          return false;
+        },
+        listener: (context, state) {
+          if (state is! MeetingDetailsLoaded) return;
 
-        if (state is MeetingDetailsLoading) {
-          return Scaffold(
-            appBar: const AppAppBar(title: "Detalhes da Reunião"),
-            body: const AppLoading(),
-          );
-        }
-
-        if (state is MeetingDetailsError) {
-          return Scaffold(
-            appBar: const AppAppBar(title: "Erro"),
-            body: AppError(
-              message: state.message,
-              onRetry: () => context.read<MeetingDetailsCubit>().loadMeeting(),
-            ),
-          );
-        }
-
-        if (state is MeetingDetailsLoaded) {
-          final meeting = state.meeting;
-
-          // Load presences if not loaded yet
-          if (state.presencesStatus == PresencesStatus.initial) {
-            context.read<MeetingDetailsCubit>().loadPresences();
+          if (state.markingPresenceStatus == MarkingPresenceStatus.success) {
+            AppSnackbar.success(
+              context,
+              message: "Presença atualizada com sucesso!",
+            );
+          } else if (state.markingPresenceStatus == MarkingPresenceStatus.error &&
+              state.markingPresenceError != null) {
+            AppSnackbar.error(context, message: state.markingPresenceError!);
+          } else if (state.deleteStatus == DeleteStatus.success) {
+            context.pop();
+          } else if (state.deleteStatus == DeleteStatus.failure) {
+            AppSnackbar.error(context, message: "Erro ao excluir reunião");
+          }
+        },
+        builder: (context, state) {
+          if (state is MeetingDetailsInitial) {
+            return Scaffold(
+              appBar: const AppAppBar(title: "Detalhes da Reunião"),
+              body: const AppLoading(),
+            );
           }
 
-          final meetingDateTime = meeting.meetingDateTime;
+          if (state is MeetingDetailsLoading) {
+            return Scaffold(
+              appBar: const AppAppBar(title: "Detalhes da Reunião"),
+              body: const AppLoading(),
+            );
+          }
+
+          if (state is MeetingDetailsError) {
+            return Scaffold(
+              appBar: const AppAppBar(title: "Erro"),
+              body: AppError(
+                message: state.message,
+                onRetry: () => context.read<MeetingDetailsCubit>().loadMeeting(),
+              ),
+            );
+          }
+
+          if (state is MeetingDetailsLoaded) {
+            final meeting = state.meeting;
+
+            final meetingDateTime = meeting.meetingDateTime;
 
           return Scaffold(
             appBar: AppAppBar(
@@ -156,6 +175,7 @@ class MeetingDetailsScreen extends StatelessWidget {
           body: const AppEmpty(message: "Nenhum dado encontrado"),
         );
       },
+      ),
     );
   }
 

@@ -15,6 +15,8 @@ class EditBlockCubit extends Cubit<EditBlockState> {
 
   final ICarnivalBlocksRepository _carnivalBlocksRepository;
   final String _carnivalBlockId;
+  bool _isUpdating = false;
+  bool _isDeleting = false;
 
   Future<void> loadBlock() async {
     emit(EditBlockLoading());
@@ -47,24 +49,37 @@ class EditBlockCubit extends Cubit<EditBlockState> {
     required String name,
     required String carnivalBlockImage,
   }) async {
+    if (_isUpdating) return;
+    _isUpdating = true;
+
     emit(EditBlockSaving());
 
     final data = {'name': name, 'carnivalBlockImage': carnivalBlockImage};
 
-    final result = await _carnivalBlocksRepository.updateAsync(
-      int.parse(_carnivalBlockId),
-      data,
-    );
+    try {
+      final result = await _carnivalBlocksRepository.updateAsync(
+        int.parse(_carnivalBlockId),
+        data,
+      );
 
-    result.fold(
-      (_) => emit(EditBlockSuccess()),
-      (failure) => emit(EditBlockError(extractUserMessage(failure))),
-    );
+      result.fold(
+        (_) => emit(EditBlockSuccess()),
+        (failure) => emit(EditBlockError(extractUserMessage(failure))),
+      );
+    } finally {
+      _isUpdating = false;
+    }
   }
 
   Future<void> deleteBlock() async {
+    if (_isDeleting) return;
+    _isDeleting = true;
+
     final currentState = state;
-    if (currentState is! EditBlockLoaded) return;
+    if (currentState is! EditBlockLoaded) {
+      _isDeleting = false;
+      return;
+    }
 
     emit(
       EditBlockDeleting(
@@ -82,13 +97,17 @@ class EditBlockCubit extends Cubit<EditBlockState> {
       return;
     }
 
-    final result = await _carnivalBlocksRepository.deleteByIdAsync(
-      blockId,
-    );
+    try {
+      final result = await _carnivalBlocksRepository.deleteByIdAsync(
+        blockId,
+      );
 
-    result.fold(
-      (_) => emit(EditBlockDeleted()),
-      (failure) => emit(EditBlockError(extractUserMessage(failure))),
-    );
+      result.fold(
+        (_) => emit(EditBlockDeleted()),
+        (failure) => emit(EditBlockError(extractUserMessage(failure))),
+      );
+    } finally {
+      _isDeleting = false;
+    }
   }
 }

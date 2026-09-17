@@ -1,3 +1,4 @@
+import "package:bloco_na_rua/core/errors/user_message.dart";
 import "package:bloco_na_rua/data/repositories/auth/auth_listenable.dart";
 import "package:bloco_na_rua/data/repositories/auth/iauth_repository.dart";
 import "package:bloco_na_rua/data/services/auth/models/signup_request/signup_request.dart";
@@ -31,7 +32,7 @@ class AuthCubit extends Cubit<AuthState> {
         _authListenable.notify();
       },
       (error) {
-        final message = error.toString();
+        final message = extractUserMessage(error);
         _log.warning("Login failed: $message");
         emit(AuthFailure(message));
       },
@@ -49,7 +50,7 @@ class AuthCubit extends Cubit<AuthState> {
         _authListenable.notify();
       },
       (error) {
-        final message = error.toString();
+        final message = extractUserMessage(error);
         _log.warning("Sign up failed: $message");
         emit(AuthFailure(message));
       },
@@ -66,7 +67,7 @@ class AuthCubit extends Cubit<AuthState> {
         emit(const AuthSuccess(message: "E-mail de verificação reenviado!"));
       },
       (error) {
-        final message = error.toString();
+        final message = extractUserMessage(error);
         _log.warning("Failed to resend verification: $message");
         emit(AuthFailure(message));
       },
@@ -84,7 +85,7 @@ class AuthCubit extends Cubit<AuthState> {
         _authListenable.notify();
       },
       (error) {
-        final message = error.toString();
+        final message = extractUserMessage(error);
         _log.warning("Logout failed: $message");
         emit(AuthFailure(message));
       },
@@ -102,7 +103,7 @@ class AuthCubit extends Cubit<AuthState> {
         _authListenable.notify();
       },
       (error) {
-        final message = error.toString();
+        final message = extractUserMessage(error);
         _log.warning("Failed to reset password: $message");
         emit(AuthFailure(message));
       },

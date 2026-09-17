@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:bloco_na_rua/core/errors/user_message.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
 import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart';
@@ -16,8 +14,12 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
 
   final ICarnivalBlocksRepository _carnivalBlocksRepository;
   final GetCurrentUserData _getCurrentUserData;
+  bool _isLoading = false;
 
   Future<void> createBlock(String name) async {
+    if (_isLoading) return;
+    _isLoading = true;
+
     emit(CreateBlockLoading());
 
     try {
@@ -34,15 +36,9 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
       final user = userResult.getOrNull()!;
 
       // 2. Create the block with user as owner
-      final inviteCode = _generateInviteCode();
-      final managersInviteCode = _generateManagersInviteCode();
-      final data = {
-        'name': name,
-        'ownerId': user.id,
-        'inviteCode': inviteCode,
-        'managersInviteCode': managersInviteCode,
-        'carnivalBlockImage': '',
-      };
+      // ponytail: TO-DO - Backend must generate and return inviteCode + managersInviteCode
+      // in the createAsync response. Remove 'carnivalBlockImage' once backend handles it.
+      final data = {'name': name, 'ownerId': user.id, 'carnivalBlockImage': ''};
 
       final result = await _carnivalBlocksRepository.createAsync(data);
 
@@ -53,18 +49,8 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
       );
     } catch (e) {
       emit(CreateBlockError('Erro inesperado: ${extractUserMessage(e)}'));
+    } finally {
+      _isLoading = false;
     }
-  }
-
-  String _generateInviteCode() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    final random = Random.secure();
-    return List.generate(6, (_) => chars[random.nextInt(chars.length)]).join();
-  }
-
-  String _generateManagersInviteCode() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    final random = Random.secure();
-    return List.generate(8, (_) => chars[random.nextInt(chars.length)]).join();
   }
 }

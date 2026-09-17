@@ -10,7 +10,7 @@ class NotFoundScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppAppBar(title: "Pagina nao encontrada"),
+      appBar: const AppAppBar(title: "Página não encontrada"),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(Spacing.pagePaddingMobile),

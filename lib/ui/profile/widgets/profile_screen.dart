@@ -180,6 +180,7 @@ class ProfileScreen extends StatelessWidget {
           child: AppListTile(
             leading: const Icon(Icons.brightness_6_rounded),
             title: "Tema",
+            onTap: () {}, // Required for ListTile to be enabled
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

@@ -135,6 +135,19 @@ class AuthRepository implements IAuthRepository {
     }
 
     _log.info("Login successful");
+
+    // Save UUID first — only set auth state after this succeeds.
+    // If saveUuid fails, we sign out to avoid inconsistent state where
+    // _authToken is set but _currentMember/_isAuthenticated are not.
+    var userIdResult = await _secureStorageService.saveUuid(
+      loginResponse.userId,
+    );
+    if (userIdResult.isError()) {
+      _log.severe("Failed to save User UUID", userIdResult.exceptionOrNull());
+      await Supabase.instance.client.auth.signOut();
+      return Failure(userIdResult.exceptionOrNull()!);
+    }
+
     _isAuthenticated = true;
     _authToken = loginResponse.accessToken;
     // Invalidate the in-flight future so the next `currentUuid` call
@@ -145,13 +158,6 @@ class AuthRepository implements IAuthRepository {
     // avoid a redundant request when the router redirect already
     // calls validateSession() in the same frame.
     _currentMember = null;
-
-    var userIdResult = await _secureStorageService.saveUuid(
-      loginResponse.userId,
-    );
-    if (userIdResult.isError()) {
-      _log.severe("Failed to save User UUID", userIdResult.exceptionOrNull());
-    }
 
     return loginResult;
   }
@@ -181,7 +187,15 @@ class AuthRepository implements IAuthRepository {
     var membersResult = await _registerMember(signUpRequest, userId);
     if (membersResult.isError()) {
       // Clean up Supabase auth user via backend endpoint if member creation failed
-      await _signupCleanup(userId);
+      final cleanupError = await _signupCleanup(userId);
+      if (cleanupError.isError()) {
+        // Log but don't crash — fire-and-forget with server-side reconciliation
+        // ponytail: server-side orphan cleanup job should run periodically
+        _log.severe(
+          'Orphan Supabase user $userId: member registration failed and cleanup also failed',
+          cleanupError.exceptionOrNull(),
+        );
+      }
       return Failure(membersResult.exceptionOrNull()!);
     }
 
@@ -222,6 +236,14 @@ class AuthRepository implements IAuthRepository {
       _log.warning(
         "Failed to clear stored User ID",
         userIdResult.exceptionOrNull(),
+      );
+    }
+
+    final tokenResult = await _secureStorageService.saveToken(null);
+    if (tokenResult.isError()) {
+      _log.warning(
+        "Failed to clear stored auth token",
+        tokenResult.exceptionOrNull(),
       );
     }
 
@@ -279,19 +301,20 @@ class AuthRepository implements IAuthRepository {
     return membersResult;
   }
 
-  Future<void> _signupCleanup(String uuid) async {
+  Future<Result<void>> _signupCleanup(String uuid) async {
     try {
       final token = Supabase.instance.client.auth.currentSession?.accessToken;
       if (token == null) {
         _log.warning("No token available for signup cleanup");
-        return;
+        return Success.unit();
       }
       await _baseApiClient.client.delete(
         '/api/v1/admin/signup-cleanup/$uuid',
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
+      return Success.unit();
     } catch (e) {
-      _log.severe("Signup cleanup failed", e);
+      return Failure(e is Exception ? e : Exception(e.toString()));
     }
   }
 }

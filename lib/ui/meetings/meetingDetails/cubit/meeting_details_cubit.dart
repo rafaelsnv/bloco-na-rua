@@ -26,11 +26,18 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
   final ICarnivalBlocksRepository _carnivalBlocksRepository;
   final String meetingId;
   final _log = Logger('MeetingDetailsCubit');
+  bool _isMarkingPresence = false;
 
   Future<void> loadMeeting() async {
     emit(const MeetingDetailsLoading());
 
-    final result = await _meetingsRepository.getByIdAsync(int.parse(meetingId));
+    final meetingIdInt = int.tryParse(meetingId);
+    if (meetingIdInt == null) {
+      emit(const MeetingDetailsError('ID da reuniao invalido'));
+      return;
+    }
+
+    final result = await _meetingsRepository.getByIdAsync(meetingIdInt);
 
     result.fold(
       (meeting) async {
@@ -63,10 +70,22 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
     final currentState = state;
     if (currentState is! MeetingDetailsLoaded) return;
 
+    final meetingIdInt = int.tryParse(meetingId);
+    if (meetingIdInt == null) {
+      emit(
+        currentState.copyWith(
+          presences: [],
+          presencesStatus: PresencesStatus.error,
+          presencesError: 'ID da reuniao invalido',
+        ),
+      );
+      return;
+    }
+
     emit(currentState.copyWith(presencesStatus: PresencesStatus.loading));
 
     final result = await _meetingPresencesRepository.getByMeetingId(
-      int.parse(meetingId),
+      meetingIdInt,
     );
 
     result.fold(
@@ -90,8 +109,14 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
   }
 
   Future<void> markPresence({required bool isPresent}) async {
+    if (_isMarkingPresence) return;
+    _isMarkingPresence = true;
+
     final currentState = state;
-    if (currentState is! MeetingDetailsLoaded) return;
+    if (currentState is! MeetingDetailsLoaded) {
+      _isMarkingPresence = false;
+      return;
+    }
 
     emit(
       currentState.copyWith(
@@ -146,6 +171,8 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
           markingPresenceError: extractUserMessage(e),
         ),
       );
+    } finally {
+      _isMarkingPresence = false;
     }
   }
 

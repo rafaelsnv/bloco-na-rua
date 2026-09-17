@@ -11,7 +11,7 @@ import "../../tokens/app_typography.dart";
 import "../cards/app_card.dart";
 import "../display/image_url_validator.dart";
 
-const _blockEmojis = ["🎭", "🎉", "🎊", "", "🎷", "🎺", "🪇", "🏟️"];
+const _blockEmojis = ["🎭", "🎉", "🎊", "🎷", "🎺", "🪇", "🏟️"];
 
 /// BlockCard compound widget for displaying a carnival block summary.
 ///
