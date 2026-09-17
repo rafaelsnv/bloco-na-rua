@@ -41,7 +41,7 @@ class MembersApiClient implements IMembersApiClient {
       final memberResponse = MemberResponse.fromJson(data as Map<String, dynamic>);
       // Convert to domain entity
       final result = MembersEntity(
-        id: memberResponse.id ?? 0,
+        id: memberResponse.id ?? (throw Exception('Missing id in MemberResponse')),
         name: memberResponse.name,
         email: memberResponse.email,
         phone: memberResponse.phone,

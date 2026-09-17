@@ -37,7 +37,7 @@ class _MembersScreenContent extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    state.errorMessage!.replaceAll("Exception: ", ""),
+                    state.errorMessage!,
                   ),
                   showCloseIcon: true,
                 ),

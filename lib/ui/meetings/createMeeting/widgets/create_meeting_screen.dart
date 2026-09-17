@@ -113,6 +113,24 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
       return;
     }
 
+    final description = _descriptionController.text.trim();
+    if (description.isEmpty) {
+      AppSnackbar.warning(
+        context,
+        message: "Por favor, insira uma descrição para a reunião",
+      );
+      return;
+    }
+
+    final location = _locationController.text.trim();
+    if (location.isEmpty) {
+      AppSnackbar.warning(
+        context,
+        message: "Por favor, insira um local para a reunião",
+      );
+      return;
+    }
+
     if (_selectedDate == null || _selectedTime == null) {
       AppSnackbar.warning(context, message: "Por favor, selecione data e hora");
       return;
@@ -128,8 +146,8 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
 
     final data = <String, dynamic>{
       "name": title,
-      "description": _descriptionController.text.trim(),
-      "location": _locationController.text.trim(),
+      "description": description,
+      "location": location,
       "dateTime": dateTime.toIso8601String(),
       "carnivalBlockId": int.tryParse(widget.carnivalBlockId) ?? 0,
     };

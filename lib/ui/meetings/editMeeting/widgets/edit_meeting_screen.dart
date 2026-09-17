@@ -38,6 +38,11 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
     _locationController = TextEditingController();
     _dateController = TextEditingController();
     _timeController = TextEditingController();
+
+    final meetingId = int.tryParse(widget.meetingId);
+    if (meetingId != null) {
+      context.read<EditMeetingCubit>().loadMeeting(meetingId);
+    }
   }
 
   @override
@@ -105,18 +110,33 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
   }
 
   void _submitForm() {
+    final meetingId = int.tryParse(widget.meetingId);
+    if (meetingId == null) {
+      AppSnackbar.error(context, message: "ID da reuniao invalido");
+      return;
+    }
+
+    final title = _titleController.text.trim();
+    if (title.isEmpty) {
+      AppSnackbar.error(
+        context,
+        message: "O titulo da reuniao e obrigatorio",
+      );
+      return;
+    }
+
     final dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
     final formattedDateTime = dateFormat.format(_selectedDateTime);
 
     final data = <String, dynamic>{
-      if (_titleController.text.isNotEmpty) "name": _titleController.text,
+      "name": title,
       if (_locationController.text.isNotEmpty)
         "location": _locationController.text,
       "meetingDateTime": formattedDateTime,
     };
 
     context.read<EditMeetingCubit>().updateMeeting(
-      int.parse(widget.meetingId),
+      meetingId,
       data,
     );
   }
@@ -128,10 +148,7 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
         if (state.status == EditMeetingStatus.success) {
           AppSnackbar.success(
             context,
-            message: "Reuniao atualizada com sucesso!",
-          );
-          context.read<EditMeetingCubit>().loadMeeting(
-            int.parse(widget.meetingId),
+            message: "Reunião atualizada com sucesso!",
           );
           if (!mounted) return;
           context.pop();
@@ -142,9 +159,30 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
       },
       builder: (context, state) {
         if (state.status == EditMeetingStatus.initial) {
-          context.read<EditMeetingCubit>().loadMeeting(
-            int.parse(widget.meetingId),
-          );
+          final meetingId = int.tryParse(widget.meetingId);
+          if (meetingId == null) {
+            return Scaffold(
+appBar: const AppAppBar(title: "Editar reunião"),
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline_rounded,
+                      size: 48,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    const SizedBox(height: Spacing.space_sm),
+                    Text(
+                      "ID da reuniao invalido",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
           return Scaffold(
             appBar: const AppAppBar(title: "Editar reuniao"),
             body: const AppLoading(),
@@ -197,7 +235,7 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   AppTextField(
-                    label: "Titulo da reuniao",
+                    label: "Título da reunião",
                     controller: _titleController,
                     onChanged: (_) => setState(() {}),
                   ),
@@ -221,7 +259,7 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
                   ),
                   const SizedBox(height: Spacing.space_md),
                   AppButton(
-                    label: "Salvar alteracoes",
+                    label: "Salvar alterações",
                     isFullWidth: true,
                     isLoading: isSaving,
                     isDisabled: isSaving,
