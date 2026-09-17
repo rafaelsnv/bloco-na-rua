@@ -22,11 +22,22 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   late final GoRouter _router;
+  late final AuthCubit _authCubit;
 
   @override
   void initState() {
     super.initState();
     _router = router(context.read<AuthListenable>());
+    _authCubit = AuthCubit(
+      authRepository: context.read(),
+      authListenable: context.read<AuthListenable>(),
+    );
+  }
+
+  @override
+  void dispose() {
+    _authCubit.close();
+    super.dispose();
   }
 
   @override
@@ -41,12 +52,7 @@ class _MainAppState extends State<MainApp> {
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => AuthCubit(
-            authRepository: context.read(),
-            authListenable: context.read<AuthListenable>(),
-          ),
-        ),
+        BlocProvider<AuthCubit>.value(value: _authCubit),
         BlocProvider(create: (_) => ThemeCubit()..load()),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(

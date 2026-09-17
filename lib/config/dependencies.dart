@@ -63,12 +63,9 @@ var baseOptions = BaseOptions(
   validateStatus: (status) => status != null && status >= 200 && status < 300,
 );
 
-var supabaseClient = Supabase.instance.client;
-
 List<SingleChildWidget> get providers {
   return [
     // Core
-    Provider<SupabaseClient>(create: (context) => supabaseClient),
     Provider(create: (context) => SecureStorageService()),
     Provider<IBaseApiClient>(
       create: (context) => BaseApiClient(
