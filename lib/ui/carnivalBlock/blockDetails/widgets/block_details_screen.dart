@@ -59,6 +59,9 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
   }
 
   Future<void> _loadMembers() async {
+    // ponytail: TO-DO: request batch endpoint GET /Members?ids=... from backend
+    // to eliminate this N+1 pattern. Future.wait is the best available option
+    // until a batch endpoint exists.
     final repo = context.read<ICarnivalBlockMembersRepository>();
     final membersRepo = context.read<IMembersRepository>();
     setState(() {
@@ -74,6 +77,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
       (members) async {
         // Fetch all member entities concurrently with Future.wait
         final entities = <int, MembersEntity>{};
+        final failedMemberIds = <int>[];
         final memberFutures = members.map(
           (member) => membersRepo.getByIdAsync(member.memberId),
         );
@@ -82,14 +86,22 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
         for (var i = 0; i < members.length; i++) {
           final member = members[i];
           final memberResult = memberResults[i];
-          memberResult.fold(
-            (m) => entities[member.memberId] = m,
-            (_) => entities[member.memberId] = MembersEntity(
+          memberResult.fold((m) => entities[member.memberId] = m, (_) {
+            failedMemberIds.add(member.memberId);
+            entities[member.memberId] = MembersEntity(
               id: member.memberId,
               name: "Membro",
               email: null,
               profileImage: null,
-            ),
+            );
+          });
+        }
+
+        if (failedMemberIds.isNotEmpty && mounted) {
+          AppSnackbar.error(
+            context,
+            message:
+                "Falha ao carregar dados de ${failedMemberIds.length} membro(s)",
           );
         }
 
@@ -339,8 +351,8 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
         return Scaffold(
           appBar: const AppAppBar(title: "Detalhes do Bloco"),
           body: const AppEmpty(
-            title: "Bloco nao encontrado",
-            message: "Este bloco nao esta disponivel.",
+            title: "Bloco não encontrado",
+            message: "Este bloco não está disponível.",
           ),
         );
       },

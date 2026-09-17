@@ -65,37 +65,30 @@ class _BlockListScreenContentState extends State<_BlockListScreenContent> {
             }
           },
           builder: (context, state) {
-            return Listener(
-              onPointerDown: (event) {
-                if (!fabState.expanded) return;
-                final fabBox = _fabKey.currentContext?.findRenderObject() as RenderBox?;
-                if (fabBox == null) return;
-                final localPos = fabBox.globalToLocal(event.position);
-                if (localPos.dx >= 0 &&
-                    localPos.dy >= 0 &&
-                    localPos.dx <= fabBox.size.width &&
-                    localPos.dy <= fabBox.size.height) {
-                  return; // Tap on FAB — its onPressed handles toggle
-                }
-                context.read<FabStateCubit>().dismiss();
-              },
-              child: Scaffold(
-                appBar: const AppAppBar(title: "Blocos", showBackButton: false),
-                body: SafeArea(
-                  child: _buildBody(context, state),
+            return Stack(
+              children: [
+                Scaffold(
+                  appBar: const AppAppBar(title: "Blocos", showBackButton: false),
+                  body: SafeArea(
+                    child: _buildBody(context, state),
+                  ),
+                  floatingActionButton: AddBlockFab(
+                    key: _fabKey,
+                    isExpanded: fabState.expanded,
+                    shouldAnimate: fabState.shouldAnimate,
+                    onFabPressed: () => context.read<FabStateCubit>().toggle(),
+                    onExpandedChanged: (expanded) {
+                      if (!expanded) {
+                        context.read<FabStateCubit>().dismiss();
+                      }
+                    },
+                  ),
                 ),
-                floatingActionButton: AddBlockFab(
-                  key: _fabKey,
-                  isExpanded: fabState.expanded,
-                  shouldAnimate: fabState.shouldAnimate,
-                  onFabPressed: () => context.read<FabStateCubit>().toggle(),
-                  onExpandedChanged: (expanded) {
-                    if (!expanded) {
-                      context.read<FabStateCubit>().dismiss();
-                    }
-                  },
-                ),
-              ),
+                if (fabState.expanded)
+                  ModalBarrier(
+                    onDismiss: () => context.read<FabStateCubit>().dismiss(),
+                  ),
+              ],
             );
           },
         );

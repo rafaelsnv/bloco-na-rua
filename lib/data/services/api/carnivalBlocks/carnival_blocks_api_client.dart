@@ -48,7 +48,7 @@ class CarnivalBlocksApiClient implements ICarnivalBlocksApiClient {
     return Failure(
       ApiError(
         type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
+        userMessage: 'Join by invite code is not yet available.',
         technicalMessage: 'GET /CarnivalBlocks/by-invite/{code} endpoint not implemented',
       ),
     );
