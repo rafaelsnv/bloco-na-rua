@@ -30,7 +30,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppAppBar(title: "Configuracoes"),
+      appBar: const AppAppBar(title: "Configurações"),
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: Spacing.pagePaddingMobile),
         children: [
