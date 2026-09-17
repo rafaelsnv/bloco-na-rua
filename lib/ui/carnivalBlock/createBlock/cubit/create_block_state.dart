@@ -11,7 +11,11 @@ final class CreateBlockInitial extends CreateBlockState {}
 
 final class CreateBlockLoading extends CreateBlockState {}
 
-final class CreateBlockSuccess extends CreateBlockState {}
+final class CreateBlockSuccess extends CreateBlockState {
+  final int blockId;
+
+  const CreateBlockSuccess(this.blockId);
+}
 
 final class CreateBlockError extends CreateBlockState {
   final String message;

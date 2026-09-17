@@ -117,11 +117,11 @@ class AppButton extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     switch (variant) {
       case AppButtonVariant.primary:
-        return Colors.white;
+        return AppColors.textOnPrimary;
       case AppButtonVariant.secondary:
         return isDark ? AppColors.secondaryLight : AppColors.secondary;
       case AppButtonVariant.accent:
-        return isDark ? AppColors.accentDark : Colors.white;
+        return isDark ? AppColors.accentDark : AppColors.textOnPrimary;
       case AppButtonVariant.tertiary:
         return isDark ? AppColors.textPrimaryDark : AppColors.textPrimary;
       case AppButtonVariant.ghost:
@@ -241,7 +241,7 @@ class AppButton extends StatelessWidget {
         onPressed: effectiveOnPressed,
         style: buttonStyle.copyWith(
           backgroundColor: WidgetStateProperty.all(AppColors.primary),
-          foregroundColor: WidgetStateProperty.all(Colors.white),
+          foregroundColor: WidgetStateProperty.all(AppColors.textOnPrimary),
         ),
         child: content,
       ),
@@ -265,9 +265,9 @@ class AppButton extends StatelessWidget {
         onPressed: effectiveOnPressed,
         style: buttonStyle.copyWith(
           backgroundColor: WidgetStateProperty.all(Colors.transparent),
-          foregroundColor: WidgetStateProperty.all(AppColors.secondary),
+          foregroundColor: WidgetStateProperty.all(foreground),
           side: WidgetStateProperty.all(
-            BorderSide(color: AppColors.secondary, width: 1.5),
+            BorderSide(color: foreground, width: 1.5),
           ),
         ),
         child: content,

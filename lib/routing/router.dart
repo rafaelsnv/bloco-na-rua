@@ -280,8 +280,6 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
         child: BlocProvider(
           create: (context) => CreateBlockCubit(
             carnivalBlocksRepository: context.read<ICarnivalBlocksRepository>(),
-            carnivalBlockMembersRepository: context
-                .read<ICarnivalBlockMembersRepository>(),
             getCurrentUserData: context.read<GetCurrentUserData>(),
           ),
           child: const CreateBlockScreen(),

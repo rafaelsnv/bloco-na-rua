@@ -65,7 +65,9 @@ class AppBadge extends StatelessWidget {
       return Badge(
         label: Text(
           label,
-          style: AppTypography.labelSmall.copyWith(color: Colors.white),
+          style: AppTypography.labelSmall.copyWith(
+            color: AppColors.textOnPrimary,
+          ),
         ),
         backgroundColor: backgroundColor,
         padding: _padding,
@@ -77,7 +79,9 @@ class AppBadge extends StatelessWidget {
     return Chip(
       label: Text(
         label,
-        style: AppTypography.labelSmall.copyWith(color: Colors.white),
+        style: AppTypography.labelSmall.copyWith(
+          color: AppColors.textOnPrimary,
+        ),
       ),
       backgroundColor: backgroundColor,
       padding: _padding,

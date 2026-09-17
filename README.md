@@ -59,7 +59,7 @@ Create a `.env` file in the project root:
 
 ```env
 SUPABASE_URL=your_supabase_url
-SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
 API_URL=your_backend_api_url
 ```
 

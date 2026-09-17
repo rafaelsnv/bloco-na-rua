@@ -57,7 +57,7 @@ class PresenceChip extends StatelessWidget {
           avatar: Icon(
             Icons.check_circle_rounded,
             size: 16,
-            color: Colors.white,
+            color: AppColors.textOnPrimary,
           ),
         );
       case PresenceVariant.absent:
@@ -65,14 +65,22 @@ class PresenceChip extends StatelessWidget {
           label: label,
           variant: ChipVariant.filled,
           color: AppColors.error,
-          avatar: Icon(Icons.cancel_rounded, size: 16, color: Colors.white),
+          avatar: Icon(
+            Icons.cancel_rounded,
+            size: 16,
+            color: AppColors.textOnPrimary,
+          ),
         );
       case PresenceVariant.pending:
         return AppChip(
           label: label,
           variant: ChipVariant.filled,
           color: AppColors.warning,
-          avatar: Icon(Icons.schedule_rounded, size: 16, color: Colors.white),
+          avatar: Icon(
+            Icons.schedule_rounded,
+            size: 16,
+            color: AppColors.textOnPrimary,
+          ),
         );
     }
   }

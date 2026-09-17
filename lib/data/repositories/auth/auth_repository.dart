@@ -1,16 +1,15 @@
 import "package:bloco_na_rua/data/repositories/auth/iauth_repository.dart";
 import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart";
 import "package:bloco_na_rua/data/services/api/base/ibase_api_client.dart";
-import "package:bloco_na_rua/data/services/api/members/create/member_create.dart";
+import "package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart" show ApiV1AuthLoginPost$RequestBody, LoginResponse, MemberCreate;
 import "package:bloco_na_rua/data/services/auth/auth_api_client.dart";
-import "package:bloco_na_rua/data/services/auth/models/login_request/login_request.dart";
-import "package:bloco_na_rua/data/services/auth/models/login_response/login_response.dart";
 import "package:bloco_na_rua/data/services/auth/models/signup_request/signup_request.dart";
 import "package:bloco_na_rua/data/services/secure_storage_service.dart";
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
 import "package:dio/dio.dart";
 import "package:logging/logging.dart";
 import "package:result_dart/result_dart.dart";
+import "package:supabase_flutter/supabase_flutter.dart";
 
 class AuthRepository implements IAuthRepository {
   AuthRepository({
@@ -42,7 +41,7 @@ class AuthRepository implements IAuthRepository {
   Future<String?> _fetchTokenAndUuid() async {
     final tokenResult = await _secureStorageService.fetchToken();
     if (tokenResult.isError()) {
-      _log.severe("Failed to fetch Token from SharedPreferences");
+      _log.info("Token not found (first launch or cleared)"); // ponytail: not an error
       _authToken = null;
     } else {
       _authToken = tokenResult.getOrNull();
@@ -50,7 +49,7 @@ class AuthRepository implements IAuthRepository {
 
     final uuidResult = await _secureStorageService.fetchUuid();
     if (uuidResult.isError()) {
-      _log.severe("Failed to fetch User ID from SharedPreferences");
+      _log.info("User ID not found (first launch or cleared)"); // ponytail: not an error
     }
 
     final uuid = uuidResult.getOrNull();
@@ -73,7 +72,8 @@ class AuthRepository implements IAuthRepository {
     if (_currentUuidFuture != null) {
       return _currentUuidFuture!;
     }
-    _currentUuidFuture = _fetchTokenAndUuid();
+    // ponytail: defer to next microtask to avoid blocking startup frame
+    _currentUuidFuture = Future.microtask(_fetchTokenAndUuid);
     return _currentUuidFuture!;
   }
 
@@ -119,7 +119,7 @@ class AuthRepository implements IAuthRepository {
     required String password,
     String? phone = "",
   }) async {
-    final loginRequest = LoginRequest(email: email, password: password);
+    final loginRequest = ApiV1AuthLoginPost$RequestBody(email: email, password: password);
 
     final loginResult = await _authApiClient.logIn(loginRequest);
 
@@ -153,14 +153,6 @@ class AuthRepository implements IAuthRepository {
       _log.severe("Failed to save User UUID", userIdResult.exceptionOrNull());
     }
 
-    var tokenResult = await _secureStorageService.saveToken(
-      loginResponse.accessToken,
-    );
-    if (tokenResult.isError()) {
-      _log.warning("Failed to login", loginResult.exceptionOrNull());
-      return Failure(tokenResult.exceptionOrNull()!);
-    }
-
     return loginResult;
   }
 
@@ -181,10 +173,15 @@ class AuthRepository implements IAuthRepository {
       return Failure(Exception("User data is null"));
     }
 
-    var membersResult = await _registerMember(signUpRequest, userData.userId);
+    final userId = userData.userId;
+    if (userId == null) {
+      return Failure(Exception("User ID is null"));
+    }
+
+    var membersResult = await _registerMember(signUpRequest, userId);
     if (membersResult.isError()) {
       // Clean up Supabase auth user via backend endpoint if member creation failed
-      await _signupCleanup(userData.userId);
+      await _signupCleanup(userId);
       return Failure(membersResult.exceptionOrNull()!);
     }
 
@@ -202,27 +199,8 @@ class AuthRepository implements IAuthRepository {
     );
     if (userIdResult.isError()) {
       _log.severe("Failed to save User ID", userIdResult.exceptionOrNull());
-      // Clean up - don't keep authenticated state without persistence
-      _isAuthenticated = false;
-      _authToken = null;
-      _currentUuidFuture = null;
-      await _secureStorageService.saveUuid(null);
-      return Failure(Exception("Failed to persist session"));
     }
 
-    var tokenResult = await _secureStorageService.saveToken(
-      userData.accessToken,
-    );
-    if (tokenResult.isError()) {
-      _log.severe("Failed to save token", tokenResult.exceptionOrNull());
-      // Clean up - don't keep authenticated state without persistence
-      _isAuthenticated = false;
-      _authToken = null;
-      _currentUuidFuture = null;
-      await _secureStorageService.saveUuid(null); // Clear uuid too
-      return Failure(Exception("Failed to persist session"));
-    }
-    _log.info("Token saved successfully");
     return authResult;
   }
 
@@ -230,8 +208,10 @@ class AuthRepository implements IAuthRepository {
   AsyncResult<void> logout() async {
     _log.info("Logging out");
 
-    // Clear local auth state first so concurrent callers immediately see the
-    // logged-out state, even if SharedPreferences cleanup fails.
+    // Clear Supabase session (handles token cleanup and refresh)
+    await Supabase.instance.client.auth.signOut();
+
+    // Clear local auth state
     _authToken = null;
     _currentUuidFuture = null;
     _currentMember = null;
@@ -242,14 +222,6 @@ class AuthRepository implements IAuthRepository {
       _log.warning(
         "Failed to clear stored User ID",
         userIdResult.exceptionOrNull(),
-      );
-    }
-
-    final tokenResult = await _secureStorageService.saveToken(null);
-    if (tokenResult.isError()) {
-      _log.warning(
-        "Failed to clear stored auth token",
-        tokenResult.exceptionOrNull(),
       );
     }
 
@@ -299,7 +271,7 @@ class AuthRepository implements IAuthRepository {
         "Failed to register member",
         membersResult.exceptionOrNull() ?? membersResult.getOrNull(),
       );
-      await _signupCleanup(model.uuid);
+      await _signupCleanup(model.uuid!);
       await _secureStorageService.saveToken(null);
       return Failure(membersResult.exceptionOrNull()!);
     }
@@ -309,8 +281,7 @@ class AuthRepository implements IAuthRepository {
 
   Future<void> _signupCleanup(String uuid) async {
     try {
-      // Use the stored token if available, otherwise try to fetch it
-      final token = _authToken ?? (await _secureStorageService.fetchToken()).getOrNull();
+      final token = Supabase.instance.client.auth.currentSession?.accessToken;
       if (token == null) {
         _log.warning("No token available for signup cleanup");
         return;

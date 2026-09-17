@@ -92,9 +92,7 @@ class MeetingDetailsScreen extends StatelessWidget {
             context.read<MeetingDetailsCubit>().loadPresences();
           }
 
-          final meetingDateTime = meeting.meetingDateTime != null
-              ? DateTime.parse(meeting.meetingDateTime!)
-              : null;
+          final meetingDateTime = meeting.meetingDateTime;
 
           return Scaffold(
             appBar: AppAppBar(

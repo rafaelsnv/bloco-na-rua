@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 
-import "../../tokens/app_colors.dart";
+import "../../theme/app_text_colors.dart";
 import "../../tokens/app_spacing.dart";
 import "../../tokens/app_typography.dart";
 
@@ -82,7 +82,9 @@ class AppDropdown<T> extends StatelessWidget {
           ? Text(
               hint!,
               style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.textDisabled,
+                color: Theme.of(
+                  context,
+                ).extension<AppTextColors>()!.textDisabled,
               ),
             )
           : null,

@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 
-/// Light mode ColorScheme — Carnaval Sunset.
-/// Primary: Violet #6D28D9 | Accent: Orange #F97316 | Secondary: Rose #FB7185
+/// Light mode ColorScheme — Fireworks on Velvet.
+/// Primary: Violet #7C3AED | Accent: Gold #FBBF24 | Secondary: Magenta #FF3D81
 const ColorScheme lightColorScheme = ColorScheme(
   brightness: Brightness.light,
   primary: AppColors.primary,
@@ -38,7 +38,7 @@ const ColorScheme lightColorScheme = ColorScheme(
   inversePrimary: AppColors.primaryLight,
 );
 
-/// Dark mode ColorScheme — Carnaval Sunset.
+/// Dark mode ColorScheme — Fireworks on Velvet.
 const ColorScheme darkColorScheme = ColorScheme(
   brightness: Brightness.dark,
   primary: AppColors.primaryLight,
@@ -69,7 +69,7 @@ const ColorScheme darkColorScheme = ColorScheme(
   outlineVariant: AppColors.surfaceVariantDark,
   shadow: Color(0xFF000000),
   scrim: Color(0xFF000000),
-  inverseSurface: AppColors.textPrimaryDark,
+  inverseSurface: AppColors.textPrimary,
   onInverseSurface: AppColors.textOnPrimary,
   inversePrimary: AppColors.primary,
 );

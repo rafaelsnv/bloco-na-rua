@@ -119,7 +119,7 @@ class AppChip extends StatelessWidget {
             BorderSide.none,
           );
         }
-        return (Colors.white, effectiveColor, BorderSide.none);
+        return (AppColors.textOnPrimary, effectiveColor, BorderSide.none);
 
       case ChipVariant.outlined:
         // Outlined: transparent background, colored border and text

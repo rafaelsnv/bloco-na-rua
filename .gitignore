@@ -54,7 +54,7 @@ coverage/
 
 # Temporary files
 *.temp
-# .tmp/
+.tmp/
 
 # Environment files
 .env
@@ -82,5 +82,5 @@ pids/
 # /architecture_summary.md
 *AGENTS.md
 /.ignore
-# /.opencode
-# *opencode.json*
+/.opencode
+*opencode.json*

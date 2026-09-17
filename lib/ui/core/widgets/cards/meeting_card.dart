@@ -37,17 +37,13 @@ class MeetingCard extends StatelessWidget {
   /// description as a second line below the location row.
   final bool showDescription;
 
-  /// Formats an ISO 8601 datetime string to "dd MMM yyyy • HH:mm" in pt-BR.
-  /// Returns "Data nao definida" when [dateTimeStr] is null or invalid.
-  String _formatDateTime(String? dateTimeStr) {
-    if (dateTimeStr == null || dateTimeStr.isEmpty) {
+  /// Formats a DateTime to "dd MMM yyyy • HH:mm" in pt-BR.
+  /// Returns "Data nao definida" when [dateTime] is null.
+  String _formatDateTime(DateTime? dateTime) {
+    if (dateTime == null) {
       return "Data nao definida";
     }
-    final parsed = DateTime.tryParse(dateTimeStr);
-    if (parsed == null) {
-      return "Data nao definida";
-    }
-    return DateFormat("dd MMM yyyy • HH:mm", "pt_BR").format(parsed);
+    return DateFormat("dd MMM yyyy • HH:mm", "pt_BR").format(dateTime);
   }
 
   /// Returns a small 14px icon with the onSurfaceVariant colour.

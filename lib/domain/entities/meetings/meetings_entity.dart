@@ -14,7 +14,7 @@ sealed class MeetingsEntity extends EntityBase with _$MeetingsEntity {
     String? description,
     String? location,
     String? meetingCode,
-    String? meetingDateTime,
+    DateTime? meetingDateTime,
     int? carnivalBlockId,
     DateTime? createdAt,
     DateTime? updatedAt,
