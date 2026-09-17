@@ -84,3 +84,5 @@ pids/
 /.ignore
 /.opencode
 *opencode.json*
+# Widget Preview related
+.widget_preview/
