@@ -147,5 +147,60 @@ void main() {
             ),
       ],
     );
+
+    blocTest<HomeCubit, HomeState>(
+      "emits success with empty lists when both calls return empty list",
+      build: () {
+        when(
+          () => mockGetHomeDataUseCase.getCarnivalBlocks(),
+        ).thenAnswer((_) async => const Success(<CarnivalBlocksEntity>[]));
+        when(
+          () => mockGetHomeDataUseCase.getMeetings(),
+        ).thenAnswer((_) async => const Success(<MeetingsEntity>[]));
+
+        return homeCubit;
+      },
+      act: (cubit) => cubit.loadHomeData(),
+      expect: () => [
+        const HomeState(status: HomeStatus.loading),
+        isA<HomeState>()
+            .having((s) => s.status, "status", HomeStatus.success)
+            .having((s) => s.blocks.length, "blocks length", 0)
+            .having((s) => s.meetings.length, "meetings length", 0),
+      ],
+    );
+
+    blocTest<HomeCubit, HomeState>(
+      "emits success with meetings when blocks fail but meetings succeed",
+      build: () {
+        final meetings = [
+          MeetingsEntity(
+            id: 1,
+            name: "Meeting 1",
+            description: "Description",
+            location: "Location",
+            meetingDateTime: DateTime.parse("2026-12-25T14:00:00Z"),
+            carnivalBlockId: 1,
+          ),
+        ];
+
+        when(
+          () => mockGetHomeDataUseCase.getCarnivalBlocks(),
+        ).thenAnswer((_) async => Failure(Exception("Network error")));
+        when(
+          () => mockGetHomeDataUseCase.getMeetings(),
+        ).thenAnswer((_) async => Success(meetings));
+
+        return homeCubit;
+      },
+      act: (cubit) => cubit.loadHomeData(),
+      expect: () => [
+        const HomeState(status: HomeStatus.loading),
+        isA<HomeState>()
+            .having((s) => s.status, "status", HomeStatus.success)
+            .having((s) => s.blocks.length, "blocks length", 0)
+            .having((s) => s.meetings.length, "meetings length", 1),
+      ],
+    );
   });
 }
