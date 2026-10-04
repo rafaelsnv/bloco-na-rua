@@ -10,5 +10,10 @@ abstract interface class IMeetingPresencesRepository {
 
   AsyncResult<MeetingPresencesEntity> createAsync(Map<String, dynamic> data);
 
+  AsyncResult<MeetingPresencesEntity> updateAsync(
+    int id,
+    Map<String, dynamic> data,
+  );
+
   AsyncResult<List<MeetingPresencesEntity>> getByMeetingId(int meetingId);
 }

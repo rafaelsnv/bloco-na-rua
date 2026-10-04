@@ -548,15 +548,31 @@ class _PresenceFABs extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          AppFAB(
-            icon: Icons.close_rounded,
-            onPressed: isLoading ? () {} : onMarkAbsent,
-          ),
+          // ponytail: spinner swap exists because AppFAB lacks a loading/child
+          // slot; upgrade path: add optional `child` param to AppFAB.
+          isLoading
+              ? const SizedBox(
+                  width: 56,
+                  height: 56,
+                  child: CircularProgressIndicator(strokeWidth: 3),
+                )
+              : AppFAB(
+                  key: const Key("app_fab_mark_absent"),
+                  icon: Icons.close_rounded,
+                  onPressed: onMarkAbsent,
+                ),
           const SizedBox(width: Spacing.space_sm),
-          AppFAB(
-            icon: Icons.check_rounded,
-            onPressed: isLoading ? () {} : onMarkPresent,
-          ),
+          isLoading
+              ? const SizedBox(
+                  width: 56,
+                  height: 56,
+                  child: CircularProgressIndicator(strokeWidth: 3),
+                )
+              : AppFAB(
+                  key: const Key("app_fab_mark_present"),
+                  icon: Icons.check_rounded,
+                  onPressed: onMarkPresent,
+                ),
         ],
       ),
     );

@@ -3,6 +3,10 @@ import 'package:bloco_na_rua/data/repositories/auth/iauth_repository.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
 import 'package:bloco_na_rua/data/repositories/meetingPresences/imeeting_presences_repository.dart';
 import 'package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart';
+import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';
+import 'package:bloco_na_rua/domain/entities/meetingPresences/meeting_presences_entity.dart';
+import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart';
+import 'package:result_dart/result_dart.dart';
 import 'package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
@@ -13,17 +17,20 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
     required IMeetingPresencesRepository meetingPresencesRepository,
     required IAuthRepository authRepository,
     required ICarnivalBlocksRepository carnivalBlocksRepository,
+    required GetCurrentUserData getCurrentUserData,
     required this.meetingId,
   }) : _meetingsRepository = meetingsRepository,
        _meetingPresencesRepository = meetingPresencesRepository,
        _authRepository = authRepository,
        _carnivalBlocksRepository = carnivalBlocksRepository,
+       _getCurrentUserData = getCurrentUserData,
        super(const MeetingDetailsInitial());
 
   final IMeetingsRepository _meetingsRepository;
   final IMeetingPresencesRepository _meetingPresencesRepository;
   final IAuthRepository _authRepository;
   final ICarnivalBlocksRepository _carnivalBlocksRepository;
+  final GetCurrentUserData _getCurrentUserData;
   final String meetingId;
   final _log = Logger('MeetingDetailsCubit');
   bool _isMarkingPresence = false;
@@ -108,6 +115,22 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
     );
   }
 
+  /// Returns the cached current member, resolving (and caching) it via
+  /// GetCurrentUserData when not yet populated.
+  Future<MembersEntity?> _resolveCurrentMember() async {
+    final cached = _authRepository.currentMember;
+    if (cached != null) return cached;
+
+    final result = await _getCurrentUserData();
+    return result.fold(
+      (member) => member,
+      (exception) {
+        _log.warning('Resolve current member failed', exception);
+        return null;
+      },
+    );
+  }
+
   Future<void> markPresence({required bool isPresent}) async {
     if (_isMarkingPresence) return;
     _isMarkingPresence = true;
@@ -125,8 +148,8 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
     );
 
     try {
-      final uuid = await _authRepository.currentUuid;
-      if (uuid == null || uuid.isEmpty) {
+      final member = await _resolveCurrentMember();
+      if (member == null) {
         emit(
           currentState.copyWith(
             markingPresenceStatus: MarkingPresenceStatus.error,
@@ -136,13 +159,25 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
         return;
       }
 
-      final data = {
-        'meetingId': int.parse(meetingId),
-        'carnivalBlockId': currentState.meeting.carnivalBlockId,
-        'isPresent': isPresent,
-      };
+      // Toggle: update the existing row if present, otherwise create a new
+      // one (POST has no upsert server-side, so always POSTing duplicates).
+      final existingRow = currentState.presences
+          .where((row) => row.memberId == member.id)
+          .firstOrNull;
 
-      final result = await _meetingPresencesRepository.createAsync(data);
+      final ResultDart<MeetingPresencesEntity, Exception> result;
+      if (existingRow != null) {
+        result = await _meetingPresencesRepository.updateAsync(
+          existingRow.id,
+          {'isPresent': isPresent},
+        );
+      } else {
+        result = await _meetingPresencesRepository.createAsync({
+          'meetingId': int.parse(meetingId),
+          'carnivalBlockId': currentState.meeting.carnivalBlockId,
+          'isPresent': isPresent,
+        });
+      }
 
       result.fold(
         (presence) {

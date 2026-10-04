@@ -42,8 +42,12 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen(
       (response) {
         if (response.event == AuthChangeEvent.signedIn && response.session != null) {
-          // Email verified and user signed in - navigate to home
-          _navigateAfterVerification();
+          // Verify the session has a recent email confirmation timestamp
+          // to ensure this is from email verification, not just any sign-in
+          final session = response.session!;
+          if (session.user.emailConfirmedAt != null) {
+            _navigateAfterVerification();
+          }
         }
       },
     );

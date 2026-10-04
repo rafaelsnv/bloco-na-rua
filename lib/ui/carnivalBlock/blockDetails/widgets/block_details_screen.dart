@@ -69,9 +69,16 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
       _membersError = null;
     });
 
-    final result = await repo.getByBlockIdAsync(
-      int.parse(widget.carnivalBlockId),
-    );
+    final blockId = int.tryParse(widget.carnivalBlockId);
+    if (blockId == null) {
+      setState(() {
+        _membersError = 'ID do bloco inválido';
+        _loadingMembers = false;
+      });
+      return;
+    }
+
+    final result = await repo.getByBlockIdAsync(blockId);
 
     result.fold(
       (members) async {
@@ -129,9 +136,16 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
       _meetingsError = null;
     });
 
-    final result = await repo.getAllByBlockId(
-      int.parse(widget.carnivalBlockId),
-    );
+    final blockId = int.tryParse(widget.carnivalBlockId);
+    if (blockId == null) {
+      setState(() {
+        _meetingsError = 'ID do bloco inválido';
+        _loadingMeetings = false;
+      });
+      return;
+    }
+
+    final result = await repo.getAllByBlockId(blockId);
 
     result.fold(
       (meetings) {

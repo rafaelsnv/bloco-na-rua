@@ -136,6 +136,12 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
       return;
     }
 
+    final carnivalBlockId = int.tryParse(widget.carnivalBlockId);
+    if (carnivalBlockId == null || carnivalBlockId <= 0) {
+      AppSnackbar.error(context, message: "ID do bloco inválido");
+      return;
+    }
+
     final dateTime = DateTime(
       _selectedDate!.year,
       _selectedDate!.month,
@@ -149,7 +155,7 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
       "description": description,
       "location": location,
       "dateTime": dateTime.toIso8601String(),
-      "carnivalBlockId": int.tryParse(widget.carnivalBlockId) ?? 0,
+      "carnivalBlockId": carnivalBlockId,
     };
 
     context.read<CreateMeetingCubit>().createMeeting(data);

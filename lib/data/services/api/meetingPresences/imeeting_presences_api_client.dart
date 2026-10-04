@@ -29,6 +29,21 @@ abstract interface class IMeetingPresencesApiClient {
   /// - Error status codes - Request failed (see [ApiError])
   AsyncResult<MeetingPresencesEntity> createAsync(Map<String, dynamic> data);
 
+  /// Updates a presence record by its ID.
+  ///
+  /// [id] - The ID of the presence record to update.
+  /// [data] - The update payload, must contain:
+  /// - `isPresent` - Boolean indicating attendance
+  ///
+  /// **HTTP Status Codes:**
+  /// - `200 OK` - Presence record updated successfully
+  /// - `201 Created` - Presence record updated successfully
+  /// - Error status codes - Request failed (see [ApiError])
+  AsyncResult<MeetingPresencesEntity> updateAsync(
+    int id,
+    Map<String, dynamic> data,
+  );
+
   /// Deletes a presence record by its ID.
   ///
   /// [id] - The ID of the presence record to delete.

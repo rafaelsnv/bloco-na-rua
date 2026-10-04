@@ -23,9 +23,13 @@ class BlockDetailsCubit extends Cubit<BlockDetailsState> {
   Future<void> loadBlock() async {
     emit(BlockDetailsLoading());
 
-    final result = await _carnivalBlocksRepository.getByIdAsync(
-      int.parse(_carnivalBlockId),
-    );
+    final blockId = int.tryParse(_carnivalBlockId);
+    if (blockId == null) {
+      emit(const BlockDetailsError('ID do bloco inválido'));
+      return;
+    }
+
+    final result = await _carnivalBlocksRepository.getByIdAsync(blockId);
 
     if (result.isError()) {
       final failure = result.exceptionOrNull();

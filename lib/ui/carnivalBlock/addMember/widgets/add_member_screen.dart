@@ -125,10 +125,10 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                   member: member,
                   showEmail: true,
                   onTap: () {
-                    context.read<AddMemberCubit>().addMember(
-                      member.id,
-                      int.parse(widget.carnivalBlockId),
-                    );
+                    final blockId = int.tryParse(widget.carnivalBlockId);
+                    if (blockId != null) {
+                      context.read<AddMemberCubit>().addMember(member.id, blockId);
+                    }
                   },
                 ),
               ),
@@ -136,10 +136,10 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
               AppIconButton(
                 icon: Icons.person_add_rounded,
                 onPressed: () {
-                  context.read<AddMemberCubit>().addMember(
-                    member.id,
-                    int.parse(widget.carnivalBlockId),
-                  );
+                  final blockId = int.tryParse(widget.carnivalBlockId);
+                  if (blockId != null) {
+                    context.read<AddMemberCubit>().addMember(member.id, blockId);
+                  }
                 },
                 tooltip: "Adicionar membro",
               ),

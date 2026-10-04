@@ -222,7 +222,8 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
                   .read<IMeetingPresencesRepository>(),
               authRepository: context.read<IAuthRepository>(),
               carnivalBlocksRepository: context
-                  .read<ICarnivalBlocksRepository>(),
+                   .read<ICarnivalBlocksRepository>(),
+              getCurrentUserData: context.read<GetCurrentUserData>(),
               meetingId: meetingId,
             ),
             child: MeetingDetailsScreen(meetingId: meetingId),

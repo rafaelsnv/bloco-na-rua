@@ -59,6 +59,8 @@ class AuthInterceptor extends Interceptor {
 
 var baseOptions = BaseOptions(
   baseUrl: dotenv.env['API_URL']!,
+  connectTimeout: const Duration(seconds: 15),
+  receiveTimeout: const Duration(seconds: 15),
   receiveDataWhenStatusError: true,
   validateStatus: (status) => status != null && status >= 200 && status < 300,
 );

@@ -22,23 +22,22 @@ class MeetingPresencesApiClient implements IMeetingPresencesApiClient {
     int meetingId,
   ) async {
     try {
-      final response = await baseApiClient.client.get(
-        '$_basePath/$meetingId',
-      );
+      // ponytail: no by-meetingId endpoint in API; fetch all + filter client-side, add backend filter when available
+      final response = await baseApiClient.client.get(_basePath);
       final List<MeetingPresencesEntity> result = [];
       switch (response.statusCode) {
         case 200:
           if (response.data is List) {
             result.addAll(
-              (response.data as List<dynamic>).map(
-                (e) => MeetingPresencesEntity.fromJson(e as Map<String, dynamic>),
-              ),
+              (response.data as List<dynamic>)
+                  .map(
+                    (e) => MeetingPresencesEntity.fromJson(e as Map<String, dynamic>),
+                  )
+                  .where((e) => e.meetingId == meetingId),
             );
-          } else {
-            result.add(MeetingPresencesEntity.fromJson(response.data));
           }
         case 404:
-          // No presences for this meeting - return empty list
+          // No presences - return empty list
           break;
         default:
           return Failure(baseApiClient.formatError(response));
@@ -62,6 +61,28 @@ class MeetingPresencesApiClient implements IMeetingPresencesApiClient {
     try {
       final response = await baseApiClient.client.post(_basePath, data: data);
       if (response.statusCode != 201 && response.statusCode != 200) {
+        return Failure(baseApiClient.formatError(response));
+      }
+      return Success(MeetingPresencesEntity.fromJson(response.data as Map<String, dynamic>));
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
+    }
+  }
+
+  @override
+  AsyncResult<MeetingPresencesEntity> updateAsync(
+    int id,
+    Map<String, dynamic> data,
+  ) async {
+    try {
+      final response = await baseApiClient.client.put('$_basePath/$id', data: data);
+      if (response.statusCode != 200 && response.statusCode != 201) {
         return Failure(baseApiClient.formatError(response));
       }
       return Success(MeetingPresencesEntity.fromJson(response.data as Map<String, dynamic>));
