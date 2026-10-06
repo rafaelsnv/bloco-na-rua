@@ -1,6 +1,8 @@
 import "package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/joinBlock/cubit/join_block_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/joinBlock/cubit/join_block_state.dart";
+import "package:bloco_na_rua/ui/home/cubit/home_cubit.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
@@ -46,6 +48,8 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
       child: BlocConsumer<JoinBlockCubit, JoinBlockState>(
         listener: (context, state) {
           if (state is JoinBlockSuccess) {
+            context.read<BlockListCubit>().loadBlocks();
+            context.read<HomeCubit>().loadHomeData();
             AppSnackbar.success(context, message: "Você entrou no bloco!");
             context.pop();
           } else if (state is JoinBlockError) {

@@ -40,8 +40,11 @@ class AuthRepository implements IAuthRepository {
 
   Future<String?> _fetchTokenAndUuid() async {
     final tokenResult = await _secureStorageService.fetchToken();
+    // design: storage layer wraps absence as Failure for symmetry, but a
+    // missing token/UUID on first launch is not an error — log at INFO and
+    // treat the user as unauthenticated.
     if (tokenResult.isError()) {
-      _log.info("Token not found (first launch or cleared)"); // ponytail: not an error
+      _log.info("Token not found (first launch or cleared)");
       _authToken = null;
     } else {
       _authToken = tokenResult.getOrNull();
@@ -49,7 +52,7 @@ class AuthRepository implements IAuthRepository {
 
     final uuidResult = await _secureStorageService.fetchUuid();
     if (uuidResult.isError()) {
-      _log.info("User ID not found (first launch or cleared)"); // ponytail: not an error
+      _log.info("User ID not found (first launch or cleared)");
     }
 
     final uuid = uuidResult.getOrNull();
@@ -72,7 +75,8 @@ class AuthRepository implements IAuthRepository {
     if (_currentUuidFuture != null) {
       return _currentUuidFuture!;
     }
-    // ponytail: defer to next microtask to avoid blocking startup frame
+    // design: defer to next microtask so the storage read happens after the
+    // current frame is built (no startup frame blocking).
     _currentUuidFuture = Future.microtask(_fetchTokenAndUuid);
     return _currentUuidFuture!;
   }
@@ -189,8 +193,8 @@ class AuthRepository implements IAuthRepository {
       // Clean up Supabase auth user via backend endpoint if member creation failed
       final cleanupError = await _signupCleanup(userId);
       if (cleanupError.isError()) {
-        // Log but don't crash — fire-and-forget with server-side reconciliation
-        // ponytail: server-side orphan cleanup job should run periodically
+        // Log but don't crash — fire-and-forget with server-side reconciliation.
+        // Backend TO-DO: scheduled orphan-cleanup cron to catch missed cleanups.
         _log.severe(
           'Orphan Supabase user $userId: member registration failed and cleanup also failed',
           cleanupError.exceptionOrNull(),

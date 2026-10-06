@@ -29,10 +29,7 @@ class BlockListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<BlockListCubit>(
-      create: (context) => context.read<BlockListCubit>()..loadBlocks(),
-      child: const _BlockListScreenContent(),
-    );
+    return const _BlockListScreenContent();
   }
 }
 
@@ -45,6 +42,12 @@ class _BlockListScreenContent extends StatefulWidget {
 
 class _BlockListScreenContentState extends State<_BlockListScreenContent> {
   final _fabKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<BlockListCubit>().loadBlocks();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +70,10 @@ class _BlockListScreenContentState extends State<_BlockListScreenContent> {
           builder: (context, state) {
             return Stack(
               children: [
+                if (fabState.expanded)
+                  ModalBarrier(
+                    onDismiss: () => context.read<FabStateCubit>().dismiss(),
+                  ),
                 Scaffold(
                   appBar: const AppAppBar(title: "Blocos", showBackButton: false),
                   body: SafeArea(
@@ -84,10 +91,6 @@ class _BlockListScreenContentState extends State<_BlockListScreenContent> {
                     },
                   ),
                 ),
-                if (fabState.expanded)
-                  ModalBarrier(
-                    onDismiss: () => context.read<FabStateCubit>().dismiss(),
-                  ),
               ],
             );
           },

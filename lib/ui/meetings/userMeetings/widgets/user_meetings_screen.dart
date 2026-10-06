@@ -28,6 +28,12 @@ class _UserMeetingsScreenState extends State<UserMeetingsScreen> {
   String _searchQuery = "";
 
   @override
+  void initState() {
+    super.initState();
+    context.read<UserMeetingsCubit>().loadMeetings();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<FabStateCubit, FabState>(
       builder: (context, fabState) {

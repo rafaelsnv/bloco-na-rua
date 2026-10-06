@@ -20,6 +20,8 @@ import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_loading.dart";
 import "package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_cubit.dart";
 import "package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_state.dart";
+import "package:bloco_na_rua/ui/meetings/userMeetings/cubit/user_meetings_cubit.dart";
+import "package:bloco_na_rua/ui/home/cubit/home_cubit.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
@@ -43,21 +45,7 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<MeetingDetailsCubit, MeetingDetailsState>(
-      listenWhen: (previous, current) {
-        if (previous is MeetingDetailsLoaded && current is MeetingDetailsLoaded) {
-          return previous.presencesStatus == PresencesStatus.initial &&
-              current.presencesStatus != PresencesStatus.initial;
-        }
-        return false;
-      },
-      listener: (context, state) {
-        if (state is MeetingDetailsLoaded &&
-            state.presencesStatus == PresencesStatus.initial) {
-          context.read<MeetingDetailsCubit>().loadPresences();
-        }
-      },
-      child: BlocConsumer<MeetingDetailsCubit, MeetingDetailsState>(
+    return BlocConsumer<MeetingDetailsCubit, MeetingDetailsState>(
         listenWhen: (previous, current) {
           if (previous is MeetingDetailsLoaded &&
               current is MeetingDetailsLoaded) {
@@ -78,6 +66,10 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
               state.markingPresenceError != null) {
             AppSnackbar.error(context, message: state.markingPresenceError!);
           } else if (state.deleteStatus == DeleteStatus.success) {
+            if (context.mounted) {
+              context.read<UserMeetingsCubit>().loadMeetings();
+              context.read<HomeCubit>().loadHomeData();
+            }
             context.pop();
           } else if (state.deleteStatus == DeleteStatus.failure) {
             AppSnackbar.error(context, message: "Erro ao excluir reunião");
@@ -175,7 +167,6 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
           body: const AppEmpty(message: "Nenhum dado encontrado"),
         );
       },
-      ),
     );
   }
 
@@ -543,36 +534,29 @@ class _PresenceFABs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final spinner = const SizedBox(
+      width: 24,
+      height: 24,
+      child: CircularProgressIndicator(strokeWidth: 3),
+    );
     return Padding(
       padding: EdgeInsets.only(bottom: Spacing.space_sm),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // ponytail: spinner swap exists because AppFAB lacks a loading/child
-          // slot; upgrade path: add optional `child` param to AppFAB.
-          isLoading
-              ? const SizedBox(
-                  width: 56,
-                  height: 56,
-                  child: CircularProgressIndicator(strokeWidth: 3),
-                )
-              : AppFAB(
-                  key: const Key("app_fab_mark_absent"),
-                  icon: Icons.close_rounded,
-                  onPressed: onMarkAbsent,
-                ),
+          AppFAB(
+            key: const Key("app_fab_mark_absent"),
+            icon: Icons.close_rounded,
+            onPressed: isLoading ? null : onMarkAbsent,
+            child: isLoading ? spinner : null,
+          ),
           const SizedBox(width: Spacing.space_sm),
-          isLoading
-              ? const SizedBox(
-                  width: 56,
-                  height: 56,
-                  child: CircularProgressIndicator(strokeWidth: 3),
-                )
-              : AppFAB(
-                  key: const Key("app_fab_mark_present"),
-                  icon: Icons.check_rounded,
-                  onPressed: onMarkPresent,
-                ),
+          AppFAB(
+            key: const Key("app_fab_mark_present"),
+            icon: Icons.check_rounded,
+            onPressed: isLoading ? null : onMarkPresent,
+            child: isLoading ? spinner : null,
+          ),
         ],
       ),
     );

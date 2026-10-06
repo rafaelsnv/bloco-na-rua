@@ -1,6 +1,8 @@
+import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_state.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
+import "package:bloco_na_rua/ui/home/cubit/home_cubit.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
 import "package:bloco_na_rua/ui/core/widgets/inputs/app_text_field.dart";
@@ -34,6 +36,8 @@ class _CreateBlockScreenState extends State<CreateBlockScreen> {
     return BlocConsumer<CreateBlockCubit, CreateBlockState>(
       listener: (context, state) {
         if (state is CreateBlockSuccess) {
+          context.read<BlockListCubit>().loadBlocks();
+          context.read<HomeCubit>().loadHomeData();
           AppSnackbar.success(context, message: "Bloco criado com sucesso!");
           context.pushReplacement("${Routes.carnivalBlock}/${state.blockId}");
         } else if (state is CreateBlockError) {

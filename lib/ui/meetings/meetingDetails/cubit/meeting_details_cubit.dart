@@ -65,6 +65,9 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
         emit(
           MeetingDetailsLoaded(meeting: meeting, canDeleteMeeting: canDelete),
         );
+        // Chained (not screen-level parallel) so `MeetingDetailsLoaded` is
+        // emitted before `loadPresences`'s early-return guard fires.
+        await loadPresences();
       },
       (exception) {
         _log.warning('Load meeting failed', exception);

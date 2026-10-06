@@ -1,6 +1,8 @@
 import "package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart";
+import "package:bloco_na_rua/ui/home/cubit/home_cubit.dart";
 import "package:bloco_na_rua/ui/meetings/createMeeting/cubit/create_meeting_cubit.dart";
 import "package:bloco_na_rua/ui/meetings/createMeeting/cubit/create_meeting_state.dart";
+import "package:bloco_na_rua/ui/meetings/userMeetings/cubit/user_meetings_cubit.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
@@ -170,6 +172,8 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
       child: BlocConsumer<CreateMeetingCubit, CreateMeetingState>(
         listener: (context, state) {
           if (state.status == CreateMeetingStatus.success) {
+            context.read<UserMeetingsCubit>().loadMeetings();
+            context.read<HomeCubit>().loadHomeData();
             AppSnackbar.success(context, message: "Reunião criada com sucesso");
             context.pop();
           } else if (state.status == CreateMeetingStatus.failure) {

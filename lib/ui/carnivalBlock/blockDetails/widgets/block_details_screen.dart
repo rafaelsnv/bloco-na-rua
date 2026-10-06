@@ -41,7 +41,8 @@ class BlockDetailsScreen extends StatefulWidget {
   State<BlockDetailsScreen> createState() => _BlockDetailsScreenState();
 }
 
-class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
+class _BlockDetailsScreenState extends State<BlockDetailsScreen>
+    with RouteAware {
   List<CarnivalBlockMembersEntity> _members = [];
   List<MeetingsEntity> _meetings = [];
   Map<int, MembersEntity> _memberEntities = {};
@@ -50,10 +51,32 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
   String? _membersError;
   String? _meetingsError;
   int? _deletingMemberId;
+  bool _subscribedToRoute = false;
 
   @override
   void initState() {
     super.initState();
+    _loadMembers();
+    _loadMeetings();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_subscribedToRoute) {
+      _subscribedToRoute = true;
+      Routes.routeObserver.subscribe(this, ModalRoute.of(context)!);
+    }
+  }
+
+  @override
+  void dispose() {
+    Routes.routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
     _loadMembers();
     _loadMeetings();
   }

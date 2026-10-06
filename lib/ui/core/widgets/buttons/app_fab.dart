@@ -41,20 +41,24 @@ class AppFAB extends StatelessWidget {
   /// [size] defaults to [AppFabSize.md] (56px).
   ///
   /// [fabColor] defaults to [AppFabColor.accent] (orange).
+  ///
+  /// [child] overrides [icon] when non-null — useful for inline loading
+  /// indicators. Pair with `onPressed: null` to disable interaction.
   const AppFAB({
     required this.icon,
     required this.onPressed,
     this.label,
+    this.child,
     this.size = AppFabSize.md,
     this.fabColor = AppFabColor.accent,
     super.key,
   });
 
-  /// The icon to display on the FAB.
+  /// The icon to display on the FAB. Ignored if [child] is provided.
   final IconData icon;
 
-  /// Callback when the FAB is tapped.
-  final VoidCallback onPressed;
+  /// Callback when the FAB is tapped. Null disables interaction (e.g. loading).
+  final VoidCallback? onPressed;
 
   /// Optional label text. When non-null the FAB is rendered as
   /// ExtendedFloatingActionButton; when null it is a basic FAB.
@@ -65,6 +69,9 @@ class AppFAB extends StatelessWidget {
 
   /// Color variant controlling the FAB background color.
   final AppFabColor fabColor;
+
+  /// Optional override for the FAB's child widget (e.g. a spinner).
+  final Widget? child;
 
   static const Map<AppFabSize, double> _sizeTokens = {
     AppFabSize.sm: 40.0,
@@ -110,7 +117,7 @@ class AppFAB extends StatelessWidget {
         elevation: _elevationDefault,
         shape: RoundedRectangleBorder(borderRadius: Radii.fab),
         heroTag: null,
-        child: Icon(icon, size: _iconSize),
+        child: child ?? Icon(icon, size: _iconSize),
       ),
     );
   }

@@ -29,6 +29,12 @@ class _HomeScreenState extends State<HomeScreen> {
   final _fabKey = GlobalKey();
 
   @override
+  void initState() {
+    super.initState();
+    context.read<HomeCubit>().loadHomeData();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<FabStateCubit, FabState>(
       builder: (context, fabState) {
@@ -58,6 +64,10 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: Stack(
             children: [
+              if (fabState.expanded)
+                ModalBarrier(
+                  onDismiss: () => context.read<FabStateCubit>().dismiss(),
+                ),
               Scaffold(
                 appBar: AppAppBar(
                   title: "Bloco na Rua",
@@ -105,10 +115,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 floatingActionButtonLocation:
                     FloatingActionButtonLocation.endFloat,
               ),
-              if (fabState.expanded)
-                ModalBarrier(
-                  onDismiss: () => context.read<FabStateCubit>().dismiss(),
-                ),
             ],
           ),
         );

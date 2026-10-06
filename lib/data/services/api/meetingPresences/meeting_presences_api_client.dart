@@ -22,7 +22,9 @@ class MeetingPresencesApiClient implements IMeetingPresencesApiClient {
     int meetingId,
   ) async {
     try {
-      // ponytail: no by-meetingId endpoint in API; fetch all + filter client-side, add backend filter when available
+      // design: backend has no `?meetingId=` filter; fetch all + filter here until
+      // the API ships the query param. See TKT-001 in
+      // .tmp/sessions/2026-10-06-ponytail-fix-all/BACKEND_TICKETS.md.
       final response = await baseApiClient.client.get(_basePath);
       final List<MeetingPresencesEntity> result = [];
       switch (response.statusCode) {

@@ -20,9 +20,6 @@ class Routes {
   static const String editBlock = '/edit-block';
   static const String joinBlock = '/join-block';
 
-  // Rotas de membros
-  static const String members = '/members';
-
   // Rotas de reuniões
   static const String meeting = '/meeting';
   static const String userMeetings = '/user-meetings';

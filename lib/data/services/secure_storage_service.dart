@@ -2,7 +2,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logging/logging.dart';
 import 'package:result_dart/result_dart.dart';
 
-// ponytail: Minimal wrapper - interface matches SharedPreferencesService for easy migration
+// design: Thin wrapper over `FlutterSecureStorage`. Exists for (a) the
+// `Result<T>` abstraction so callers don't try/catch around platform
+// exceptions, and (b) centralizing the key constants + logging.
 class SecureStorageService {
   static const _tokenKey = 'TOKEN';
   static const _uuidKey = 'UUID';
