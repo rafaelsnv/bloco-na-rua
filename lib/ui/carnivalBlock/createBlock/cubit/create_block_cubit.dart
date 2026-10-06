@@ -35,9 +35,9 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
       }
       final user = userResult.getOrNull()!;
 
-      // 2. Create the block with user as owner
-      // ponytail: TO-DO - Backend must generate and return inviteCode + managersInviteCode
-      // in the createAsync response. Remove 'carnivalBlockImage' once backend handles it.
+      // 2. Create the block with user as owner.
+      // Backend generates and returns inviteCode + managersInviteCode in the
+      // response (parsed into the entity); UI consumes them when needed.
       final data = {'name': name, 'ownerId': user.id, 'carnivalBlockImage': ''};
 
       final result = await _carnivalBlocksRepository.createAsync(data);

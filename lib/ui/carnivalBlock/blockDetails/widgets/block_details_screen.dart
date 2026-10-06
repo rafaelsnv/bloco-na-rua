@@ -59,9 +59,6 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
   }
 
   Future<void> _loadMembers() async {
-    // ponytail: TO-DO: request batch endpoint GET /Members?ids=... from backend
-    // to eliminate this N+1 pattern. Future.wait is the best available option
-    // until a batch endpoint exists.
     final repo = context.read<ICarnivalBlockMembersRepository>();
     final membersRepo = context.read<IMembersRepository>();
     setState(() {
@@ -82,33 +79,51 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
 
     result.fold(
       (members) async {
-        // Fetch all member entities concurrently with Future.wait
+        // Single batch fetch: GET /Members?ids=1,2,3 (backend-supported).
+        final ids = members.map((m) => m.memberId).toList();
+        final entitiesResult = await membersRepo.getByIdsAsync(ids);
+
         final entities = <int, MembersEntity>{};
-        final failedMemberIds = <int>[];
-        final memberFutures = members.map(
-          (member) => membersRepo.getByIdAsync(member.memberId),
+        var failedCount = 0;
+
+        entitiesResult.fold(
+          (fetched) {
+            final byId = {for (final e in fetched) e.id: e};
+            for (final member in members) {
+              final entity = byId[member.memberId];
+              if (entity != null) {
+                entities[member.memberId] = entity;
+              } else {
+                // Member row exists but entity missing (deleted?) — placeholder.
+                failedCount++;
+                entities[member.memberId] = MembersEntity(
+                  id: member.memberId,
+                  name: "Membro",
+                  email: null,
+                  profileImage: null,
+                );
+              }
+            }
+          },
+          (_) {
+            // Batch failed entirely — placeholder for all, same as before.
+            failedCount = members.length;
+            for (final member in members) {
+              entities[member.memberId] = MembersEntity(
+                id: member.memberId,
+                name: "Membro",
+                email: null,
+                profileImage: null,
+              );
+            }
+          },
         );
-        final memberResults = await Future.wait(memberFutures);
 
-        for (var i = 0; i < members.length; i++) {
-          final member = members[i];
-          final memberResult = memberResults[i];
-          memberResult.fold((m) => entities[member.memberId] = m, (_) {
-            failedMemberIds.add(member.memberId);
-            entities[member.memberId] = MembersEntity(
-              id: member.memberId,
-              name: "Membro",
-              email: null,
-              profileImage: null,
-            );
-          });
-        }
-
-        if (failedMemberIds.isNotEmpty && mounted) {
+        if (failedCount > 0 && mounted) {
           AppSnackbar.error(
             context,
             message:
-                "Falha ao carregar dados de ${failedMemberIds.length} membro(s)",
+                "Falha ao carregar dados de $failedCount membro(s)",
           );
         }
 
