@@ -1,6 +1,4 @@
 import "package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart";
-import "package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart";
-import "package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/joinBlock/cubit/join_block_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/joinBlock/cubit/join_block_state.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
@@ -42,10 +40,8 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => JoinBlockCubit(
-        carnivalBlocksRepository: context.read<ICarnivalBlocksRepository>(),
-        carnivalBlockMembersRepository: context
-            .read<ICarnivalBlockMembersRepository>(),
-        getCurrentUserData: context.read<GetCurrentUserData>(),
+        carnivalBlockMembersRepository:
+            context.read<ICarnivalBlockMembersRepository>(),
       ),
       child: BlocConsumer<JoinBlockCubit, JoinBlockState>(
         listener: (context, state) {

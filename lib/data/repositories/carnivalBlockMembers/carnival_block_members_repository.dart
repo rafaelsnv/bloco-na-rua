@@ -1,3 +1,4 @@
+import 'package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart';
 import 'package:bloco_na_rua/data/services/api/carnivalBlockMembers/icarnival_block_members_api_client.dart';
 import 'package:bloco_na_rua/domain/entities/carnivalBlockMembers/carnival_block_members_entity.dart';
@@ -14,6 +15,13 @@ class CarnivalBlockMembersRepository
     int blockId,
   ) async {
     return await carnivalBlockMembersApiClient.getByBlockIdAsync(blockId);
+  }
+
+  @override
+  AsyncResult<CarnivalBlockMemberJoinResponse> joinByInviteCodeAsync(
+    String inviteCode,
+  ) async {
+    return await carnivalBlockMembersApiClient.joinByInviteCodeAsync(inviteCode);
   }
 
   @override

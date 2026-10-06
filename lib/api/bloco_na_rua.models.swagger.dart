@@ -86,7 +86,11 @@ extension $CarnivalBlockCreateExtension on CarnivalBlockCreate {
 
 @JsonSerializable(explicitToJson: true)
 class CarnivalBlockMemberCreate {
-  const CarnivalBlockMemberCreate({this.carnivalBlockId, this.role});
+  const CarnivalBlockMemberCreate({
+    this.carnivalBlockId,
+    this.role,
+    this.memberId,
+  });
 
   factory CarnivalBlockMemberCreate.fromJson(Map<String, dynamic> json) =>
       _$CarnivalBlockMemberCreateFromJson(json);
@@ -103,6 +107,8 @@ class CarnivalBlockMemberCreate {
     fromJson: rolesEnumNullableFromJson,
   )
   final enums.RolesEnum? role;
+  @JsonKey(name: 'memberId', includeIfNull: false)
+  final int? memberId;
   static const fromJsonFactory = _$CarnivalBlockMemberCreateFromJson;
 
   @override
@@ -115,7 +121,12 @@ class CarnivalBlockMemberCreate {
                   carnivalBlockId,
                 )) &&
             (identical(other.role, role) ||
-                const DeepCollectionEquality().equals(other.role, role)));
+                const DeepCollectionEquality().equals(other.role, role)) &&
+            (identical(other.memberId, memberId) ||
+                const DeepCollectionEquality().equals(
+                  other.memberId,
+                  memberId,
+                )));
   }
 
   @override
@@ -125,6 +136,7 @@ class CarnivalBlockMemberCreate {
   int get hashCode =>
       const DeepCollectionEquality().hash(carnivalBlockId) ^
       const DeepCollectionEquality().hash(role) ^
+      const DeepCollectionEquality().hash(memberId) ^
       runtimeType.hashCode;
 }
 
@@ -132,22 +144,163 @@ extension $CarnivalBlockMemberCreateExtension on CarnivalBlockMemberCreate {
   CarnivalBlockMemberCreate copyWith({
     int? carnivalBlockId,
     enums.RolesEnum? role,
+    int? memberId,
   }) {
     return CarnivalBlockMemberCreate(
       carnivalBlockId: carnivalBlockId ?? this.carnivalBlockId,
       role: role ?? this.role,
+      memberId: memberId ?? this.memberId,
     );
   }
 
   CarnivalBlockMemberCreate copyWithWrapped({
     Wrapped<int?>? carnivalBlockId,
     Wrapped<enums.RolesEnum?>? role,
+    Wrapped<int?>? memberId,
   }) {
     return CarnivalBlockMemberCreate(
       carnivalBlockId: (carnivalBlockId != null
           ? carnivalBlockId.value
           : this.carnivalBlockId),
       role: (role != null ? role.value : this.role),
+      memberId: (memberId != null ? memberId.value : this.memberId),
+    );
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class CarnivalBlockMemberJoinResponse {
+  const CarnivalBlockMemberJoinResponse({
+    this.id,
+    this.carnivalBlockId,
+    this.carnivalBlockName,
+    this.memberId,
+    this.role,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  factory CarnivalBlockMemberJoinResponse.fromJson(Map<String, dynamic> json) =>
+      _$CarnivalBlockMemberJoinResponseFromJson(json);
+
+  static const toJsonFactory = _$CarnivalBlockMemberJoinResponseToJson;
+  Map<String, dynamic> toJson() =>
+      _$CarnivalBlockMemberJoinResponseToJson(this);
+
+  @JsonKey(name: 'id', includeIfNull: false)
+  final int? id;
+  @JsonKey(name: 'carnivalBlockId', includeIfNull: false)
+  final int? carnivalBlockId;
+  @JsonKey(name: 'carnivalBlockName', includeIfNull: false)
+  final String? carnivalBlockName;
+  @JsonKey(name: 'memberId', includeIfNull: false)
+  final int? memberId;
+  @JsonKey(
+    name: 'role',
+    includeIfNull: false,
+    toJson: rolesEnumNullableToJson,
+    fromJson: rolesEnumNullableFromJson,
+  )
+  final enums.RolesEnum? role;
+  @JsonKey(name: 'createdAt', includeIfNull: false)
+  final DateTime? createdAt;
+  @JsonKey(name: 'updatedAt', includeIfNull: false)
+  final DateTime? updatedAt;
+  static const fromJsonFactory = _$CarnivalBlockMemberJoinResponseFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is CarnivalBlockMemberJoinResponse &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)) &&
+            (identical(other.carnivalBlockId, carnivalBlockId) ||
+                const DeepCollectionEquality().equals(
+                  other.carnivalBlockId,
+                  carnivalBlockId,
+                )) &&
+            (identical(other.carnivalBlockName, carnivalBlockName) ||
+                const DeepCollectionEquality().equals(
+                  other.carnivalBlockName,
+                  carnivalBlockName,
+                )) &&
+            (identical(other.memberId, memberId) ||
+                const DeepCollectionEquality().equals(
+                  other.memberId,
+                  memberId,
+                )) &&
+            (identical(other.role, role) ||
+                const DeepCollectionEquality().equals(other.role, role)) &&
+            (identical(other.createdAt, createdAt) ||
+                const DeepCollectionEquality().equals(
+                  other.createdAt,
+                  createdAt,
+                )) &&
+            (identical(other.updatedAt, updatedAt) ||
+                const DeepCollectionEquality().equals(
+                  other.updatedAt,
+                  updatedAt,
+                )));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(id) ^
+      const DeepCollectionEquality().hash(carnivalBlockId) ^
+      const DeepCollectionEquality().hash(carnivalBlockName) ^
+      const DeepCollectionEquality().hash(memberId) ^
+      const DeepCollectionEquality().hash(role) ^
+      const DeepCollectionEquality().hash(createdAt) ^
+      const DeepCollectionEquality().hash(updatedAt) ^
+      runtimeType.hashCode;
+}
+
+extension $CarnivalBlockMemberJoinResponseExtension
+    on CarnivalBlockMemberJoinResponse {
+  CarnivalBlockMemberJoinResponse copyWith({
+    int? id,
+    int? carnivalBlockId,
+    String? carnivalBlockName,
+    int? memberId,
+    enums.RolesEnum? role,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return CarnivalBlockMemberJoinResponse(
+      id: id ?? this.id,
+      carnivalBlockId: carnivalBlockId ?? this.carnivalBlockId,
+      carnivalBlockName: carnivalBlockName ?? this.carnivalBlockName,
+      memberId: memberId ?? this.memberId,
+      role: role ?? this.role,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  CarnivalBlockMemberJoinResponse copyWithWrapped({
+    Wrapped<int?>? id,
+    Wrapped<int?>? carnivalBlockId,
+    Wrapped<String?>? carnivalBlockName,
+    Wrapped<int?>? memberId,
+    Wrapped<enums.RolesEnum?>? role,
+    Wrapped<DateTime?>? createdAt,
+    Wrapped<DateTime?>? updatedAt,
+  }) {
+    return CarnivalBlockMemberJoinResponse(
+      id: (id != null ? id.value : this.id),
+      carnivalBlockId: (carnivalBlockId != null
+          ? carnivalBlockId.value
+          : this.carnivalBlockId),
+      carnivalBlockName: (carnivalBlockName != null
+          ? carnivalBlockName.value
+          : this.carnivalBlockName),
+      memberId: (memberId != null ? memberId.value : this.memberId),
+      role: (role != null ? role.value : this.role),
+      createdAt: (createdAt != null ? createdAt.value : this.createdAt),
+      updatedAt: (updatedAt != null ? updatedAt.value : this.updatedAt),
     );
   }
 }

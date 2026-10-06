@@ -96,7 +96,6 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
     Locale('pt'),
-    Locale('pt', 'BR'),
   ];
 
   /// No internet connection or socket error
@@ -172,12 +171,11 @@ class _AppLocalizationsDelegate
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-  // Lookup logic when language code or full locale is specified.
+  // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
     case 'en':
       return AppLocalizationsEn();
     case 'pt':
-      // pt or pt_BR use the same translations
       return AppLocalizationsPt();
   }
 

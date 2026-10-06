@@ -1,3 +1,4 @@
+import 'package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart';
 import 'package:bloco_na_rua/core/api_error.dart';
 import 'package:bloco_na_rua/core/error_types.dart';
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
@@ -38,6 +39,44 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
           return Failure(baseApiClient.formatError(response));
       }
       return Success(result);
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
+    }
+  }
+
+  @override
+  AsyncResult<CarnivalBlockMemberJoinResponse> joinByInviteCodeAsync(
+    String inviteCode,
+  ) async {
+    try {
+      final response = await baseApiClient.client.post(
+        '$_basePath/join/$inviteCode',
+      );
+      switch (response.statusCode) {
+        case 200:
+        case 201:
+          return Success(
+            CarnivalBlockMemberJoinResponse.fromJson(response.data),
+          );
+        case 404:
+          return Failure(baseApiClient.formatError(response));
+        case 409:
+          return Failure(
+            ApiError(
+              type: ApiErrorType.unknown,
+              userMessage: 'Você já é membro deste bloco.',
+              technicalMessage: 'Already a member',
+            ),
+          );
+        default:
+          return Failure(baseApiClient.formatError(response));
+      }
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
