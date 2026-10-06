@@ -38,10 +38,10 @@ class MeetingCard extends StatelessWidget {
   final bool showDescription;
 
   /// Formats a DateTime to "dd MMM yyyy • HH:mm" in pt-BR.
-  /// Returns "Data nao definida" when [dateTime] is null.
+  /// Returns "Data não definida" when [dateTime] is null.
   String _formatDateTime(DateTime? dateTime) {
     if (dateTime == null) {
-      return "Data nao definida";
+      return "Data não definida";
     }
     return DateFormat("dd MMM yyyy • HH:mm", "pt_BR").format(dateTime);
   }
@@ -134,7 +134,7 @@ class MeetingCard extends StatelessWidget {
             Row(
               children: [
                 AppChip(
-                  label: "$confirmedPresences/$totalPresences presencas",
+                  label: "$confirmedPresences/$totalPresences presenças",
                   variant: ChipVariant.soft,
                   color: AppColors.primary,
                 ),

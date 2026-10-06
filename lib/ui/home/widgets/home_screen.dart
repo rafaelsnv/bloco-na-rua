@@ -65,6 +65,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   showBackButton: false,
                 ),
                 body: SafeArea(
+                  // Material RefreshIndicator + AlwaysScrollableScrollPhysics:
+                  // pull-to-refresh works even when content is shorter than
+                  // the viewport (empty/error states stay refreshable).
                   child: RefreshIndicator(
                     onRefresh: () => context.read<HomeCubit>().loadHomeData(),
                     child: BlocBuilder<HomeCubit, HomeState>(
@@ -226,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.symmetric(
                 horizontal: Spacing.pagePaddingMobile,
               ),
-              child: AppEmpty(message: "Nenhuma reuniao esta semana"),
+              child: AppEmpty(message: "Nenhuma reunião esta semana"),
             )
           else
             Padding(

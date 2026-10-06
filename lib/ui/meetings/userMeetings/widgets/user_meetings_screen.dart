@@ -88,13 +88,13 @@ class _UserMeetingsScreenState extends State<UserMeetingsScreen> {
                             if (filteredMeetings.isEmpty) {
                               if (allMeetings.isEmpty) {
                                 return AppEmpty(
-                                  title: "Nenhuma reuniao",
+                                  title: "Nenhuma reunião",
                                   message: "Você ainda não tem reuniões agendadas",
                                   icon: Icons.event_busy_rounded,
                                 );
                               }
                               return AppEmpty(
-                                title: "Nenhuma reuniao encontrada",
+                                title: "Nenhuma reunião encontrada",
                                 message: "Tente buscar com outros termos",
                                 icon: Icons.search_off_rounded,
                               );

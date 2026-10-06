@@ -265,7 +265,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
                 if (canManageMembers) ...[
                   IconButton(
                     icon: const Icon(Icons.add_alert_rounded),
-                    tooltip: "Criar Reuniao",
+                    tooltip: "Criar Reunião",
                     onPressed: () => context.push(
                       "/create-meeting/${widget.carnivalBlockId}",
                     ),
@@ -587,7 +587,7 @@ class _MeetingsSection extends StatelessWidget {
                 size: 20,
               ),
             ),
-            title: meeting.name ?? "Sem titulo",
+            title: meeting.name ?? "Sem título",
             subtitle: meetingDateTime != null
                 ? DateFormat(
                     "dd/MM/yyyy - HH:mm",

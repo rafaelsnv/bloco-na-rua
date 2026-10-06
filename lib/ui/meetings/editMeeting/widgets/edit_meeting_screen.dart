@@ -112,7 +112,7 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
   void _submitForm() {
     final meetingId = int.tryParse(widget.meetingId);
     if (meetingId == null) {
-      AppSnackbar.error(context, message: "ID da reuniao invalido");
+      AppSnackbar.error(context, message: "ID da reunião inválido");
       return;
     }
 
@@ -120,7 +120,7 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
     if (title.isEmpty) {
       AppSnackbar.error(
         context,
-        message: "O titulo da reuniao e obrigatorio",
+        message: "O título da reunião é obrigatório",
       );
       return;
     }
@@ -174,7 +174,7 @@ appBar: const AppAppBar(title: "Editar reunião"),
                     ),
                     const SizedBox(height: Spacing.space_sm),
                     Text(
-                      "ID da reuniao invalido",
+                      "ID da reunião inválido",
                       style: Theme.of(context).textTheme.bodyLarge,
                       textAlign: TextAlign.center,
                     ),
@@ -184,14 +184,14 @@ appBar: const AppAppBar(title: "Editar reunião"),
             );
           }
           return Scaffold(
-            appBar: const AppAppBar(title: "Editar reuniao"),
+            appBar: const AppAppBar(title: "Editar reunião"),
             body: const AppLoading(),
           );
         }
 
         if (state.status == EditMeetingStatus.loading) {
           return Scaffold(
-            appBar: const AppAppBar(title: "Editar reuniao"),
+            appBar: const AppAppBar(title: "Editar reunião"),
             body: const AppLoading(),
           );
         }
@@ -199,7 +199,7 @@ appBar: const AppAppBar(title: "Editar reunião"),
         if (state.status == EditMeetingStatus.failure &&
             state.meeting == null) {
           return Scaffold(
-            appBar: const AppAppBar(title: "Editar reuniao"),
+            appBar: const AppAppBar(title: "Editar reunião"),
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -227,7 +227,7 @@ appBar: const AppAppBar(title: "Editar reunião"),
         final isSaving = state.status == EditMeetingStatus.saving;
 
         return Scaffold(
-          appBar: const AppAppBar(title: "Editar reuniao"),
+          appBar: const AppAppBar(title: "Editar reunião"),
           body: SingleChildScrollView(
             padding: EdgeInsets.all(Spacing.pagePaddingMobile),
             child: AppCard(

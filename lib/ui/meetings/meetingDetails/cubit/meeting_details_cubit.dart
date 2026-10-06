@@ -40,7 +40,7 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
 
     final meetingIdInt = int.tryParse(meetingId);
     if (meetingIdInt == null) {
-      emit(const MeetingDetailsError('ID da reuniao invalido'));
+      emit(const MeetingDetailsError('ID da reunião inválido'));
       return;
     }
 
@@ -83,7 +83,7 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
         currentState.copyWith(
           presences: [],
           presencesStatus: PresencesStatus.error,
-          presencesError: 'ID da reuniao invalido',
+          presencesError: 'ID da reunião inválido',
         ),
       );
       return;
@@ -173,7 +173,7 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
         );
       } else {
         result = await _meetingPresencesRepository.createAsync({
-          'meetingId': int.parse(meetingId),
+          'meetingId': currentState.meeting.id,
           'carnivalBlockId': currentState.meeting.carnivalBlockId,
           'isPresent': isPresent,
         });
@@ -217,7 +217,7 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
 
     emit(currentState.copyWith(deleteStatus: DeleteStatus.deleting));
 
-    final result = await _meetingsRepository.delete(int.parse(meetingId));
+    final result = await _meetingsRepository.delete(currentState.meeting.id);
 
     result.fold(
       (success) =>

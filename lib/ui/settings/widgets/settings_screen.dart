@@ -17,7 +17,7 @@ class SettingsScreen extends StatelessWidget {
     final confirmed = await AppDialog.confirm(
       context,
       title: "Sair da conta?",
-      message: "Voce precisara fazer login novamente para acessar o app.",
+      message: "Você precisará fazer login novamente para acessar o app.",
       confirmLabel: "Sair",
       cancelLabel: "Cancelar",
       isDestructive: true,

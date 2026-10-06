@@ -21,13 +21,12 @@ class HomeCubit extends ResumableCubit<HomeState> {
     emit(state.copyWith(status: HomeStatus.loading));
 
     try {
-      final results = await Future.wait([
-        _getHomeDataUseCase.getCarnivalBlocks(),
-        _getHomeDataUseCase.getMeetings(),
-      ]);
-
-      final blocksResult = results[0];
-      final meetingsResult = results[1];
+      // Both futures start immediately (parallel), but are awaited
+      // individually so their types survive without casts.
+      final blocksFuture = _getHomeDataUseCase.getCarnivalBlocks();
+      final meetingsFuture = _getHomeDataUseCase.getMeetings();
+      final blocksResult = await blocksFuture;
+      final meetingsResult = await meetingsFuture;
 
       if (blocksResult.isError() && meetingsResult.isError()) {
         final error =
@@ -42,11 +41,11 @@ class HomeCubit extends ResumableCubit<HomeState> {
         return;
       }
 
-      final blocks = (blocksResult.getOrNull() as List<CarnivalBlocksEntity>?) ?? const <CarnivalBlocksEntity>[];
+      final blocks = blocksResult.getOrNull() ?? const <CarnivalBlocksEntity>[];
       final now = DateTime.now();
       final today = DateTime(now.year, now.month, now.day);
       final meetings =
-          (meetingsResult.getOrNull() as List<MeetingsEntity>?)
+          meetingsResult.getOrNull()
               ?.where((m) {
                 final meetingDate = m.meetingDateTime;
                 if (meetingDate == null) return false;
