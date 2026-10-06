@@ -3,6 +3,7 @@
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:collection/collection.dart';
+
 import 'dart:convert';
 
 import 'bloco_na_rua.enums.swagger.dart' as enums;
