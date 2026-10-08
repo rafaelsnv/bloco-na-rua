@@ -3,7 +3,6 @@ import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_cubit.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_state.dart";
 import "package:bloco_na_rua/ui/core/theme/theme_cubit.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
@@ -257,7 +256,12 @@ class ProfileScreen extends StatelessWidget {
               Navigator.pop(dialogContext);
               context.read<AuthCubit>().logout();
             },
-            child: const Text("Sair", style: TextStyle(color: AppColors.error)),
+            child: Text(
+              "Sair",
+              style: TextStyle(
+                color: Theme.of(dialogContext).colorScheme.error,
+              ),
+            ),
           ),
         ],
       ),

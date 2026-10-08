@@ -3,7 +3,6 @@ import "package:flutter_bloc/flutter_bloc.dart";
 
 import "package:bloco_na_rua/ui/auth/cubit/auth_cubit.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_state.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_list_tile.dart";
@@ -43,9 +42,9 @@ class SettingsScreen extends StatelessWidget {
               },
               builder: (context, state) {
                 return AppListTile(
-                  leading: const Icon(
+                  leading: Icon(
                     Icons.logout_rounded,
-                    color: AppColors.error,
+                    color: Theme.of(context).colorScheme.error,
                   ),
                   title: "Sair",
                   trailing: state is AuthLoading

@@ -6,7 +6,6 @@ import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
 import "package:bloco_na_rua/ui/core/widgets/inputs/app_text_field.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:brasil_fields/brasil_fields.dart";
@@ -77,6 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
@@ -106,7 +106,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             title: Text(
               "Bloco na Rua",
               style: AppTypography.displaySmall.copyWith(
-                color: AppColors.primary,
+                color: colors.primary,
               ),
             ),
           ),
@@ -121,7 +121,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Text(
                       "Crie sua conta",
                       style: AppTypography.displaySmall.copyWith(
-                        color: AppColors.primary,
+                        color: colors.primary,
                       ),
                     ),
                     const SizedBox(height: Spacing.space_xs),
@@ -245,7 +245,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           "Já tem uma conta? Faça login",
                           textAlign: TextAlign.center,
                           style: AppTypography.bodyLarge.copyWith(
-                            color: AppColors.primary,
+                            color: colors.primary,
                           ),
                         ),
                       ),

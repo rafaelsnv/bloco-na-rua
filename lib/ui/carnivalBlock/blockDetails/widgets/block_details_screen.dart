@@ -247,11 +247,11 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
   Color _roleColor(int role) {
     switch (role) {
       case 1:
-        return AppColors.primary;
+        return Theme.of(context).colorScheme.primary;
       case 2:
         return AppColors.info;
       default:
-        return AppColors.primary;
+        return Theme.of(context).colorScheme.primary;
     }
   }
 
@@ -548,7 +548,7 @@ class _MeetingsSection extends StatelessWidget {
                 Icon(
                   Icons.error_outline_rounded,
                   size: 32,
-                  color: AppColors.error,
+                  color: Theme.of(context).colorScheme.error,
                 ),
                 const SizedBox(height: Spacing.space_sm),
                 Text(
@@ -705,7 +705,7 @@ class _MembersSection extends StatelessWidget {
                 Icon(
                   Icons.error_outline_rounded,
                   size: 32,
-                  color: AppColors.error,
+                  color: Theme.of(context).colorScheme.error,
                 ),
                 const SizedBox(height: Spacing.space_sm),
                 Text(
@@ -937,7 +937,7 @@ class _MemberRow extends StatelessWidget {
                   Text(
                     email,
                     style: AppTypography.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -955,7 +955,7 @@ class _MemberRow extends StatelessWidget {
           ] else if (canManageMembers) ...[
             AppIconButton(
               icon: Icons.delete_rounded,
-              color: AppColors.error,
+              color: Theme.of(context).colorScheme.error,
               size: AppIconButtonSize.sm,
               onPressed: onDelete,
             ),

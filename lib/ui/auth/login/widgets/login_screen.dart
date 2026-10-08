@@ -9,7 +9,6 @@ import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
 import "package:bloco_na_rua/ui/core/widgets/inputs/app_text_field.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
@@ -70,6 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
@@ -91,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
           title: Text(
             "Bloco na Rua",
             style: AppTypography.displaySmall.copyWith(
-              color: AppColors.primary,
+              color: colors.primary,
             ),
           ),
         ),
@@ -106,13 +106,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   Icon(
                     Icons.celebration_rounded,
                     size: 80,
-                    color: AppColors.primary,
+                    color: colors.primary,
                   ),
                   const SizedBox(height: Spacing.space_sm),
                   Text(
                     "Bem vindo",
                     style: AppTypography.displaySmall.copyWith(
-                      color: AppColors.primary,
+                      color: colors.primary,
                     ),
                   ),
                   const SizedBox(height: Spacing.space_xs),
@@ -221,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(
                       "Esqueceu a senha?",
                       style: AppTypography.bodyLarge.copyWith(
-                        color: AppColors.primary,
+                        color: colors.primary,
                       ),
                     ),
                   ),
@@ -234,7 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(
                       "Não tem uma conta? Cadastre-se",
                       style: AppTypography.bodyLarge.copyWith(
-                        color: AppColors.primary,
+                        color: colors.primary,
                       ),
                     ),
                   ),

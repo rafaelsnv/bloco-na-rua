@@ -1,7 +1,6 @@
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/core/cubit/fab_state.dart";
 import "package:bloco_na_rua/ui/core/cubit/fab_state_cubit.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/add_block_fab.dart";
@@ -141,14 +140,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   "Ola!",
                   style: AppTypography.headlineMedium.copyWith(
-                    color: AppColors.primary,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 const SizedBox(height: Spacing.space_4xs),
                 Text(
                   "Veja seus blocos e reuniões",
                   style: AppTypography.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],
@@ -166,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text(
                 "Ver todos",
                 style: AppTypography.labelLarge.copyWith(
-                  color: AppColors.primary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ),
@@ -223,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text(
                 "Ver todos",
                 style: AppTypography.labelLarge.copyWith(
-                  color: AppColors.primary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ),

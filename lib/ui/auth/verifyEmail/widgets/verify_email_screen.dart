@@ -6,7 +6,6 @@ import "package:bloco_na_rua/ui/auth/cubit/auth_state.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:flutter/material.dart";
@@ -59,6 +58,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
@@ -85,7 +85,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
           title: Text(
             "Bloco na Rua",
             style: AppTypography.displaySmall.copyWith(
-              color: AppColors.primary,
+              color: colors.primary,
             ),
           ),
         ),
@@ -100,13 +100,13 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 Icon(
                   Icons.mark_email_unread_rounded,
                   size: 100,
-                  color: AppColors.primary,
+                  color: colors.primary,
                 ),
                 const SizedBox(height: Spacing.space_lg),
                 Text(
                   "Verifique seu e-mail",
                   style: AppTypography.headlineMedium.copyWith(
-                    color: AppColors.primary,
+                    color: colors.primary,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -122,7 +122,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 Text(
                   widget.email,
                   style: AppTypography.titleMedium.copyWith(
-                    color: AppColors.primary,
+                    color: colors.primary,
                   ),
                   textAlign: TextAlign.center,
                 ),

@@ -1,6 +1,5 @@
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:bloco_na_rua/ui/onboarding/screens/onboarding_1_screen.dart";
@@ -54,6 +53,7 @@ class _OnboardingWrapperState extends State<OnboardingWrapper> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
@@ -69,7 +69,7 @@ class _OnboardingWrapperState extends State<OnboardingWrapper> {
                   child: Text(
                     "Pular",
                     style: AppTypography.labelLarge.copyWith(
-                      color: AppColors.primary,
+                      color: colors.primary,
                     ),
                   ),
                 ),
@@ -118,6 +118,9 @@ class _OnboardingWrapperState extends State<OnboardingWrapper> {
 
   Widget _buildDot(int index) {
     final isActive = index == _currentPage;
+    final inactiveColor = Theme.of(context).brightness == Brightness.dark
+        ? Theme.of(context).colorScheme.outlineVariant
+        : Theme.of(context).colorScheme.outline;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       margin: const EdgeInsets.symmetric(horizontal: Spacing.space_2xs),
@@ -125,7 +128,7 @@ class _OnboardingWrapperState extends State<OnboardingWrapper> {
       height: 8,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
-        color: isActive ? AppColors.primary : AppColors.borderLight,
+        color: isActive ? Theme.of(context).colorScheme.primary : inactiveColor,
       ),
     );
   }

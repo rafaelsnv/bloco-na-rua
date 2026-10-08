@@ -1,4 +1,3 @@
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:flutter/material.dart";
@@ -8,18 +7,19 @@ class Onboarding1Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.all(Spacing.pagePaddingMobile),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Spacer(),
-          Icon(Icons.celebration_rounded, size: 120, color: AppColors.primary),
+          Icon(Icons.celebration_rounded, size: 120, color: colors.primary),
           const SizedBox(height: Spacing.space_xl),
           Text(
             "O que é um bloco?",
             style: AppTypography.headlineLarge.copyWith(
-              color: AppColors.primary,
+              color: colors.primary,
             ),
             textAlign: TextAlign.center,
           ),

@@ -5,12 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logging/logging.dart';
 import 'package:marionette_flutter/marionette_flutter.dart';
+import 'package:marionette_logging/marionette_logging.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
   if (kDebugMode) {
-    MarionetteBinding.ensureInitialized();
+    MarionetteBinding.ensureInitialized(
+      MarionetteConfiguration(
+        enableSessionReports: true,
+        logCollector: LoggingLogCollector(),
+      ),
+    );
   } else {
     WidgetsFlutterBinding.ensureInitialized();
   }
