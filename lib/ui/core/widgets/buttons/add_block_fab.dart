@@ -1,5 +1,4 @@
 import "package:bloco_na_rua/routing/routes.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
@@ -151,6 +150,8 @@ class _SpeedDialAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Match bottom nav bar unselected item color.
+    final foregroundColor = Theme.of(context).colorScheme.onSurfaceVariant;
     return AnimatedScale(
       scale: expanded ? 1.0 : 0.5,
       duration: duration,
@@ -167,10 +168,12 @@ class _SpeedDialAction extends StatelessWidget {
             icon: Icon(icon, size: 20),
             label: Text(label),
             style: OutlinedButton.styleFrom(
-              backgroundColor:
-                  Theme.of(context).colorScheme.surfaceContainerLow,
-              foregroundColor: AppColors.primary,
-              side: BorderSide(color: AppColors.primary),
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              foregroundColor: foregroundColor,
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.outline,
+                width: 1.5,
+              ),
               shape: RoundedRectangleBorder(borderRadius: Radii.radiusLg),
               padding: const EdgeInsets.symmetric(
                 horizontal: Spacing.space_md,

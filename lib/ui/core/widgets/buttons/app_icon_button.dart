@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 
 /// Icon button size taxonomy with associated sizing tokens.
 enum AppIconButtonSize {
@@ -64,6 +63,7 @@ class AppIconButton extends StatelessWidget {
     final effectiveOnPressed = onPressed;
     final isDisabled = effectiveOnPressed == null;
     final animationsDisabled = MediaQuery.disableAnimationsOf(context);
+    final colorScheme = Theme.of(context).colorScheme;
 
     // Determine visual density based on size.
     // IconButton default touch target is 48px; we use compact to reduce
@@ -104,7 +104,7 @@ class AppIconButton extends StatelessWidget {
         splashRadius: animationsDisabled ? 0 : null,
         hoverColor: animationsDisabled
             ? Colors.transparent
-            : AppColors.primary.withValues(alpha: 0.1),
+            : colorScheme.primary.withValues(alpha: 0.1),
       ),
     );
 
@@ -112,7 +112,6 @@ class AppIconButton extends StatelessWidget {
   }
 
   Color _iconColor(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return isDark ? AppColors.primaryLight : AppColors.primary;
+    return Theme.of(context).colorScheme.primary;
   }
 }

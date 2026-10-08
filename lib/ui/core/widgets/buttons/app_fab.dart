@@ -91,11 +91,21 @@ class AppFAB extends StatelessWidget {
   double get _diameter => _sizeTokens[size]!;
   double get _iconSize => _iconSizeTokens[size]!;
 
-  Color get _backgroundColor => switch (fabColor) {
-    AppFabColor.primary => AppColors.primary,
-    AppFabColor.accent => AppColors.accent,
-    AppFabColor.tertiary => AppColors.tertiary,
-  };
+  // ponytail: FAB primary uses light variant in dark mode for better contrast on dark surface
+  Color _backgroundColor(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return switch (fabColor) {
+      AppFabColor.primary => colorScheme.primary,
+      // ponytail: ColorScheme has no accent slot; scheme.secondary is magenta,
+      // not the orange accent — keep the token until accent lands in the scheme.
+      AppFabColor.accent => AppColors.accent,
+      AppFabColor.tertiary => colorScheme.tertiary,
+    };
+  }
+
+  Color _foregroundColor(BuildContext context) {
+    return Theme.of(context).colorScheme.onPrimary;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,8 +122,8 @@ class AppFAB extends StatelessWidget {
       child: FloatingActionButton(
         key: effectiveKey,
         onPressed: onPressed,
-        backgroundColor: _backgroundColor,
-        foregroundColor: AppColors.textOnPrimary,
+        backgroundColor: _backgroundColor(context),
+        foregroundColor: _foregroundColor(context),
         elevation: _elevationDefault,
         shape: RoundedRectangleBorder(borderRadius: Radii.fab),
         heroTag: null,
@@ -126,8 +136,8 @@ class AppFAB extends StatelessWidget {
     return FloatingActionButton.extended(
       key: effectiveKey,
       onPressed: onPressed,
-      backgroundColor: _backgroundColor,
-      foregroundColor: AppColors.textOnPrimary,
+      backgroundColor: _backgroundColor(context),
+      foregroundColor: _foregroundColor(context),
       elevation: _elevationDefault,
       shape: RoundedRectangleBorder(borderRadius: Radii.fab),
       heroTag: null,

@@ -115,7 +115,6 @@ class AppListTile extends StatelessWidget {
 
     return ListTile(
       key: resolvedKey,
-      enabled: onTap != null,
       contentPadding: effectivePadding,
       leading: leading,
       title: Text(title, style: AppTypography.titleMedium),

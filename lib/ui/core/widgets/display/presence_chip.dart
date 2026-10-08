@@ -47,6 +47,13 @@ class PresenceChip extends StatelessWidget {
     }
   }
 
+  /// Foreground for icons on filled chips — matches [AppChip]'s filled
+  /// foreground rule: light fills (e.g. warning) get dark text, saturated
+  /// fills keep white text, in both brightness modes.
+  Color _iconForeground(Color fill) => fill.computeLuminance() > 0.4
+      ? AppColors.textPrimary
+      : AppColors.textOnPrimary;
+
   Widget _buildWithIcon() {
     switch (variant) {
       case PresenceVariant.present:
@@ -57,7 +64,7 @@ class PresenceChip extends StatelessWidget {
           avatar: Icon(
             Icons.check_circle_rounded,
             size: 16,
-            color: AppColors.textOnPrimary,
+            color: _iconForeground(AppColors.success),
           ),
         );
       case PresenceVariant.absent:
@@ -68,7 +75,7 @@ class PresenceChip extends StatelessWidget {
           avatar: Icon(
             Icons.cancel_rounded,
             size: 16,
-            color: AppColors.textOnPrimary,
+            color: _iconForeground(AppColors.error),
           ),
         );
       case PresenceVariant.pending:
@@ -79,7 +86,7 @@ class PresenceChip extends StatelessWidget {
           avatar: Icon(
             Icons.schedule_rounded,
             size: 16,
-            color: AppColors.textOnPrimary,
+            color: _iconForeground(AppColors.warning),
           ),
         );
     }

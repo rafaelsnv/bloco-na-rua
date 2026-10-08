@@ -114,18 +114,20 @@ class AppButton extends StatelessWidget {
   };
 
   Color _foregroundColor(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
     switch (variant) {
       case AppButtonVariant.primary:
-        return AppColors.textOnPrimary;
+        return colorScheme.onPrimary;
       case AppButtonVariant.secondary:
-        return isDark ? AppColors.secondaryLight : AppColors.secondary;
+        return colorScheme.secondary;
       case AppButtonVariant.accent:
+        // Accent gold is not part of colorScheme — keep token fallback.
+        final isDark = Theme.of(context).brightness == Brightness.dark;
         return isDark ? AppColors.accentDark : AppColors.textOnPrimary;
       case AppButtonVariant.tertiary:
-        return isDark ? AppColors.textPrimaryDark : AppColors.textPrimary;
+        return colorScheme.onSurface;
       case AppButtonVariant.ghost:
-        return isDark ? AppColors.primaryLight : AppColors.primary;
+        return colorScheme.primary;
     }
   }
 
@@ -218,6 +220,7 @@ class AppButton extends StatelessWidget {
     Key effectiveKey,
   ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
     final foreground = _foregroundColor(context);
     final minimumSize = Size.fromHeight(height);
     final padding = EdgeInsets.symmetric(
@@ -240,8 +243,8 @@ class AppButton extends StatelessWidget {
         key: effectiveKey,
         onPressed: effectiveOnPressed,
         style: buttonStyle.copyWith(
-          backgroundColor: WidgetStateProperty.all(AppColors.primary),
-          foregroundColor: WidgetStateProperty.all(AppColors.textOnPrimary),
+          backgroundColor: WidgetStateProperty.all(colorScheme.primary),
+          foregroundColor: WidgetStateProperty.all(colorScheme.onPrimary),
         ),
         child: content,
       ),
@@ -249,9 +252,14 @@ class AppButton extends StatelessWidget {
         key: effectiveKey,
         onPressed: effectiveOnPressed,
         style: buttonStyle.copyWith(
-          backgroundColor: WidgetStateProperty.all(
-            isDark ? AppColors.accentLight : AppColors.accent,
-          ),
+          backgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return colorScheme.surfaceContainerHigh;
+            }
+            // Accent gold is not part of colorScheme — keep token fallback.
+            final isDark = Theme.of(context).brightness == Brightness.dark;
+            return isDark ? AppColors.accentLight : AppColors.accent;
+          }),
           foregroundColor: WidgetStateProperty.all(foreground),
           elevation: WidgetStateProperty.all(isDark ? 0.0 : 6.0),
           shape: WidgetStateProperty.all(
@@ -276,7 +284,9 @@ class AppButton extends StatelessWidget {
         key: effectiveKey,
         onPressed: effectiveOnPressed,
         style: buttonStyle.copyWith(
-          foregroundColor: WidgetStateProperty.all(foreground),
+          foregroundColor: WidgetStateProperty.all(
+            colorScheme.onSecondaryContainer,
+          ),
         ),
         child: content,
       ),

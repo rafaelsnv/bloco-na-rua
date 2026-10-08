@@ -87,7 +87,7 @@ class MemberCard extends StatelessWidget {
                   Text(
                     member.email!,
                     style: AppTypography.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -113,17 +113,22 @@ class MemberCard extends StatelessWidget {
 
 /// Green circle indicator representing online status.
 ///
-/// 12px diameter, [AppColors.success] fill, 2px white border.
+/// 12px diameter, [AppColors.success] fill, 2px border matching the card
+/// surface color per brightness.
 class _OnlineDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: 12,
       height: 12,
       decoration: BoxDecoration(
         color: AppColors.success,
         shape: BoxShape.circle,
-        border: Border.all(color: AppColors.textOnPrimary, width: 2),
+        border: Border.all(
+          color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+          width: 2,
+        ),
       ),
     );
   }

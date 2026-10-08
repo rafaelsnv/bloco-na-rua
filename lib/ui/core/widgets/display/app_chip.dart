@@ -81,10 +81,14 @@ class AppChip extends StatelessWidget {
       onPressed: onPressed,
       onDeleted: onDeleted,
       deleteIcon: onDeleted != null
-          ? Icon(Icons.close_rounded, size: 16, color: AppColors.textSecondary)
+          ? Icon(
+              Icons.close_rounded,
+              size: 16,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            )
           : null,
       backgroundColor: background,
-      deleteIconColor: AppColors.textSecondary,
+      deleteIconColor: Theme.of(context).colorScheme.onSurfaceVariant,
       side: side,
       shape: RoundedRectangleBorder(borderRadius: Radii.chip),
       padding: EdgeInsets.symmetric(
@@ -92,7 +96,11 @@ class AppChip extends StatelessWidget {
         vertical: Spacing.space_4xs,
       ),
       showCheckmark: false,
-      isEnabled: onPressed != null || onDeleted != null,
+      // Always enabled: RawChip paints label/avatar at 38% opacity and drops
+      // the background when isEnabled is false (chip.dart `_kDisabledAlpha`).
+      // Display-only chips have no callbacks but must still render at full
+      // strength, so interactivity is driven by onPressed/onDeleted alone.
+      isEnabled: true,
     );
 
     return chip;
@@ -104,22 +112,31 @@ class AppChip extends StatelessWidget {
     Color effectiveColor,
   ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
 
     switch (variant) {
       case ChipVariant.filled:
-        // Filled: in light mode use effectiveColor bg + white text.
-        // In dark mode, swap to lighter primary equivalents (primaryLight
-        // background + primaryDark text) only when the chip uses the
-        // brand primary color, mirroring the mockup (lines 373: dark Todos
-        // chip uses bg-primary-light text-primary-dark).
+        // Filled: in dark mode the brand primary chip swaps to lighter
+        // equivalents (primaryLight background + primaryDark text), mirroring
+        // the mockup (line 373: dark Todos chip). The dark scheme encodes this
+        // swap: primary = primaryLight, primaryContainer = primaryDark.
         if (isDark && effectiveColor == AppColors.primary) {
           return (
-            AppColors.primaryDark,
-            AppColors.primaryLight,
+            colorScheme.primaryContainer,
+            colorScheme.primary,
             BorderSide.none,
           );
         }
-        return (AppColors.textOnPrimary, effectiveColor, BorderSide.none);
+        // Foreground picked by fill luminance so light fills (e.g. warning)
+        // get dark text while saturated fills keep white text — readable in
+        // both brightness modes. These ink colors are brightness-independent
+        // (a light fill always wants dark ink, even in dark mode), so they
+        // have no colorScheme equivalent — onSurface/onPrimary flip with
+        // brightness and would break contrast here.
+        final foreground = effectiveColor.computeLuminance() > 0.4
+            ? AppColors.textPrimary
+            : AppColors.textOnPrimary;
+        return (foreground, effectiveColor, BorderSide.none);
 
       case ChipVariant.outlined:
         // Outlined: transparent background, colored border and text
@@ -130,14 +147,11 @@ class AppChip extends StatelessWidget {
 
       case ChipVariant.soft:
         // Soft: low-alpha colored background, colored text.
-        // For secondary (rose), use secondaryDark in light, secondaryLight in dark
-        // for proper contrast on the 20% opacity background.
-        Color foreground = effectiveColor;
-        if (effectiveColor == AppColors.secondary) {
-          foreground = isDark
-              ? AppColors.secondaryLight
-              : AppColors.secondaryDark;
-        }
+        // Foreground swaps to the lighter variant in dark mode and the darker
+        // variant in light mode for proper contrast on the 20% opacity
+        // background. Colors without dedicated light/dark tokens
+        // (success/info) keep the base color.
+        final foreground = _softForeground(effectiveColor, isDark, colorScheme);
         // Background always uses the effective (input) color at 20% opacity,
         // not the swapped foreground — this matches the mockup's
         // `bg-secondary/20` (mockup line 254).
@@ -145,5 +159,39 @@ class AppChip extends StatelessWidget {
         final side = BorderSide.none;
         return (foreground, background, side);
     }
+  }
+
+  /// Soft-variant foreground: light variant in dark mode, dark variant in
+  /// light mode. Warning maps to the amber accent family (no dedicated
+  /// warning light/dark tokens exist).
+  ///
+  /// Primary/secondary/error resolve through the theme's colorScheme, which
+  /// already encodes the brightness-specific variants:
+  /// - dark:  primary=primaryLight, secondary=secondaryLight, error=errorDark
+  /// - light: onPrimaryContainer=primaryDark, onSecondaryContainer=secondaryDark,
+  ///          error=error
+  /// Accent and tertiary light/dark variants are not represented in the
+  /// colorScheme, so they keep their AppColors tokens.
+  Color _softForeground(
+    Color color,
+    bool isDark,
+    ColorScheme colorScheme,
+  ) {
+    if (color == AppColors.primary) {
+      return isDark ? colorScheme.primary : colorScheme.onPrimaryContainer;
+    }
+    if (color == AppColors.secondary) {
+      return isDark ? colorScheme.secondary : colorScheme.onSecondaryContainer;
+    }
+    if (color == AppColors.accent || color == AppColors.warning) {
+      return isDark ? AppColors.accentLight : AppColors.accentDark;
+    }
+    if (color == AppColors.tertiary) {
+      return isDark ? AppColors.tertiaryLight : AppColors.tertiaryDark;
+    }
+    if (color == AppColors.error) {
+      return colorScheme.error;
+    }
+    return color;
   }
 }

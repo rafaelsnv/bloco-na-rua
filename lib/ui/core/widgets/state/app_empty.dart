@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 
-import "../../tokens/app_colors.dart";
 import "../../tokens/app_spacing.dart";
 import "../../tokens/app_typography.dart";
 import "../buttons/app_button.dart";
@@ -61,6 +60,7 @@ class AppEmpty extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final showCtaButton = actionLabel != null && onAction != null;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Padding(
       padding: const EdgeInsets.all(Spacing.pagePaddingMobile),
@@ -71,7 +71,7 @@ class AppEmpty extends StatelessWidget {
           children: [
             // Icon (only shown when provided)
             if (icon != null) ...[
-              Icon(icon, size: 96, color: AppColors.primaryLight),
+              Icon(icon, size: 96, color: colorScheme.primary),
               // Gap: icon -> title
               const SizedBox(height: Spacing.space_md),
             ],

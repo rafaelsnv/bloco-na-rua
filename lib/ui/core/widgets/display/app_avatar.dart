@@ -22,13 +22,13 @@ enum AvatarSize {
 /// Avatar shape variants that control border radius.
 enum AvatarShape { circle, square, roundedSquare }
 
-/// AVATAR_PALETTE — six colors used for initials background, selected by name hash.
+/// AVATAR_PALETTE — colors used for initials background, selected by name hash.
+/// All fills are dark enough for light text in both brightness modes.
 const List<Color> _avatarPalette = [
   AppColors.primary, // #6D28D9
   AppColors.accent, // #F97316
   AppColors.success, // #16A34A
   AppColors.info, // #0EA5E9
-  AppColors.primaryLight, // #A78BFA
   AppColors.secondary, // #FB7185
 ];
 
@@ -80,17 +80,23 @@ String _buildVersionedUrl(String url, Object? versionToken) {
 }
 
 /// Returns the appropriate text style for initials based on [size].
-TextStyle _getInitialsStyle(AvatarSize size) {
+///
+/// Foreground is brightness-aware relative to the [background] fill: light
+/// fills get dark text, dark fills get white text.
+TextStyle _getInitialsStyle(AvatarSize size, Color background) {
+  final foreground = background.computeLuminance() > 0.4
+      ? AppColors.textPrimary
+      : AppColors.textOnPrimary;
   switch (size) {
     case AvatarSize.xs:
     case AvatarSize.sm:
-      return AppTypography.labelSmall.copyWith(color: AppColors.textOnPrimary);
+      return AppTypography.labelSmall.copyWith(color: foreground);
     case AvatarSize.md:
-      return AppTypography.labelMedium.copyWith(color: AppColors.textOnPrimary);
+      return AppTypography.labelMedium.copyWith(color: foreground);
     case AvatarSize.lg:
-      return AppTypography.titleSmall.copyWith(color: AppColors.textOnPrimary);
+      return AppTypography.titleSmall.copyWith(color: foreground);
     case AvatarSize.xl:
-      return AppTypography.titleMedium.copyWith(color: AppColors.textOnPrimary);
+      return AppTypography.titleMedium.copyWith(color: foreground);
   }
 }
 
@@ -143,17 +149,23 @@ class AppAvatar extends StatelessWidget {
     // Show initials widget as a fallback or primary content
     Widget initialsOrIcon() {
       final initials = _getInitials(name);
+      final background = _getInitialsBackground(name);
+      // Brightness-aware foreground: dark fills get white icon, light fills
+      // would get dark text (matches _getInitialsStyle).
+      final iconColor = background.computeLuminance() > 0.4
+          ? AppColors.textPrimary
+          : AppColors.textOnPrimary;
 
       if (initials.isEmpty) {
-        // No name — show person icon on primary background
+        // No name — show person icon on the hashed background
         return Icon(
           Icons.person_rounded,
           size: diameter * 0.5,
-          color: AppColors.textOnPrimary,
+          color: iconColor,
         );
       }
 
-      return Text(initials, style: _getInitialsStyle(size));
+      return Text(initials, style: _getInitialsStyle(size, background));
     }
 
     // If no usable imageUrl, show initials or icon immediately. The validator
