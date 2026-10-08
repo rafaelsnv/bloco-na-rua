@@ -122,6 +122,22 @@ class AppTheme {
         thickness: 1,
         space: 1,
       ),
+      navigationBarTheme: NavigationBarThemeData(
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: lightColorScheme.primary,
+            );
+          }
+          return TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: lightColorScheme.onSurfaceVariant,
+          );
+        }),
+      ),
     );
   }
 
@@ -156,6 +172,8 @@ class AppTheme {
         style: FilledButton.styleFrom(
           backgroundColor: darkColorScheme.primary,
           foregroundColor: darkColorScheme.onPrimary,
+          disabledBackgroundColor: darkColorScheme.surfaceContainerHigh,
+          disabledForegroundColor: darkColorScheme.onSurface.withValues(alpha: 0.38),
           shape: RoundedRectangleBorder(borderRadius: Radii.button),
           padding: const EdgeInsets.symmetric(
             horizontal: Spacing.space_md,
@@ -167,6 +185,8 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
           foregroundColor: darkColorScheme.primary,
           side: BorderSide(color: darkColorScheme.primary, width: 1.5),
+          disabledBackgroundColor: darkColorScheme.surfaceContainerHigh,
+          disabledForegroundColor: darkColorScheme.onSurface.withValues(alpha: 0.38),
           shape: RoundedRectangleBorder(borderRadius: Radii.button),
           padding: const EdgeInsets.symmetric(
             horizontal: Spacing.space_md,
@@ -175,7 +195,10 @@ class AppTheme {
         ),
       ),
       textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(foregroundColor: darkColorScheme.primary),
+        style: TextButton.styleFrom(
+          foregroundColor: darkColorScheme.primary,
+          disabledForegroundColor: darkColorScheme.onSurface.withValues(alpha: 0.38),
+        ),
       ),
       chipTheme: ChipThemeData(
         labelStyle: AppTypography.labelMedium.copyWith(
@@ -234,6 +257,22 @@ class AppTheme {
         color: darkColorScheme.outline,
         thickness: 1,
         space: 1,
+      ),
+      navigationBarTheme: NavigationBarThemeData(
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: darkColorScheme.primary,
+            );
+          }
+          return TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: darkColorScheme.onSurfaceVariant,
+          );
+        }),
       ),
     );
   }

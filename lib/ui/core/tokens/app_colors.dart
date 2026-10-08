@@ -19,10 +19,11 @@ class AppColors {
   // Group 3 — Accent / CTA (Gold)
   static const Color accent = Color(0xFFD97706);
   static const Color accentLight = Color(0xFFFBBF24);
-  static const Color accentDark = Color(0xFF92400E);
+  static const Color accentDark = Color(0xFF7C2D12);
 
   // Group 4 — Tertiary (Cyan)
   static const Color tertiary = Color(0xFF0E7490);
+  static const Color tertiaryLight = Color(0xFF6DDBC8);
   static const Color tertiaryDark = Color(0xFF164E63);
   static const Color tertiaryContainerLight = Color(0xFFCFFAFE);
   static const Color tertiaryContainerDark = Color(0xFF164E63);
@@ -31,9 +32,16 @@ class AppColors {
   static const Color success = Color(0xFF16A34A);
   static const Color warning = Color(0xFFF59E0B);
   static const Color error = Color(0xFFDC2626);
+  static const Color errorDark = Color(0xFFF87171);
   static const Color errorContainerLight = Color(0xFFFEE2E2);
   static const Color errorContainerDark = Color(0xFF991B1B);
   static const Color info = Color(0xFF0EA5E9);
+  static const Color warningContainerLight = Color(0xFF78350F);
+  static const Color warningContainerDark = Color(0xFF451A03);
+  static const Color infoContainerLight = Color(0xFF0C4A6E);
+  static const Color infoContainerDark = Color(0xFF075985);
+  static const Color successContainerLight = Color(0xFF14532D);
+  static const Color successContainerDark = Color(0xFF052E16);
 
   // Group 6 — Surface Light (Stone anchor + Violet tonal ladder)
   static const Color backgroundLight = Color(0xFFFAFAF9);
@@ -50,10 +58,9 @@ class AppColors {
   static const Color surfaceDark = Color(0xFF1F2937);
   static const Color surfaceVariantDark = Color(0xFF2D3042);
   static const Color surfaceContainerDark = Color(0xFF374151);
-  static const Color surfaceContainerHighDark = Color(0xFF4B5563);
-  static const Color surfaceContainerHighestDark = Color(0xFF6B7280);
-  static const Color surfaceNeutralDark = Color(0xFF1F2937);
-  static const Color borderDark = Color(0xFF374151);
+  static const Color surfaceContainerHighDark = Color(0xFF3F4657);
+  static const Color surfaceContainerHighestDark = Color(0xFF4B5563);
+  static const Color borderDark = Color(0xFF475569);
 
   // Group 8 — Text Light
   static const Color textPrimary = Color(0xFF1C1917);
@@ -64,7 +71,8 @@ class AppColors {
 
   // Group 9 — Text Dark
   static const Color textPrimaryDark = Color(0xFFFAFAF9);
-  static const Color textSecondaryDark = Color(0xFFD6D3D1);
-  static const Color textTertiaryDark = Color(0xFFA8A29E);
-  static const Color textDisabledDark = Color(0xFF57534E);
+  static const Color textSecondaryDark = Color(0xFFCBD5E1);
+  static const Color textTertiaryDark = Color(0xFF94A3B8);
+  static const Color textDisabledDark = Color(0xFF64748B);
+  static const Color textOnPrimaryDark = Color(0xFF2E1065);
 }
