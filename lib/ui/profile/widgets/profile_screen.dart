@@ -111,12 +111,12 @@ class ProfileScreen extends StatelessWidget {
 
         // Appearance section
         const SizedBox(height: Spacing.space_md),
-        const AppSectionHeader(title: "Apar├¬ncia"),
+        const AppSectionHeader(title: "Aparência"),
         _buildThemeDropdown(context),
 
         // Information section
         const SizedBox(height: Spacing.space_md),
-        const AppSectionHeader(title: "Informa├º├Áes"),
+        const AppSectionHeader(title: "Informações"),
         AppCard(
           padding: EdgeInsets.zero,
           child: ListView.separated(
@@ -129,7 +129,7 @@ class ProfileScreen extends StatelessWidget {
                 return AppListTile(
                   leading: const Icon(Icons.phone_rounded),
                   title: "Telefone",
-                  subtitle: phone.isNotEmpty ? phone : "N├úo informado",
+                  subtitle: phone.isNotEmpty ? phone : "Não informado",
                 );
               }
               return AppListTile(
@@ -137,7 +137,7 @@ class ProfileScreen extends StatelessWidget {
                 title: "Membro desde",
                 subtitle: createdAt != null
                     ? DateFormat("MMMM/yyyy", "pt_BR").format(createdAt)
-                    : "N├úo dispon├¡vel",
+                    : "Não disponível",
               );
             },
           ),

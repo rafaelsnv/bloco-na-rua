@@ -41,7 +41,7 @@ class AuthRepository implements IAuthRepository {
   Future<String?> _fetchTokenAndUuid() async {
     final tokenResult = await _secureStorageService.fetchToken();
     // design: storage layer wraps absence as Failure for symmetry, but a
-    // missing token/UUID on first launch is not an error ÔÇö log at INFO and
+    // missing token/UUID on first launch is not an error — log at INFO and
     // treat the user as unauthenticated.
     if (tokenResult.isError()) {
       _log.info("Token not found (first launch or cleared)");
@@ -140,7 +140,7 @@ class AuthRepository implements IAuthRepository {
 
     _log.info("Login successful");
 
-    // Save UUID first ÔÇö only set auth state after this succeeds.
+    // Save UUID first — only set auth state after this succeeds.
     // If saveUuid fails, we sign out to avoid inconsistent state where
     // _authToken is set but _currentMember/_isAuthenticated are not.
     var userIdResult = await _secureStorageService.saveUuid(
@@ -193,7 +193,7 @@ class AuthRepository implements IAuthRepository {
       // Clean up Supabase auth user via backend endpoint if member creation failed
       final cleanupError = await _signupCleanup(userId);
       if (cleanupError.isError()) {
-        // Log but don't crash ÔÇö fire-and-forget with server-side reconciliation.
+        // Log but don't crash — fire-and-forget with server-side reconciliation.
         // Backend TO-DO: scheduled orphan-cleanup cron to catch missed cleanups.
         _log.severe(
           'Orphan Supabase user $userId: member registration failed and cleanup also failed',

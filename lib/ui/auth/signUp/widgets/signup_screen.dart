@@ -127,7 +127,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     const SizedBox(height: Spacing.space_xs),
                     Text(
-                      "Junte-se ├á folia",
+                      "Junte-se à folia",
                       style: AppTypography.bodyLarge.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
@@ -162,7 +162,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   return "Por favor, insira um e-mail";
                                 }
                                 if (!_isValidEmail(value)) {
-                                  return "E-mail inv├ílido";
+                                  return "E-mail inválido";
                                 }
                                 return null;
                               },
@@ -175,13 +175,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               prefixIcon: Icons.lock_rounded,
                               keyboardType: TextInputType.visiblePassword,
                               obscureText: true,
-                              helperText: "M├¡nimo 8 caracteres",
+                              helperText: "Mínimo 8 caracteres",
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return "Por favor, insira uma senha";
                                 }
                                 if (value.length < 8) {
-                                  return "A senha deve ter no m├¡nimo 8 caracteres";
+                                  return "A senha deve ter no mínimo 8 caracteres";
                                 }
                                 return null;
                               },
@@ -202,7 +202,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   return "Por favor, insira um telefone";
                                 }
                                 if (value.length < 14) {
-                                  return "Telefone inv├ílido";
+                                  return "Telefone inválido";
                                 }
                                 return null;
                               },
@@ -243,7 +243,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       child: GestureDetector(
                         onTap: () => context.go(Routes.login),
                         child: Text(
-                          "J├í tem uma conta? Fa├ºa login",
+                          "Já tem uma conta? Faça login",
                           textAlign: TextAlign.center,
                           style: AppTypography.bodyLarge.copyWith(
                             color: colors.primary,

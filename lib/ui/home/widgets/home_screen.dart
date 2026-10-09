@@ -212,9 +212,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
           const SizedBox(height: Spacing.space_md),
 
-          // Pr├│ximos encontros section
+          // Próximos encontros section
           AppSectionHeader(
-            title: "Pr├│ximos encontros",
+            title: "Próximos encontros",
             action: TextButton(
               onPressed: () {
                 final shell = StatefulNavigationShell.of(context);

@@ -41,13 +41,13 @@ class MeetingCard extends StatelessWidget {
   /// When true, renders the meeting code badge.
   final bool showMeetingCode;
 
-  /// Formats a DateTime to "dd MMM yyyy ÔÇó HH:mm" in pt-BR.
-  /// Returns "Data n├úo definida" when [dateTime] is null.
+  /// Formats a DateTime to "dd MMM yyyy • HH:mm" in pt-BR.
+  /// Returns "Data não definida" when [dateTime] is null.
   String _formatDateTime(DateTime? dateTime) {
     if (dateTime == null) {
-      return "Data n├úo definida";
+      return "Data não definida";
     }
-    return DateFormat("dd MMM yyyy ÔÇó HH:mm", "pt_BR").format(dateTime);
+    return DateFormat("dd MMM yyyy • HH:mm", "pt_BR").format(dateTime);
   }
 
   /// Returns a small 14px icon with the onSurfaceVariant colour.
@@ -142,7 +142,7 @@ class MeetingCard extends StatelessWidget {
             Row(
               children: [
                 AppChip(
-                  label: "$confirmedPresences/$totalPresences presen├ºas",
+                  label: "$confirmedPresences/$totalPresences presenças",
                   variant: ChipVariant.soft,
                   color: AppColors.primary,
                 ),

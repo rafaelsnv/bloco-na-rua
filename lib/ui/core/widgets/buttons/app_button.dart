@@ -7,20 +7,20 @@ import "package:flutter/material.dart";
 
 /// Button variant taxonomy.
 enum AppButtonVariant {
-  /// Brand primary violet fill ÔÇö main call-to-action.
+  /// Brand primary violet fill — main call-to-action.
   primary,
 
-  /// Brand secondary rose outline ÔÇö secondary actions.
+  /// Brand secondary rose outline — secondary actions.
   secondary,
 
-  /// Accent orange fill ÔÇö call-to-action (e.g. "Entrar no Bloco", "Salvar").
+  /// Accent orange fill — call-to-action (e.g. "Entrar no Bloco", "Salvar").
   /// Renders bold with elevation shadow and 12px (rounded-xl) radius.
   accent,
 
-  /// Surface fill ÔÇö low-emphasis actions.
+  /// Surface fill — low-emphasis actions.
   tertiary,
 
-  /// Transparent fill ÔÇö inline or tertiary actions.
+  /// Transparent fill — inline or tertiary actions.
   ghost,
 }
 
@@ -121,7 +121,7 @@ class AppButton extends StatelessWidget {
       case AppButtonVariant.secondary:
         return colorScheme.secondary;
       case AppButtonVariant.accent:
-        // Accent gold is not part of colorScheme ÔÇö keep token fallback.
+        // Accent gold is not part of colorScheme — keep token fallback.
         final isDark = Theme.of(context).brightness == Brightness.dark;
         return isDark ? AppColors.textOnPrimaryDark : AppColors.textOnPrimary;
       case AppButtonVariant.tertiary:
@@ -251,7 +251,7 @@ class AppButton extends StatelessWidget {
             if (states.contains(WidgetState.disabled)) {
               return colorScheme.surfaceContainerHigh;
             }
-            // Accent gold is not part of colorScheme ÔÇö keep token fallback.
+            // Accent gold is not part of colorScheme — keep token fallback.
             final isDark = Theme.of(context).brightness == Brightness.dark;
             return isDark ? AppColors.accentLight : AppColors.accent;
           }),

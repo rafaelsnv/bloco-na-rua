@@ -118,7 +118,7 @@ class ApiError implements Exception {
     switch (statusCode) {
       case 400:
         // Backend field-level errors live in the body (e.g. {"Phone": [...]}),
-        // not statusMessage ÔÇö log the body or they're lost.
+        // not statusMessage — log the body or they're lost.
         _log.severe('API 400: ${response?.data}');
         return ApiError(
           type: ApiErrorType.validation,

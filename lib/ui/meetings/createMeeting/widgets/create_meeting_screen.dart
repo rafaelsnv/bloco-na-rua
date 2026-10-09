@@ -119,7 +119,7 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
     if (description.isEmpty) {
       AppSnackbar.warning(
         context,
-        message: "Por favor, insira uma descri├º├úo para o encontro",
+        message: "Por favor, insira uma descrição para o encontro",
       );
       return;
     }
@@ -140,7 +140,7 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
 
     final carnivalBlockId = int.tryParse(widget.carnivalBlockId);
     if (carnivalBlockId == null || carnivalBlockId <= 0) {
-      AppSnackbar.error(context, message: "ID do bloco inv├ílido");
+      AppSnackbar.error(context, message: "ID do bloco inválido");
       return;
     }
 
@@ -198,7 +198,7 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                       children: [
                         AppTextField(
                           controller: _titleController,
-                          label: "T├¡tulo do encontro",
+                          label: "Título do encontro",
                           hint: "Ex.: Ensaio geral",
                           textInputAction: TextInputAction.next,
                           onChanged: (_) => setState(() {}),
@@ -206,7 +206,7 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                         const SizedBox(height: Spacing.space_md),
                         AppTextField(
                           controller: _descriptionController,
-                          label: "Descri├º├úo",
+                          label: "Descrição",
                           hint: "Detalhes sobre o encontro (opcional)",
                           isMultiline: true,
                           textInputAction: TextInputAction.next,
@@ -267,7 +267,7 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                         AppTextField(
                           controller: _locationController,
                           label: "Local",
-                          hint: "Ex.: Pra├ºa central",
+                          hint: "Ex.: Praça central",
                           textInputAction: TextInputAction.done,
                         ),
                         const SizedBox(height: Spacing.space_lg),

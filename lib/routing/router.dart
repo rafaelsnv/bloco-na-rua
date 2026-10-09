@@ -45,7 +45,7 @@ import "package:logging/logging.dart";
 final _logger = Logger("GoRouter");
 
 const _shellNavItems = <AppBottomNavItem>[
-  AppBottomNavItem(icon: Icons.home_rounded, label: "In├¡cio"),
+  AppBottomNavItem(icon: Icons.home_rounded, label: "Início"),
   AppBottomNavItem(icon: Icons.celebration_rounded, label: "Blocos"),
   AppBottomNavItem(icon: Icons.event_rounded, label: "Encontros"),
   AppBottomNavItem(icon: Icons.person_rounded, label: "Perfil"),

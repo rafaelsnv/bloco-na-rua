@@ -115,7 +115,7 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
   void _submitForm() {
     final meetingId = int.tryParse(widget.meetingId);
     if (meetingId == null) {
-      AppSnackbar.error(context, message: "ID do encontro inv├ílido");
+      AppSnackbar.error(context, message: "ID do encontro inválido");
       return;
     }
 
@@ -123,7 +123,7 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
     if (title.isEmpty) {
       AppSnackbar.error(
         context,
-        message: "O t├¡tulo do encontro ├® obrigat├│rio",
+        message: "O título do encontro é obrigatório",
       );
       return;
     }
@@ -182,7 +182,7 @@ appBar: const AppAppBar(title: "Editar encontro"),
                     ),
                     const SizedBox(height: Spacing.space_sm),
                     Text(
-                      "ID do encontro inv├ílido",
+                      "ID do encontro inválido",
                       style: Theme.of(context).textTheme.bodyLarge,
                       textAlign: TextAlign.center,
                     ),
@@ -243,7 +243,7 @@ appBar: const AppAppBar(title: "Editar encontro"),
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   AppTextField(
-                    label: "T├¡tulo do encontro",
+                    label: "Título do encontro",
                     controller: _titleController,
                     onChanged: (_) => setState(() {}),
                   ),
@@ -267,7 +267,7 @@ appBar: const AppAppBar(title: "Editar encontro"),
                   ),
                   const SizedBox(height: Spacing.space_md),
                   AppButton(
-                    label: "Salvar altera├º├Áes",
+                    label: "Salvar alterações",
                     isFullWidth: true,
                     isLoading: isSaving,
                     isDisabled: isSaving,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Defini├º├úo das rotas da aplica├º├úo
+/// Definição das rotas da aplicação
 class Routes {
   Routes._();
 
@@ -30,7 +30,7 @@ class Routes {
   static const String profile = '/profile';
   static const String settings = '/settings';
 
-  // Rotas de autentica├º├úo
+  // Rotas de autenticação
   static const String verifyEmail = '/verify-email';
   static const String onboarding = '/onboarding';
 

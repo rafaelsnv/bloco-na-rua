@@ -21,7 +21,7 @@ class Onboarding3Screen extends StatelessWidget {
           ),
           const SizedBox(height: Spacing.space_xl),
           Text(
-            "Confirme presen├ºa nos encontros",
+            "Confirme presença nos encontros",
             style: AppTypography.headlineLarge.copyWith(
               color: colors.primary,
             ),
@@ -29,7 +29,7 @@ class Onboarding3Screen extends StatelessWidget {
           ),
           const SizedBox(height: Spacing.space_md),
           Text(
-            "Veja os encontros do seu bloco e confirme sua presen├ºa. Nunca mais perca um encontro!",
+            "Veja os encontros do seu bloco e confirme sua presença. Nunca mais perca um encontro!",
             style: AppTypography.bodyLarge.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),

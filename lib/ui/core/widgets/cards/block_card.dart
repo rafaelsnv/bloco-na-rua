@@ -11,11 +11,11 @@ import "../../tokens/app_typography.dart";
 import "../cards/app_card.dart";
 import "../display/image_url_validator.dart";
 
-const _blockEmojis = ["­ƒÄ¡", "­ƒÄë", "­ƒÄè", "­ƒÄÀ", "­ƒÄ║", "­ƒ¬ç", "­ƒÅƒ´©Å"];
+const _blockEmojis = ["🎭", "🎉", "🎊", "🎷", "🎺", "🪇", "🏟️"];
 
 /// BlockCard compound widget for displaying a carnival block summary.
 ///
-/// Shows: emoji icon + block name + location ÔÇó date + optional live indicator.
+/// Shows: emoji icon + block name + location • date + optional live indicator.
 class BlockCard extends StatelessWidget {
   const BlockCard({
     super.key,
@@ -61,7 +61,7 @@ class BlockCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Icon container ÔÇö 40x40px to fit content height
+            // Icon container — 40x40px to fit content height
             Container(
               width: 40,
               height: 40,
@@ -108,7 +108,7 @@ class BlockCard extends StatelessWidget {
                   ),
                   if (location != null || date != null)
                     Text(
-                      [location, date].whereType<String>().join(" ÔÇó "),
+                      [location, date].whereType<String>().join(" • "),
                       style: AppTypography.bodySmall.copyWith(
                         color: textSecondary,
                       ),

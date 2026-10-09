@@ -15,14 +15,14 @@ class ThemeCubit extends Cubit<ThemeMode> {
     if (storedIndex != null && storedIndex >= 0 && storedIndex < ThemeMode.values.length) {
       emit(ThemeMode.values[storedIndex]);
     }
-    // If no stored value ÔÇö first launch ÔÇö system brightness is used.
+    // If no stored value — first launch — system brightness is used.
     // No extra action needed; isDarkModeEnabled getter handles the rest.
   }
 
   /// Returns true if dark mode is enabled:
-  /// - Explicitly set to dark ÔåÆ true
-  /// - Explicitly set to light ÔåÆ false
-  /// - System mode (null stored) ÔåÆ derive from current system brightness
+  /// - Explicitly set to dark → true
+  /// - Explicitly set to light → false
+  /// - System mode (null stored) → derive from current system brightness
   bool isDarkModeEnabled(BuildContext context) {
     if (state == ThemeMode.dark) return true;
     if (state == ThemeMode.light) return false;
@@ -31,8 +31,8 @@ class ThemeCubit extends Cubit<ThemeMode> {
   }
 
   /// Sets dark mode on or off.
-  /// When enabling ÔåÆ ThemeMode.dark
-  /// When disabling ÔåÆ ThemeMode.light
+  /// When enabling → ThemeMode.dark
+  /// When disabling → ThemeMode.light
   /// Clears "system" choice by storing an explicit value.
   Future<void> setDarkMode(bool enabled) async {
     final newMode = enabled ? ThemeMode.dark : ThemeMode.light;

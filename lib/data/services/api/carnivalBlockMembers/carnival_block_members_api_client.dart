@@ -70,7 +70,7 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
           return Failure(
             ApiError(
               type: ApiErrorType.unknown,
-              userMessage: 'Voc├¬ j├í ├® membro deste bloco.',
+              userMessage: 'Você já é membro deste bloco.',
               technicalMessage: 'Already a member',
             ),
           );

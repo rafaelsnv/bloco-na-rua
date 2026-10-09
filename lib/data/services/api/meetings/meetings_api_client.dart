@@ -47,7 +47,7 @@ class MeetingsApiClient implements IMeetingsApiClient {
         case 200:
         case 204:
           // Empty-but-valid responses may arrive as null or a non-list body
-          // (e.g. ASP.NET returning null for "no meetings") ÔÇö treat as empty
+          // (e.g. ASP.NET returning null for "no meetings") — treat as empty
           // instead of letting the cast throw into a generic Failure.
           // ponytail: non-list 200 payload treated as "no meetings";
           // parse an envelope here if the backend ever returns one.

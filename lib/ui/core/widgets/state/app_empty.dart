@@ -112,7 +112,7 @@ class AppEmpty extends StatelessWidget {
               ),
             ],
 
-            // CTA buttons ÔÇö side by side when both are provided
+            // CTA buttons — side by side when both are provided
             if (showCtaButton || showSecondaryCtaButton) ...[
               const SizedBox(height: Spacing.space_lg),
               Row(
