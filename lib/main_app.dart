@@ -18,7 +18,6 @@ import "package:bloco_na_rua/ui/home/cubit/home_cubit.dart";
 import "package:bloco_na_rua/ui/meetings/userMeetings/cubit/user_meetings_cubit.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter/foundation.dart";
 import "package:go_router/go_router.dart";
 
 class MainApp extends StatefulWidget {
@@ -65,14 +64,6 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    // Debug: Log device locale
-    final deviceLocale = PlatformDispatcher.instance.locale;
-    if (kDebugMode) {
-      debugPrint('[DEBUG i18n] Device locale: $deviceLocale');
-      debugPrint('[DEBUG i18n] Language: ${deviceLocale.languageCode}, Country: ${deviceLocale.countryCode}');
-      debugPrint('[DEBUG i18n] Supported locales: ${AppLocalizations.supportedLocales}');
-    }
-
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthCubit>.value(value: _authCubit),

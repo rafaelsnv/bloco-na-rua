@@ -49,14 +49,14 @@ class _UserMeetingsScreenState extends State<UserMeetingsScreen> {
           child: Stack(
             children: [
               Scaffold(
-                appBar: AppAppBar(title: "Reuniões", showBackButton: false),
+                appBar: AppAppBar(title: "Encontros", showBackButton: false),
                 body: SafeArea(
                   child: Column(
                     children: [
                       Padding(
                         padding: EdgeInsets.all(Spacing.space_sm),
                         child: AppSearchField(
-                          hint: "Buscar reuniões...",
+                          hint: "Buscar encontros...",
                           onChanged: (query) {
                             setState(() {
                               _searchQuery = query.toLowerCase();
@@ -94,13 +94,13 @@ class _UserMeetingsScreenState extends State<UserMeetingsScreen> {
                             if (filteredMeetings.isEmpty) {
                               if (allMeetings.isEmpty) {
                                 return AppEmpty(
-                                  title: "Nenhuma reunião",
-                                  message: "Você ainda não tem reuniões agendadas",
+                                  title: "Nenhum encontro",
+                                  message: "Você ainda não tem encontros agendados",
                                   icon: Icons.event_busy_rounded,
                                 );
                               }
                               return AppEmpty(
-                                title: "Nenhuma reunião encontrada",
+                                title: "Nenhum encontro encontrado",
                                 message: "Tente buscar com outros termos",
                                 icon: Icons.search_off_rounded,
                               );

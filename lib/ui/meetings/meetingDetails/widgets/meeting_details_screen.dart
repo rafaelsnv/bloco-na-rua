@@ -72,20 +72,20 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
             }
             context.pop();
           } else if (state.deleteStatus == DeleteStatus.failure) {
-            AppSnackbar.error(context, message: "Erro ao excluir reunião");
+            AppSnackbar.error(context, message: "Erro ao excluir encontro");
           }
         },
         builder: (context, state) {
           if (state is MeetingDetailsInitial) {
             return Scaffold(
-              appBar: const AppAppBar(title: "Detalhes da Reunião"),
+              appBar: const AppAppBar(title: "Detalhes do Encontro"),
               body: const AppLoading(),
             );
           }
 
           if (state is MeetingDetailsLoading) {
             return Scaffold(
-              appBar: const AppAppBar(title: "Detalhes da Reunião"),
+              appBar: const AppAppBar(title: "Detalhes do Encontro"),
               body: const AppLoading(),
             );
           }
@@ -107,7 +107,7 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
 
           return Scaffold(
             appBar: AppAppBar(
-              title: meeting.name ?? "Detalhes da Reunião",
+              title: meeting.name ?? "Detalhes do Encontro",
               actions: _buildAppBarActions(context, state),
             ),
             body: RefreshIndicator(
@@ -163,7 +163,7 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
         }
 
         return Scaffold(
-          appBar: const AppAppBar(title: "Detalhes da Reunião"),
+          appBar: const AppAppBar(title: "Detalhes do Encontro"),
           body: const AppEmpty(message: "Nenhum dado encontrado"),
         );
       },
@@ -198,7 +198,7 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
           Icons.delete_outline_rounded,
           color: Theme.of(context).colorScheme.error,
         ),
-        tooltip: "Excluir reunião",
+        tooltip: "Excluir encontro",
         onPressed: () => _showDeleteDialog(context),
       ),
     ];
@@ -207,9 +207,9 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
   void _showDeleteDialog(BuildContext context) async {
     final confirmed = await AppDialog.confirm(
       context,
-      title: "Excluir reunião",
+      title: "Excluir encontro",
       message:
-          "Tem certeza que deseja excluir esta reunião? Esta ação não pode ser desfeita.",
+          "Tem certeza que deseja excluir este encontro? Esta ação não pode ser desfeita.",
       confirmLabel: "Excluir",
       isDestructive: true,
     );

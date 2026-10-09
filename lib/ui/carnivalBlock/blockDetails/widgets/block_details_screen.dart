@@ -303,7 +303,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
                 if (canManageMembers) ...[
                   IconButton(
                     icon: const Icon(Icons.add_alert_rounded),
-                    tooltip: "Criar Reunião",
+                    tooltip: "Criar Encontro",
                     onPressed: () => context.push(
                       "/create-meeting/${widget.carnivalBlockId}",
                     ),
