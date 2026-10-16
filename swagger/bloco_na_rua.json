@@ -2852,6 +2852,10 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "memberName": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2989,6 +2993,11 @@
           },
           "isPresent": {
             "type": "boolean"
+          },
+          "memberId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false

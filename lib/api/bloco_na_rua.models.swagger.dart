@@ -315,6 +315,7 @@ class CarnivalBlockMemberResponse {
     this.role,
     this.createdAt,
     this.updatedAt,
+    this.memberName,
   });
 
   factory CarnivalBlockMemberResponse.fromJson(Map<String, dynamic> json) =>
@@ -340,6 +341,8 @@ class CarnivalBlockMemberResponse {
   final DateTime? createdAt;
   @JsonKey(name: 'updatedAt', includeIfNull: false)
   final DateTime? updatedAt;
+  @JsonKey(name: 'memberName', includeIfNull: false)
+  final String? memberName;
   static const fromJsonFactory = _$CarnivalBlockMemberResponseFromJson;
 
   @override
@@ -369,6 +372,11 @@ class CarnivalBlockMemberResponse {
                 const DeepCollectionEquality().equals(
                   other.updatedAt,
                   updatedAt,
+                )) &&
+            (identical(other.memberName, memberName) ||
+                const DeepCollectionEquality().equals(
+                  other.memberName,
+                  memberName,
                 )));
   }
 
@@ -383,6 +391,7 @@ class CarnivalBlockMemberResponse {
       const DeepCollectionEquality().hash(role) ^
       const DeepCollectionEquality().hash(createdAt) ^
       const DeepCollectionEquality().hash(updatedAt) ^
+      const DeepCollectionEquality().hash(memberName) ^
       runtimeType.hashCode;
 }
 
@@ -394,6 +403,7 @@ extension $CarnivalBlockMemberResponseExtension on CarnivalBlockMemberResponse {
     enums.RolesEnum? role,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? memberName,
   }) {
     return CarnivalBlockMemberResponse(
       id: id ?? this.id,
@@ -402,6 +412,7 @@ extension $CarnivalBlockMemberResponseExtension on CarnivalBlockMemberResponse {
       role: role ?? this.role,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      memberName: memberName ?? this.memberName,
     );
   }
 
@@ -412,6 +423,7 @@ extension $CarnivalBlockMemberResponseExtension on CarnivalBlockMemberResponse {
     Wrapped<enums.RolesEnum?>? role,
     Wrapped<DateTime?>? createdAt,
     Wrapped<DateTime?>? updatedAt,
+    Wrapped<String?>? memberName,
   }) {
     return CarnivalBlockMemberResponse(
       id: (id != null ? id.value : this.id),
@@ -422,6 +434,7 @@ extension $CarnivalBlockMemberResponseExtension on CarnivalBlockMemberResponse {
       role: (role != null ? role.value : this.role),
       createdAt: (createdAt != null ? createdAt.value : this.createdAt),
       updatedAt: (updatedAt != null ? updatedAt.value : this.updatedAt),
+      memberName: (memberName != null ? memberName.value : this.memberName),
     );
   }
 }
@@ -915,6 +928,7 @@ class MeetingPresenceCreate {
     this.meetingId,
     this.carnivalBlockId,
     this.isPresent,
+    this.memberId,
   });
 
   factory MeetingPresenceCreate.fromJson(Map<String, dynamic> json) =>
@@ -929,6 +943,8 @@ class MeetingPresenceCreate {
   final int? carnivalBlockId;
   @JsonKey(name: 'isPresent', includeIfNull: false)
   final bool? isPresent;
+  @JsonKey(name: 'memberId', includeIfNull: false)
+  final int? memberId;
   static const fromJsonFactory = _$MeetingPresenceCreateFromJson;
 
   @override
@@ -949,6 +965,11 @@ class MeetingPresenceCreate {
                 const DeepCollectionEquality().equals(
                   other.isPresent,
                   isPresent,
+                )) &&
+            (identical(other.memberId, memberId) ||
+                const DeepCollectionEquality().equals(
+                  other.memberId,
+                  memberId,
                 )));
   }
 
@@ -960,6 +981,7 @@ class MeetingPresenceCreate {
       const DeepCollectionEquality().hash(meetingId) ^
       const DeepCollectionEquality().hash(carnivalBlockId) ^
       const DeepCollectionEquality().hash(isPresent) ^
+      const DeepCollectionEquality().hash(memberId) ^
       runtimeType.hashCode;
 }
 
@@ -968,11 +990,13 @@ extension $MeetingPresenceCreateExtension on MeetingPresenceCreate {
     int? meetingId,
     int? carnivalBlockId,
     bool? isPresent,
+    int? memberId,
   }) {
     return MeetingPresenceCreate(
       meetingId: meetingId ?? this.meetingId,
       carnivalBlockId: carnivalBlockId ?? this.carnivalBlockId,
       isPresent: isPresent ?? this.isPresent,
+      memberId: memberId ?? this.memberId,
     );
   }
 
@@ -980,6 +1004,7 @@ extension $MeetingPresenceCreateExtension on MeetingPresenceCreate {
     Wrapped<int?>? meetingId,
     Wrapped<int?>? carnivalBlockId,
     Wrapped<bool?>? isPresent,
+    Wrapped<int?>? memberId,
   }) {
     return MeetingPresenceCreate(
       meetingId: (meetingId != null ? meetingId.value : this.meetingId),
@@ -987,6 +1012,7 @@ extension $MeetingPresenceCreateExtension on MeetingPresenceCreate {
           ? carnivalBlockId.value
           : this.carnivalBlockId),
       isPresent: (isPresent != null ? isPresent.value : this.isPresent),
+      memberId: (memberId != null ? memberId.value : this.memberId),
     );
   }
 }
