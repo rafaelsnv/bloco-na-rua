@@ -1,8 +1,10 @@
 import 'package:bloco_na_rua/core/errors/user_message.dart';
 import 'package:bloco_na_rua/data/repositories/auth/iauth_repository.dart';
+import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
 import 'package:bloco_na_rua/data/repositories/meetingPresences/imeeting_presences_repository.dart';
 import 'package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart';
+import 'package:bloco_na_rua/data/repositories/members/imembers_repository.dart';
 import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';
 import 'package:bloco_na_rua/domain/entities/meetingPresences/meeting_presences_entity.dart';
 import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart';
@@ -17,12 +19,16 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
     required IMeetingPresencesRepository meetingPresencesRepository,
     required IAuthRepository authRepository,
     required ICarnivalBlocksRepository carnivalBlocksRepository,
+    required ICarnivalBlockMembersRepository carnivalBlockMembersRepository,
+    required IMembersRepository membersRepository,
     required GetCurrentUserData getCurrentUserData,
     required this.meetingId,
   }) : _meetingsRepository = meetingsRepository,
        _meetingPresencesRepository = meetingPresencesRepository,
        _authRepository = authRepository,
        _carnivalBlocksRepository = carnivalBlocksRepository,
+       _carnivalBlockMembersRepository = carnivalBlockMembersRepository,
+       _membersRepository = membersRepository,
        _getCurrentUserData = getCurrentUserData,
        super(const MeetingDetailsInitial());
 
@@ -30,6 +36,8 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
   final IMeetingPresencesRepository _meetingPresencesRepository;
   final IAuthRepository _authRepository;
   final ICarnivalBlocksRepository _carnivalBlocksRepository;
+  final ICarnivalBlockMembersRepository _carnivalBlockMembersRepository;
+  final IMembersRepository _membersRepository;
   final GetCurrentUserData _getCurrentUserData;
   final String meetingId;
   final _log = Logger('MeetingDetailsCubit');
@@ -48,31 +56,95 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
 
     result.fold(
       (meeting) async {
-        // Check if current user can delete (is block owner)
+        // Fetch the block once: name for display + owner check for delete.
         final uuid = await _authRepository.currentUuid;
         bool canDelete = false;
+        String? blockName;
 
-        if (uuid != null && meeting.carnivalBlockId != null) {
+        if (meeting.carnivalBlockId != null) {
           final blockResult = await _carnivalBlocksRepository.getByIdAsync(
             meeting.carnivalBlockId!,
           );
-          canDelete = blockResult.fold(
-            (block) => block.ownerId.toString() == uuid,
-            (_) => false,
-          );
+          blockResult.fold((block) {
+            blockName = block.name;
+            canDelete = uuid != null && block.ownerId.toString() == uuid;
+          }, (_) {});
         }
 
         emit(
-          MeetingDetailsLoaded(meeting: meeting, canDeleteMeeting: canDelete),
+          MeetingDetailsLoaded(
+            meeting: meeting,
+            canDeleteMeeting: canDelete,
+            blockName: blockName,
+          ),
         );
         // Chained (not screen-level parallel) so `MeetingDetailsLoaded` is
         // emitted before `loadPresences`'s early-return guard fires.
         await loadPresences();
+        await _loadBlockMembers(meeting.carnivalBlockId);
       },
       (exception) {
         _log.warning('Load meeting failed', exception);
         emit(MeetingDetailsError(extractUserMessage(exception)));
       },
+    );
+  }
+
+  /// Loads the block's member roster (with member entities for names) and
+  /// computes whether the current user can manage presences (owner or
+  /// admin/moderator role).
+  Future<void> _loadBlockMembers(int? carnivalBlockId) async {
+    final currentState = state;
+    if (currentState is! MeetingDetailsLoaded || carnivalBlockId == null) return;
+
+    final membersResult = await _carnivalBlockMembersRepository
+        .getByBlockIdAsync(carnivalBlockId);
+
+    final blockMembers = membersResult.getOrNull() ?? [];
+    if (blockMembers.isEmpty) {
+      emit(currentState.copyWith(blockMembers: const []));
+      return;
+    }
+
+    // Single batch fetch: GET /Members?ids=1,2,3 (backend-supported).
+    final ids = blockMembers.map((m) => m.memberId).toList();
+    final entitiesResult = await _membersRepository.getByIdsAsync(ids);
+    final fetched = entitiesResult.getOrNull() ?? [];
+    final byId = {for (final e in fetched) e.id: e};
+    final memberEntities = <int, MembersEntity>{
+      for (final member in blockMembers)
+        member.memberId: byId[member.memberId] ??
+            // Member row exists but entity missing (deleted?) — placeholder.
+            MembersEntity(id: member.memberId, name: "Membro"),
+    };
+
+    // Owner or admin/moderator (role 1/2) can manage presences.
+    final currentMember = await _resolveCurrentMember();
+    final currentMemberId = currentMember?.id;
+    final myMembership = blockMembers
+        .where((m) => m.memberId == currentMemberId)
+        .firstOrNull;
+
+    // Owner check: block ownerId vs current member id.
+    bool isOwner = false;
+    if (currentMemberId != null) {
+      final blockResult = await _carnivalBlocksRepository.getByIdAsync(
+        carnivalBlockId,
+      );
+      isOwner = blockResult.fold(
+        (block) => block.ownerId == currentMemberId,
+        (_) => false,
+      );
+    }
+    final hasManagerRole =
+        myMembership != null && (myMembership.role == 1 || myMembership.role == 2);
+
+    emit(
+      currentState.copyWith(
+        blockMembers: blockMembers,
+        memberEntities: memberEntities,
+        canManagePresence: isOwner || hasManagerRole,
+      ),
     );
   }
 
@@ -135,6 +207,27 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
   }
 
   Future<void> markPresence({required bool isPresent}) async {
+    final member = await _resolveCurrentMember();
+    if (member == null) {
+      final currentState = state;
+      if (currentState is! MeetingDetailsLoaded) return;
+      emit(
+        currentState.copyWith(
+          markingPresenceStatus: MarkingPresenceStatus.error,
+          markingPresenceError: 'Usuário não autenticado',
+        ),
+      );
+      return;
+    }
+    await setMemberPresence(memberId: member.id, isPresent: isPresent);
+  }
+
+  /// Sets the presence of any block member (used by owners/managers and by
+  /// the self-marking FABs).
+  Future<void> setMemberPresence({
+    required int memberId,
+    required bool isPresent,
+  }) async {
     if (_isMarkingPresence) return;
     _isMarkingPresence = true;
 
@@ -151,21 +244,10 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
     );
 
     try {
-      final member = await _resolveCurrentMember();
-      if (member == null) {
-        emit(
-          currentState.copyWith(
-            markingPresenceStatus: MarkingPresenceStatus.error,
-            markingPresenceError: 'Usuário não autenticado',
-          ),
-        );
-        return;
-      }
-
       // Toggle: update the existing row if present, otherwise create a new
       // one (POST has no upsert server-side, so always POSTing duplicates).
       final existingRow = currentState.presences
-          .where((row) => row.memberId == member.id)
+          .where((row) => row.memberId == memberId)
           .firstOrNull;
 
       final ResultDart<MeetingPresencesEntity, Exception> result;
@@ -177,6 +259,7 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
       } else {
         result = await _meetingPresencesRepository.createAsync({
           'meetingId': currentState.meeting.id,
+          'memberId': memberId,
           'carnivalBlockId': currentState.meeting.carnivalBlockId,
           'isPresent': isPresent,
         });

@@ -128,8 +128,9 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
       return;
     }
 
-    final dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
-    final formattedDateTime = dateFormat.format(_selectedDateTime);
+    // ISO 8601 with 'T' separator — System.Text.Json rejects the
+    // space-separated "yyyy-MM-dd HH:mm:ss" format.
+    final formattedDateTime = _selectedDateTime.toIso8601String();
 
     final data = <String, dynamic>{
       "name": title,

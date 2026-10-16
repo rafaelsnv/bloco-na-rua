@@ -1,19 +1,19 @@
-import "package:bloco_na_rua/domain/entities/meetingPresences/meeting_presences_entity.dart";
 import "package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart";
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_fab.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/member_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_chip.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_section_header.dart";
-import "package:bloco_na_rua/ui/core/widgets/display/presence_chip.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_dialog.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_loading_indicator.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
+import "package:bloco_na_rua/ui/core/widgets/inputs/app_search_field.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_empty.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
@@ -46,64 +46,66 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MeetingDetailsCubit, MeetingDetailsState>(
-        listenWhen: (previous, current) {
-          if (previous is MeetingDetailsLoaded &&
-              current is MeetingDetailsLoaded) {
-            return previous.markingPresenceStatus !=
-                current.markingPresenceStatus;
-          }
-          return false;
-        },
-        listener: (context, state) {
-          if (state is! MeetingDetailsLoaded) return;
+      listenWhen: (previous, current) {
+        if (previous is MeetingDetailsLoaded &&
+            current is MeetingDetailsLoaded) {
+          return previous.markingPresenceStatus !=
+              current.markingPresenceStatus;
+        }
+        return false;
+      },
+      listener: (context, state) {
+        if (state is! MeetingDetailsLoaded) return;
 
-          if (state.markingPresenceStatus == MarkingPresenceStatus.success) {
-            AppSnackbar.success(
-              context,
-              message: "Presença atualizada com sucesso!",
-            );
-          } else if (state.markingPresenceStatus == MarkingPresenceStatus.error &&
-              state.markingPresenceError != null) {
-            AppSnackbar.error(context, message: state.markingPresenceError!);
-          } else if (state.deleteStatus == DeleteStatus.success) {
-            if (context.mounted) {
-              context.read<UserMeetingsCubit>().loadMeetings();
-              context.read<HomeCubit>().loadHomeData();
-            }
-            context.pop();
-          } else if (state.deleteStatus == DeleteStatus.failure) {
-            AppSnackbar.error(context, message: "Erro ao excluir encontro");
+        if (state.markingPresenceStatus == MarkingPresenceStatus.success) {
+          AppSnackbar.success(
+            context,
+            message: "Presença atualizada com sucesso!",
+          );
+        } else if (state.markingPresenceStatus == MarkingPresenceStatus.error &&
+            state.markingPresenceError != null) {
+          AppSnackbar.error(context, message: state.markingPresenceError!);
+        } else if (state.deleteStatus == DeleteStatus.success) {
+          if (context.mounted) {
+            context.read<UserMeetingsCubit>().loadMeetings();
+            context.read<HomeCubit>().loadHomeData();
           }
-        },
-        builder: (context, state) {
-          if (state is MeetingDetailsInitial) {
-            return Scaffold(
-              appBar: const AppAppBar(title: "Detalhes do Encontro"),
-              body: const AppLoading(),
-            );
-          }
+          context.pop();
+        } else if (state.deleteStatus == DeleteStatus.failure) {
+          AppSnackbar.error(context, message: "Erro ao excluir encontro");
+        }
+      },
+      builder: (context, state) {
+        if (state is MeetingDetailsInitial) {
+          return Scaffold(
+            appBar: const AppAppBar(title: "Detalhes do Encontro"),
+            body: const AppLoading(),
+          );
+        }
 
-          if (state is MeetingDetailsLoading) {
-            return Scaffold(
-              appBar: const AppAppBar(title: "Detalhes do Encontro"),
-              body: const AppLoading(),
-            );
-          }
+        if (state is MeetingDetailsLoading) {
+          return Scaffold(
+            appBar: const AppAppBar(title: "Detalhes do Encontro"),
+            body: const AppLoading(),
+          );
+        }
 
-          if (state is MeetingDetailsError) {
-            return Scaffold(
-              appBar: const AppAppBar(title: "Erro"),
-              body: AppError(
-                message: state.message,
-                onRetry: () => context.read<MeetingDetailsCubit>().loadMeeting(),
-              ),
-            );
-          }
+        if (state is MeetingDetailsError) {
+          return Scaffold(
+            appBar: const AppAppBar(title: "Erro"),
+            body: AppError(
+              message: state.message,
+              onRetry: () => context.read<MeetingDetailsCubit>().loadMeeting(),
+            ),
+          );
+        }
 
-          if (state is MeetingDetailsLoaded) {
-            final meeting = state.meeting;
+        if (state is MeetingDetailsLoaded) {
+          final meeting = state.meeting;
 
-            final meetingDateTime = meeting.meetingDateTime;
+          final meetingDateTime = meeting.meetingDateTime;
+          final isMarkingPresence =
+              state.markingPresenceStatus == MarkingPresenceStatus.loading;
 
           return Scaffold(
             appBar: AppAppBar(
@@ -126,38 +128,75 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
                     _MeetingInfoCard(
                       meeting: meeting,
                       meetingDateTime: meetingDateTime,
+                      blockName: state.blockName,
                     ),
                     const SizedBox(height: Spacing.space_md),
-                    // Presences Section
-                    AppSectionHeader(
-                      title: "Lista de Presença",
-                      action: AppChip(
-                        label:
-                            "${state.presences.where((p) => p.isPresent).length} / ${state.presences.length} confirmaram",
-                        variant: ChipVariant.soft,
-                        color: AppColors.primary,
+                    // Presences Section — all on one row: icon + title + chip + FAB.
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Spacing.pagePaddingMobile,
+                        vertical: Spacing.space_2xs,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.people_rounded,
+                            color: Theme.of(context).colorScheme.primary,
+                            size: 24,
+                          ),
+                          const SizedBox(width: Spacing.space_2xs),
+                          Flexible(
+                            child: Text(
+                              "Lista de Presença",
+                              style: AppTypography.headlineSmall,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(width: Spacing.space_2xs),
+                          AppChip(
+                            label:
+                                "${state.presences.where((p) => p.isPresent).length}/${state.blockMembers.isNotEmpty ? state.blockMembers.length : state.presences.length}",
+                            variant: ChipVariant.soft,
+                            color: AppColors.primary,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: Spacing.space_2xs,
+                              vertical: Spacing.space_4xs,
+                            ),
+                          ),
+                          const SizedBox(width: Spacing.space_2xs),
+                          AppFAB(
+                            key: const Key("app_fab_mark_present"),
+                            icon: Icons.check_rounded,
+                            size: AppFabSizeMetrics.sm,
+                            onPressed: isMarkingPresence
+                                ? null
+                                : () => context
+                                      .read<MeetingDetailsCubit>()
+                                      .markPresence(isPresent: true),
+                            child: isMarkingPresence
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2.5,
+                                    ),
+                                  )
+                                : null,
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: Spacing.space_2xs),
                     _PresencesSection(
                       state: state,
                       onRetry: () =>
                           context.read<MeetingDetailsCubit>().loadPresences(),
                     ),
-                    const SizedBox(height: Spacing.space_xl),
+                    const SizedBox(height: Spacing.space_md),
                   ],
                 ),
               ),
-            ),
-            floatingActionButton: _PresenceFABs(
-              isLoading:
-                  state.markingPresenceStatus == MarkingPresenceStatus.loading,
-              onMarkPresent: () => context
-                  .read<MeetingDetailsCubit>()
-                  .markPresence(isPresent: true),
-              onMarkAbsent: () => context
-                  .read<MeetingDetailsCubit>()
-                  .markPresence(isPresent: false),
             ),
           );
         }
@@ -220,10 +259,15 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
 }
 
 class _MeetingInfoCard extends StatelessWidget {
-  const _MeetingInfoCard({required this.meeting, this.meetingDateTime});
+  const _MeetingInfoCard({
+    required this.meeting,
+    this.meetingDateTime,
+    this.blockName,
+  });
 
   final MeetingsEntity meeting;
   final DateTime? meetingDateTime;
+  final String? blockName;
 
   String get _statusLabel {
     if (meetingDateTime == null) return "Próxima";
@@ -251,96 +295,98 @@ class _MeetingInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Title row
-          Row(
+    // Status chip floats on the card's top edge via a Stack.
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        AppCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: EdgeInsets.all(Spacing.space_xs),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  borderRadius: Radii.radiusMd,
-                ),
-                child: Icon(
-                  Icons.event_rounded,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  size: 28,
-                ),
-              ),
-              const SizedBox(width: Spacing.space_xs),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+              // Title row
+              Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(Spacing.space_xs),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      borderRadius: Radii.radiusMd,
+                    ),
+                    child: Icon(
+                      Icons.event_rounded,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      size: 28,
+                    ),
+                  ),
+                  const SizedBox(width: Spacing.space_xs),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Text(
-                            meeting.name ?? "",
-                            style: AppTypography.headlineSmall,
+                        Text(
+                          meeting.name ?? "",
+                          style: AppTypography.headlineSmall,
+                        ),
+                        if (blockName != null && blockName!.isNotEmpty)
+                          Text(
+                            blockName!,
+                            style: AppTypography.bodyMedium?.copyWith(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                        AppChip(
-                          label: _statusLabel,
-                          variant: ChipVariant.filled,
-                          color: _statusColor,
-                        ),
                       ],
                     ),
-                    const SizedBox(height: Spacing.space_2xs),
-                    AppChip(
-                      label: "Ver bloco",
-                      variant: ChipVariant.outlined,
-                      color: AppColors.primary,
-                      onPressed: () => context.push(
-                        "/carnival-block/${meeting.carnivalBlockId}",
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+              if (meeting.description != null &&
+                  meeting.description!.isNotEmpty) ...[
+                const SizedBox(height: Spacing.space_sm),
+                Text(
+                  meeting.description!,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ],
+              const SizedBox(height: Spacing.space_sm),
+              Divider(color: Theme.of(context).colorScheme.outlineVariant),
+              const SizedBox(height: Spacing.space_sm),
+              // Date + time in a single row
+              if (meetingDateTime != null)
+                _InfoRow(
+                  icon: Icons.calendar_today_rounded,
+                  text: DateFormat(
+                    "EEEE, dd/MM/yyyy • HH:mm",
+                    "pt_BR",
+                  ).format(meetingDateTime!),
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+              // Location last
+              if (meeting.location != null && meeting.location!.isNotEmpty) ...[
+                const SizedBox(height: Spacing.space_xs),
+                _InfoRow(
+                  icon: Icons.location_on_rounded,
+                  text: meeting.location!,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ],
             ],
           ),
-          if (meeting.description != null &&
-              meeting.description!.isNotEmpty) ...[
-            const SizedBox(height: Spacing.space_sm),
-            Text(
-              meeting.description!,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-          ],
-          const SizedBox(height: Spacing.space_sm),
-          Divider(color: Theme.of(context).colorScheme.outlineVariant),
-          const SizedBox(height: Spacing.space_sm),
-          // Location
-          if (meeting.location != null && meeting.location!.isNotEmpty)
-            _InfoRow(
-              icon: Icons.location_on_rounded,
-              text: meeting.location!,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          if (meetingDateTime != null) ...[
-            const SizedBox(height: Spacing.space_xs),
-            _InfoRow(
-              icon: Icons.calendar_today_rounded,
-              text: DateFormat(
-                "EEEE, dd/MM/yyyy",
-                "pt_BR",
-              ).format(meetingDateTime!),
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-            const SizedBox(height: Spacing.space_xs),
-            _InfoRow(
-              icon: Icons.access_time_rounded,
-              text: DateFormat("HH:mm").format(meetingDateTime!),
-              color: Theme.of(context).colorScheme.tertiary,
-            ),
-          ],
-        ],
-      ),
+        ),
+        // Status chip stacked on the card's top edge.
+        Positioned(
+          top: Spacing.space_3xs,
+          right: Spacing.space_xs,
+          child: AppChip(
+            label: _statusLabel,
+            variant: ChipVariant.filled,
+            color: _statusColor,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -373,14 +419,112 @@ class _InfoRow extends StatelessWidget {
   }
 }
 
-class _PresencesSection extends StatelessWidget {
+enum _PresenceSort { name, presentFirst, absentFirst }
+
+enum _PresenceFilter { all, present, absent }
+
+/// Round icon-only presence badge shown inside the member card.
+class _PresenceBadge extends StatelessWidget {
+  const _PresenceBadge({required this.isPresent});
+
+  final bool isPresent;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 28,
+      height: 28,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: isPresent ? AppColors.success : AppColors.error,
+      ),
+      child: Icon(
+        isPresent ? Icons.check_rounded : Icons.close_rounded,
+        size: 16,
+        color: AppColors.textOnPrimary,
+      ),
+    );
+  }
+}
+
+/// One row in the presence list: a block member and their presence status
+/// (null = no presence record yet).
+class _MemberEntry {
+  const _MemberEntry({required this.member, this.isPresent});
+
+  final MembersEntity member;
+  final bool? isPresent;
+}
+
+class _PresencesSection extends StatefulWidget {
   const _PresencesSection({required this.state, required this.onRetry});
 
   final MeetingDetailsLoaded state;
   final VoidCallback onRetry;
 
   @override
+  State<_PresencesSection> createState() => _PresencesSectionState();
+}
+
+class _PresencesSectionState extends State<_PresencesSection> {
+  String _searchQuery = "";
+  _PresenceSort _sort = _PresenceSort.name;
+  _PresenceFilter _filter = _PresenceFilter.all;
+
+  /// All members: the block roster when loaded (real names), otherwise
+  /// derived from presence rows as a fallback.
+  List<_MemberEntry> get _allEntries {
+    final state = widget.state;
+    final presenceByMember = {for (final p in state.presences) p.memberId: p};
+    if (state.blockMembers.isNotEmpty) {
+      return [
+        for (final bm in state.blockMembers)
+          _MemberEntry(
+            member:
+                state.memberEntities[bm.memberId] ??
+                MembersEntity(id: bm.memberId, name: "Membro"),
+            isPresent: presenceByMember[bm.memberId]?.isPresent,
+          ),
+      ];
+    }
+    return [
+      for (final p in state.presences)
+        _MemberEntry(
+          member: MembersEntity(id: p.memberId, name: "Membro #${p.memberId}"),
+          isPresent: p.isPresent,
+        ),
+    ];
+  }
+
+  List<_MemberEntry> get _visibleEntries {
+    final query = _searchQuery.toLowerCase();
+    final list =
+        _allEntries.where((entry) {
+          final matchesFilter = switch (_filter) {
+            _PresenceFilter.all => true,
+            _PresenceFilter.present => entry.isPresent == true,
+            _PresenceFilter.absent => entry.isPresent != true,
+          };
+          final name = (entry.member.name ?? "").toLowerCase();
+          return matchesFilter && (query.isEmpty || name.contains(query));
+        }).toList()..sort((a, b) {
+          final byName = (a.member.name ?? "").compareTo(b.member.name ?? "");
+          final aPresent = a.isPresent == true;
+          final bPresent = b.isPresent == true;
+          return switch (_sort) {
+            _PresenceSort.name => byName,
+            _PresenceSort.presentFirst =>
+              aPresent == bPresent ? byName : (aPresent ? -1 : 1),
+            _PresenceSort.absentFirst =>
+              aPresent == bPresent ? byName : (aPresent ? 1 : -1),
+          };
+        });
+    return list;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final state = widget.state;
     if (state.presencesStatus == PresencesStatus.loading) {
       return AppCard(
         child: Padding(
@@ -401,7 +545,8 @@ class _PresencesSection extends StatelessWidget {
       );
     }
 
-    if (state.presences.isEmpty) {
+    final allEntries = _allEntries;
+    if (allEntries.isEmpty) {
       return AppCard(
         child: Padding(
           padding: EdgeInsets.all(Spacing.space_md),
@@ -413,150 +558,176 @@ class _PresencesSection extends StatelessWidget {
       );
     }
 
-    final presentMembers = state.presences.where((p) => p.isPresent).toList();
-    final absentMembers = state.presences.where((p) => !p.isPresent).toList();
+    final entries = _visibleEntries;
+    final isBusy = state.markingPresenceStatus == MarkingPresenceStatus.loading;
 
-    return Column(
-      children: [
-        if (presentMembers.isNotEmpty) ...[
-          _PresenceGroup(
-            title: "Presentes",
-            presences: presentMembers,
-            color: Theme.of(context).colorScheme.primary,
-            icon: Icons.check_circle_rounded,
-          ),
-          const SizedBox(height: Spacing.space_xs),
-        ],
-        if (absentMembers.isNotEmpty)
-          _PresenceGroup(
-            title: "Ausentes",
-            presences: absentMembers,
-            color: Theme.of(context).colorScheme.error,
-            icon: Icons.cancel_rounded,
-          ),
-      ],
-    );
-  }
-}
-
-class _PresenceGroup extends StatelessWidget {
-  const _PresenceGroup({
-    required this.title,
-    required this.presences,
-    required this.color,
-    required this.icon,
-  });
-
-  final String title;
-  final List<MeetingPresencesEntity> presences;
-  final Color color;
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
     return AppCard(
       elevation: AppCardElevation.none,
       padding: EdgeInsets.zero,
       child: Column(
         children: [
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: Spacing.space_sm,
-              vertical: Spacing.space_xs,
-            ),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(Radii.radiusMd.topLeft.x),
-              ),
-            ),
+          // Search + sort/filter, inside the list card.
+          Padding(
+            padding: EdgeInsets.all(Spacing.space_xs),
             child: Row(
               children: [
-                Icon(icon, color: color, size: 20),
-                const SizedBox(width: Spacing.space_2xs),
-                Text(
-                  "$title (${presences.length})",
-                  style: AppTypography.titleSmall.copyWith(color: color),
+                Expanded(
+                  child: AppSearchField(
+                    hint: "Buscar membro...",
+                    onChanged: (value) => setState(() => _searchQuery = value),
+                  ),
                 ),
+                const SizedBox(width: Spacing.space_xs),
+                _buildSortFilterMenu(),
               ],
             ),
           ),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: presences.length,
-            separatorBuilder: (context, index) => Divider(
-              height: 1,
-              color: Theme.of(context).colorScheme.outlineVariant,
-            ),
-            itemBuilder: (context, index) {
-              final presence = presences[index];
-              // Build a synthetic MembersEntity for MemberCard
-              final member = MembersEntity(
-                id: presence.memberId,
-                name: "Membro #${presence.memberId}",
-              );
-              return Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Spacing.space_2xs,
-                  vertical: Spacing.space_3xs,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: MemberCard(member: member, showEmail: false),
-                    ),
-                    const SizedBox(width: Spacing.space_2xs),
-                    presence.isPresent
-                        ? PresenceChip.present()
-                        : PresenceChip.absent(),
-                  ],
-                ),
-              );
-            },
+          Divider(
+            height: 1,
+            color: Theme.of(context).colorScheme.outlineVariant,
           ),
+          if (entries.isEmpty)
+            Padding(
+              padding: EdgeInsets.all(Spacing.space_md),
+              child: AppEmpty(
+                message: "Nenhum membro encontrado",
+                icon: Icons.search_off_rounded,
+              ),
+            )
+          else
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: entries.length,
+              separatorBuilder: (context, index) => Divider(
+                height: 1,
+                color: Theme.of(context).colorScheme.outlineVariant,
+              ),
+              itemBuilder: (context, index) {
+                final entry = entries[index];
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Spacing.space_2xs,
+                    vertical: Spacing.space_3xs,
+                  ),
+                  child: MemberCard(
+                    member: entry.member,
+                    showEmail: false,
+                    // Owners/managers toggle presence by tapping the card.
+                    onTap: state.canManagePresence && !isBusy
+                        ? () => _confirmSetPresence(context, entry)
+                        : null,
+                    trailing: _PresenceBadge(
+                      isPresent: entry.isPresent ?? false,
+                    ),
+                  ),
+                );
+              },
+            ),
         ],
       ),
     );
   }
-}
 
-class _PresenceFABs extends StatelessWidget {
-  const _PresenceFABs({
-    required this.isLoading,
-    required this.onMarkPresent,
-    required this.onMarkAbsent,
-  });
-
-  final bool isLoading;
-  final VoidCallback onMarkPresent;
-  final VoidCallback onMarkAbsent;
-
-  @override
-  Widget build(BuildContext context) {
-    final spinner = const SizedBox(
-      width: 24,
-      height: 24,
-      child: CircularProgressIndicator(strokeWidth: 3),
+  /// Asks for confirmation before changing a member's presence.
+  Future<void> _confirmSetPresence(
+    BuildContext context,
+    _MemberEntry entry,
+  ) async {
+    final isPresent = !(entry.isPresent ?? false);
+    final confirmed = await AppDialog.confirm(
+      context,
+      title: "Alterar presença",
+      message:
+          "Marcar ${entry.member.name ?? "este membro"} como ${isPresent ? "presente" : "ausente"}?",
+      confirmLabel: "Confirmar",
+      cancelLabel: "Cancelar",
     );
-    return Padding(
-      padding: EdgeInsets.only(bottom: Spacing.space_sm),
+    if (confirmed == true && context.mounted) {
+      context.read<MeetingDetailsCubit>().setMemberPresence(
+        memberId: entry.member.id,
+        isPresent: isPresent,
+      );
+    }
+  }
+
+  Widget _buildSortFilterMenu() {
+    return PopupMenuButton<Object>(
+      icon: const Icon(Icons.sort_rounded),
+      tooltip: "Ordenar e filtrar",
+      onSelected: (value) {
+        if (value is _PresenceSort) {
+          setState(() => _sort = value);
+        } else if (value is _PresenceFilter) {
+          setState(() => _filter = value);
+        }
+      },
+      itemBuilder: (context) => [
+        _menuHeader("Ordenar"),
+        _checkItem(
+          _PresenceSort.name,
+          "Nome (A-Z)",
+          _sort == _PresenceSort.name,
+        ),
+        _checkItem(
+          _PresenceSort.presentFirst,
+          "Presentes primeiro",
+          _sort == _PresenceSort.presentFirst,
+        ),
+        _checkItem(
+          _PresenceSort.absentFirst,
+          "Ausentes primeiro",
+          _sort == _PresenceSort.absentFirst,
+        ),
+        const PopupMenuDivider(),
+        _menuHeader("Filtrar"),
+        _checkItem(
+          _PresenceFilter.all,
+          "Todos",
+          _filter == _PresenceFilter.all,
+        ),
+        _checkItem(
+          _PresenceFilter.present,
+          "Presentes",
+          _filter == _PresenceFilter.present,
+        ),
+        _checkItem(
+          _PresenceFilter.absent,
+          "Ausentes",
+          _filter == _PresenceFilter.absent,
+        ),
+      ],
+    );
+  }
+
+  PopupMenuItem<Object> _menuHeader(String label) {
+    return PopupMenuItem<Object>(
+      enabled: false,
+      child: Text(
+        label,
+        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
+      ),
+    );
+  }
+
+  PopupMenuItem<Object> _checkItem(Object value, String label, bool checked) {
+    return PopupMenuItem<Object>(
+      value: value,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          AppFAB(
-            key: const Key("app_fab_mark_absent"),
-            icon: Icons.close_rounded,
-            onPressed: isLoading ? null : onMarkAbsent,
-            child: isLoading ? spinner : null,
+          SizedBox(
+            width: 24,
+            child: checked
+                ? Icon(
+                    Icons.check_rounded,
+                    size: 18,
+                    color: Theme.of(context).colorScheme.primary,
+                  )
+                : null,
           ),
-          const SizedBox(width: Spacing.space_sm),
-          AppFAB(
-            key: const Key("app_fab_mark_present"),
-            icon: Icons.check_rounded,
-            onPressed: isLoading ? null : onMarkPresent,
-            child: isLoading ? spinner : null,
-          ),
+          Text(label),
         ],
       ),
     );

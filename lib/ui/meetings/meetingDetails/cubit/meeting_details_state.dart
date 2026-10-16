@@ -1,5 +1,7 @@
+import 'package:bloco_na_rua/domain/entities/carnivalBlockMembers/carnival_block_members_entity.dart';
 import 'package:bloco_na_rua/domain/entities/meetingPresences/meeting_presences_entity.dart';
 import 'package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart';
+import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';
 import 'package:equatable/equatable.dart';
 
 sealed class MeetingDetailsState extends Equatable {
@@ -26,6 +28,10 @@ class MeetingDetailsLoaded extends MeetingDetailsState {
   final String? markingPresenceError;
   final DeleteStatus deleteStatus;
   final bool canDeleteMeeting;
+  final List<CarnivalBlockMembersEntity> blockMembers;
+  final Map<int, MembersEntity> memberEntities;
+  final bool canManagePresence;
+  final String? blockName;
 
   const MeetingDetailsLoaded({
     required this.meeting,
@@ -36,6 +42,10 @@ class MeetingDetailsLoaded extends MeetingDetailsState {
     this.markingPresenceError,
     this.deleteStatus = DeleteStatus.initial,
     this.canDeleteMeeting = false,
+    this.blockMembers = const [],
+    this.memberEntities = const {},
+    this.canManagePresence = false,
+    this.blockName,
   });
 
   MeetingDetailsLoaded copyWith({
@@ -47,6 +57,10 @@ class MeetingDetailsLoaded extends MeetingDetailsState {
     String? markingPresenceError,
     DeleteStatus? deleteStatus,
     bool? canDeleteMeeting,
+    List<CarnivalBlockMembersEntity>? blockMembers,
+    Map<int, MembersEntity>? memberEntities,
+    bool? canManagePresence,
+    String? blockName,
   }) {
     return MeetingDetailsLoaded(
       meeting: meeting ?? this.meeting,
@@ -58,6 +72,10 @@ class MeetingDetailsLoaded extends MeetingDetailsState {
       markingPresenceError: markingPresenceError ?? this.markingPresenceError,
       deleteStatus: deleteStatus ?? this.deleteStatus,
       canDeleteMeeting: canDeleteMeeting ?? this.canDeleteMeeting,
+      blockMembers: blockMembers ?? this.blockMembers,
+      memberEntities: memberEntities ?? this.memberEntities,
+      canManagePresence: canManagePresence ?? this.canManagePresence,
+      blockName: blockName ?? this.blockName,
     );
   }
 
@@ -71,6 +89,10 @@ class MeetingDetailsLoaded extends MeetingDetailsState {
     markingPresenceError,
     deleteStatus,
     canDeleteMeeting,
+    blockMembers,
+    memberEntities,
+    canManagePresence,
+    blockName,
   ];
 }
 

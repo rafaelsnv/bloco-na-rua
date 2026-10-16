@@ -156,7 +156,10 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
       "name": title,
       "description": description,
       "location": location,
-      "dateTime": dateTime.toIso8601String(),
+      // API field is `meetingDateTime` (see MeetingCreate in swagger) — the
+      // old `dateTime` key was silently dropped server-side, storing the
+      // .NET default (1900-01-01 00:00).
+      "meetingDateTime": dateTime.toIso8601String(),
       "carnivalBlockId": carnivalBlockId,
     };
 
