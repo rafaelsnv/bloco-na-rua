@@ -1,0 +1,11 @@
+1. Contraste dos botões de login/cadastrar no modo claro
+2. Duplicação nos registros de lista de presença (indepotência no backend)
+3. Alternativa visual para o botão de confirmar presença
+4. Loading da lista de presença não preenchendo horizonalmente
+5. Código de convite/gestor
+5.1 Posicionar lado a lado
+5.2 Adicionar botão de exibir/ocultar
+5.3 Rever cores
+6. Ajustar espaçamento padrão entre título e seção/conteúdo, usar tela de reunião como referência
+7. Posicionar o ícone de adicionar membro dentro do tile de membro
+8. Quando o bloco tem uma imagem, substituir o ícone pela imagem
