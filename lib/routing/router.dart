@@ -19,6 +19,7 @@ import "package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_cub
 import "package:bloco_na_rua/ui/carnivalBlock/createBlock/widgets/create_block_screen.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/editBlock/cubit/edit_block_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/editBlock/widgets/edit_block_screen.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/joinBlock/cubit/join_block_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/joinBlock/widgets/join_block_modal.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_shell.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_bottom_nav.dart";
@@ -208,6 +209,7 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
                    .read<ICarnivalBlocksRepository>(),
               carnivalBlockMembersRepository: context
                   .read<ICarnivalBlockMembersRepository>(),
+              membersRepository: context.read<IMembersRepository>(),
               getCurrentUserData: context.read<GetCurrentUserData>(),
               meetingId: meetingId,
             ),
@@ -255,7 +257,13 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
       pageBuilder: (context, state) => _buildPageWithSlideTransition(
         context: context,
         state: state,
-        child: const JoinBlockModal(),
+        child: BlocProvider(
+          create: (context) => JoinBlockCubit(
+            carnivalBlockMembersRepository:
+                context.read<ICarnivalBlockMembersRepository>(),
+          ),
+          child: const JoinBlockModal(),
+        ),
       ),
     ),
     GoRoute(
