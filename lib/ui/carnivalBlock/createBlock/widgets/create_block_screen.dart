@@ -3,6 +3,7 @@ import "package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_cub
 import "package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_state.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/home/cubit/home_cubit.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
 import "package:bloco_na_rua/ui/core/widgets/inputs/app_text_field.dart";
@@ -124,7 +125,7 @@ class _CreateBlockScreenState extends State<CreateBlockScreen> {
                       AppButton(
                         label: "Criar",
                         variant: AppButtonVariant.primary,
-                        size: AppButtonSize.lg,
+                        size: AppButtonSizeMetrics.lg,
                         isFullWidth: true,
                         isLoading: isLoading,
                         isDisabled: isDisabled,

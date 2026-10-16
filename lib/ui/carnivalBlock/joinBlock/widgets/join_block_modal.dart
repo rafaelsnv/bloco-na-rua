@@ -1,4 +1,3 @@
-import "package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/joinBlock/cubit/join_block_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/joinBlock/cubit/join_block_state.dart";
@@ -40,25 +39,19 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => JoinBlockCubit(
-        carnivalBlockMembersRepository:
-            context.read<ICarnivalBlockMembersRepository>(),
-      ),
-      child: BlocConsumer<JoinBlockCubit, JoinBlockState>(
+    return BlocConsumer<JoinBlockCubit, JoinBlockState>(
         listener: (context, state) {
-          if (state is JoinBlockSuccess) {
-            context.read<BlockListCubit>().loadBlocks();
-            context.read<HomeCubit>().loadHomeData();
-            AppSnackbar.success(context, message: "Você entrou no bloco!");
-            context.pop();
-          } else if (state is JoinBlockError) {
-            AppSnackbar.error(context, message: state.message);
-          }
-        },
-        builder: (context, state) {
+        if (state is JoinBlockSuccess) {
+          context.read<BlockListCubit>().loadBlocks();
+          context.read<HomeCubit>().loadHomeData();
+          AppSnackbar.success(context, message: "Você entrou no bloco!");
+          context.pop();
+        } else if (state is JoinBlockError) {
+          AppSnackbar.error(context, message: state.message);
+        }
+      },
+      builder: (context, state) {
           final isLoading = state is JoinBlockLoading;
-          final codeIsEmpty = _inviteCodeController.text.trim().isEmpty;
 
           return Scaffold(
             appBar: const AppAppBar(
@@ -154,7 +147,6 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
                       variant: AppButtonVariant.primary,
                       isFullWidth: true,
                       isLoading: isLoading,
-                      isDisabled: codeIsEmpty,
                       onPressed: () => _submit(context),
                     ),
                   ],
@@ -163,8 +155,7 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
             ),
           );
         },
-      ),
-    );
+      );
   }
 }
 

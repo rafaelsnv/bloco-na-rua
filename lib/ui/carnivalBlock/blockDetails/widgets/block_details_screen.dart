@@ -12,6 +12,7 @@ import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_icon_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
@@ -27,6 +28,7 @@ import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_loading.dart";
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_cache_manager/flutter_cache_manager.dart";
 import "package:go_router/go_router.dart";
@@ -65,7 +67,10 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
     super.didChangeDependencies();
     if (!_subscribedToRoute) {
       _subscribedToRoute = true;
-      Routes.routeObserver.subscribe(this, ModalRoute.of(context)!);
+      final route = ModalRoute.of(context);
+      if (route != null) {
+        Routes.routeObserver.subscribe(this, route);
+      }
     }
   }
 
@@ -345,7 +350,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
                           ? AppButton(
                               label: "Criar",
                               variant: AppButtonVariant.ghost,
-                              size: AppButtonSize.sm,
+                              size: AppButtonSizeMetrics.sm,
                               onPressed: () => context.push(
                                 "/create-meeting/${widget.carnivalBlockId}",
                               ),
@@ -373,7 +378,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
                           ? AppButton(
                               label: "Adicionar",
                               variant: AppButtonVariant.ghost,
-                              size: AppButtonSize.sm,
+                              size: AppButtonSizeMetrics.sm,
                               onPressed: () => context.push(
                                 "/add-member/${widget.carnivalBlockId}",
                               ),
@@ -493,6 +498,120 @@ class _BlockInfoCard extends StatelessWidget {
             ),
             const SizedBox(height: Spacing.space_md),
           ],
+
+          // Invite code — managers/owner only
+          if (canManageMembers) ...[
+            Container(
+              padding: const EdgeInsets.all(Spacing.space_sm),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.secondaryContainer,
+                borderRadius: Radii.radiusSm,
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.vpn_key_rounded,
+                    size: 20,
+                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                  ),
+                  const SizedBox(width: Spacing.space_sm),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Código de convite",
+                          style: AppTypography.labelSmall.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer,
+                          ),
+                        ),
+                        Text(
+                          carnivalBlock.inviteCode,
+                          style: AppTypography.titleMedium.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  AppIconButton(
+                    icon: Icons.copy_rounded,
+                    size: AppIconButtonSizeMetrics.sm,
+                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                    onPressed: () {
+                      Clipboard.setData(
+                          ClipboardData(text: carnivalBlock.inviteCode));
+                      AppSnackbar.success(
+                        context,
+                        message: "Código copiado!",
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: Spacing.space_sm),
+            // Managers invite code — managers/owner only
+            Container(
+              padding: const EdgeInsets.all(Spacing.space_sm),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.tertiaryContainer,
+                borderRadius: Radii.radiusSm,
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.admin_panel_settings_rounded,
+                    size: 20,
+                    color: Theme.of(context).colorScheme.onTertiaryContainer,
+                  ),
+                  const SizedBox(width: Spacing.space_sm),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Código de gestor",
+                          style: AppTypography.labelSmall.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onTertiaryContainer,
+                          ),
+                        ),
+                        Text(
+                          carnivalBlock.managersInviteCode,
+                          style: AppTypography.titleMedium.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onTertiaryContainer,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  AppIconButton(
+                    icon: Icons.copy_rounded,
+                    size: AppIconButtonSizeMetrics.sm,
+                    color: Theme.of(context).colorScheme.onTertiaryContainer,
+                    onPressed: () {
+                      Clipboard.setData(
+                          ClipboardData(text: carnivalBlock.managersInviteCode));
+                      AppSnackbar.success(
+                        context,
+                        message: "Código copiado!",
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -562,7 +681,7 @@ class _MeetingsSection extends StatelessWidget {
                 AppButton(
                   label: "Tentar novamente",
                   variant: AppButtonVariant.secondary,
-                  size: AppButtonSize.sm,
+                  size: AppButtonSizeMetrics.sm,
                   onPressed: onRetry,
                 ),
               ],
@@ -719,7 +838,7 @@ class _MembersSection extends StatelessWidget {
                 AppButton(
                   label: "Tentar novamente",
                   variant: AppButtonVariant.secondary,
-                  size: AppButtonSize.sm,
+                  size: AppButtonSizeMetrics.sm,
                   onPressed: onRetry,
                 ),
               ],
@@ -956,7 +1075,7 @@ class _MemberRow extends StatelessWidget {
             AppIconButton(
               icon: Icons.delete_rounded,
               color: Theme.of(context).colorScheme.error,
-              size: AppIconButtonSize.sm,
+              size: AppIconButtonSizeMetrics.sm,
               onPressed: onDelete,
             ),
           ],

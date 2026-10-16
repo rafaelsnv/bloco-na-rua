@@ -61,6 +61,20 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
       switch (response.statusCode) {
         case 200:
         case 201:
+          // 200 returns array of CarnivalBlockMemberResponse per swagger,
+          // 201 returns single CarnivalBlockMemberJoinResponse.
+          // Handle both cases gracefully by checking response data type.
+          if (response.data is List) {
+            // 200 case: take first item if available
+            final list = response.data as List;
+            if (list.isNotEmpty) {
+              return Success(
+                CarnivalBlockMemberJoinResponse.fromJson(
+                    list.first as Map<String, dynamic>),
+              );
+            }
+            return Failure(baseApiClient.formatError(response));
+          }
           return Success(
             CarnivalBlockMemberJoinResponse.fromJson(response.data),
           );
