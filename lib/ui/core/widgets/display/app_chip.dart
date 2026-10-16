@@ -16,6 +16,7 @@ class AppChip extends StatelessWidget {
     this.onPressed,
     this.variant = ChipVariant.filled,
     this.color,
+    this.padding,
   });
 
   final String label;
@@ -24,6 +25,9 @@ class AppChip extends StatelessWidget {
   final VoidCallback? onPressed;
   final ChipVariant variant;
   final Color? color;
+
+  /// Optional padding override. Defaults to the standard chip padding.
+  final EdgeInsetsGeometry? padding;
 
   /// Presence chip indicating present status (success color).
   factory AppChip.presencePresent(String label) {
@@ -91,10 +95,12 @@ class AppChip extends StatelessWidget {
       deleteIconColor: Theme.of(context).colorScheme.onSurfaceVariant,
       side: side,
       shape: RoundedRectangleBorder(borderRadius: Radii.chip),
-      padding: EdgeInsets.symmetric(
-        horizontal: Spacing.space_xs,
-        vertical: Spacing.space_4xs,
-      ),
+      padding:
+          padding ??
+          EdgeInsets.symmetric(
+            horizontal: Spacing.space_xs,
+            vertical: Spacing.space_4xs,
+          ),
       showCheckmark: false,
       // Always enabled: RawChip paints label/avatar at 38% opacity and drops
       // the background when isEnabled is false (chip.dart `_kDisabledAlpha`).

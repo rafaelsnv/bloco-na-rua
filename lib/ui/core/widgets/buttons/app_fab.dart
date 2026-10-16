@@ -1,18 +1,7 @@
+import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:flutter/material.dart";
-
-/// Size variants for [AppFAB].
-enum AppFabSize {
-  /// Small: 40px diameter.
-  sm,
-
-  /// Medium: 56px diameter.
-  md,
-
-  /// Large: 72px diameter.
-  lg,
-}
 
 /// Color variants for [AppFAB].
 enum AppFabColor {
@@ -38,7 +27,7 @@ class AppFAB extends StatelessWidget {
   /// [label] optionally provides a label text. When non-null the FAB renders
   /// as an ExtendedFloatingActionButton; when null it renders as a basic FAB.
   ///
-  /// [size] defaults to [AppFabSize.md] (56px).
+  /// [size] defaults to [AppFabSizeMetrics.md] (48px diameter).
   ///
   /// [fabColor] defaults to [AppFabColor.accent] (orange).
   ///
@@ -49,7 +38,7 @@ class AppFAB extends StatelessWidget {
     required this.onPressed,
     this.label,
     this.child,
-    this.size = AppFabSize.md,
+    this.size = AppFabSizeMetrics.md,
     this.fabColor = AppFabColor.accent,
     super.key,
   });
@@ -64,8 +53,8 @@ class AppFAB extends StatelessWidget {
   /// ExtendedFloatingActionButton; when null it is a basic FAB.
   final String? label;
 
-  /// Size preset controlling the FAB diameter.
-  final AppFabSize size;
+  /// Size preset pulling all metrics from [AppFabSizeMetrics].
+  final AppFabSizeMetrics size;
 
   /// Color variant controlling the FAB background color.
   final AppFabColor fabColor;
@@ -73,31 +62,14 @@ class AppFAB extends StatelessWidget {
   /// Optional override for the FAB's child widget (e.g. a spinner).
   final Widget? child;
 
-  static const Map<AppFabSize, double> _sizeTokens = {
-    AppFabSize.sm: 40.0,
-    AppFabSize.md: 56.0,
-    AppFabSize.lg: 72.0,
-  };
-
-  static const Map<AppFabSize, double> _iconSizeTokens = {
-    AppFabSize.sm: 20.0,
-    AppFabSize.md: 24.0,
-    AppFabSize.lg: 28.0,
-  };
-
   // Standard FAB elevation.
   static const double _elevationDefault = 6.0;
-
-  double get _diameter => _sizeTokens[size]!;
-  double get _iconSize => _iconSizeTokens[size]!;
 
   // ponytail: FAB primary uses light variant in dark mode for better contrast on dark surface
   Color _backgroundColor(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return switch (fabColor) {
       AppFabColor.primary => colorScheme.primary,
-      // ponytail: ColorScheme has no accent slot; scheme.secondary is magenta,
-      // not the orange accent — keep the token until accent lands in the scheme.
       AppFabColor.accent => AppColors.accent,
       AppFabColor.tertiary => colorScheme.tertiary,
     };
@@ -117,17 +89,18 @@ class AppFAB extends StatelessWidget {
 
   Widget _buildBasicFab(BuildContext context, Key effectiveKey) {
     return SizedBox(
-      width: _diameter,
-      height: _diameter,
+      width: size.diameter,
+      height: size.diameter,
       child: FloatingActionButton(
         key: effectiveKey,
         onPressed: onPressed,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         backgroundColor: _backgroundColor(context),
         foregroundColor: _foregroundColor(context),
         elevation: _elevationDefault,
         shape: RoundedRectangleBorder(borderRadius: Radii.fab),
         heroTag: null,
-        child: child ?? Icon(icon, size: _iconSize),
+        child: child ?? Icon(icon, size: size.iconSize),
       ),
     );
   }
@@ -141,7 +114,7 @@ class AppFAB extends StatelessWidget {
       elevation: _elevationDefault,
       shape: RoundedRectangleBorder(borderRadius: Radii.fab),
       heroTag: null,
-      icon: Icon(icon, size: _iconSize),
+      icon: Icon(icon, size: size.iconSize),
       label: Text(label!),
     );
   }

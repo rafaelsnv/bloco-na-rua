@@ -1,7 +1,7 @@
+import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:flutter/material.dart";
 
@@ -24,18 +24,6 @@ enum AppButtonVariant {
   ghost,
 }
 
-/// Button size taxonomy with associated sizing tokens.
-enum AppButtonSize {
-  /// Small: 36px height, 8px horizontal padding, 12px vertical padding.
-  sm,
-
-  /// Medium: 44px height, 12px horizontal padding, 16px vertical padding.
-  md,
-
-  /// Large: 52px height, 16px horizontal padding, 20px vertical padding.
-  lg,
-}
-
 /// A design-system-compliant button widget supporting four visual variants,
 /// three size presets, loading and disabled states, and icon decoration.
 class AppButton extends StatelessWidget {
@@ -45,7 +33,7 @@ class AppButton extends StatelessWidget {
   const AppButton({
     required this.label,
     this.variant = AppButtonVariant.primary,
-    this.size = AppButtonSize.md,
+    this.size = AppButtonSizeMetrics.md,
     this.icon,
     this.trailingIcon,
     this.onPressed,
@@ -61,8 +49,8 @@ class AppButton extends StatelessWidget {
   /// Visual style preset. Defaults to [AppButtonVariant.primary].
   final AppButtonVariant variant;
 
-  /// Size preset controlling height and padding.
-  final AppButtonSize size;
+  /// Size preset pulling all metrics from [AppButtonSizeMetrics].
+  final AppButtonSizeMetrics size;
 
   /// Optional leading icon rendered before the label.
   final Widget? icon;
@@ -83,36 +71,6 @@ class AppButton extends StatelessWidget {
   /// When true the button expands to fill its parent's width.
   final bool isFullWidth;
 
-  static const Map<AppButtonSize, double> _heightTokens = {
-    AppButtonSize.sm: 36.0,
-    AppButtonSize.md: 44.0,
-    AppButtonSize.lg: 52.0,
-  };
-
-  static const Map<AppButtonSize, double> _horizontalPaddingTokens = {
-    AppButtonSize.sm: Spacing.space_2xs,
-    AppButtonSize.md: Spacing.space_xs,
-    AppButtonSize.lg: Spacing.space_sm,
-  };
-
-  static const Map<AppButtonSize, double> _verticalPaddingTokens = {
-    AppButtonSize.sm: Spacing.space_xs,
-    AppButtonSize.md: Spacing.space_sm,
-    AppButtonSize.lg: Spacing.buttonPaddingVLg,
-  };
-
-  static const Map<AppButtonSize, double> _iconLabelGapTokens = {
-    AppButtonSize.sm: Spacing.space_2xs,
-    AppButtonSize.md: Spacing.space_2xs,
-    AppButtonSize.lg: Spacing.space_xs,
-  };
-
-  static const Map<AppButtonSize, double> _iconSizeTokens = {
-    AppButtonSize.sm: 16.0,
-    AppButtonSize.md: 20.0,
-    AppButtonSize.lg: 24.0,
-  };
-
   Color _foregroundColor(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     switch (variant) {
@@ -121,7 +79,6 @@ class AppButton extends StatelessWidget {
       case AppButtonVariant.secondary:
         return colorScheme.secondary;
       case AppButtonVariant.accent:
-        // Accent gold is not part of colorScheme — keep token fallback.
         final isDark = Theme.of(context).brightness == Brightness.dark;
         return isDark ? AppColors.textOnPrimaryDark : AppColors.textOnPrimary;
       case AppButtonVariant.tertiary:
@@ -133,58 +90,36 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = _heightTokens[size]!;
-    final horizontalPadding = _horizontalPaddingTokens[size]!;
-    final verticalPadding = _verticalPaddingTokens[size]!;
-    final iconLabelGap = _iconLabelGapTokens[size]!;
-    final iconSize = _iconSizeTokens[size]!;
     final effectiveOnPressed = isDisabled ? null : onPressed;
     final effectiveOpacity = isDisabled ? 0.5 : 1.0;
-
     final animationsDisabled = MediaQuery.disableAnimationsOf(context);
 
-    final content = _buildContent(
-      context,
-      iconLabelGap,
-      iconSize,
-    );
-
+    final content = _buildContent(context);
     final buttonChild = _buildButtonChild(
       context,
       content,
-      height,
-      horizontalPadding,
-      verticalPadding,
       effectiveOnPressed,
       effectiveOpacity,
       animationsDisabled,
       key ?? Key('app_button_$label'),
     );
 
-    if (animationsDisabled) {
-      return buttonChild;
-    }
-
+    if (animationsDisabled) return buttonChild;
     return _HoverOpacityWrapper(
       opacity: 1.0,
       child: _PressScaleWrapper(child: buttonChild),
     );
   }
 
-  Widget _buildContent(
-    BuildContext context,
-    double iconLabelGap,
-    double iconSize,
-  ) {
+  Widget _buildContent(BuildContext context) {
     final foreground = _foregroundColor(context);
-
     return Row(
       mainAxisSize: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (icon != null) icon!, // ignore: use_null_aware_elements
+        if (icon != null) icon!,
         if (icon != null && (isLoading || label.isNotEmpty))
-          SizedBox(width: iconLabelGap),
+          SizedBox(width: size.iconLabelGap),
         if (isLoading)
           SizedBox(
             width: 20,
@@ -197,7 +132,7 @@ class AppButton extends StatelessWidget {
         else if (label.isNotEmpty)
           Text(label, style: _textStyle(context, foreground)),
         if (trailingIcon != null && (isLoading || label.isNotEmpty))
-          SizedBox(width: iconLabelGap),
+          SizedBox(width: size.iconLabelGap),
         ?trailingIcon,
       ],
     );
@@ -206,9 +141,6 @@ class AppButton extends StatelessWidget {
   Widget _buildButtonChild(
     BuildContext context,
     Widget content,
-    double height,
-    double horizontalPadding,
-    double verticalPadding,
     VoidCallback? effectiveOnPressed,
     double effectiveOpacity,
     bool animationsDisabled,
@@ -217,10 +149,10 @@ class AppButton extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final colorScheme = Theme.of(context).colorScheme;
     final foreground = _foregroundColor(context);
-    final minimumSize = Size.fromHeight(height);
+    final minimumSize = Size.fromHeight(size.height);
     final padding = EdgeInsets.symmetric(
-      horizontal: horizontalPadding,
-      vertical: verticalPadding,
+      horizontal: size.horizontalPadding,
+      vertical: size.verticalPadding,
     );
     final textStyle = _textStyle(context, foreground);
 
@@ -251,14 +183,13 @@ class AppButton extends StatelessWidget {
             if (states.contains(WidgetState.disabled)) {
               return colorScheme.surfaceContainerHigh;
             }
-            // Accent gold is not part of colorScheme — keep token fallback.
-            final isDark = Theme.of(context).brightness == Brightness.dark;
             return isDark ? AppColors.accentLight : AppColors.accent;
           }),
           foregroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.disabled)) {
-              final isDark = Theme.of(context).brightness == Brightness.dark;
-              return isDark ? AppColors.textSecondaryDark : AppColors.textTertiary;
+              return isDark
+                  ? AppColors.textSecondaryDark
+                  : AppColors.textTertiary;
             }
             return foreground;
           }),
@@ -305,32 +236,37 @@ class AppButton extends StatelessWidget {
     if (isFullWidth) {
       return SizedBox(width: double.infinity, child: button);
     }
-    return button;
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 200),
+      child: button,
+    );
   }
 
   TextStyle _textStyle(BuildContext context, Color foreground) {
     final base = switch (variant) {
-      AppButtonVariant.accent => AppTypography.buttonLarge.copyWith(
-        fontWeight: FontWeight.w700,
-      ),
+      AppButtonVariant.accent =>
+        AppTypography.buttonLarge.copyWith(fontWeight: FontWeight.w700),
       _ => switch (size) {
-        AppButtonSize.sm => AppTypography.buttonSmall,
-        AppButtonSize.md => AppTypography.buttonMedium,
-        AppButtonSize.lg => AppTypography.buttonLarge,
-      },
+          AppButtonSizeMetrics.sm => AppTypography.buttonSmall,
+          AppButtonSizeMetrics.md => AppTypography.buttonMedium,
+          AppButtonSizeMetrics.lg => AppTypography.buttonLarge,
+          _ => AppTypography.buttonMedium,
+        },
     };
     return base.copyWith(color: foreground);
   }
 }
 
 class _HoverOpacityWrapper extends StatefulWidget {
-  const _HoverOpacityWrapper({required this.opacity, required this.child});
+  const _HoverOpacityWrapper(
+      {required this.opacity, required this.child});
 
   final double opacity;
   final Widget child;
 
   @override
-  State<_HoverOpacityWrapper> createState() => _HoverOpacityWrapperState();
+  State<_HoverOpacityWrapper> createState() =>
+      _HoverOpacityWrapperState();
 }
 
 class _HoverOpacityWrapperState extends State<_HoverOpacityWrapper> {

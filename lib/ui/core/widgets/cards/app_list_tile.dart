@@ -117,7 +117,12 @@ class AppListTile extends StatelessWidget {
       key: resolvedKey,
       contentPadding: effectivePadding,
       leading: leading,
-      title: Text(title, style: AppTypography.titleMedium),
+      title: Text(
+        title,
+        style: AppTypography.titleMedium,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
       subtitle: subtitle != null
           ? Text(
               subtitle!,

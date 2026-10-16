@@ -8,6 +8,7 @@ class AppSectionHeader extends StatelessWidget {
     required this.title,
     this.leading,
     this.action,
+    this.titleTrailing,
   });
 
   /// Section title text (required).
@@ -15,6 +16,9 @@ class AppSectionHeader extends StatelessWidget {
 
   /// Optional leading widget placed before the title (e.g. icon).
   final Widget? leading;
+
+  /// Optional widget placed right after the title (e.g. a count chip).
+  final Widget? titleTrailing;
 
   /// Optional trailing widget (e.g. TextButton "Ver todos").
   final Widget? action;
@@ -24,23 +28,37 @@ class AppSectionHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: Spacing.pagePaddingMobile,
-        vertical: Spacing.space_sm,
+        vertical: Spacing.space_2xs,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          if (leading != null) ...[
-            leading!,
-            const SizedBox(width: Spacing.space_xs),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (leading != null) ...[
+              leading!,
+              const SizedBox(width: Spacing.space_xs),
+            ],
+            Flexible(
+              fit: FlexFit.loose,
+              child: Text(
+                title,
+                style: AppTypography.headlineSmall,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            if (titleTrailing != null) ...[
+              const SizedBox(width: Spacing.space_xs),
+              titleTrailing!,
+            ],
+            if (action != null) ...[
+              const SizedBox(width: Spacing.space_sm),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [action!],
+              ),
+            ],
           ],
-          Expanded(
-            flex: 2,
-            child: Text(title, style: AppTypography.headlineSmall),
-          ),
-          if (action != null) ...[Flexible(child: action!)],
-        ],
-      ),
+        ),
     );
   }
 }
