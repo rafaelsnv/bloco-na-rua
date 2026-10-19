@@ -42,6 +42,9 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
   final String meetingId;
   final _log = Logger('MeetingDetailsCubit');
   bool _isMarkingPresence = false;
+  // ponytail: in-flight presence ops by memberId-meetingId composite key.
+  // Guards against rapid taps / concurrent calls that bypass markPresence.
+  final Set<String> _inFlightPresenceKeys = {};
 
   Future<void> loadMeeting() async {
     emit(const MeetingDetailsLoading());
@@ -219,6 +222,9 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
       );
       return;
     }
+    // ponytail: guard by composite key to deduplicate rapid taps.
+    final key = '${member.id}_$meetingId';
+    if (_inFlightPresenceKeys.contains(key)) return;
     await setMemberPresence(memberId: member.id, isPresent: isPresent);
   }
 
@@ -228,12 +234,15 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
     required int memberId,
     required bool isPresent,
   }) async {
+    final idempotencyKey = '${memberId}_$meetingId';
     if (_isMarkingPresence) return;
+    if (!_inFlightPresenceKeys.add(idempotencyKey)) return; // already in flight
     _isMarkingPresence = true;
 
     final currentState = state;
     if (currentState is! MeetingDetailsLoaded) {
       _isMarkingPresence = false;
+      _inFlightPresenceKeys.remove(idempotencyKey);
       return;
     }
 
@@ -257,12 +266,16 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
           {'isPresent': isPresent},
         );
       } else {
-        result = await _meetingPresencesRepository.createAsync({
-          'meetingId': currentState.meeting.id,
-          'memberId': memberId,
-          'carnivalBlockId': currentState.meeting.carnivalBlockId,
-          'isPresent': isPresent,
-        });
+        // ponytail: idempotency key prevents duplicates on rapid calls
+        result = await _meetingPresencesRepository.createAsync(
+          {
+            'meetingId': currentState.meeting.id,
+            'memberId': memberId,
+            'carnivalBlockId': currentState.meeting.carnivalBlockId,
+            'isPresent': isPresent,
+          },
+          idempotencyKey: idempotencyKey,
+        );
       }
 
       result.fold(
@@ -294,6 +307,7 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
       );
     } finally {
       _isMarkingPresence = false;
+      _inFlightPresenceKeys.remove(idempotencyKey);
     }
   }
 

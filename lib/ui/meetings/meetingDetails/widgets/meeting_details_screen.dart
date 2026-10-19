@@ -4,12 +4,10 @@ import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
-import "package:bloco_na_rua/ui/core/widgets/buttons/app_fab.dart";
+import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/member_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_chip.dart";
-import "package:bloco_na_rua/ui/core/widgets/display/app_section_header.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_dialog.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_loading_indicator.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
@@ -124,14 +122,14 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Meeting Info Card
+// Meeting Info Card
                     _MeetingInfoCard(
                       meeting: meeting,
                       meetingDateTime: meetingDateTime,
                       blockName: state.blockName,
                     ),
-                    const SizedBox(height: Spacing.space_md),
-                    // Presences Section — all on one row: icon + title + chip + FAB.
+                    const SizedBox(height: Spacing.sectionGap),
+                    // Presences Section — header row + prominent confirm button.
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: Spacing.pagePaddingMobile,
@@ -165,35 +163,36 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
                               vertical: Spacing.space_4xs,
                             ),
                           ),
-                          const SizedBox(width: Spacing.space_2xs),
-                          AppFAB(
-                            key: const Key("app_fab_mark_present"),
-                            icon: Icons.check_rounded,
-                            size: AppFabSizeMetrics.sm,
-                            onPressed: isMarkingPresence
-                                ? null
-                                : () => context
-                                      .read<MeetingDetailsCubit>()
-                                      .markPresence(isPresent: true),
-                            child: isMarkingPresence
-                                ? const SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2.5,
-                                    ),
-                                  )
-                                : null,
-                          ),
                         ],
                       ),
                     ),
+                    const SizedBox(height: Spacing.space_xs),
+                    // Prominent confirm-presence button — replaces the FAB.
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Spacing.pagePaddingMobile,
+                      ),
+                      child: AppButton(
+                        key: const Key("button_confirm_presence"),
+                        label: "Confirmar Presença",
+                        variant: AppButtonVariant.accent,
+                        isFullWidth: true,
+                        icon: const Icon(Icons.check_rounded),
+                        isLoading: isMarkingPresence,
+                        onPressed: isMarkingPresence
+                            ? null
+                            : () => context
+                                  .read<MeetingDetailsCubit>()
+                                  .markPresence(isPresent: true),
+                      ),
+                    ),
+                    const SizedBox(height: Spacing.sectionGap),
                     _PresencesSection(
                       state: state,
                       onRetry: () =>
                           context.read<MeetingDetailsCubit>().loadPresences(),
                     ),
-                    const SizedBox(height: Spacing.space_md),
+                    const SizedBox(height: Spacing.sectionGap),
                   ],
                 ),
               ),
@@ -330,7 +329,7 @@ class _MeetingInfoCard extends StatelessWidget {
                         if (blockName != null && blockName!.isNotEmpty)
                           Text(
                             blockName!,
-                            style: AppTypography.bodyMedium?.copyWith(
+                            style: AppTypography.bodyMedium.copyWith(
                               color: Theme.of(
                                 context,
                               ).colorScheme.onSurfaceVariant,
@@ -530,11 +529,15 @@ class _PresencesSectionState extends State<_PresencesSection> {
         child: Padding(
           padding: EdgeInsets.all(Spacing.space_lg),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              AppLoadingIndicator(size: 32),
+              Center(child: AppLoadingIndicator(size: 32)),
               const SizedBox(height: Spacing.space_sm),
               Text(
                 "Carregando presenças...",
+                textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
