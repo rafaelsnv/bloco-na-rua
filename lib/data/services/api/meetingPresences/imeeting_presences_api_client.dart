@@ -23,11 +23,18 @@ abstract interface class IMeetingPresencesApiClient {
   ///   - `true` - Member is marked as attending (present)
   ///   - `false` - Member is marked as not attending (absent)
   ///
+  /// [idempotencyKey] - Optional unique key (e.g., `${memberId}_${meetingId}`)
+  /// to prevent duplicate records on rapid calls/retry. Backend should return
+  /// existing record if key matches.
+  ///
   /// **HTTP Status Codes:**
   /// - `201 Created` - Presence record created successfully
   /// - `200 OK` - Presence record updated successfully
   /// - Error status codes - Request failed (see [ApiError])
-  AsyncResult<MeetingPresencesEntity> createAsync(Map<String, dynamic> data);
+  AsyncResult<MeetingPresencesEntity> createAsync(
+    Map<String, dynamic> data, {
+    String? idempotencyKey,
+  });
 
   /// Updates a presence record by its ID.
   ///
