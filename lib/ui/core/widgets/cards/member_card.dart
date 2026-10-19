@@ -27,6 +27,7 @@ class MemberCard extends StatelessWidget {
     this.showEmail = true,
     this.isOnline = false,
     this.trailing,
+    this.leading,
   });
 
   /// The member entity to display.
@@ -50,6 +51,11 @@ class MemberCard extends StatelessWidget {
   /// Optional trailing widget (e.g. an action icon) shown at the end of the row.
   final Widget? trailing;
 
+  /// Optional leading widget replacing the default [AppAvatar].
+  /// Used for action tiles like "Adicionar membro" rendered in the same shape
+  /// as a member row. Falls back to the avatar when null.
+  final Widget? leading;
+
   @override
   Widget build(BuildContext context) {
     final onlineDot = _OnlineDot();
@@ -61,16 +67,20 @@ class MemberCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Avatar with optional online indicator
+          // Avatar with optional online indicator, or custom leading widget.
           Stack(
             children: [
-              AppAvatar(
-                imageUrl: member.profileImage,
-                name: member.name,
-                size: AvatarSize.md,
-                imageCacheVersion: member.updatedAt,
-              ),
-              if (isOnline) Positioned(right: 0, bottom: 0, child: onlineDot),
+              if (leading != null)
+                leading!
+              else
+                AppAvatar(
+                  imageUrl: member.profileImage,
+                  name: member.name,
+                  size: AvatarSize.md,
+                  imageCacheVersion: member.updatedAt,
+                ),
+              if (isOnline && leading == null)
+                Positioned(right: 0, bottom: 0, child: onlineDot),
             ],
           ),
           SizedBox(width: Spacing.space_md),

@@ -11,12 +11,14 @@ const ColorScheme lightColorScheme = ColorScheme(
   onPrimaryContainer: AppColors.primaryDark,
   secondary: AppColors.secondary,
   onSecondary: AppColors.textOnPrimary,
-  secondaryContainer: AppColors.secondaryLight,
+  secondaryContainer: AppColors.secondaryContainerLight,
   onSecondaryContainer: AppColors.secondaryDark,
   tertiary: AppColors.tertiaryLight,
   onTertiary: AppColors.textOnPrimary,
   tertiaryContainer: AppColors.tertiaryContainerLight,
-  onTertiaryContainer: AppColors.tertiary,
+  // ponytail: tertiaryDark (#164E63) on the very light cyan wash gives ~8:1
+  // contrast; the previous tertiary (#0E7490) only hit ~4.7:1.
+  onTertiaryContainer: AppColors.tertiaryDark,
   error: AppColors.error,
   onError: AppColors.textOnPrimary,
   errorContainer: AppColors.errorContainerLight,
@@ -48,7 +50,9 @@ const ColorScheme darkColorScheme = ColorScheme(
   secondary: AppColors.secondaryLight,
   onSecondary: AppColors.secondaryDark,
   secondaryContainer: AppColors.secondaryDark,
-  onSecondaryContainer: AppColors.secondaryLight,
+  // ponytail: light pink on dark wine for WCAG AA contrast (~7:1) instead of
+  // bright magenta on dark wine (~3:1) the Material default would have.
+  onSecondaryContainer: Color(0xFFFBCFE8),
   tertiary: AppColors.tertiary,
   onTertiary: AppColors.textOnPrimary,
   tertiaryContainer: AppColors.tertiaryContainerDark,

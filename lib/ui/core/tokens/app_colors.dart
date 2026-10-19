@@ -15,6 +15,11 @@ class AppColors {
   static const Color secondary = Color(0xFFE11D74);
   static const Color secondaryLight = Color(0xFFFF3D81);
   static const Color secondaryDark = Color(0xFF831843);
+  // ponytail: very light pink wash for container surface in light mode;
+  // dark wine text on this hits WCAG AA (~8.9:1) instead of the saturated
+  // secondaryLight (~2.9:1) the previous default would have.
+  static const Color secondaryContainerLight = Color(0xFFFDF2F8);
+  static const Color secondaryContainerDark = Color(0xFF831843);
 
   // Group 3 — Accent / CTA (Gold)
   static const Color accent = Color(0xFFD97706);

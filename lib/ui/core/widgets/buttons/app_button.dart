@@ -79,8 +79,10 @@ class AppButton extends StatelessWidget {
       case AppButtonVariant.secondary:
         return colorScheme.secondary;
       case AppButtonVariant.accent:
+        // ponytail: dark text in light mode (#7C2D12) hits WCAG AA on orange;
+        // light text in dark mode stays for the inverted accent surface.
         final isDark = Theme.of(context).brightness == Brightness.dark;
-        return isDark ? AppColors.textOnPrimaryDark : AppColors.textOnPrimary;
+        return isDark ? AppColors.textOnPrimaryDark : AppColors.accentDark;
       case AppButtonVariant.tertiary:
         return colorScheme.onSurface;
       case AppButtonVariant.ghost:
@@ -117,7 +119,7 @@ class AppButton extends StatelessWidget {
       mainAxisSize: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (icon != null) icon!,
+        ?icon,
         if (icon != null && (isLoading || label.isNotEmpty))
           SizedBox(width: size.iconLabelGap),
         if (isLoading)
@@ -185,14 +187,7 @@ class AppButton extends StatelessWidget {
             }
             return isDark ? AppColors.accentLight : AppColors.accent;
           }),
-          foregroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.disabled)) {
-              return isDark
-                  ? AppColors.textSecondaryDark
-                  : AppColors.textTertiary;
-            }
-            return foreground;
-          }),
+          foregroundColor: WidgetStateProperty.all(foreground),
           elevation: WidgetStateProperty.all(isDark ? 0.0 : 6.0),
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(borderRadius: Radii.buttonAccent),
