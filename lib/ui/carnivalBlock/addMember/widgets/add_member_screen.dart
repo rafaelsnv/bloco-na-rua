@@ -118,32 +118,25 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
 
         return Padding(
           padding: EdgeInsets.only(bottom: Spacing.space_xs),
-          child: Row(
-            children: [
-              Expanded(
-                child: MemberCard(
-                  member: member,
-                  showEmail: true,
-                  onTap: () {
-                    final blockId = int.tryParse(widget.carnivalBlockId);
-                    if (blockId != null) {
-                      context.read<AddMemberCubit>().addMember(member.id, blockId);
-                    }
-                  },
-                ),
-              ),
-              SizedBox(width: Spacing.space_2xs),
-              AppIconButton(
-                icon: Icons.person_add_rounded,
-                onPressed: () {
-                  final blockId = int.tryParse(widget.carnivalBlockId);
-                  if (blockId != null) {
-                    context.read<AddMemberCubit>().addMember(member.id, blockId);
-                  }
-                },
-                tooltip: "Adicionar membro",
-              ),
-            ],
+          child: MemberCard(
+            member: member,
+            showEmail: true,
+            onTap: () {
+              final blockId = int.tryParse(widget.carnivalBlockId);
+              if (blockId != null) {
+                context.read<AddMemberCubit>().addMember(member.id, blockId);
+              }
+            },
+            trailing: AppIconButton(
+              icon: Icons.person_add_rounded,
+              onPressed: () {
+                final blockId = int.tryParse(widget.carnivalBlockId);
+                if (blockId != null) {
+                  context.read<AddMemberCubit>().addMember(member.id, blockId);
+                }
+              },
+              tooltip: "Adicionar membro",
+            ),
           ),
         );
       },

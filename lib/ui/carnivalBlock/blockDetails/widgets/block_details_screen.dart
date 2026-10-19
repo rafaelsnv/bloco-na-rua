@@ -17,6 +17,7 @@ import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_icon_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_list_tile.dart";
+import "package:bloco_na_rua/ui/core/widgets/cards/member_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_avatar.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_section_header.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/image_url_validator.dart";
@@ -357,7 +358,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
                             )
                           : null,
                     ),
-                    const SizedBox(height: Spacing.space_sm),
+                    const SizedBox(height: Spacing.sectionGap),
                     _MeetingsSection(
                       meetings: _meetings,
                       isLoading: _loadingMeetings,
@@ -366,7 +367,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
                     ),
                     const SizedBox(height: Spacing.sectionGap),
 
-                    // Members section
+                    // Members section — "Adicionar" lives inside the members list as a tile.
                     AppSectionHeader(
                       title: "Membros",
                       leading: Icon(
@@ -374,18 +375,8 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
                         color: Theme.of(context).colorScheme.primary,
                         size: 24,
                       ),
-                      action: canManageMembers
-                          ? AppButton(
-                              label: "Adicionar",
-                              variant: AppButtonVariant.ghost,
-                              size: AppButtonSizeMetrics.sm,
-                              onPressed: () => context.push(
-                                "/add-member/${widget.carnivalBlockId}",
-                              ),
-                            )
-                          : null,
                     ),
-                    const SizedBox(height: Spacing.space_sm),
+                    const SizedBox(height: Spacing.sectionGap),
                     _MembersSection(
                       members: _members,
                       memberEntities: _memberEntities,
@@ -397,6 +388,11 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
                       onDeleteMember: _deleteMember,
                       roleColor: _roleColor,
                       roleLabel: _roleLabel,
+                      onAddMember: canManageMembers
+                          ? () => context.push(
+                                "/add-member/${widget.carnivalBlockId}",
+                              )
+                          : null,
                     ),
                   ],
                 ),
@@ -417,7 +413,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
   }
 }
 
-class _BlockInfoCard extends StatelessWidget {
+class _BlockInfoCard extends StatefulWidget {
   const _BlockInfoCard({
     required this.carnivalBlock,
     required this.canManageMembers,
@@ -427,7 +423,17 @@ class _BlockInfoCard extends StatelessWidget {
   final bool canManageMembers;
 
   @override
+  State<_BlockInfoCard> createState() => _BlockInfoCardState();
+}
+
+class _BlockInfoCardState extends State<_BlockInfoCard> {
+  bool _obscureInviteCode = true;
+  bool _obscureManagerCode = true;
+
+  @override
   Widget build(BuildContext context) {
+    final carnivalBlock = widget.carnivalBlock;
+    final canManageMembers = widget.canManageMembers;
     return AppCard(
       elevation: AppCardElevation.sm,
       child: Column(
@@ -501,115 +507,175 @@ class _BlockInfoCard extends StatelessWidget {
 
           // Invite code — managers/owner only
           if (canManageMembers) ...[
-            Container(
-              padding: const EdgeInsets.all(Spacing.space_sm),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondaryContainer,
-                borderRadius: Radii.radiusSm,
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.vpn_key_rounded,
-                    size: 20,
-                    color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  ),
-                  const SizedBox(width: Spacing.space_sm),
-                  Expanded(
+            Row(
+              children: [
+                // Invite code
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(Spacing.space_sm),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondaryContainer,
+                      borderRadius: Radii.radiusSm,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Código de convite",
-                          style: AppTypography.labelSmall.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSecondaryContainer,
-                          ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.vpn_key_rounded,
+                              size: 20,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer,
+                            ),
+                            const SizedBox(width: Spacing.space_2xs),
+                            Expanded(
+                              child: Text(
+                                "Código de convite",
+                                style: AppTypography.labelSmall.copyWith(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSecondaryContainer,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          carnivalBlock.inviteCode,
-                          style: AppTypography.titleMedium.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSecondaryContainer,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        const SizedBox(height: Spacing.space_2xs),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                _obscureInviteCode
+                                    ? "••••••••"
+                                    : carnivalBlock.inviteCode,
+                                style: AppTypography.titleMedium.copyWith(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSecondaryContainer,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            AppIconButton(
+                              icon: _obscureInviteCode
+                                  ? Icons.visibility_off_rounded
+                                  : Icons.visibility_rounded,
+                              size: AppIconButtonSizeMetrics.md,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer,
+                              onPressed: () => setState(
+                                () => _obscureInviteCode = !_obscureInviteCode,
+                              ),
+                            ),
+                            AppIconButton(
+                              icon: Icons.copy_rounded,
+                              size: AppIconButtonSizeMetrics.md,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer,
+                              onPressed: () {
+                                Clipboard.setData(
+                                    ClipboardData(text: carnivalBlock.inviteCode));
+                                AppSnackbar.success(
+                                  context,
+                                  message: "Código copiado!",
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                  AppIconButton(
-                    icon: Icons.copy_rounded,
-                    size: AppIconButtonSizeMetrics.sm,
-                    color: Theme.of(context).colorScheme.onSecondaryContainer,
-                    onPressed: () {
-                      Clipboard.setData(
-                          ClipboardData(text: carnivalBlock.inviteCode));
-                      AppSnackbar.success(
-                        context,
-                        message: "Código copiado!",
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: Spacing.space_sm),
-            // Managers invite code — managers/owner only
-            Container(
-              padding: const EdgeInsets.all(Spacing.space_sm),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.tertiaryContainer,
-                borderRadius: Radii.radiusSm,
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.admin_panel_settings_rounded,
-                    size: 20,
-                    color: Theme.of(context).colorScheme.onTertiaryContainer,
-                  ),
-                  const SizedBox(width: Spacing.space_sm),
-                  Expanded(
+                ),
+                const SizedBox(width: Spacing.space_sm),
+                // Manager code
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(Spacing.space_sm),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.tertiaryContainer,
+                      borderRadius: Radii.radiusSm,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Código de gestor",
-                          style: AppTypography.labelSmall.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onTertiaryContainer,
-                          ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.admin_panel_settings_rounded,
+                              size: 20,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onTertiaryContainer,
+                            ),
+                            const SizedBox(width: Spacing.space_2xs),
+                            Expanded(
+                              child: Text(
+                                "Código de gestor",
+                                style: AppTypography.labelSmall.copyWith(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onTertiaryContainer,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          carnivalBlock.managersInviteCode,
-                          style: AppTypography.titleMedium.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onTertiaryContainer,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        const SizedBox(height: Spacing.space_2xs),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                _obscureManagerCode
+                                    ? "••••••••"
+                                    : carnivalBlock.managersInviteCode,
+                                style: AppTypography.titleMedium.copyWith(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onTertiaryContainer,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            AppIconButton(
+                              icon: _obscureManagerCode
+                                  ? Icons.visibility_off_rounded
+                                  : Icons.visibility_rounded,
+                              size: AppIconButtonSizeMetrics.md,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onTertiaryContainer,
+                              onPressed: () => setState(
+                                () => _obscureManagerCode = !_obscureManagerCode,
+                              ),
+                            ),
+                            AppIconButton(
+                              icon: Icons.copy_rounded,
+                              size: AppIconButtonSizeMetrics.md,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onTertiaryContainer,
+                              onPressed: () {
+                                Clipboard.setData(
+                                    ClipboardData(
+                                        text: carnivalBlock.managersInviteCode));
+                                AppSnackbar.success(
+                                  context,
+                                  message: "Código copiado!",
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                  AppIconButton(
-                    icon: Icons.copy_rounded,
-                    size: AppIconButtonSizeMetrics.sm,
-                    color: Theme.of(context).colorScheme.onTertiaryContainer,
-                    onPressed: () {
-                      Clipboard.setData(
-                          ClipboardData(text: carnivalBlock.managersInviteCode));
-                      AppSnackbar.success(
-                        context,
-                        message: "Código copiado!",
-                      );
-                    },
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ],
@@ -775,6 +841,7 @@ class _MembersSection extends StatelessWidget {
     required this.onDeleteMember,
     required this.roleColor,
     required this.roleLabel,
+    this.onAddMember,
   });
 
   final List<CarnivalBlockMembersEntity> members;
@@ -787,6 +854,12 @@ class _MembersSection extends StatelessWidget {
   final void Function(CarnivalBlockMembersEntity) onDeleteMember;
   final Color Function(int) roleColor;
   final String Function(int) roleLabel;
+
+  /// ponytail: optional add-member callback. When non-null, an "Adicionar
+  /// membro" tile is rendered inside the list (above the group headers) so
+  /// the action sits next to the members it affects instead of the section
+  /// header.
+  final VoidCallback? onAddMember;
 
   @override
   Widget build(BuildContext context) {
@@ -884,6 +957,12 @@ class _MembersSection extends StatelessWidget {
 
     // Build flat list: group headers + member rows
     final List<Widget> items = [];
+
+    // Add-member tile sits INSIDE the members list so the action lives next
+    // to the rows it affects (per Issue 7).
+    if (onAddMember != null && members.isNotEmpty) {
+      items.add(_AddMemberTile(onTap: onAddMember!));
+    }
 
     if (admins.isNotEmpty) {
       items.add(
@@ -1080,6 +1159,35 @@ class _MemberRow extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+/// "Adicionar membro" tile rendered as the first row of the members list
+/// when the user can manage members.
+class _AddMemberTile extends StatelessWidget {
+  const _AddMemberTile({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return MemberCard(
+      member: MembersEntity(id: -1, name: "Adicionar membro"),
+      showEmail: false,
+      onTap: onTap,
+      trailing: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primaryContainer,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          Icons.person_add_rounded,
+          color: Theme.of(context).colorScheme.onPrimaryContainer,
+        ),
       ),
     );
   }
