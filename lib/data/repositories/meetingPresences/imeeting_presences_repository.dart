@@ -8,7 +8,14 @@ abstract interface class IMeetingPresencesRepository {
 
   AsyncResult deleteByIdAsync(int id);
 
-  AsyncResult<MeetingPresencesEntity> createAsync(Map<String, dynamic> data);
+  /// Creates a presence record with optional idempotency key.
+  ///
+  /// [idempotencyKey] - Optional unique key (e.g., `${memberId}_${meetingId}`)
+  /// to prevent duplicate records on rapid calls/retry.
+  AsyncResult<MeetingPresencesEntity> createAsync(
+    Map<String, dynamic> data, {
+    String? idempotencyKey,
+  });
 
   AsyncResult<MeetingPresencesEntity> updateAsync(
     int id,
