@@ -210,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-          const SizedBox(height: Spacing.space_md),
+          const SizedBox(height: Spacing.sectionGap),
 
           // Próximos encontros section
           AppSectionHeader(
