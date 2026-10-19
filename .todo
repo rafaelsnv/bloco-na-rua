@@ -1,7 +1,7 @@
 1. Contraste dos botões de login/cadastrar no modo claro
-2. Duplicação nos registros de lista de presença (indepotência no backend)
+2. Duplicação nos registros de lista de presença (idempotência no backend)
 3. Alternativa visual para o botão de confirmar presença
-4. Loading da lista de presença não preenchendo horizonalmente
+4. Loading da lista de presença não preenchendo horizontalmente
 5. Código de convite/gestor
 5.1 Posicionar lado a lado
 5.2 Adicionar botão de exibir/ocultar
