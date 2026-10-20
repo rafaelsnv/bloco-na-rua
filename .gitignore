@@ -49,6 +49,10 @@ app.*.map.json
 *.freezed.dart
 *.mocks.dart
 
+# Keystore and signing
+*.jks
+key.properties
+
 # Coverage
 coverage/
 
