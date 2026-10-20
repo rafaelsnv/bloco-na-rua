@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Ola!",
+                  "Olá!",
                   style: AppTypography.headlineMedium.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                   ),

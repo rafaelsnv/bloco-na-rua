@@ -30,35 +30,31 @@ class AppSectionHeader extends StatelessWidget {
         horizontal: Spacing.pagePaddingMobile,
         vertical: Spacing.space_2xs,
       ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            if (leading != null) ...[
-              leading!,
-              const SizedBox(width: Spacing.space_xs),
-            ],
-            Flexible(
-              fit: FlexFit.loose,
-              child: Text(
-                title,
-                style: AppTypography.headlineSmall,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            if (titleTrailing != null) ...[
-              const SizedBox(width: Spacing.space_xs),
-              titleTrailing!,
-            ],
-            if (action != null) ...[
-              const SizedBox(width: Spacing.space_sm),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [action!],
-              ),
-            ],
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (leading != null) ...[
+            leading!,
+            const SizedBox(width: Spacing.space_xs),
           ],
-        ),
+          Expanded(
+            child: Text(
+              title,
+              style: AppTypography.headlineSmall,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          if (titleTrailing != null) ...[
+            const SizedBox(width: Spacing.space_xs),
+            titleTrailing!,
+          ],
+          if (action != null) ...[
+            const SizedBox(width: Spacing.space_sm),
+            action!,
+          ],
+        ],
+      ),
     );
   }
 }

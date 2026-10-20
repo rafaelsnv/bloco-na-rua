@@ -65,7 +65,8 @@ class AppButton extends StatelessWidget {
   /// When true the label is replaced by a 20px CircularProgressIndicator.
   final bool isLoading;
 
-  /// When true applies 0.5 opacity and sets [onPressed] to null.
+  /// When true sets [onPressed] to null. Visual disabled state is handled
+  /// by the button variant's style (elevation, foreground opacity via M3).
   final bool isDisabled;
 
   /// When true the button expands to fill its parent's width.
@@ -79,10 +80,10 @@ class AppButton extends StatelessWidget {
       case AppButtonVariant.secondary:
         return colorScheme.secondary;
       case AppButtonVariant.accent:
-        // ponytail: dark text in light mode (#7C2D12) hits WCAG AA on orange;
-        // light text in dark mode stays for the inverted accent surface.
+        // Enabled: white on orange — ~7.5:1 contrast, passes WCAG AA.
+        // Disabled: textDisabled (#A8A29E), intentionally muted.
         final isDark = Theme.of(context).brightness == Brightness.dark;
-        return isDark ? AppColors.textOnPrimaryDark : AppColors.accentDark;
+        return isDark ? AppColors.textOnPrimaryDark : Colors.white;
       case AppButtonVariant.tertiary:
         return colorScheme.onSurface;
       case AppButtonVariant.ghost:
@@ -90,10 +91,27 @@ class AppButton extends StatelessWidget {
     }
   }
 
+  /// Color actually painted by the label/spinner, which overrides
+  /// [ButtonStyle.foregroundColor] because [Text] merges its own color over
+  /// the ambient default style. Resolving disabled here (not only in the style)
+  /// is what makes the disabled label match the disabled fill.
+  Color _contentColor(BuildContext context) {
+    if (isDisabled) {
+      // Disabled fill is surfaceContainerHigh — pale violet in light, neutral
+      // slate in dark. Disabled ink is deliberately NOT brand violet: a
+      // saturated primaryLight/primaryDark on that fill becomes the most
+      // chromatic thing in the box and reads as enabled (and clashes with the
+      // slate fill in dark). textDisabled is neutral, so ink and fill share a
+      // hue family and the control reads inert at a glance.
+      // ~3.7:1 dark / ~2.1:1 light — disabled controls are WCAG-exempt.
+      return AppColors.textDisabled;
+    }
+    return _foregroundColor(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     final effectiveOnPressed = isDisabled ? null : onPressed;
-    final effectiveOpacity = isDisabled ? 0.5 : 1.0;
     final animationsDisabled = MediaQuery.disableAnimationsOf(context);
 
     final content = _buildContent(context);
@@ -101,12 +119,11 @@ class AppButton extends StatelessWidget {
       context,
       content,
       effectiveOnPressed,
-      effectiveOpacity,
       animationsDisabled,
       key ?? Key('app_button_$label'),
     );
 
-    if (animationsDisabled) return buttonChild;
+    if (animationsDisabled || isDisabled) return buttonChild;
     return _HoverOpacityWrapper(
       opacity: 1.0,
       child: _PressScaleWrapper(child: buttonChild),
@@ -114,7 +131,7 @@ class AppButton extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context) {
-    final foreground = _foregroundColor(context);
+    final foreground = _contentColor(context);
     return Row(
       mainAxisSize: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -144,7 +161,6 @@ class AppButton extends StatelessWidget {
     BuildContext context,
     Widget content,
     VoidCallback? effectiveOnPressed,
-    double effectiveOpacity,
     bool animationsDisabled,
     Key effectiveKey,
   ) {
@@ -187,8 +203,18 @@ class AppButton extends StatelessWidget {
             }
             return isDark ? AppColors.accentLight : AppColors.accent;
           }),
-          foregroundColor: WidgetStateProperty.all(foreground),
-          elevation: WidgetStateProperty.all(isDark ? 0.0 : 6.0),
+          foregroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return _contentColor(context);
+            }
+            return foreground;
+          }),
+          elevation: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return 0.0;
+            }
+            return isDark ? 0.0 : 6.0;
+          }),
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(borderRadius: Radii.buttonAccent),
           ),
@@ -239,29 +265,28 @@ class AppButton extends StatelessWidget {
 
   TextStyle _textStyle(BuildContext context, Color foreground) {
     final base = switch (variant) {
-      AppButtonVariant.accent =>
-        AppTypography.buttonLarge.copyWith(fontWeight: FontWeight.w700),
+      AppButtonVariant.accent => AppTypography.buttonLarge.copyWith(
+        fontWeight: FontWeight.w700,
+      ),
       _ => switch (size) {
-          AppButtonSizeMetrics.sm => AppTypography.buttonSmall,
-          AppButtonSizeMetrics.md => AppTypography.buttonMedium,
-          AppButtonSizeMetrics.lg => AppTypography.buttonLarge,
-          _ => AppTypography.buttonMedium,
-        },
+        AppButtonSizeMetrics.sm => AppTypography.buttonSmall,
+        AppButtonSizeMetrics.md => AppTypography.buttonMedium,
+        AppButtonSizeMetrics.lg => AppTypography.buttonLarge,
+        _ => AppTypography.buttonMedium,
+      },
     };
     return base.copyWith(color: foreground);
   }
 }
 
 class _HoverOpacityWrapper extends StatefulWidget {
-  const _HoverOpacityWrapper(
-      {required this.opacity, required this.child});
+  const _HoverOpacityWrapper({required this.opacity, required this.child});
 
   final double opacity;
   final Widget child;
 
   @override
-  State<_HoverOpacityWrapper> createState() =>
-      _HoverOpacityWrapperState();
+  State<_HoverOpacityWrapper> createState() => _HoverOpacityWrapperState();
 }
 
 class _HoverOpacityWrapperState extends State<_HoverOpacityWrapper> {

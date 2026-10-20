@@ -1,5 +1,6 @@
 import "package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart";
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
@@ -8,6 +9,7 @@ import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/member_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_chip.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_section_header.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_dialog.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_loading_indicator.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
@@ -130,40 +132,22 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
                     ),
                     const SizedBox(height: Spacing.sectionGap),
                     // Presences Section — header row + prominent confirm button.
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: Spacing.pagePaddingMobile,
-                        vertical: Spacing.space_2xs,
+                    AppSectionHeader(
+                      title: "Lista de Presença",
+                      leading: Icon(
+                        Icons.people_rounded,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 24,
                       ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.people_rounded,
-                            color: Theme.of(context).colorScheme.primary,
-                            size: 24,
-                          ),
-                          const SizedBox(width: Spacing.space_2xs),
-                          Flexible(
-                            child: Text(
-                              "Lista de Presença",
-                              style: AppTypography.headlineSmall,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const SizedBox(width: Spacing.space_2xs),
-                          AppChip(
-                            label:
-                                "${state.presences.where((p) => p.isPresent).length}/${state.blockMembers.isNotEmpty ? state.blockMembers.length : state.presences.length}",
-                            variant: ChipVariant.soft,
-                            color: AppColors.primary,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: Spacing.space_2xs,
-                              vertical: Spacing.space_4xs,
-                            ),
-                          ),
-                        ],
+                      titleTrailing: AppChip(
+                        label:
+                            "${state.presences.where((p) => p.isPresent).length}/${state.blockMembers.isNotEmpty ? state.blockMembers.length : state.presences.length}",
+                        variant: ChipVariant.soft,
+                        color: AppColors.primary,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: Spacing.space_2xs,
+                          vertical: Spacing.space_4xs,
+                        ),
                       ),
                     ),
                     const SizedBox(height: Spacing.space_xs),
@@ -176,6 +160,7 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
                         key: const Key("button_confirm_presence"),
                         label: "Confirmar Presença",
                         variant: AppButtonVariant.accent,
+                        size: AppButtonSizeMetrics.sm,
                         isFullWidth: true,
                         icon: const Icon(Icons.check_rounded),
                         isLoading: isMarkingPresence,

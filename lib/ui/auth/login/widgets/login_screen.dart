@@ -1,3 +1,4 @@
+import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
@@ -73,10 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
-          AppSnackbar.error(
-            context,
-            message: state.message,
-          );
+          AppSnackbar.error(context, message: state.message);
         } else if (state is AuthAuthenticated) {
           context.go(Routes.home);
         } else if (state is AuthSuccess) {
@@ -90,9 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
           elevation: 0,
           title: Text(
             "Bloco na Rua",
-            style: AppTypography.displaySmall.copyWith(
-              color: colors.primary,
-            ),
+            style: AppTypography.displaySmall.copyWith(color: colors.primary),
           ),
         ),
         body: SafeArea(
@@ -332,28 +328,35 @@ class _ForgotPasswordDialogState extends State<_ForgotPasswordDialog> {
               ),
               const SizedBox(height: Spacing.space_lg),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  AppButton(
-                    label: "Cancelar",
-                    variant: AppButtonVariant.tertiary,
-                    onPressed: () => Navigator.of(context).pop(),
+                  Flexible(
+                    fit: FlexFit.tight,
+                    child: AppButton(
+                      label: "Cancelar",
+                      size: AppButtonSizeMetrics.sm,
+                      variant: AppButtonVariant.tertiary,
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
                   ),
                   const SizedBox(width: Spacing.space_xs),
-                  AppButton(
-                    label: "Enviar",
-                    variant: AppButtonVariant.accent,
-                    isDisabled: !_isFormValid,
-                    onPressed: !_isFormValid
-                        ? null
-                        : () {
-                            if (_formKey.currentState!.validate()) {
-                              widget.outerContext
-                                  .read<AuthCubit>()
-                                  .resetPassword(_emailController.text);
-                              Navigator.of(context).pop();
-                            }
-                          },
+                  Flexible(
+                    fit: FlexFit.tight,
+                    child: AppButton(
+                      label: "Enviar",
+                      size: AppButtonSizeMetrics.sm,
+                      variant: AppButtonVariant.accent,
+                      isDisabled: !_isFormValid,
+                      onPressed: !_isFormValid
+                          ? null
+                          : () {
+                              if (_formKey.currentState!.validate()) {
+                                widget.outerContext
+                                    .read<AuthCubit>()
+                                    .resetPassword(_emailController.text);
+                                Navigator.of(context).pop();
+                              }
+                            },
+                    ),
                   ),
                 ],
               ),

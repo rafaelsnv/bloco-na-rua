@@ -6,11 +6,12 @@ import "package:flutter/material.dart";
 ///
 /// All three widgets use the same ladder:
 ///
-/// | Size | Diameter/Height | Icon          |
-/// | ---- | --------------- | ------------- |
-/// | sm   | space_lg (32)   | space_sm (16) |
-/// | md   | space_xl (48)   | space_md (24) |
-/// | lg   | space_2xl (64)  | space_lg (32) |
+/// | Size     | Diameter/Height | Icon           |
+/// | -------- | --------------- | -------------- |
+/// | sm       | space_lg (32)   | space_sm (16)  |
+/// | between  | space_xl (40)   | space_md (20)  |
+/// | md       | space_xl (48)   | space_md (24)  |
+/// | lg       | space_2xl (64)  | space_lg (32)  |
 
 /// AppButton size metrics.
 final class AppButtonSizeMetrics {
@@ -34,6 +35,15 @@ final class AppButtonSizeMetrics {
     horizontalPadding: Spacing.space_2xs,
     verticalPadding: Spacing.space_xs,
     iconSize: Spacing.space_sm,
+    iconLabelGap: Spacing.space_2xs,
+  );
+
+  /// Between: 40px height, icon 20px.
+  static const between = AppButtonSizeMetrics(
+    height: 40,
+    horizontalPadding: Spacing.space_xs,
+    verticalPadding: Spacing.space_2xs,
+    iconSize: 20,
     iconLabelGap: Spacing.space_2xs,
   );
 
@@ -75,6 +85,13 @@ final class AppIconButtonSizeMetrics {
     minTouchTarget: 0,
   );
 
+  /// Between: 20px icon, compact density, no enforced touch target.
+  static const between = AppIconButtonSizeMetrics(
+    iconSize: 20,
+    visualDensity: VisualDensity(horizontal: -2, vertical: -2),
+    minTouchTarget: 0,
+  );
+
   /// Medium: 24px icon, standard density, 48px min touch target (a11y).
   static const md = AppIconButtonSizeMetrics(
     iconSize: Spacing.space_md,
@@ -92,10 +109,7 @@ final class AppIconButtonSizeMetrics {
 
 /// AppFAB size metrics.
 final class AppFabSizeMetrics {
-  const AppFabSizeMetrics({
-    required this.diameter,
-    required this.iconSize,
-  });
+  const AppFabSizeMetrics({required this.diameter, required this.iconSize});
 
   final double diameter;
   final double iconSize;
