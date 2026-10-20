@@ -17,10 +17,10 @@ jobs:
           cache: true
           pub-cache: true
 
-      - run: flutter pub get
+      - run: flutter pub get --no-input
 
       - name: Enable iOS platform
-        run: flutter create --platforms=ios .
+        run: yes | flutter create --platforms=ios .
 
       - name: Build
         run: flutter build ios --release --no-codesign
