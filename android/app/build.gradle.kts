@@ -2,7 +2,6 @@ import java.util.Properties
 
 plugins {
     id("com.android.application")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
 
@@ -26,15 +25,15 @@ android {
 
     signingConfigs {
         create("release") {
-            val keystoreProperties = Properties()
-            val keystorePropertiesFile = rootProject.file("key.properties")
-            if (keystorePropertiesFile.exists()) {
-                keystoreProperties.load(keystorePropertiesFile.inputStream())
-                storeFile = file(keystoreProperties["storeFile"] as String)
-                storePassword = keystoreProperties["storePassword"] as String
-                keyAlias = keystoreProperties["keyAlias"] as String
-                keyPassword = keystoreProperties["keyPassword"] as String
+            val keystoreProps = Properties()
+            val keyPropsFile = rootProject.file("key.properties")
+            if (keyPropsFile.exists()) {
+                keystoreProps.load(keyPropsFile.inputStream())
             }
+            storeFile = file(System.getenv("KEYSTORE_FILE") ?: keystoreProps["storeFile"] ?: "app/bloco-na-rua.jks")
+            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: keystoreProps["storePassword"]?.toString() ?: ""
+            keyAlias = System.getenv("KEY_ALIAS") ?: keystoreProps["keyAlias"]?.toString() ?: ""
+            keyPassword = System.getenv("KEY_PASSWORD") ?: keystoreProps["keyPassword"]?.toString() ?: ""
         }
     }
 
