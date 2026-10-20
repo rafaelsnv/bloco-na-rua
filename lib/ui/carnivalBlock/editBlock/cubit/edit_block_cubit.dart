@@ -1,0 +1,119 @@
+import 'package:bloco_na_rua/core/errors/user_message.dart';
+import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
+import 'package:bloco_na_rua/ui/carnivalBlock/editBlock/cubit/edit_block_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class EditBlockCubit extends Cubit<EditBlockState> {
+  EditBlockCubit({
+    required ICarnivalBlocksRepository carnivalBlocksRepository,
+    required String carnivalBlockId,
+  }) : _carnivalBlocksRepository = carnivalBlocksRepository,
+       _carnivalBlockId = carnivalBlockId,
+       super(EditBlockInitial()) {
+    loadBlock();
+  }
+
+  final ICarnivalBlocksRepository _carnivalBlocksRepository;
+  final String _carnivalBlockId;
+  bool _isUpdating = false;
+  bool _isDeleting = false;
+
+  Future<void> loadBlock() async {
+    emit(EditBlockLoading());
+
+    int blockId;
+    try {
+      blockId = int.parse(_carnivalBlockId);
+    } catch (_) {
+      emit(EditBlockError('ID do bloco inválido'));
+      return;
+    }
+
+    final result = await _carnivalBlocksRepository.getByIdAsync(
+      blockId,
+    );
+
+    result.fold(
+      (block) => emit(
+        EditBlockLoaded(
+          id: block.id,
+          name: block.name,
+          carnivalBlockImage: block.carnivalBlockImage,
+        ),
+      ),
+      (failure) => emit(EditBlockError(extractUserMessage(failure))),
+    );
+  }
+
+  Future<void> updateBlock({
+    required String name,
+    required String carnivalBlockImage,
+  }) async {
+    if (_isUpdating) return;
+    _isUpdating = true;
+
+    final currentState = state;
+    if (currentState is! EditBlockLoaded) {
+      _isUpdating = false;
+      return;
+    }
+
+    emit(EditBlockSaving());
+
+    final data = {'name': name, 'carnivalBlockImage': carnivalBlockImage};
+
+    try {
+      final result = await _carnivalBlocksRepository.updateAsync(
+        currentState.id,
+        data,
+      );
+
+      result.fold(
+        (_) => emit(EditBlockSuccess()),
+        (failure) => emit(EditBlockError(extractUserMessage(failure))),
+      );
+    } finally {
+      _isUpdating = false;
+    }
+  }
+
+  Future<void> deleteBlock() async {
+    if (_isDeleting) return;
+    _isDeleting = true;
+
+    final currentState = state;
+    if (currentState is! EditBlockLoaded) {
+      _isDeleting = false;
+      return;
+    }
+
+    emit(
+      EditBlockDeleting(
+        id: currentState.id,
+        name: currentState.name,
+        carnivalBlockImage: currentState.carnivalBlockImage,
+      ),
+    );
+
+    int blockId;
+    try {
+      blockId = int.parse(_carnivalBlockId);
+    } catch (_) {
+      emit(EditBlockError('ID do bloco inválido'));
+      return;
+    }
+
+    try {
+      final result = await _carnivalBlocksRepository.deleteByIdAsync(
+        blockId,
+      );
+
+      result.fold(
+        (_) => emit(EditBlockDeleted()),
+        (failure) => emit(EditBlockError(extractUserMessage(failure))),
+      );
+    } finally {
+      _isDeleting = false;
+    }
+  }
+}

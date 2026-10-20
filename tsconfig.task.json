@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "esnext"
+  },
+  "ts-node": {
+    "transpileOnly": true
+  }
+}

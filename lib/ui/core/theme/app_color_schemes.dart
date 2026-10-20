@@ -1,0 +1,79 @@
+import "package:flutter/material.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+
+/// Light mode ColorScheme — Fireworks on Velvet.
+/// Primary: Violet #7C3AED | Accent: Gold #FBBF24 | Secondary: Magenta #FF3D81
+const ColorScheme lightColorScheme = ColorScheme(
+  brightness: Brightness.light,
+  primary: AppColors.primary,
+  onPrimary: AppColors.textOnPrimary,
+  primaryContainer: AppColors.primaryLight,
+  onPrimaryContainer: AppColors.primaryDark,
+  secondary: AppColors.secondary,
+  onSecondary: AppColors.textOnPrimary,
+  secondaryContainer: AppColors.secondaryContainerLight,
+  onSecondaryContainer: AppColors.secondaryDark,
+  tertiary: AppColors.tertiaryLight,
+  onTertiary: AppColors.textOnPrimary,
+  tertiaryContainer: AppColors.tertiaryContainerLight,
+  // ponytail: tertiaryDark (#164E63) on the very light cyan wash gives ~8:1
+  // contrast; the previous tertiary (#0E7490) only hit ~4.7:1.
+  onTertiaryContainer: AppColors.tertiaryDark,
+  error: AppColors.error,
+  onError: AppColors.textOnPrimary,
+  errorContainer: AppColors.errorContainerLight,
+  onErrorContainer: AppColors.error,
+  surface: AppColors.surfaceLight,
+  surfaceContainerLowest: AppColors.backgroundLight,
+  surfaceContainerLow: AppColors.surfaceVariantLight,
+  surfaceContainer: AppColors.surfaceContainerLight,
+  surfaceContainerHigh: AppColors.surfaceContainerHighLight,
+  surfaceContainerHighest: AppColors.surfaceContainerHighestLight,
+  onSurface: AppColors.textPrimary,
+  onSurfaceVariant: AppColors.textSecondary,
+  outline: AppColors.borderLight,
+  outlineVariant: AppColors.surfaceVariantLight,
+  shadow: Color(0xFF000000),
+  scrim: Color(0xFF000000),
+  inverseSurface: AppColors.textPrimary,
+  onInverseSurface: AppColors.textOnPrimary,
+  inversePrimary: AppColors.primaryLight,
+);
+
+/// Dark mode ColorScheme — Fireworks on Velvet.
+const ColorScheme darkColorScheme = ColorScheme(
+  brightness: Brightness.dark,
+  primary: AppColors.primaryLight,
+  onPrimary: AppColors.textOnPrimaryDark,
+  primaryContainer: AppColors.primaryDark,
+  onPrimaryContainer: AppColors.primaryLight,
+  secondary: AppColors.secondaryLight,
+  onSecondary: AppColors.secondaryDark,
+  secondaryContainer: AppColors.secondaryDark,
+  // ponytail: light pink on dark wine for WCAG AA contrast (~7:1) instead of
+  // bright magenta on dark wine (~3:1) the Material default would have.
+  onSecondaryContainer: Color(0xFFFBCFE8),
+  tertiary: AppColors.tertiary,
+  onTertiary: AppColors.textOnPrimary,
+  tertiaryContainer: AppColors.tertiaryContainerDark,
+  onTertiaryContainer: AppColors.tertiaryContainerLight,
+  error: AppColors.errorDark,
+  onError: AppColors.textOnPrimary,
+  errorContainer: AppColors.errorContainerDark,
+  onErrorContainer: AppColors.errorContainerLight,
+  surface: AppColors.surfaceDark,
+  onSurface: AppColors.textPrimaryDark,
+  surfaceContainerLowest: AppColors.backgroundDark,
+  surfaceContainerLow: AppColors.surfaceVariantDark,
+  surfaceContainer: AppColors.surfaceContainerDark,
+  surfaceContainerHigh: AppColors.surfaceContainerHighDark,
+  surfaceContainerHighest: AppColors.surfaceContainerHighestDark,
+  onSurfaceVariant: AppColors.textSecondaryDark,
+  outline: AppColors.borderDark,
+  outlineVariant: AppColors.surfaceVariantDark,
+  shadow: Color(0xFF000000),
+  scrim: Color(0xFF000000),
+  inverseSurface: AppColors.textPrimaryDark,
+  onInverseSurface: AppColors.textPrimary,
+  inversePrimary: AppColors.primary,
+);

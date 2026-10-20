@@ -1,0 +1,285 @@
+import "package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart";
+import "package:bloco_na_rua/ui/home/cubit/home_cubit.dart";
+import "package:bloco_na_rua/ui/meetings/editMeeting/cubit/edit_meeting_cubit.dart";
+import "package:bloco_na_rua/ui/meetings/editMeeting/cubit/edit_meeting_state.dart";
+import "package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_cubit.dart";
+import "package:bloco_na_rua/ui/meetings/userMeetings/cubit/user_meetings_cubit.dart";
+import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
+import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
+import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
+import "package:bloco_na_rua/ui/core/widgets/inputs/app_text_field.dart";
+import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
+import "package:bloco_na_rua/ui/core/widgets/state/app_loading.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:go_router/go_router.dart";
+import "package:intl/intl.dart";
+
+class EditMeetingScreen extends StatefulWidget {
+  const EditMeetingScreen({super.key, required this.meetingId});
+
+  final String meetingId;
+
+  @override
+  State<EditMeetingScreen> createState() => _EditMeetingScreenState();
+}
+
+class _EditMeetingScreenState extends State<EditMeetingScreen> {
+  late final TextEditingController _titleController;
+  late final TextEditingController _locationController;
+  late final TextEditingController _dateController;
+  late final TextEditingController _timeController;
+
+  DateTime _selectedDateTime = DateTime.now();
+  bool _controllersInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController();
+    _locationController = TextEditingController();
+    _dateController = TextEditingController();
+    _timeController = TextEditingController();
+
+    final meetingId = int.tryParse(widget.meetingId);
+    if (meetingId != null) {
+      context.read<EditMeetingCubit>().loadMeeting(meetingId);
+    }
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _locationController.dispose();
+    _dateController.dispose();
+    _timeController.dispose();
+    super.dispose();
+  }
+
+  void _initializeControllers(MeetingsEntity meeting) {
+    if (_controllersInitialized) return;
+
+    _titleController.text = meeting.name ?? "";
+    _locationController.text = meeting.location ?? "";
+
+    final dateTime = meeting.meetingDateTime;
+    if (dateTime != null) {
+      _selectedDateTime = dateTime;
+    } else {
+      _selectedDateTime = DateTime.now();
+    }
+
+    _updateDateTimeControllers();
+
+    _controllersInitialized = true;
+  }
+
+  void _updateDateTimeControllers() {
+    final dateFormat = DateFormat.yMd("pt_BR");
+    final timeFormat = DateFormat.Hm();
+
+    _dateController.text = dateFormat.format(_selectedDateTime);
+    _timeController.text = timeFormat.format(_selectedDateTime);
+  }
+
+  Future<void> _pickDateTime() async {
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDateTime,
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
+    );
+
+    if (pickedDate == null || !mounted) return;
+
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(_selectedDateTime),
+    );
+
+    if (pickedTime == null || !mounted) return;
+
+    setState(() {
+      _selectedDateTime = DateTime(
+        pickedDate.year,
+        pickedDate.month,
+        pickedDate.day,
+        pickedTime.hour,
+        pickedTime.minute,
+      );
+      _updateDateTimeControllers();
+    });
+  }
+
+  void _submitForm() {
+    final meetingId = int.tryParse(widget.meetingId);
+    if (meetingId == null) {
+      AppSnackbar.error(context, message: "ID do encontro inválido");
+      return;
+    }
+
+    final title = _titleController.text.trim();
+    if (title.isEmpty) {
+      AppSnackbar.error(
+        context,
+        message: "O título do encontro é obrigatório",
+      );
+      return;
+    }
+
+    // ISO 8601 with 'T' separator — System.Text.Json rejects the
+    // space-separated "yyyy-MM-dd HH:mm:ss" format.
+    final formattedDateTime = _selectedDateTime.toIso8601String();
+
+    final data = <String, dynamic>{
+      "name": title,
+      if (_locationController.text.isNotEmpty)
+        "location": _locationController.text,
+      "meetingDateTime": formattedDateTime,
+    };
+
+    context.read<EditMeetingCubit>().updateMeeting(
+      meetingId,
+      data,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<EditMeetingCubit, EditMeetingState>(
+      listener: (context, state) {
+        if (state.status == EditMeetingStatus.success) {
+          context.read<UserMeetingsCubit>().loadMeetings();
+          context.read<HomeCubit>().loadHomeData();
+          try {
+            context.read<MeetingDetailsCubit>().loadMeeting();
+          } catch (_) {}
+          AppSnackbar.success(
+            context,
+            message: "Encontro atualizado com sucesso!",
+          );
+          if (!mounted) return;
+          context.pop();
+        } else if (state.status == EditMeetingStatus.failure &&
+            state.errorMessage != null) {
+          AppSnackbar.error(context, message: state.errorMessage!);
+        }
+      },
+      builder: (context, state) {
+        if (state.status == EditMeetingStatus.initial) {
+          final meetingId = int.tryParse(widget.meetingId);
+          if (meetingId == null) {
+            return Scaffold(
+appBar: const AppAppBar(title: "Editar encontro"),
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline_rounded,
+                      size: 48,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    const SizedBox(height: Spacing.space_sm),
+                    Text(
+                      "ID do encontro inválido",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+          return Scaffold(
+            appBar: const AppAppBar(title: "Editar encontro"),
+            body: const AppLoading(),
+          );
+        }
+
+        if (state.status == EditMeetingStatus.loading) {
+          return Scaffold(
+            appBar: const AppAppBar(title: "Editar encontro"),
+            body: const AppLoading(),
+          );
+        }
+
+        if (state.status == EditMeetingStatus.failure &&
+            state.meeting == null) {
+          return Scaffold(
+            appBar: const AppAppBar(title: "Editar encontro"),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline_rounded,
+                    size: 48,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                  const SizedBox(height: Spacing.space_sm),
+                  Text(
+                    state.errorMessage ?? "Erro desconhecido",
+                    style: Theme.of(context).textTheme.bodyLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        // EditMeetingLoaded
+        _initializeControllers(state.meeting!);
+
+        final isSaving = state.status == EditMeetingStatus.saving;
+
+        return Scaffold(
+          appBar: const AppAppBar(title: "Editar encontro"),
+          body: SingleChildScrollView(
+            padding: EdgeInsets.all(Spacing.pagePaddingMobile),
+            child: AppCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  AppTextField(
+                    label: "Título do encontro",
+                    controller: _titleController,
+                    onChanged: (_) => setState(() {}),
+                  ),
+                  const SizedBox(height: Spacing.space_sm),
+                  GestureDetector(
+                    onTap: _pickDateTime,
+                    child: TextField(
+                      controller: _dateController,
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        labelText: "Data e hora",
+                        suffixIcon: const Icon(Icons.event_rounded),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: Spacing.space_sm),
+                  AppTextField(
+                    label: "Local",
+                    controller: _locationController,
+                    onChanged: (_) => setState(() {}),
+                  ),
+                  const SizedBox(height: Spacing.space_md),
+                  AppButton(
+                    label: "Salvar alterações",
+                    isFullWidth: true,
+                    isLoading: isSaving,
+                    isDisabled: isSaving,
+                    onPressed: _submitForm,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
