@@ -1,4 +1,4 @@
-name: Flutter CI
+name: Flutter CI - Development
 
 on:
   pull_request:
