@@ -86,7 +86,7 @@ pids/
 # /architecture_summary.md
 *AGENTS.md
 /.ignore
-/.opencode
+/.opencode/*
 *opencode.json*
 # Widget Preview related
 .widget_preview/
