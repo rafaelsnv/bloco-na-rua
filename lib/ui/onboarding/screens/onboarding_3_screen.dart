@@ -1,4 +1,3 @@
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:flutter/material.dart";
@@ -8,6 +7,7 @@ class Onboarding3Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.all(Spacing.pagePaddingMobile),
       child: Column(
@@ -17,19 +17,19 @@ class Onboarding3Screen extends StatelessWidget {
           Icon(
             Icons.event_available_rounded,
             size: 120,
-            color: AppColors.primary,
+            color: colors.primary,
           ),
           const SizedBox(height: Spacing.space_xl),
           Text(
-            "Confirme presença nas reuniões",
+            "Confirme presença nos encontros",
             style: AppTypography.headlineLarge.copyWith(
-              color: AppColors.primary,
+              color: colors.primary,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: Spacing.space_md),
           Text(
-            "Veja as reuniões do seu bloco e confirme sua presença. Nunca mais perca um encontro!",
+            "Veja os encontros do seu bloco e confirme sua presença. Nunca mais perca um encontro!",
             style: AppTypography.bodyLarge.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),

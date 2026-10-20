@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 
-import "../../tokens/app_colors.dart";
 import "../../tokens/app_radius.dart";
 import "../../tokens/app_spacing.dart";
 import "../../tokens/app_typography.dart";
@@ -17,7 +16,7 @@ enum BadgeSize { sm, md }
 /// badge overlay at the top-right corner of [child].
 ///
 /// [label] is required and defines the text displayed inside the badge.
-/// [color] sets the background color (defaults to [AppColors.primary]).
+/// [color] sets the background color (defaults to the theme primary color).
 /// [size] controls padding and font scale (defaults to [BadgeSize.md]).
 class AppBadge extends StatelessWidget {
   const AppBadge({
@@ -31,7 +30,7 @@ class AppBadge extends StatelessWidget {
   /// Text content of the badge. Required.
   final String label;
 
-  /// Custom background color. Defaults to [AppColors.primary].
+  /// Custom background color. Defaults to the theme primary color.
   final Color? color;
 
   /// Size variant controlling padding and font scale. Defaults to [BadgeSize.md].
@@ -58,7 +57,8 @@ class AppBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = color ?? AppColors.primary;
+    final colorScheme = Theme.of(context).colorScheme;
+    final backgroundColor = color ?? colorScheme.primary;
 
     if (child != null) {
       // Wrapping mode: Badge handles positioning at top-right.
@@ -66,7 +66,7 @@ class AppBadge extends StatelessWidget {
         label: Text(
           label,
           style: AppTypography.labelSmall.copyWith(
-            color: AppColors.textOnPrimary,
+            color: colorScheme.onPrimary,
           ),
         ),
         backgroundColor: backgroundColor,
@@ -79,9 +79,7 @@ class AppBadge extends StatelessWidget {
     return Chip(
       label: Text(
         label,
-        style: AppTypography.labelSmall.copyWith(
-          color: AppColors.textOnPrimary,
-        ),
+        style: AppTypography.labelSmall.copyWith(color: colorScheme.onPrimary),
       ),
       backgroundColor: backgroundColor,
       padding: _padding,

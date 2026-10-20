@@ -22,23 +22,26 @@ class MeetingPresencesApiClient implements IMeetingPresencesApiClient {
     int meetingId,
   ) async {
     try {
-      final response = await baseApiClient.client.get(
-        '$_basePath/$meetingId',
-      );
+      // design: backend has no `?meetingId=` filter; fetch all + filter here until
+      // the API ships the query param. See TKT-001 in
+      // .tmp/sessions/2026-10-06-ponytail-fix-all/BACKEND_TICKETS.md.
+      final response = await baseApiClient.client.get(_basePath);
       final List<MeetingPresencesEntity> result = [];
       switch (response.statusCode) {
         case 200:
           if (response.data is List) {
             result.addAll(
-              (response.data as List<dynamic>).map(
-                (e) => MeetingPresencesEntity.fromJson(e as Map<String, dynamic>),
-              ),
+              (response.data as List<dynamic>)
+                  .map(
+                    (e) => MeetingPresencesEntity.fromJson(
+                      e as Map<String, dynamic>,
+                    ),
+                  )
+                  .where((e) => e.meetingId == meetingId),
             );
-          } else {
-            result.add(MeetingPresencesEntity.fromJson(response.data));
           }
         case 404:
-          // No presences for this meeting - return empty list
+          // No presences - return empty list
           break;
         default:
           return Failure(baseApiClient.formatError(response));
@@ -47,32 +50,79 @@ class MeetingPresencesApiClient implements IMeetingPresencesApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
+    }
+  }
+
+  // TO-DO(backend): Add unique constraint on (memberId, meetingId) in MeetingPresences
+  // table. On conflict (HTTP 409 or 200 with existing record), return the existing
+  // record so clients can dedupe reliably. The Idempotency-Key header sent here is
+  // currently ignored by the backend.
+  @override
+  AsyncResult<MeetingPresencesEntity> createAsync(
+    Map<String, dynamic> data, {
+    String? idempotencyKey,
+  }) async {
+    try {
+      final options = idempotencyKey != null
+          ? Options(headers: {'Idempotency-Key': idempotencyKey})
+          : null;
+      final response = await baseApiClient.client.post(
+        _basePath,
+        data: data,
+        options: options,
+      );
+      if (response.statusCode != 201 && response.statusCode != 200) {
+        return Failure(baseApiClient.formatError(response));
+      }
+      return Success(
+        MeetingPresencesEntity.fromJson(response.data as Map<String, dynamic>),
+      );
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
   @override
-  AsyncResult<MeetingPresencesEntity> createAsync(
+  AsyncResult<MeetingPresencesEntity> updateAsync(
+    int id,
     Map<String, dynamic> data,
   ) async {
     try {
-      final response = await baseApiClient.client.post(_basePath, data: data);
-      if (response.statusCode != 201 && response.statusCode != 200) {
+      final response = await baseApiClient.client.put(
+        '$_basePath/$id',
+        data: data,
+      );
+      if (response.statusCode != 200 && response.statusCode != 201) {
         return Failure(baseApiClient.formatError(response));
       }
-      return Success(MeetingPresencesEntity.fromJson(response.data as Map<String, dynamic>));
+      return Success(
+        MeetingPresencesEntity.fromJson(response.data as Map<String, dynamic>),
+      );
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -87,11 +137,13 @@ class MeetingPresencesApiClient implements IMeetingPresencesApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 }

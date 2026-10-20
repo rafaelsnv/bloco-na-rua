@@ -52,13 +52,19 @@ class EditBlockCubit extends Cubit<EditBlockState> {
     if (_isUpdating) return;
     _isUpdating = true;
 
+    final currentState = state;
+    if (currentState is! EditBlockLoaded) {
+      _isUpdating = false;
+      return;
+    }
+
     emit(EditBlockSaving());
 
     final data = {'name': name, 'carnivalBlockImage': carnivalBlockImage};
 
     try {
       final result = await _carnivalBlocksRepository.updateAsync(
-        int.parse(_carnivalBlockId),
+        currentState.id,
         data,
       );
 

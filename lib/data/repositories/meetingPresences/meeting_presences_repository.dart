@@ -17,9 +17,21 @@ class MeetingPresencesRepository implements IMeetingPresencesRepository {
 
   @override
   AsyncResult<MeetingPresencesEntity> createAsync(
+    Map<String, dynamic> data, {
+    String? idempotencyKey,
+  }) async {
+    return await meetingPresencesApiClient.createAsync(
+      data,
+      idempotencyKey: idempotencyKey,
+    );
+  }
+
+  @override
+  AsyncResult<MeetingPresencesEntity> updateAsync(
+    int id,
     Map<String, dynamic> data,
   ) async {
-    return await meetingPresencesApiClient.createAsync(data);
+    return await meetingPresencesApiClient.updateAsync(id, data);
   }
 
   // Implement required IRepositoryBase methods using base repo pattern

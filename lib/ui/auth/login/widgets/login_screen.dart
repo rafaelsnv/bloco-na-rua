@@ -1,3 +1,4 @@
+import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
@@ -9,7 +10,6 @@ import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
 import "package:bloco_na_rua/ui/core/widgets/inputs/app_text_field.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
@@ -70,13 +70,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
-          AppSnackbar.error(
-            context,
-            message: state.message,
-          );
+          AppSnackbar.error(context, message: state.message);
         } else if (state is AuthAuthenticated) {
           context.go(Routes.home);
         } else if (state is AuthSuccess) {
@@ -90,9 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
           elevation: 0,
           title: Text(
             "Bloco na Rua",
-            style: AppTypography.displaySmall.copyWith(
-              color: AppColors.primary,
-            ),
+            style: AppTypography.displaySmall.copyWith(color: colors.primary),
           ),
         ),
         body: SafeArea(
@@ -106,13 +102,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   Icon(
                     Icons.celebration_rounded,
                     size: 80,
-                    color: AppColors.primary,
+                    color: colors.primary,
                   ),
                   const SizedBox(height: Spacing.space_sm),
                   Text(
                     "Bem vindo",
                     style: AppTypography.displaySmall.copyWith(
-                      color: AppColors.primary,
+                      color: colors.primary,
                     ),
                   ),
                   const SizedBox(height: Spacing.space_xs),
@@ -221,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(
                       "Esqueceu a senha?",
                       style: AppTypography.bodyLarge.copyWith(
-                        color: AppColors.primary,
+                        color: colors.primary,
                       ),
                     ),
                   ),
@@ -234,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(
                       "Não tem uma conta? Cadastre-se",
                       style: AppTypography.bodyLarge.copyWith(
-                        color: AppColors.primary,
+                        color: colors.primary,
                       ),
                     ),
                   ),
@@ -332,28 +328,35 @@ class _ForgotPasswordDialogState extends State<_ForgotPasswordDialog> {
               ),
               const SizedBox(height: Spacing.space_lg),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  AppButton(
-                    label: "Cancelar",
-                    variant: AppButtonVariant.tertiary,
-                    onPressed: () => Navigator.of(context).pop(),
+                  Flexible(
+                    fit: FlexFit.tight,
+                    child: AppButton(
+                      label: "Cancelar",
+                      size: AppButtonSizeMetrics.sm,
+                      variant: AppButtonVariant.tertiary,
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
                   ),
                   const SizedBox(width: Spacing.space_xs),
-                  AppButton(
-                    label: "Enviar",
-                    variant: AppButtonVariant.accent,
-                    isDisabled: !_isFormValid,
-                    onPressed: !_isFormValid
-                        ? null
-                        : () {
-                            if (_formKey.currentState!.validate()) {
-                              widget.outerContext
-                                  .read<AuthCubit>()
-                                  .resetPassword(_emailController.text);
-                              Navigator.of(context).pop();
-                            }
-                          },
+                  Flexible(
+                    fit: FlexFit.tight,
+                    child: AppButton(
+                      label: "Enviar",
+                      size: AppButtonSizeMetrics.sm,
+                      variant: AppButtonVariant.accent,
+                      isDisabled: !_isFormValid,
+                      onPressed: !_isFormValid
+                          ? null
+                          : () {
+                              if (_formKey.currentState!.validate()) {
+                                widget.outerContext
+                                    .read<AuthCubit>()
+                                    .resetPassword(_emailController.text);
+                                Navigator.of(context).pop();
+                              }
+                            },
+                    ),
                   ),
                 ],
               ),

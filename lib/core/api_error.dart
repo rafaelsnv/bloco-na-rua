@@ -2,10 +2,13 @@ import 'package:bloco_na_rua/core/error_messages.dart';
 import 'package:bloco_na_rua/core/error_types.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
+import 'package:logging/logging.dart';
 
 /// Centralized API error class that encapsulates error information
 /// with user-friendly messages.
 class ApiError implements Exception {
+  static final Logger _log = Logger('ApiError');
+
   /// The type/category of the error
   final ApiErrorType type;
 
@@ -114,6 +117,9 @@ class ApiError implements Exception {
 
     switch (statusCode) {
       case 400:
+        // Backend field-level errors live in the body (e.g. {"Phone": [...]}),
+        // not statusMessage — log the body or they're lost.
+        _log.severe('API 400: ${response?.data}');
         return ApiError(
           type: ApiErrorType.validation,
           userMessage: 'Invalid data. Check the information.',

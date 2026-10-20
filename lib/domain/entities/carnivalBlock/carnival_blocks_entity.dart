@@ -7,15 +7,10 @@ part 'carnival_blocks_entity.g.dart';
 @freezed
 sealed class CarnivalBlocksEntity extends EntityBase
     with _$CarnivalBlocksEntity {
-  @override
   final int ownerId;
-  @override
   final String name;
-  @override
   final String inviteCode;
-  @override
   final String managersInviteCode;
-  @override
   final String carnivalBlockImage;
 
   CarnivalBlocksEntity._({

@@ -30,6 +30,9 @@ final class EditBlockSaving extends EditBlockState {}
 
 final class EditBlockSuccess extends EditBlockState {}
 
+/// Deliberately duplicates [EditBlockLoaded] fields: the delete confirmation
+/// UI keeps rendering the block while deletion is in flight, so the loaded
+/// data must survive the state transition.
 final class EditBlockDeleting extends EditBlockState {
   final int id;
   final String name;

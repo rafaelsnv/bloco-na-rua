@@ -15,14 +15,12 @@ const _blockEmojis = ["🎭", "🎉", "🎊", "🎷", "🎺", "🪇", "🏟️"]
 
 /// BlockCard compound widget for displaying a carnival block summary.
 ///
-/// Shows: emoji icon + block name + location • date + member count badge +
-/// optional live indicator.
+/// Shows: emoji icon + block name + location • date + optional live indicator.
 class BlockCard extends StatelessWidget {
   const BlockCard({
     super.key,
     required this.block,
     this.onTap,
-    this.memberCount,
     this.location,
     this.date,
     this.isLive = false,
@@ -33,10 +31,6 @@ class BlockCard extends StatelessWidget {
 
   /// Optional tap callback.
   final VoidCallback? onTap;
-
-  /// Optional member count. When provided displays "N membros".
-  /// When null displays "Sem membros".
-  final int? memberCount;
 
   /// Optional location string (e.g. "Recife").
   final String? location;
@@ -121,7 +115,7 @@ class BlockCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  _buildBadgeRow(surfaceVariant, textSecondary, textTertiary),
+                  if (isLive) _buildLiveIndicator(textTertiary),
                 ],
               ),
             ),
@@ -142,44 +136,23 @@ class BlockCard extends StatelessWidget {
     );
   }
 
-  Widget _buildBadgeRow(
-    Color surfaceVariant,
-    Color textSecondary,
-    Color textTertiary,
-  ) {
+  Widget _buildLiveIndicator(Color textTertiary) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: Spacing.space_2xs,
-            vertical: 1,
-          ),
+          width: 6,
+          height: 6,
           decoration: BoxDecoration(
-            color: surfaceVariant,
-            borderRadius: Radii.radiusFull,
-          ),
-          child: Text(
-            memberCount != null ? "$memberCount membros" : "Sem membros",
-            style: AppTypography.labelSmall.copyWith(color: textSecondary),
+            color: AppColors.tertiary,
+            shape: BoxShape.circle,
           ),
         ),
-        if (isLive) ...[
-          const SizedBox(width: Spacing.space_xs),
-          Container(
-            width: 6,
-            height: 6,
-            decoration: BoxDecoration(
-              color: AppColors.tertiary,
-              shape: BoxShape.circle,
-            ),
-          ),
-          const SizedBox(width: Spacing.space_2xs),
-          Text(
-            "Ao vivo",
-            style: AppTypography.labelSmall.copyWith(color: textTertiary),
-          ),
-        ],
+        const SizedBox(width: Spacing.space_2xs),
+        Text(
+          "Ao vivo",
+          style: AppTypography.labelSmall.copyWith(color: textTertiary),
+        ),
       ],
     );
   }

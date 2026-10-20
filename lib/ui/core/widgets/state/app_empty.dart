@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 
-import "../../tokens/app_colors.dart";
 import "../../tokens/app_spacing.dart";
 import "../../tokens/app_typography.dart";
 import "../buttons/app_button.dart";
@@ -32,6 +31,8 @@ class AppEmpty extends StatelessWidget {
   ///   button is rendered.
   /// [onAction] is optional; when provided alongside [actionLabel], a CTA
   ///   button is rendered. Both must be non-null for the button to appear.
+  /// [secondaryActionLabel]/[onSecondaryAction] render an outlined secondary
+  ///   CTA below the primary one, same pairing rule.
   const AppEmpty({
     super.key,
     this.title,
@@ -39,6 +40,8 @@ class AppEmpty extends StatelessWidget {
     this.icon,
     this.actionLabel,
     this.onAction,
+    this.secondaryActionLabel,
+    this.onSecondaryAction,
   });
 
   /// Optional custom title. Defaults to "Nada por aqui".
@@ -58,9 +61,20 @@ class AppEmpty extends StatelessWidget {
   /// a CTA button is rendered.
   final VoidCallback? onAction;
 
+  /// Optional secondary CTA button label. When provided alongside
+  /// [onSecondaryAction], an outlined secondary button is rendered.
+  final String? secondaryActionLabel;
+
+  /// Optional secondary CTA button press handler. When provided alongside
+  /// [secondaryActionLabel], an outlined secondary button is rendered.
+  final VoidCallback? onSecondaryAction;
+
   @override
   Widget build(BuildContext context) {
     final showCtaButton = actionLabel != null && onAction != null;
+    final showSecondaryCtaButton =
+        secondaryActionLabel != null && onSecondaryAction != null;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Padding(
       padding: const EdgeInsets.all(Spacing.pagePaddingMobile),
@@ -71,7 +85,7 @@ class AppEmpty extends StatelessWidget {
           children: [
             // Icon (only shown when provided)
             if (icon != null) ...[
-              Icon(icon, size: 96, color: AppColors.primaryLight),
+              Icon(icon, size: 96, color: colorScheme.primary),
               // Gap: icon -> title
               const SizedBox(height: Spacing.space_md),
             ],
@@ -98,13 +112,28 @@ class AppEmpty extends StatelessWidget {
               ),
             ],
 
-            // Gap: message -> CTA button
-            if (showCtaButton) ...[
+            // CTA buttons — side by side when both are provided
+            if (showCtaButton || showSecondaryCtaButton) ...[
               const SizedBox(height: Spacing.space_lg),
-              AppButton(
-                label: actionLabel!,
-                icon: const Icon(Icons.add_rounded),
-                onPressed: onAction,
+              Row(
+                children: [
+                  if (showCtaButton)
+                    Expanded(
+                      child: AppButton(
+                        label: actionLabel!,
+                        onPressed: onAction,
+                      ),
+                    ),
+                  if (showCtaButton && showSecondaryCtaButton)
+                    const SizedBox(width: Spacing.space_sm),
+                  if (showSecondaryCtaButton)
+                    Expanded(
+                      child: AppButton(
+                        label: secondaryActionLabel!,
+                        onPressed: onSecondaryAction,
+                      ),
+                    ),
+                ],
               ),
             ],
           ],

@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 
-import "../../tokens/app_colors.dart";
 import "../../tokens/app_spacing.dart";
 import "../../tokens/app_typography.dart";
 
@@ -31,6 +30,7 @@ class AppLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final animationsDisabled = MediaQuery.of(context).disableAnimations;
+    final primary = Theme.of(context).colorScheme.primary;
 
     return Center(
       child: Padding(
@@ -40,16 +40,12 @@ class AppLoading extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             animationsDisabled
-                ? Icon(
-                    Icons.hourglass_top_rounded,
-                    size: size,
-                    color: AppColors.primary,
-                  )
+                ? Icon(Icons.hourglass_top_rounded, size: size, color: primary)
                 : SizedBox(
                     width: size,
                     height: size,
                     child: CircularProgressIndicator(
-                      color: AppColors.primary,
+                      color: primary,
                       strokeWidth: 3,
                     ),
                   ),

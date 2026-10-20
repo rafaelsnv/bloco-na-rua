@@ -14,18 +14,17 @@ import "package:bloco_na_rua/ui/carnivalBlock/addMember/cubit/add_member_cubit.d
 import "package:bloco_na_rua/ui/carnivalBlock/addMember/widgets/add_member_screen.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockDetails/widgets/block_details_screen.dart";
-import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockList/widgets/block_list_screen.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/createBlock/widgets/create_block_screen.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/editBlock/cubit/edit_block_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/editBlock/widgets/edit_block_screen.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/joinBlock/cubit/join_block_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/joinBlock/widgets/join_block_modal.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_shell.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_bottom_nav.dart";
 import "package:bloco_na_rua/ui/core/cubit/fab_state_cubit.dart";
 import "package:bloco_na_rua/ui/error/widgets/error_screen.dart";
-import "package:bloco_na_rua/ui/home/cubit/home_cubit.dart";
 import "package:bloco_na_rua/ui/home/widgets/home_screen.dart";
 import "package:bloco_na_rua/ui/meetings/createMeeting/cubit/create_meeting_cubit.dart";
 import "package:bloco_na_rua/ui/meetings/createMeeting/widgets/create_meeting_screen.dart";
@@ -33,7 +32,6 @@ import "package:bloco_na_rua/ui/meetings/editMeeting/cubit/edit_meeting_cubit.da
 import "package:bloco_na_rua/ui/meetings/editMeeting/widgets/edit_meeting_screen.dart";
 import "package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_cubit.dart";
 import "package:bloco_na_rua/ui/meetings/meetingDetails/widgets/meeting_details_screen.dart";
-import "package:bloco_na_rua/ui/meetings/userMeetings/cubit/user_meetings_cubit.dart";
 import "package:bloco_na_rua/ui/meetings/userMeetings/widgets/user_meetings_screen.dart";
 import "package:bloco_na_rua/ui/not_found/widgets/not_found_screen.dart";
 import "package:bloco_na_rua/ui/onboarding/onboarding_wrapper.dart";
@@ -50,7 +48,7 @@ final _logger = Logger("GoRouter");
 const _shellNavItems = <AppBottomNavItem>[
   AppBottomNavItem(icon: Icons.home_rounded, label: "Início"),
   AppBottomNavItem(icon: Icons.celebration_rounded, label: "Blocos"),
-  AppBottomNavItem(icon: Icons.event_rounded, label: "Reuniões"),
+  AppBottomNavItem(icon: Icons.event_rounded, label: "Encontros"),
   AppBottomNavItem(icon: Icons.person_rounded, label: "Perfil"),
 ];
 
@@ -81,6 +79,7 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
   redirect: _redirect,
   refreshListenable: authListenable,
   errorBuilder: _errorBuilder,
+  observers: [Routes.routeObserver],
   routes: [
     // Auth routes (no shell, no transition)
     GoRoute(
@@ -122,12 +121,7 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
               pageBuilder: (context, state) => _buildPageWithSlideTransition(
                 context: context,
                 state: state,
-                child: BlocProvider(
-                  create: (context) =>
-                      HomeCubit(getHomeDataUseCase: context.read())
-                        ..loadHomeData(),
-                  child: const HomeScreen(),
-                ),
+                child: const HomeScreen(),
               ),
             ),
           ],
@@ -140,12 +134,7 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
               pageBuilder: (context, state) => _buildPageWithSlideTransition(
                 context: context,
                 state: state,
-                child: BlocProvider(
-                  create: (context) =>
-                      BlockListCubit(getHomeDataUseCase: context.read())
-                        ..loadBlocks(),
-                  child: const BlockListScreen(),
-                ),
+                child: const BlockListScreen(),
               ),
             ),
           ],
@@ -158,12 +147,7 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
               pageBuilder: (context, state) => _buildPageWithSlideTransition(
                 context: context,
                 state: state,
-                child: BlocProvider(
-                  create: (context) =>
-                      UserMeetingsCubit(getUserMeetingsUseCase: context.read())
-                        ..loadMeetings(),
-                  child: const UserMeetingsScreen(),
-                ),
+                child: const UserMeetingsScreen(),
               ),
             ),
           ],
@@ -222,7 +206,11 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
                   .read<IMeetingPresencesRepository>(),
               authRepository: context.read<IAuthRepository>(),
               carnivalBlocksRepository: context
-                  .read<ICarnivalBlocksRepository>(),
+                   .read<ICarnivalBlocksRepository>(),
+              carnivalBlockMembersRepository: context
+                  .read<ICarnivalBlockMembersRepository>(),
+              membersRepository: context.read<IMembersRepository>(),
+              getCurrentUserData: context.read<GetCurrentUserData>(),
               meetingId: meetingId,
             ),
             child: MeetingDetailsScreen(meetingId: meetingId),
@@ -269,7 +257,13 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
       pageBuilder: (context, state) => _buildPageWithSlideTransition(
         context: context,
         state: state,
-        child: const JoinBlockModal(),
+        child: BlocProvider(
+          create: (context) => JoinBlockCubit(
+            carnivalBlockMembersRepository:
+                context.read<ICarnivalBlockMembersRepository>(),
+          ),
+          child: const JoinBlockModal(),
+        ),
       ),
     ),
     GoRoute(

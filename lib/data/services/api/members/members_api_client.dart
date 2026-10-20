@@ -185,6 +185,30 @@ class MembersApiClient implements IMembersApiClient {
   }
 
   @override
+  AsyncResult<List<MembersEntity>> getByIdsAsync(List<int> ids) async {
+    try {
+      final response = await baseApiClient.client.get(
+        _basePath,
+        queryParameters: {'ids': ids.join(',')},
+      );
+      if (response.statusCode != 200) {
+        return Failure(baseApiClient.formatError(response));
+      }
+      final data = response.data as List;
+      final result = data.map((e) => MembersEntity.fromJson(e)).toList();
+      return Success(result);
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
+    }
+  }
+
+  @override
   AsyncResult<MembersEntity> getByIdAsync(int id) async {
     try {
       final response = await baseApiClient.client.get('$_basePath/$id');

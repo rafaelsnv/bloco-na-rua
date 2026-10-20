@@ -1,6 +1,9 @@
 import "package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart";
+import "package:bloco_na_rua/ui/home/cubit/home_cubit.dart";
 import "package:bloco_na_rua/ui/meetings/editMeeting/cubit/edit_meeting_cubit.dart";
 import "package:bloco_na_rua/ui/meetings/editMeeting/cubit/edit_meeting_state.dart";
+import "package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_cubit.dart";
+import "package:bloco_na_rua/ui/meetings/userMeetings/cubit/user_meetings_cubit.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
@@ -112,7 +115,7 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
   void _submitForm() {
     final meetingId = int.tryParse(widget.meetingId);
     if (meetingId == null) {
-      AppSnackbar.error(context, message: "ID da reuniao invalido");
+      AppSnackbar.error(context, message: "ID do encontro inválido");
       return;
     }
 
@@ -120,13 +123,14 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
     if (title.isEmpty) {
       AppSnackbar.error(
         context,
-        message: "O titulo da reuniao e obrigatorio",
+        message: "O título do encontro é obrigatório",
       );
       return;
     }
 
-    final dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
-    final formattedDateTime = dateFormat.format(_selectedDateTime);
+    // ISO 8601 with 'T' separator — System.Text.Json rejects the
+    // space-separated "yyyy-MM-dd HH:mm:ss" format.
+    final formattedDateTime = _selectedDateTime.toIso8601String();
 
     final data = <String, dynamic>{
       "name": title,
@@ -146,9 +150,14 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
     return BlocConsumer<EditMeetingCubit, EditMeetingState>(
       listener: (context, state) {
         if (state.status == EditMeetingStatus.success) {
+          context.read<UserMeetingsCubit>().loadMeetings();
+          context.read<HomeCubit>().loadHomeData();
+          try {
+            context.read<MeetingDetailsCubit>().loadMeeting();
+          } catch (_) {}
           AppSnackbar.success(
             context,
-            message: "Reunião atualizada com sucesso!",
+            message: "Encontro atualizado com sucesso!",
           );
           if (!mounted) return;
           context.pop();
@@ -162,7 +171,7 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
           final meetingId = int.tryParse(widget.meetingId);
           if (meetingId == null) {
             return Scaffold(
-appBar: const AppAppBar(title: "Editar reunião"),
+appBar: const AppAppBar(title: "Editar encontro"),
               body: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -174,7 +183,7 @@ appBar: const AppAppBar(title: "Editar reunião"),
                     ),
                     const SizedBox(height: Spacing.space_sm),
                     Text(
-                      "ID da reuniao invalido",
+                      "ID do encontro inválido",
                       style: Theme.of(context).textTheme.bodyLarge,
                       textAlign: TextAlign.center,
                     ),
@@ -184,14 +193,14 @@ appBar: const AppAppBar(title: "Editar reunião"),
             );
           }
           return Scaffold(
-            appBar: const AppAppBar(title: "Editar reuniao"),
+            appBar: const AppAppBar(title: "Editar encontro"),
             body: const AppLoading(),
           );
         }
 
         if (state.status == EditMeetingStatus.loading) {
           return Scaffold(
-            appBar: const AppAppBar(title: "Editar reuniao"),
+            appBar: const AppAppBar(title: "Editar encontro"),
             body: const AppLoading(),
           );
         }
@@ -199,7 +208,7 @@ appBar: const AppAppBar(title: "Editar reunião"),
         if (state.status == EditMeetingStatus.failure &&
             state.meeting == null) {
           return Scaffold(
-            appBar: const AppAppBar(title: "Editar reuniao"),
+            appBar: const AppAppBar(title: "Editar encontro"),
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -227,7 +236,7 @@ appBar: const AppAppBar(title: "Editar reunião"),
         final isSaving = state.status == EditMeetingStatus.saving;
 
         return Scaffold(
-          appBar: const AppAppBar(title: "Editar reuniao"),
+          appBar: const AppAppBar(title: "Editar encontro"),
           body: SingleChildScrollView(
             padding: EdgeInsets.all(Spacing.pagePaddingMobile),
             child: AppCard(
@@ -235,7 +244,7 @@ appBar: const AppAppBar(title: "Editar reunião"),
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   AppTextField(
-                    label: "Título da reunião",
+                    label: "Título do encontro",
                     controller: _titleController,
                     onChanged: (_) => setState(() {}),
                   ),

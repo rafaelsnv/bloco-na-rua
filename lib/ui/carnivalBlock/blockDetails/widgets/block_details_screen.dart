@@ -12,6 +12,7 @@ import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_icon_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
@@ -27,8 +28,8 @@ import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_loading.dart";
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_cache_manager/flutter_cache_manager.dart";
 import "package:go_router/go_router.dart";
 import "package:intl/intl.dart";
 
@@ -41,7 +42,8 @@ class BlockDetailsScreen extends StatefulWidget {
   State<BlockDetailsScreen> createState() => _BlockDetailsScreenState();
 }
 
-class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
+class _BlockDetailsScreenState extends State<BlockDetailsScreen>
+    with RouteAware {
   List<CarnivalBlockMembersEntity> _members = [];
   List<MeetingsEntity> _meetings = [];
   Map<int, MembersEntity> _memberEntities = {};
@@ -50,6 +52,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
   String? _membersError;
   String? _meetingsError;
   int? _deletingMemberId;
+  bool _subscribedToRoute = false;
 
   @override
   void initState() {
@@ -58,10 +61,31 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
     _loadMeetings();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_subscribedToRoute) {
+      _subscribedToRoute = true;
+      final route = ModalRoute.of(context);
+      if (route != null) {
+        Routes.routeObserver.subscribe(this, route);
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    Routes.routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    _loadMembers();
+    _loadMeetings();
+  }
+
   Future<void> _loadMembers() async {
-    // ponytail: TO-DO: request batch endpoint GET /Members?ids=... from backend
-    // to eliminate this N+1 pattern. Future.wait is the best available option
-    // until a batch endpoint exists.
     final repo = context.read<ICarnivalBlockMembersRepository>();
     final membersRepo = context.read<IMembersRepository>();
     setState(() {
@@ -69,39 +93,63 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
       _membersError = null;
     });
 
-    final result = await repo.getByBlockIdAsync(
-      int.parse(widget.carnivalBlockId),
-    );
+    final blockId = int.tryParse(widget.carnivalBlockId);
+    if (blockId == null) {
+      setState(() {
+        _membersError = 'ID do bloco inválido';
+        _loadingMembers = false;
+      });
+      return;
+    }
+
+    final result = await repo.getByBlockIdAsync(blockId);
 
     result.fold(
       (members) async {
-        // Fetch all member entities concurrently with Future.wait
+        // Single batch fetch: GET /Members?ids=1,2,3 (backend-supported).
+        final ids = members.map((m) => m.memberId).toList();
+        final entitiesResult = await membersRepo.getByIdsAsync(ids);
+
         final entities = <int, MembersEntity>{};
-        final failedMemberIds = <int>[];
-        final memberFutures = members.map(
-          (member) => membersRepo.getByIdAsync(member.memberId),
+        var failedCount = 0;
+
+        entitiesResult.fold(
+          (fetched) {
+            final byId = {for (final e in fetched) e.id: e};
+            for (final member in members) {
+              final entity = byId[member.memberId];
+              if (entity != null) {
+                entities[member.memberId] = entity;
+              } else {
+                // Member row exists but entity missing (deleted?) — placeholder.
+                failedCount++;
+                entities[member.memberId] = MembersEntity(
+                  id: member.memberId,
+                  name: "Membro",
+                  email: null,
+                  profileImage: null,
+                );
+              }
+            }
+          },
+          (_) {
+            // Batch failed entirely — placeholder for all, same as before.
+            failedCount = members.length;
+            for (final member in members) {
+              entities[member.memberId] = MembersEntity(
+                id: member.memberId,
+                name: "Membro",
+                email: null,
+                profileImage: null,
+              );
+            }
+          },
         );
-        final memberResults = await Future.wait(memberFutures);
 
-        for (var i = 0; i < members.length; i++) {
-          final member = members[i];
-          final memberResult = memberResults[i];
-          memberResult.fold((m) => entities[member.memberId] = m, (_) {
-            failedMemberIds.add(member.memberId);
-            entities[member.memberId] = MembersEntity(
-              id: member.memberId,
-              name: "Membro",
-              email: null,
-              profileImage: null,
-            );
-          });
-        }
-
-        if (failedMemberIds.isNotEmpty && mounted) {
+        if (failedCount > 0 && mounted) {
           AppSnackbar.error(
             context,
-            message:
-                "Falha ao carregar dados de ${failedMemberIds.length} membro(s)",
+            message: "Falha ao carregar dados de $failedCount membro(s)",
           );
         }
 
@@ -129,9 +177,16 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
       _meetingsError = null;
     });
 
-    final result = await repo.getAllByBlockId(
-      int.parse(widget.carnivalBlockId),
-    );
+    final blockId = int.tryParse(widget.carnivalBlockId);
+    if (blockId == null) {
+      setState(() {
+        _meetingsError = 'ID do bloco inválido';
+        _loadingMeetings = false;
+      });
+      return;
+    }
+
+    final result = await repo.getAllByBlockId(blockId);
 
     result.fold(
       (meetings) {
@@ -195,11 +250,11 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
   Color _roleColor(int role) {
     switch (role) {
       case 1:
-        return AppColors.primary;
+        return Theme.of(context).colorScheme.primary;
       case 2:
         return AppColors.info;
       default:
-        return AppColors.primary;
+        return Theme.of(context).colorScheme.primary;
     }
   }
 
@@ -251,7 +306,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
                 if (canManageMembers) ...[
                   IconButton(
                     icon: const Icon(Icons.add_alert_rounded),
-                    tooltip: "Criar Reuniao",
+                    tooltip: "Criar Encontro",
                     onPressed: () => context.push(
                       "/create-meeting/${widget.carnivalBlockId}",
                     ),
@@ -290,17 +345,14 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
                         size: 24,
                       ),
                       action: canManageMembers
-                          ? AppButton(
-                              label: "Criar",
-                              variant: AppButtonVariant.ghost,
-                              size: AppButtonSize.sm,
+                          ? TextButton(
                               onPressed: () => context.push(
                                 "/create-meeting/${widget.carnivalBlockId}",
                               ),
+                              child: const Text("Criar"),
                             )
                           : null,
                     ),
-                    const SizedBox(height: Spacing.space_sm),
                     _MeetingsSection(
                       meetings: _meetings,
                       isLoading: _loadingMeetings,
@@ -318,17 +370,14 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
                         size: 24,
                       ),
                       action: canManageMembers
-                          ? AppButton(
-                              label: "Adicionar",
-                              variant: AppButtonVariant.ghost,
-                              size: AppButtonSize.sm,
+                          ? TextButton(
                               onPressed: () => context.push(
                                 "/add-member/${widget.carnivalBlockId}",
                               ),
+                              child: const Text("Adicionar"),
                             )
                           : null,
                     ),
-                    const SizedBox(height: Spacing.space_sm),
                     _MembersSection(
                       members: _members,
                       memberEntities: _memberEntities,
@@ -360,7 +409,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen> {
   }
 }
 
-class _BlockInfoCard extends StatelessWidget {
+class _BlockInfoCard extends StatefulWidget {
   const _BlockInfoCard({
     required this.carnivalBlock,
     required this.canManageMembers,
@@ -370,7 +419,17 @@ class _BlockInfoCard extends StatelessWidget {
   final bool canManageMembers;
 
   @override
+  State<_BlockInfoCard> createState() => _BlockInfoCardState();
+}
+
+class _BlockInfoCardState extends State<_BlockInfoCard> {
+  bool _obscureInviteCode = true;
+  bool _obscureManagerCode = true;
+
+  @override
   Widget build(BuildContext context) {
+    final carnivalBlock = widget.carnivalBlock;
+    final canManageMembers = widget.canManageMembers;
     return AppCard(
       elevation: AppCardElevation.sm,
       child: Column(
@@ -379,18 +438,26 @@ class _BlockInfoCard extends StatelessWidget {
           // Block name row
           Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(Spacing.space_sm),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  shape: BoxShape.circle,
+              if (isValidImageUrl(carnivalBlock.carnivalBlockImage))
+                CircleAvatar(
+                  radius: 22,
+                  backgroundImage: CachedNetworkImageProvider(
+                    carnivalBlock.carnivalBlockImage,
+                  ),
+                )
+              else
+                Container(
+                  padding: const EdgeInsets.all(Spacing.space_sm),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.celebration_rounded,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    size: 28,
+                  ),
                 ),
-                child: Icon(
-                  Icons.celebration_rounded,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  size: 28,
-                ),
-              ),
               const SizedBox(width: Spacing.space_sm),
               Expanded(
                 child: Text(
@@ -404,43 +471,129 @@ class _BlockInfoCard extends StatelessWidget {
           ),
           const SizedBox(height: Spacing.space_md),
 
-          // Cover image — guard with isValidImageUrl() so backend placeholders
-          // (e.g. "img") don't crash CachedNetworkImageProvider.
-          if (isValidImageUrl(carnivalBlock.carnivalBlockImage)) ...[
-            ClipRRect(
-              borderRadius: Radii.radiusMd,
-              child: CachedNetworkImage(
-                imageUrl: carnivalBlock.carnivalBlockImage,
-                height: 160,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                cacheManager: CacheManager(
-                  Config(
-                    "appImageCache",
-                    stalePeriod: Duration(days: 7),
-                    maxNrOfCacheObjects: 200,
-                  ),
-                ),
-                placeholder: (context, url) => Container(
-                  height: 160,
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                  child: const Center(
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  height: 160,
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  child: Icon(
-                    Icons.celebration_rounded,
-                    size: 48,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+          // Invite code — managers/owner only
+          if (canManageMembers) ...[
+            _CodeCard(
+              title: "Código de convite",
+              code: carnivalBlock.inviteCode,
+              icon: Icons.vpn_key_rounded,
+              containerColor: Theme.of(context).colorScheme.secondaryContainer,
+              onContainerColor: Theme.of(
+                context,
+              ).colorScheme.onSecondaryContainer,
+              obscured: _obscureInviteCode,
+              onToggleObscure: () =>
+                  setState(() => _obscureInviteCode = !_obscureInviteCode),
+              onCopy: () {
+                Clipboard.setData(
+                  ClipboardData(text: carnivalBlock.inviteCode),
+                );
+                AppSnackbar.success(context, message: "Código copiado!");
+              },
+            ),
+            const SizedBox(height: Spacing.space_sm),
+            _CodeCard(
+              title: "Código de gestor",
+              code: carnivalBlock.managersInviteCode,
+              icon: Icons.admin_panel_settings_rounded,
+              containerColor: Theme.of(context).colorScheme.tertiaryContainer,
+              onContainerColor: Theme.of(
+                context,
+              ).colorScheme.onTertiaryContainer,
+              obscured: _obscureManagerCode,
+              onToggleObscure: () =>
+                  setState(() => _obscureManagerCode = !_obscureManagerCode),
+              onCopy: () {
+                Clipboard.setData(
+                  ClipboardData(text: carnivalBlock.managersInviteCode),
+                );
+                AppSnackbar.success(context, message: "Código copiado!");
+              },
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _CodeCard extends StatelessWidget {
+  const _CodeCard({
+    required this.title,
+    required this.code,
+    required this.icon,
+    required this.containerColor,
+    required this.onContainerColor,
+    required this.obscured,
+    required this.onToggleObscure,
+    required this.onCopy,
+  });
+
+  final String title;
+  final String code;
+  final IconData icon;
+  final Color containerColor;
+  final Color onContainerColor;
+  final bool obscured;
+  final VoidCallback onToggleObscure;
+  final VoidCallback onCopy;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Spacing.space_sm,
+      ),
+      decoration: BoxDecoration(
+        color: containerColor,
+        borderRadius: Radii.radiusSm,
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 18, color: onContainerColor),
+              const SizedBox(width: Spacing.space_2xs),
+              Expanded(
+                child: Text(
+                  title,
+                  style: AppTypography.titleMedium.copyWith(
+                    color: onContainerColor,
                   ),
                 ),
               ),
+              AppIconButton(
+                  icon: obscured
+                      ? Icons.visibility_off_rounded
+                      : Icons.visibility_rounded,
+                  size: AppIconButtonSizeMetrics.between,
+                  color: onContainerColor,
+                  onPressed: onToggleObscure,
+                ),
+            ],
+          ),
+          Transform.translate(
+            offset: const Offset(0, -5),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    obscured ? "••••••••••••" : code,
+                    style: AppTypography.titleLarge.copyWith(
+                      color: onContainerColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              AppIconButton(
+                icon: Icons.copy_rounded,
+                size: AppIconButtonSizeMetrics.between,
+                color: onContainerColor,
+                onPressed: onCopy,
+              ),
+              ],
             ),
-            const SizedBox(height: Spacing.space_md),
-          ],
+          ),
         ],
       ),
     );
@@ -496,7 +649,7 @@ class _MeetingsSection extends StatelessWidget {
                 Icon(
                   Icons.error_outline_rounded,
                   size: 32,
-                  color: AppColors.error,
+                  color: Theme.of(context).colorScheme.error,
                 ),
                 const SizedBox(height: Spacing.space_sm),
                 Text(
@@ -510,7 +663,7 @@ class _MeetingsSection extends StatelessWidget {
                 AppButton(
                   label: "Tentar novamente",
                   variant: AppButtonVariant.secondary,
-                  size: AppButtonSize.sm,
+                  size: AppButtonSizeMetrics.sm,
                   onPressed: onRetry,
                 ),
               ],
@@ -573,7 +726,7 @@ class _MeetingsSection extends StatelessWidget {
                 size: 20,
               ),
             ),
-            title: meeting.name ?? "Sem titulo",
+            title: meeting.name ?? "Sem título",
             subtitle: meetingDateTime != null
                 ? DateFormat(
                     "dd/MM/yyyy - HH:mm",
@@ -653,7 +806,7 @@ class _MembersSection extends StatelessWidget {
                 Icon(
                   Icons.error_outline_rounded,
                   size: 32,
-                  color: AppColors.error,
+                  color: Theme.of(context).colorScheme.error,
                 ),
                 const SizedBox(height: Spacing.space_sm),
                 Text(
@@ -667,7 +820,7 @@ class _MembersSection extends StatelessWidget {
                 AppButton(
                   label: "Tentar novamente",
                   variant: AppButtonVariant.secondary,
-                  size: AppButtonSize.sm,
+                  size: AppButtonSizeMetrics.sm,
                   onPressed: onRetry,
                 ),
               ],
@@ -885,7 +1038,7 @@ class _MemberRow extends StatelessWidget {
                   Text(
                     email,
                     style: AppTypography.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -903,8 +1056,8 @@ class _MemberRow extends StatelessWidget {
           ] else if (canManageMembers) ...[
             AppIconButton(
               icon: Icons.delete_rounded,
-              color: AppColors.error,
-              size: AppIconButtonSize.sm,
+              color: Theme.of(context).colorScheme.error,
+              size: AppIconButtonSizeMetrics.sm,
               onPressed: onDelete,
             ),
           ],

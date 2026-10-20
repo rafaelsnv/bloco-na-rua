@@ -12,6 +12,7 @@ abstract class IMembersApiClient {
   AsyncResult<List<CarnivalBlocksEntity>> getBlocksByMemberId(int memberId);
   AsyncResult<List<MeetingsEntity>> getMeetingsByMemberId(int memberId);
   AsyncResult<List<MembersEntity>> getAllAsync();
+  AsyncResult<List<MembersEntity>> getByIdsAsync(List<int> ids);
   AsyncResult<MembersEntity> getByIdAsync(int id);
   AsyncResult<MembersEntity> updateAsync(int id, Map<String, dynamic> data);
   AsyncResult deleteAsync(int id);

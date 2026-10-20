@@ -62,7 +62,7 @@ class AddMemberCubit extends Cubit<AddMemberState> {
     final result = await _carnivalBlockMembersRepository.createAsync(
       carnivalBlockId,
       memberId,
-      0,
+      null,
     );
 
     result.fold(

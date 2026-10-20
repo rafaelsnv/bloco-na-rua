@@ -1,3 +1,4 @@
+import 'package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart';
 import 'package:bloco_na_rua/data/services/api/carnivalBlockMembers/icarnival_block_members_api_client.dart';
 import 'package:bloco_na_rua/domain/entities/carnivalBlockMembers/carnival_block_members_entity.dart';
@@ -17,10 +18,17 @@ class CarnivalBlockMembersRepository
   }
 
   @override
+  AsyncResult<CarnivalBlockMemberJoinResponse> joinByInviteCodeAsync(
+    String inviteCode,
+  ) async {
+    return await carnivalBlockMembersApiClient.joinByInviteCodeAsync(inviteCode);
+  }
+
+  @override
   AsyncResult<CarnivalBlockMembersEntity> createAsync(
     int carnivalBlockId,
     int memberId,
-    int role,
+    int? role,
   ) async {
     return await carnivalBlockMembersApiClient.createAsync(
       carnivalBlockId,
@@ -34,7 +42,7 @@ class CarnivalBlockMembersRepository
     int id,
     int carnivalBlockId,
     int memberId,
-    int role,
+    int? role,
   ) async {
     return await carnivalBlockMembersApiClient.updateAsync(
       id,

@@ -26,6 +26,8 @@ class MemberCard extends StatelessWidget {
     this.roleColor,
     this.showEmail = true,
     this.isOnline = false,
+    this.trailing,
+    this.leading,
   });
 
   /// The member entity to display.
@@ -46,6 +48,14 @@ class MemberCard extends StatelessWidget {
   /// Whether to show a green online indicator dot on the avatar. Defaults to false.
   final bool isOnline;
 
+  /// Optional trailing widget (e.g. an action icon) shown at the end of the row.
+  final Widget? trailing;
+
+  /// Optional leading widget replacing the default [AppAvatar].
+  /// Used for action tiles like "Adicionar membro" rendered in the same shape
+  /// as a member row. Falls back to the avatar when null.
+  final Widget? leading;
+
   @override
   Widget build(BuildContext context) {
     final onlineDot = _OnlineDot();
@@ -57,16 +67,20 @@ class MemberCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Avatar with optional online indicator
+          // Avatar with optional online indicator, or custom leading widget.
           Stack(
             children: [
-              AppAvatar(
-                imageUrl: member.profileImage,
-                name: member.name,
-                size: AvatarSize.md,
-                imageCacheVersion: member.updatedAt,
-              ),
-              if (isOnline) Positioned(right: 0, bottom: 0, child: onlineDot),
+              if (leading != null)
+                leading!
+              else
+                AppAvatar(
+                  imageUrl: member.profileImage,
+                  name: member.name,
+                  size: AvatarSize.md,
+                  imageCacheVersion: member.updatedAt,
+                ),
+              if (isOnline && leading == null)
+                Positioned(right: 0, bottom: 0, child: onlineDot),
             ],
           ),
           SizedBox(width: Spacing.space_md),
@@ -87,7 +101,7 @@ class MemberCard extends StatelessWidget {
                   Text(
                     member.email!,
                     style: AppTypography.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -105,6 +119,11 @@ class MemberCard extends StatelessWidget {
               color: roleColor ?? AppColors.primary,
             ),
           ],
+          // Optional trailing widget (e.g. action icon)
+          if (trailing != null) ...[
+            SizedBox(width: Spacing.space_sm),
+            trailing!,
+          ],
         ],
       ),
     );
@@ -113,17 +132,22 @@ class MemberCard extends StatelessWidget {
 
 /// Green circle indicator representing online status.
 ///
-/// 12px diameter, [AppColors.success] fill, 2px white border.
+/// 12px diameter, [AppColors.success] fill, 2px border matching the card
+/// surface color per brightness.
 class _OnlineDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: 12,
       height: 12,
       decoration: BoxDecoration(
         color: AppColors.success,
         shape: BoxShape.circle,
-        border: Border.all(color: AppColors.textOnPrimary, width: 2),
+        border: Border.all(
+          color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+          width: 2,
+        ),
       ),
     );
   }

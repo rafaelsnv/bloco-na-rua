@@ -2,8 +2,6 @@ import "package:flutter/material.dart";
 
 import "../../tokens/app_duration.dart";
 
-import "../../tokens/app_colors.dart";
-
 /// Defines the visual style of the loading indicator.
 enum AppLoadingIndicatorVariant {
   /// Circular spinner style using [CircularProgressIndicator].
@@ -17,14 +15,13 @@ enum AppLoadingIndicatorVariant {
 /// spinner or a pulsing dot based on the [variant] parameter.
 ///
 /// [size] controls the dimensions of the indicator.
-/// [color] sets the indicator color (defaults to [AppColors.primary]).
+/// [color] sets the indicator color (defaults to the theme primary color).
 /// [strokeWidth] is used for the circular variant (defaults to 3).
 ///
 /// Example:
 /// ```dart
 /// AppLoadingIndicator(
 ///   size: 32,
-///   color: AppColors.accent,
 ///   variant: AppLoadingIndicatorVariant.pulse,
 /// )
 /// ```
@@ -33,7 +30,7 @@ class AppLoadingIndicator extends StatelessWidget {
   final double size;
 
   /// The color of the indicator.
-  /// Defaults to [AppColors.primary].
+  /// Defaults to the theme primary color.
   final Color? color;
 
   /// The visual variant of the indicator.
@@ -74,11 +71,14 @@ class AppLoadingIndicator extends StatelessWidget {
     switch (variant) {
       case AppLoadingIndicatorVariant.circular:
         return CircularProgressIndicator(
-          color: color ?? AppColors.primary,
+          color: color ?? Theme.of(context).colorScheme.primary,
           strokeWidth: strokeWidth,
         );
       case AppLoadingIndicatorVariant.pulse:
-        return _PulseIndicator(size: size, color: color ?? AppColors.primary);
+        return _PulseIndicator(
+          size: size,
+          color: color ?? Theme.of(context).colorScheme.primary,
+        );
     }
   }
 }

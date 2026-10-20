@@ -45,9 +45,16 @@ class MeetingsApiClient implements IMeetingsApiClient {
       final List<MeetingsEntity> result = [];
       switch (response.statusCode) {
         case 200:
-          result.addAll(
-            (response.data as List).map((e) => MeetingsEntity.fromJson(e)),
-          );
+        case 204:
+          // Empty-but-valid responses may arrive as null or a non-list body
+          // (e.g. ASP.NET returning null for "no meetings") — treat as empty
+          // instead of letting the cast throw into a generic Failure.
+          // ponytail: non-list 200 payload treated as "no meetings";
+          // parse an envelope here if the backend ever returns one.
+          final data = response.data;
+          if (data is List) {
+            result.addAll(data.map((e) => MeetingsEntity.fromJson(e)));
+          }
         case 404:
           return Success(result);
         default:

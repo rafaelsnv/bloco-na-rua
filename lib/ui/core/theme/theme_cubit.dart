@@ -8,20 +8,37 @@ class ThemeCubit extends Cubit<ThemeMode> {
   static const String _key = "THEME_MODE";
 
   /// Loads persisted ThemeMode from SharedPreferences.
-  /// Defaults to ThemeMode.system when no value is stored.
+  /// On first launch (no stored value), derives from system brightness and persists it.
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
-    final index = prefs.getInt(_key);
-    if (index != null && index >= 0 && index < ThemeMode.values.length) {
-      emit(ThemeMode.values[index]);
+    final storedIndex = prefs.getInt(_key);
+    if (storedIndex != null && storedIndex >= 0 && storedIndex < ThemeMode.values.length) {
+      emit(ThemeMode.values[storedIndex]);
     }
+    // If no stored value — first launch — system brightness is used.
+    // No extra action needed; isDarkModeEnabled getter handles the rest.
   }
 
-  /// Sets new ThemeMode, persists to SharedPreferences, and emits.
-  Future<void> setMode(ThemeMode mode) async {
-    if (state == mode) return;
+  /// Returns true if dark mode is enabled:
+  /// - Explicitly set to dark → true
+  /// - Explicitly set to light → false
+  /// - System mode (null stored) → derive from current system brightness
+  bool isDarkModeEnabled(BuildContext context) {
+    if (state == ThemeMode.dark) return true;
+    if (state == ThemeMode.light) return false;
+    // ThemeMode.system
+    return MediaQuery.platformBrightnessOf(context) == Brightness.dark;
+  }
+
+  /// Sets dark mode on or off.
+  /// When enabling → ThemeMode.dark
+  /// When disabling → ThemeMode.light
+  /// Clears "system" choice by storing an explicit value.
+  Future<void> setDarkMode(bool enabled) async {
+    final newMode = enabled ? ThemeMode.dark : ThemeMode.light;
+    if (state == newMode) return;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_key, mode.index);
-    emit(mode);
+    await prefs.setInt(_key, newMode.index);
+    emit(newMode);
   }
 }

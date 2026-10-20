@@ -4,7 +4,8 @@ import 'package:bloco_na_rua/l10n/app_localizations.dart';
 import 'package:flutter/widgets.dart';
 
 /// Generic fallback message used when no [BuildContext] is available.
-/// ponytail: non-localized, single string — add context param to localize.
+/// Last-resort path: only fires when both `error == null` and no l10n
+/// context. Real call sites should pass `context` to localize.
 const _genericErrorMessage = 'Erro desconhecido';
 
 /// Extracts a user-friendly message from the given error.

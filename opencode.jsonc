@@ -9,7 +9,7 @@
     },
     "dart": {
       "type": "local",
-      "command": ["dart", "mcp-server", "--log-file=.logs/dart_mcp.log"],
+      "command": ["dart", "mcp-server", "--log-file=.logs/dart_mcp.log", "--enable", "flutter_app_lifecycle", "--enable", "cli"],
       "enabled": true,
       "environment": {}
     },

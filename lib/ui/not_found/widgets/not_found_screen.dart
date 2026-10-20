@@ -27,7 +27,7 @@ class NotFoundScreen extends StatelessWidget {
                 Text("404", style: Theme.of(context).textTheme.headlineLarge),
                 const SizedBox(height: Spacing.space_sm),
                 Text(
-                  "A pagina que voce procura nao existe.",
+                  "A página que você procura não existe.",
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),

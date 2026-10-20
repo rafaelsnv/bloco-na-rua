@@ -1,7 +1,6 @@
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/core/cubit/fab_state.dart";
 import "package:bloco_na_rua/ui/core/cubit/fab_state_cubit.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/add_block_fab.dart";
@@ -27,6 +26,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _fabKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<HomeCubit>().loadHomeData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +63,10 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: Stack(
             children: [
+              if (fabState.expanded)
+                ModalBarrier(
+                  onDismiss: () => context.read<FabStateCubit>().dismiss(),
+                ),
               Scaffold(
                 appBar: AppAppBar(
                   title: "Bloco na Rua",
@@ -65,6 +74,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   showBackButton: false,
                 ),
                 body: SafeArea(
+                  // Material RefreshIndicator + AlwaysScrollableScrollPhysics:
+                  // pull-to-refresh works even when content is shorter than
+                  // the viewport (empty/error states stay refreshable).
                   child: RefreshIndicator(
                     onRefresh: () => context.read<HomeCubit>().loadHomeData(),
                     child: BlocBuilder<HomeCubit, HomeState>(
@@ -102,10 +114,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 floatingActionButtonLocation:
                     FloatingActionButtonLocation.endFloat,
               ),
-              if (fabState.expanded)
-                ModalBarrier(
-                  onDismiss: () => context.read<FabStateCubit>().dismiss(),
-                ),
             ],
           ),
         );
@@ -130,16 +138,16 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Ola!",
+                  "Olá!",
                   style: AppTypography.headlineMedium.copyWith(
-                    color: AppColors.primary,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 const SizedBox(height: Spacing.space_4xs),
                 Text(
-                  "Veja seus blocos e reuniões",
+                  "Veja seus blocos e encontros",
                   style: AppTypography.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],
@@ -157,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text(
                 "Ver todos",
                 style: AppTypography.labelLarge.copyWith(
-                  color: AppColors.primary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ),
@@ -170,15 +178,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 horizontal: Spacing.pagePaddingMobile,
               ),
               child: AppEmpty(
-                icon: Icons.celebration,
                 message: "Nenhum bloco ainda",
                 actionLabel: "Criar bloco",
                 onAction: () => context.push(Routes.createBlock),
+                secondaryActionLabel: "Entrar em bloco",
+                onSecondaryAction: () => context.push(Routes.joinBlock),
               ),
             )
           else
             SizedBox(
-              height: 70,
+              height: 90,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(
@@ -201,11 +210,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-          const SizedBox(height: Spacing.space_md),
+          const SizedBox(height: Spacing.sectionGap),
 
-          // Próximas reuniões section
+          // Próximos encontros section
           AppSectionHeader(
-            title: "Próximas reuniões",
+            title: "Próximos encontros",
             action: TextButton(
               onPressed: () {
                 final shell = StatefulNavigationShell.of(context);
@@ -214,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text(
                 "Ver todos",
                 style: AppTypography.labelLarge.copyWith(
-                  color: AppColors.primary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ),
@@ -226,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.symmetric(
                 horizontal: Spacing.pagePaddingMobile,
               ),
-              child: AppEmpty(message: "Nenhuma reuniao esta semana"),
+              child: AppEmpty(message: "Nenhum encontro esta semana"),
             )
           else
             Padding(

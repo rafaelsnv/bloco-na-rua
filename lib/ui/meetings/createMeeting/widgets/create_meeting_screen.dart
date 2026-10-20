@@ -1,6 +1,8 @@
 import "package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart";
+import "package:bloco_na_rua/ui/home/cubit/home_cubit.dart";
 import "package:bloco_na_rua/ui/meetings/createMeeting/cubit/create_meeting_cubit.dart";
 import "package:bloco_na_rua/ui/meetings/createMeeting/cubit/create_meeting_state.dart";
+import "package:bloco_na_rua/ui/meetings/userMeetings/cubit/user_meetings_cubit.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
@@ -108,7 +110,7 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
     if (title.isEmpty) {
       AppSnackbar.warning(
         context,
-        message: "Por favor, insira um nome para a reunião",
+        message: "Por favor, insira um nome para o encontro",
       );
       return;
     }
@@ -117,7 +119,7 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
     if (description.isEmpty) {
       AppSnackbar.warning(
         context,
-        message: "Por favor, insira uma descrição para a reunião",
+        message: "Por favor, insira uma descrição para o encontro",
       );
       return;
     }
@@ -126,13 +128,19 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
     if (location.isEmpty) {
       AppSnackbar.warning(
         context,
-        message: "Por favor, insira um local para a reunião",
+        message: "Por favor, insira um local para o encontro",
       );
       return;
     }
 
     if (_selectedDate == null || _selectedTime == null) {
       AppSnackbar.warning(context, message: "Por favor, selecione data e hora");
+      return;
+    }
+
+    final carnivalBlockId = int.tryParse(widget.carnivalBlockId);
+    if (carnivalBlockId == null || carnivalBlockId <= 0) {
+      AppSnackbar.error(context, message: "ID do bloco inválido");
       return;
     }
 
@@ -148,8 +156,11 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
       "name": title,
       "description": description,
       "location": location,
-      "dateTime": dateTime.toIso8601String(),
-      "carnivalBlockId": int.tryParse(widget.carnivalBlockId) ?? 0,
+      // API field is `meetingDateTime` (see MeetingCreate in swagger) — the
+      // old `dateTime` key was silently dropped server-side, storing the
+      // .NET default (1900-01-01 00:00).
+      "meetingDateTime": dateTime.toIso8601String(),
+      "carnivalBlockId": carnivalBlockId,
     };
 
     context.read<CreateMeetingCubit>().createMeeting(data);
@@ -164,18 +175,20 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
       child: BlocConsumer<CreateMeetingCubit, CreateMeetingState>(
         listener: (context, state) {
           if (state.status == CreateMeetingStatus.success) {
-            AppSnackbar.success(context, message: "Reunião criada com sucesso");
+            context.read<UserMeetingsCubit>().loadMeetings();
+            context.read<HomeCubit>().loadHomeData();
+            AppSnackbar.success(context, message: "Encontro criado com sucesso");
             context.pop();
           } else if (state.status == CreateMeetingStatus.failure) {
             final message =
-                state.errorMessage ?? "Erro ao criar reunião. Tente novamente.";
+                state.errorMessage ?? "Erro ao criar encontro. Tente novamente.";
             AppSnackbar.error(context, message: message);
           }
         },
         builder: (context, state) {
           return Scaffold(
             appBar: const AppAppBar(
-              title: "Nova reunião",
+              title: "Novo encontro",
               showBackButton: true,
             ),
             body: SafeArea(
@@ -188,7 +201,7 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                       children: [
                         AppTextField(
                           controller: _titleController,
-                          label: "Título da reunião",
+                          label: "Título do encontro",
                           hint: "Ex.: Ensaio geral",
                           textInputAction: TextInputAction.next,
                           onChanged: (_) => setState(() {}),
@@ -197,7 +210,7 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                         AppTextField(
                           controller: _descriptionController,
                           label: "Descrição",
-                          hint: "Detalhes sobre a reunião (opcional)",
+                          hint: "Detalhes sobre o encontro (opcional)",
                           isMultiline: true,
                           textInputAction: TextInputAction.next,
                         ),
@@ -262,7 +275,7 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                         ),
                         const SizedBox(height: Spacing.space_lg),
                         AppButton(
-                          label: "Criar reunião",
+                          label: "Criar encontro",
                           variant: AppButtonVariant.primary,
                           isFullWidth: true,
                           isLoading:

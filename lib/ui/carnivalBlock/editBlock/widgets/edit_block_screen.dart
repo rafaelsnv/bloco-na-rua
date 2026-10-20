@@ -1,3 +1,4 @@
+import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/editBlock/cubit/edit_block_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/editBlock/cubit/edit_block_state.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
@@ -8,6 +9,7 @@ import "package:bloco_na_rua/ui/core/widgets/inputs/app_text_field.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_loading.dart";
+import "package:bloco_na_rua/ui/home/cubit/home_cubit.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:flutter/material.dart";
@@ -49,11 +51,15 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
       child: BlocConsumer<EditBlockCubit, EditBlockState>(
         listener: (context, state) {
           if (state is EditBlockSuccess) {
+            context.read<BlockListCubit>().loadBlocks();
+            context.read<HomeCubit>().loadHomeData();
             AppSnackbar.success(context, message: "Bloco atualizado com sucesso");
             context.pop();
           } else if (state is EditBlockError) {
             AppSnackbar.error(context, message: state.message);
           } else if (state is EditBlockDeleted) {
+            context.read<BlockListCubit>().loadBlocks();
+            context.read<HomeCubit>().loadHomeData();
             AppSnackbar.success(context, message: "Bloco excluído com sucesso");
             context.pop();
           }

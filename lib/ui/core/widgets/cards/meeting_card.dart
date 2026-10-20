@@ -17,6 +17,7 @@ class MeetingCard extends StatelessWidget {
     this.totalPresences,
     this.confirmedPresences,
     this.showDescription = false,
+    this.showMeetingCode = false,
   });
 
   /// The meeting data to display.
@@ -37,18 +38,25 @@ class MeetingCard extends StatelessWidget {
   /// description as a second line below the location row.
   final bool showDescription;
 
+  /// When true, renders the meeting code badge.
+  final bool showMeetingCode;
+
   /// Formats a DateTime to "dd MMM yyyy • HH:mm" in pt-BR.
-  /// Returns "Data nao definida" when [dateTime] is null.
+  /// Returns "Data não definida" when [dateTime] is null.
   String _formatDateTime(DateTime? dateTime) {
     if (dateTime == null) {
-      return "Data nao definida";
+      return "Data não definida";
     }
     return DateFormat("dd MMM yyyy • HH:mm", "pt_BR").format(dateTime);
   }
 
   /// Returns a small 14px icon with the onSurfaceVariant colour.
-  Widget _icon(IconData icon) {
-    return Icon(icon, size: 14, color: AppColors.textSecondary);
+  Widget _icon(BuildContext context, IconData icon) {
+    return Icon(
+      icon,
+      size: 14,
+      color: Theme.of(context).colorScheme.onSurfaceVariant,
+    );
   }
 
   /// A compact vertical gap using Spacing.space_4xs.
@@ -69,13 +77,13 @@ class MeetingCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  meeting.name ?? "Reunião",
+                  meeting.name ?? "Encontro",
                   style: AppTypography.titleMedium,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              if (meeting.meetingCode != null)
+              if (showMeetingCode && meeting.meetingCode != null)
                 AppBadge(label: meeting.meetingCode!, size: BadgeSize.sm),
             ],
           ),
@@ -85,12 +93,12 @@ class MeetingCard extends StatelessWidget {
           // Row 2: datetime
           Row(
             children: [
-              _icon(Icons.event_rounded),
+                _icon(context, Icons.event_rounded),
               SizedBox(width: Spacing.space_xs),
               Text(
                 _formatDateTime(meeting.meetingDateTime),
                 style: AppTypography.bodySmall.copyWith(
-                  color: AppColors.textSecondary,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
@@ -101,13 +109,13 @@ class MeetingCard extends StatelessWidget {
             _gap,
             Row(
               children: [
-                _icon(Icons.location_on_rounded),
+                _icon(context, Icons.location_on_rounded),
                 SizedBox(width: Spacing.space_xs),
                 Expanded(
                   child: Text(
                     meeting.location!,
                     style: AppTypography.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -134,7 +142,7 @@ class MeetingCard extends StatelessWidget {
             Row(
               children: [
                 AppChip(
-                  label: "$confirmedPresences/$totalPresences presencas",
+                  label: "$confirmedPresences/$totalPresences presenças",
                   variant: ChipVariant.soft,
                   color: AppColors.primary,
                 ),

@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 
-import "../../tokens/app_colors.dart";
 import "../../tokens/app_spacing.dart";
 import "../../tokens/app_typography.dart";
 import "../buttons/app_button.dart";
@@ -66,7 +65,7 @@ class AppError extends StatelessWidget {
             Icon(
               icon ?? Icons.error_outline_rounded,
               size: 64,
-              color: AppColors.error,
+              color: Theme.of(context).colorScheme.error,
             ),
 
             // Gap: icon -> title

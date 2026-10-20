@@ -1,3 +1,4 @@
+import 'package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart';
 import 'package:bloco_na_rua/core/api_error.dart';
 import 'package:bloco_na_rua/core/error_types.dart';
 import 'package:bloco_na_rua/data/services/api/base/ibase_api_client.dart';
@@ -50,16 +51,70 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
   }
 
   @override
+  AsyncResult<CarnivalBlockMemberJoinResponse> joinByInviteCodeAsync(
+    String inviteCode,
+  ) async {
+    try {
+      final response = await baseApiClient.client.post(
+        '$_basePath/join/$inviteCode',
+      );
+      switch (response.statusCode) {
+        case 200:
+        case 201:
+          // 200 returns array of CarnivalBlockMemberResponse per swagger,
+          // 201 returns single CarnivalBlockMemberJoinResponse.
+          // Handle both cases gracefully by checking response data type.
+          if (response.data is List) {
+            // 200 case: take first item if available
+            final list = response.data as List;
+            if (list.isNotEmpty) {
+              return Success(
+                CarnivalBlockMemberJoinResponse.fromJson(
+                    list.first as Map<String, dynamic>),
+              );
+            }
+            return Failure(baseApiClient.formatError(response));
+          }
+          return Success(
+            CarnivalBlockMemberJoinResponse.fromJson(response.data),
+          );
+        case 404:
+          return Failure(baseApiClient.formatError(response));
+        case 409:
+          return Failure(
+            ApiError(
+              type: ApiErrorType.unknown,
+              userMessage: 'Você já é membro deste bloco.',
+              technicalMessage: 'Already a member',
+            ),
+          );
+        default:
+          return Failure(baseApiClient.formatError(response));
+      }
+    } on DioException catch (e) {
+      return Failure(ApiError.fromDioException(e));
+    } catch (e) {
+      return Failure(ApiError(
+        type: ApiErrorType.unknown,
+        userMessage: 'Something unexpected happened. Try again.',
+        technicalMessage: e.toString(),
+      ));
+    }
+  }
+
+  @override
   AsyncResult<CarnivalBlockMembersEntity> createAsync(
     int carnivalBlockId,
     int memberId,
-    int role,
+    int? role,
   ) async {
     try {
       final data = {
         'carnivalBlockId': carnivalBlockId,
         'memberId': memberId,
-        'role': role,
+        // Backend rejects role 0 ("Invalid data"); omit role so it defaults
+        // to a regular member.
+        'role': ?role,
       };
       final response = await baseApiClient.client.post(
         _basePath,
@@ -85,13 +140,13 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
     int id,
     int carnivalBlockId,
     int memberId,
-    int role,
+    int? role,
   ) async {
     try {
       final data = {
         'carnivalBlockId': carnivalBlockId,
         'memberId': memberId,
-        'role': role,
+        'role': ?role,
       };
       final response = await baseApiClient.client.put(
         '$_basePath/$id',

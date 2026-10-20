@@ -1,18 +1,7 @@
+import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:flutter/material.dart";
-
-/// Size variants for [AppFAB].
-enum AppFabSize {
-  /// Small: 40px diameter.
-  sm,
-
-  /// Medium: 56px diameter.
-  md,
-
-  /// Large: 72px diameter.
-  lg,
-}
 
 /// Color variants for [AppFAB].
 enum AppFabColor {
@@ -38,57 +27,57 @@ class AppFAB extends StatelessWidget {
   /// [label] optionally provides a label text. When non-null the FAB renders
   /// as an ExtendedFloatingActionButton; when null it renders as a basic FAB.
   ///
-  /// [size] defaults to [AppFabSize.md] (56px).
+  /// [size] defaults to [AppFabSizeMetrics.md] (48px diameter).
   ///
   /// [fabColor] defaults to [AppFabColor.accent] (orange).
+  ///
+  /// [child] overrides [icon] when non-null — useful for inline loading
+  /// indicators. Pair with `onPressed: null` to disable interaction.
   const AppFAB({
     required this.icon,
     required this.onPressed,
     this.label,
-    this.size = AppFabSize.md,
+    this.child,
+    this.size = AppFabSizeMetrics.md,
     this.fabColor = AppFabColor.accent,
     super.key,
   });
 
-  /// The icon to display on the FAB.
+  /// The icon to display on the FAB. Ignored if [child] is provided.
   final IconData icon;
 
-  /// Callback when the FAB is tapped.
-  final VoidCallback onPressed;
+  /// Callback when the FAB is tapped. Null disables interaction (e.g. loading).
+  final VoidCallback? onPressed;
 
   /// Optional label text. When non-null the FAB is rendered as
   /// ExtendedFloatingActionButton; when null it is a basic FAB.
   final String? label;
 
-  /// Size preset controlling the FAB diameter.
-  final AppFabSize size;
+  /// Size preset pulling all metrics from [AppFabSizeMetrics].
+  final AppFabSizeMetrics size;
 
   /// Color variant controlling the FAB background color.
   final AppFabColor fabColor;
 
-  static const Map<AppFabSize, double> _sizeTokens = {
-    AppFabSize.sm: 40.0,
-    AppFabSize.md: 56.0,
-    AppFabSize.lg: 72.0,
-  };
-
-  static const Map<AppFabSize, double> _iconSizeTokens = {
-    AppFabSize.sm: 20.0,
-    AppFabSize.md: 24.0,
-    AppFabSize.lg: 28.0,
-  };
+  /// Optional override for the FAB's child widget (e.g. a spinner).
+  final Widget? child;
 
   // Standard FAB elevation.
   static const double _elevationDefault = 6.0;
 
-  double get _diameter => _sizeTokens[size]!;
-  double get _iconSize => _iconSizeTokens[size]!;
+  // ponytail: FAB primary uses light variant in dark mode for better contrast on dark surface
+  Color _backgroundColor(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return switch (fabColor) {
+      AppFabColor.primary => colorScheme.primary,
+      AppFabColor.accent => AppColors.accent,
+      AppFabColor.tertiary => colorScheme.tertiary,
+    };
+  }
 
-  Color get _backgroundColor => switch (fabColor) {
-    AppFabColor.primary => AppColors.primary,
-    AppFabColor.accent => AppColors.accent,
-    AppFabColor.tertiary => AppColors.tertiary,
-  };
+  Color _foregroundColor(BuildContext context) {
+    return Theme.of(context).colorScheme.onPrimary;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,17 +89,18 @@ class AppFAB extends StatelessWidget {
 
   Widget _buildBasicFab(BuildContext context, Key effectiveKey) {
     return SizedBox(
-      width: _diameter,
-      height: _diameter,
+      width: size.diameter,
+      height: size.diameter,
       child: FloatingActionButton(
         key: effectiveKey,
         onPressed: onPressed,
-        backgroundColor: _backgroundColor,
-        foregroundColor: AppColors.textOnPrimary,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        backgroundColor: _backgroundColor(context),
+        foregroundColor: _foregroundColor(context),
         elevation: _elevationDefault,
         shape: RoundedRectangleBorder(borderRadius: Radii.fab),
         heroTag: null,
-        child: Icon(icon, size: _iconSize),
+        child: child ?? Icon(icon, size: size.iconSize),
       ),
     );
   }
@@ -119,12 +109,12 @@ class AppFAB extends StatelessWidget {
     return FloatingActionButton.extended(
       key: effectiveKey,
       onPressed: onPressed,
-      backgroundColor: _backgroundColor,
-      foregroundColor: AppColors.textOnPrimary,
+      backgroundColor: _backgroundColor(context),
+      foregroundColor: _foregroundColor(context),
       elevation: _elevationDefault,
       shape: RoundedRectangleBorder(borderRadius: Radii.fab),
       heroTag: null,
-      icon: Icon(icon, size: _iconSize),
+      icon: Icon(icon, size: size.iconSize),
       label: Text(label!),
     );
   }

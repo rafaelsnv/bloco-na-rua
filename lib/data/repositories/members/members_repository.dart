@@ -38,6 +38,11 @@ class MembersRepository implements IMembersRepository {
   }
 
   @override
+  AsyncResult<List<MembersEntity>> getByIdsAsync(List<int> ids) async {
+    return await _membersApiClient.getByIdsAsync(ids);
+  }
+
+  @override
   AsyncResult<MembersEntity> getByIdAsync(int id) async {
     return await _membersApiClient.getByIdAsync(id);
   }

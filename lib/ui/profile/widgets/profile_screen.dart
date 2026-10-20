@@ -3,7 +3,6 @@ import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_cubit.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_state.dart";
 import "package:bloco_na_rua/ui/core/theme/theme_cubit.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
@@ -33,15 +32,7 @@ class ProfileScreen extends StatelessWidget {
         }
       },
       child: Scaffold(
-        appBar: AppAppBar(
-          title: "Perfil",
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.settings_rounded),
-              onPressed: () => context.push(Routes.settings),
-            ),
-          ],
-        ),
+        appBar: AppAppBar(title: "Perfil"),
         body: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
             return state.when(
@@ -169,72 +160,13 @@ class ProfileScreen extends StatelessWidget {
   Widget _buildThemeDropdown(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeMode>(
       builder: (context, themeMode) {
-        final themeLabel = switch (themeMode) {
-          ThemeMode.light => "Claro",
-          ThemeMode.dark => "Escuro",
-          ThemeMode.system => "Sistema",
-        };
-
         return AppCard(
           padding: EdgeInsets.zero,
-          child: AppListTile(
-            leading: const Icon(Icons.brightness_6_rounded),
-            title: "Tema",
-            onTap: () {}, // Required for ListTile to be enabled
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  themeLabel,
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(width: Spacing.space_2xs),
-                PopupMenuButton<ThemeMode>(
-                  initialValue: themeMode,
-                  onSelected: (mode) {
-                    context.read<ThemeCubit>().setMode(mode);
-                  },
-                  itemBuilder: (_) => [
-                    const PopupMenuItem(
-                      value: ThemeMode.system,
-                      child: Row(
-                        children: [
-                          Icon(Icons.brightness_auto_rounded, size: 20),
-                          SizedBox(width: Spacing.space_xs),
-                          Text("Sistema"),
-                        ],
-                      ),
-                    ),
-                    const PopupMenuItem(
-                      value: ThemeMode.light,
-                      child: Row(
-                        children: [
-                          Icon(Icons.light_mode_rounded, size: 20),
-                          SizedBox(width: Spacing.space_xs),
-                          Text("Claro"),
-                        ],
-                      ),
-                    ),
-                    const PopupMenuItem(
-                      value: ThemeMode.dark,
-                      child: Row(
-                        children: [
-                          Icon(Icons.dark_mode_rounded, size: 20),
-                          SizedBox(width: Spacing.space_xs),
-                          Text("Escuro"),
-                        ],
-                      ),
-                    ),
-                  ],
-                  child: Icon(
-                    Icons.arrow_drop_down_rounded,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-              ],
-            ),
+          child: SwitchListTile(
+            secondary: const Icon(Icons.dark_mode_rounded),
+            title: const Text("Modo escuro"),
+            value: context.watch<ThemeCubit>().isDarkModeEnabled(context),
+            onChanged: (v) => context.read<ThemeCubit>().setDarkMode(v),
           ),
         );
       },
@@ -257,7 +189,12 @@ class ProfileScreen extends StatelessWidget {
               Navigator.pop(dialogContext);
               context.read<AuthCubit>().logout();
             },
-            child: const Text("Sair", style: TextStyle(color: AppColors.error)),
+            child: Text(
+              "Sair",
+              style: TextStyle(
+                color: Theme.of(dialogContext).colorScheme.error,
+              ),
+            ),
           ),
         ],
       ),
