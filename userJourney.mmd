@@ -1,134 +1,111 @@
-flowchart LR
+flowchart TB
     %% ============================================
-    %% USER JOURNEY v3 - Bloco na Rua
-    %% Based on actual running app exploration
+    %% USER JOURNEY v6 - Bloco na Rua
+    %% Source: live exploration of the running app on Android emulator
+    %% (Marionette session). [seen] = captured on device.
+    %% [route] = route exists in lib/routing/routes.dart, not visited.
     %% ============================================
 
-    %% Entry Points
     n0@{ shape: "circle", label: "Start" }
-    nDeepLink["DeepLink<br>(push/QR)"]
-
-    %% Auth Flow (assumed from v2, not fully explored)
-    n0 --> n1["LoginScreen<br>/login"]
-    nDeepLink --> n1
-    nDeepLink --> n12["BlockDetails<br>/carnival-block/:id"]
-    nDeepLink --> n16["MeetingDetails<br>/meeting/:id"]
-
-    n1 --> n2["SignUpScreen<br>/register"]
-    n1 --> nForgot["ForgotPassword<br>/forgot-password"]
-    n2 -. back .-> n1
-    nForgot -. reset .-> n1
-
-    %% ============================================
-    %% Main App Shell
-    %% 4 bottom tabs (Settings is separate page)
-    %% ============================================
-    n4["MainPage<br>/home<br>(Início)"]
     style n0 color:#000000,fill:#C1FF72,stroke:#00BF63
 
-    %% Bottom Navigation (4 tabs)
-    n4 --> n5["Blocos<br>/carnival-blocks"]
-    n4 --> n6["Reuniões<br>/user-meetings"]
-    n4 --> n7["Membros<br>/members"]
-    n4 --> n8["Perfil<br>/profile"]
+    %% ============================================
+    %% AUTH
+    %% ============================================
+    n0 --> n1["LoginScreen /login<br>E-mail + Senha<br>app_text_field_E-mail | app_text_field_Senha<br>app_button_Entrar (disabled ate preencher)"]
+    n0 --> n2["SignUpScreen /register<br>Nome, E-mail, Senha, Telefone (mascara BR)<br>app_button_Cadastrar (disabled ate os 4 campos)"]
 
-    %% Início tab specific flows
-    n4 --> nHomeBlocks["Home: My Blocks<br>(horizontal scroll or list)"]
-    n4 --> nHomeMeetings["Home: Upcoming Meetings<br>empty state"]
+    n1 --> n1a["Forgot password DIALOG (nao e rota)<br>app_text_field_E-mail<br>app_button_Enviar | app_button_Cancelar"]
+    n1a -.-> n1
+    n1 --> n4
+
+    n2 --> n2a["Backend confirma o e-mail<br>sem etapa de verificacao (AuthAuthenticated)"]
+    n2a --> n4
+    n0 -.-> nVE["VerifyEmailScreen /verify-email?email=<br>[route] so quando o backend exige verificacao"]
 
     %% ============================================
-    %% Blocos Flow
+    %% SHELL - 4 abas: Inicio, Blocos, Encontros, Perfil
     %% ============================================
-    n5 --> n5b["Blocos List<br>block cards"]
-    n5b --> n10["Criar Bloco<br>/create-block"]
-    n5b --> n11["Entrar em Bloco<br>/join-block"]
-    n5b --> n12
-
-    n10 --> n12
-    n11 --> n12
-
-    n12["BlockDetails<br>/carnival-block/:id<br>🎭 bloco name"]
-    n12 --> n13["CreateMeeting<br>/create-meeting/:blockId"]
-    n12 --> n14["EditBlock<br>/edit-block/:id"]
-    n12 --> n15["AddMember<br>/add-member/:blockId"]
-    n12 --> nMeetings["Encontros<br>(meetings list)"]
-
-    nMeetings --> n16
+    n4["AppShell<br>Bottom nav: Inicio, Blocos, Encontros, Perfil"]
 
     %% ============================================
-    %% Reuniões Flow
+    %% INICIO
     %% ============================================
-    n6 --> n6b["Reuniões List<br>search + meeting cards"]
-    n6b --> n16
+    n4 --> nHome["HomeScreen /<br>Ola! / Veja seus blocos e encontros<br>Meus blocos (Ver todos) / Proximos encontros<br>app_button_Criar bloco | Entrar em bloco<br>empty: Nenhum bloco ainda / Nenhum encontro esta semana"]
 
-    n16["MeetingDetails<br>/meeting/:id"]
-    n16 --> n16b["Ver bloco<br>(link to BlockDetails)"]
-    n16b --> n12
+    %% ============================================
+    %% BLOCOS
+    %% ============================================
+    n4 --> n5["BlockListScreen /carnival-blocks<br>cards block_card_72<br>FAB app_fab_null -> speed-dial: Criar Bloco / Entrar em Bloco"]
+    n5 --> n10["CreateBlockScreen /create-block<br>app_text_field_Nome do bloco<br>app_button_Criar"]
+    n5 --> n11["JoinBlockModal /join-block<br>app_text_field_Codigo de convite<br>app_button_Entrar"]
+    n10 -. success .-> n12
+    n11 -. success .-> n12
 
-    n16 --> n17["EditMeeting<br>/edit-meeting/:id"]
-    n16 -. back .-> n6b
+    %% ============================================
+    %% DETALHES DO BLOCO
+    %% ============================================
+    n12["BlockDetailsScreen /carnival-block/:id<br>Codigo de convite + Codigo de gestor (copiar)<br>Encontros | Membros (Moderadores / Participantes)<br>app bar: Criar Encontro | Editar Bloco"]
+    n12 --> n13["CreateMeetingScreen /create-meeting/:blockId<br>app_text_field_Titulo do encontro | Descricao | Local<br>pickers de data e hora (dialogos)<br>app_button_Criar encontro (exige data+hora)"]
+    n12 --> n14["EditBlockScreen /edit-block/:id<br>app_text_field_Nome do bloco + imagem (Sem imagem)<br>app_button_Salvar alteracoes | Excluir bloco"]
+    n12 --> n15["AddMemberScreen /add-member/:blockId<br>app_search_field_Buscar por nome ou email<br>cards member_card_4 + app_icon_button_Adicionar membro"]
+    n13 -. success .-> n12
 
-    %% RSVP - 2 FABs (present/absent)
-    n16 --> nRSVP@{ shape: "diam", label: "Confirmar<br>Presença?" }
+    %% ============================================
+    %% ENCONTROS
+    %% ============================================
+    n4 --> n6["UserMeetingsScreen /user-meetings<br>app_search_field_Buscar encontros...<br>filtros: Todos, Hoje, Esta semana, Este mes<br>cards meeting_card_16"]
+    n6 --> n16["MeetingDetailsScreen /meeting/:id<br>Lista de Presenca + contador (0/1 -> 1/1)<br>button_confirm_presence<br>app_search_field_Buscar membro... + Ordenar e filtrar<br>cards member_card_23"]
+    n16 -.-> n17["EditMeeting /edit-meeting/:id<br>[route] nao visitada"]
+
+    n16 --> nRSVP@{ shape: "diam", label: "Confirmar<br>presenca?" }
     style nRSVP fill:,stroke:#FF914D
-    nRSVP --> n19["✓ Presença<br>Confirmada"]
-    nRSVP --> n20["✕ Ausente<br>Recusada"]
+    nRSVP --> n19["Presenca confirmada<br>snackbar: Presenca atualizada com sucesso!"]
 
     %% ============================================
-    %% Membros Flow (minimal exploration)
+    %% PERFIL
     %% ============================================
-    n7 --> n21["Membros List"]
+    n4 --> n8["ProfileScreen /profile<br>avatar + nome + e-mail<br>Aparencia (switch modo escuro)<br>Informacoes: app_list_tile_telefone | app_list_tile_membro-desde<br>Conta: app_button_Sair da conta"]
+    n8 --> n8a["EditProfile /edit-profile<br>Nome, E-mail (somente leitura), Telefone,<br>Nova senha, Confirmar nova senha<br>app_button_Salvar alteracoes"]
+    n8 --> nLogout["Dialogo de logout 'Sair'"]
+    nLogout --> n1
+    n4 -.-> nSet["Settings /settings<br>[route] nao visitada"]
 
     %% ============================================
-    %% Perfil + Settings (separate pages)
+    %% ESTADOS VAZIOS / ERROS
     %% ============================================
-    n8["Perfil<br>/profile"]
-    n8 --> nProfileEdit["EditProfile<br>/edit-profile"]
-    n8 --> n8s["Configurações<br>/settings"]
-    n8s --> nLogout["ConfirmLogout<br>(modal)"]
-    nLogout -. logout .-> n1
-
-    %% Profile shows: avatar, name, email, Tema (Sistema), Telefone, Membro desde
-
-    %% ============================================
-    %% FAB Actions (observed)
-    %% ============================================
-    n5b --> nFAB1["FAB: Create Block?"]
-    n6b --> nFAB2["FAB: Create Meeting?"]
-    n16 --> nFABPresent["FAB: Mark Present"]
-    n16 --> nFABAbsent["FAB: Mark Absent"]
-
-    %% ============================================
-    %% Error States
-    %% ============================================
+    n5 -. empty .-> nE1["Nenhum bloco ainda<br>Crie um bloco para comecar"]
+    n6 -. empty .-> nE2["Nenhum encontro esta semana"]
+    nHome -. empty .-> nE4["Nenhum bloco ainda / Nenhum encontro esta semana"]
     n1 -. error .-> n1
     n10 -. error .-> n10
     n11 -. error .-> n11
-    n19 -. error: rede .-> n19_err["Presença Confirmada<br>(retry)"]
-    n19_err -. retry .-> n19
+    n0 -.-> n404["Rotas de erro: /404 | /error"]
 
     %% ============================================
-    %% Success Feedback (dashed return)
+    %% WIDGET IDs CONFIRMADOS
     %% ============================================
-    n10 -. success .-> n12
-    n11 -. success .-> n12
-    n13 -. success .-> n12
-    n14 -. success .-> n12
-    n15 -. success .-> n12
-    n17 -. success .-> n16
-    n19 -. success .-> n16
-    n20 -. success .-> n16
-
-    %% ============================================
-    %% Empty States (observed)
-    %% ============================================
-    n5b -. empty .-> nE1["Empty: No blocks<br>+ Criar | + Entrar"]
-    n6b -. empty .-> nE2["Empty: No meetings<br>scheduled"]
-    n7 -. empty .-> nE3["Empty: No members<br>added"]
-    n4 -. empty .-> nE4["Empty: Bem-vindo!<br>Start by creating a block"]
-    n16 -. no RSVPs .-> nE5["Ninguém confirmou<br>presença ainda"]
-
-    %% ============================================
-    %% Meeting Card Info (observed)
-    %% Shows: title, code (68R3Z4), date, description
-    %% ============================================
+    subgraph "Widget IDs confirmados"
+    wid1["app_text_field_E-mail"]
+    wid2["app_text_field_Senha"]
+    wid3["app_button_Entrar"]
+    wid4["app_text_field_Nome"]
+    wid5["app_text_field_Telefone"]
+    wid6["app_button_Cadastrar"]
+    wid7["app_text_field_Nome do bloco"]
+    wid8["app_button_Criar"]
+    wid9["app_search_field_Buscar encontros..."]
+    wid10["app_button_Sair da conta"]
+    wid11["app_list_tile_telefone"]
+    wid12["app_list_tile_membro-desde"]
+    wid13["app_fab_null"]
+    wid14["app_search_field_Buscar membro..."]
+    wid15["button_confirm_presence"]
+    wid16["app_button_Criar encontro"]
+    wid17["app_button_Salvar alteracoes"]
+    wid18["app_button_Excluir bloco"]
+    wid19["app_icon_button_Adicionar membro"]
+    wid20["app_button_Entrar"]
+    wid21["app_button_Cancelar"]
+    wid22["app_button_Enviar"]
+    end
