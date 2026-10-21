@@ -10,6 +10,7 @@ import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
 import "package:bloco_na_rua/ui/core/widgets/inputs/app_text_field.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_logo.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
@@ -99,11 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Header section
-                  Icon(
-                    Icons.celebration_rounded,
-                    size: 80,
-                    color: colors.primary,
-                  ),
+                  const AppLogo(size: 80),
                   const SizedBox(height: Spacing.space_sm),
                   Text(
                     "Bem vindo",
@@ -113,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: Spacing.space_xs),
                   Text(
-                    "Entre para gerenciar seu bloco",
+                    "Entre para organizar seu bloco",
                     style: AppTypography.bodyLarge.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),

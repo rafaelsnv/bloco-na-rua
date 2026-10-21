@@ -1,5 +1,6 @@
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_logo.dart";
 import "package:flutter/material.dart";
 
 class Onboarding1Screen extends StatelessWidget {
@@ -14,7 +15,7 @@ class Onboarding1Screen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Spacer(),
-          Icon(Icons.celebration_rounded, size: 120, color: colors.primary),
+          const AppLogo(size: 120),
           const SizedBox(height: Spacing.space_xl),
           Text(
             "O que é um bloco?",
