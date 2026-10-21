@@ -49,10 +49,10 @@ const ColorScheme darkColorScheme = ColorScheme(
   onPrimaryContainer: AppColors.primaryLight,
   secondary: AppColors.secondaryLight,
   onSecondary: AppColors.secondaryDark,
-  secondaryContainer: AppColors.secondaryDark,
-  // ponytail: light pink on dark wine for WCAG AA contrast (~7:1) instead of
-  // bright magenta on dark wine (~3:1) the Material default would have.
-  onSecondaryContainer: Color(0xFFFBCFE8),
+  secondaryContainer: AppColors.secondaryContainerDark,
+  // ponytail: light pink on the muted maroon container for WCAG AA contrast
+  // (~9:1) instead of bright magenta on dark wine (~3:1).
+  onSecondaryContainer: AppColors.secondaryContainerInkDark,
   tertiary: AppColors.tertiary,
   onTertiary: AppColors.textOnPrimary,
   tertiaryContainer: AppColors.tertiaryContainerDark,

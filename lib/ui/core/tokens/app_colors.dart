@@ -19,7 +19,13 @@ class AppColors {
   // dark wine text on this hits WCAG AA (~8.9:1) instead of the saturated
   // secondaryLight (~2.9:1) the previous default would have.
   static const Color secondaryContainerLight = Color(0xFFFDF2F8);
-  static const Color secondaryContainerDark = Color(0xFF831843);
+  // ponytail: the dark container is a muted maroon (~15% of the hue over the
+  // dark surface), NOT the saturated secondaryDark — the saturated base made
+  // the invite-code card the loudest block on screen in dark mode.
+  static const Color secondaryContainerDark = Color(0xFF3B1220);
+
+  /// Ink (on-container) color for [secondaryContainerDark].
+  static const Color secondaryContainerInkDark = Color(0xFFFBCFE8);
 
   // Group 3 — Accent / CTA (Gold)
   static const Color accent = Color(0xFFD97706);
@@ -31,7 +37,9 @@ class AppColors {
   static const Color tertiaryLight = Color(0xFF6DDBC8);
   static const Color tertiaryDark = Color(0xFF164E63);
   static const Color tertiaryContainerLight = Color(0xFFCFFAFE);
-  static const Color tertiaryContainerDark = Color(0xFF164E63);
+
+  /// Muted teal container for dark mode — see [secondaryContainerDark].
+  static const Color tertiaryContainerDark = Color(0xFF0E3540);
 
   // Group 5 — Semantic
   static const Color success = Color(0xFF16A34A);
@@ -41,6 +49,14 @@ class AppColors {
   static const Color errorContainerLight = Color(0xFFFEE2E2);
   static const Color errorContainerDark = Color(0xFF991B1B);
   static const Color info = Color(0xFF0EA5E9);
+
+  /// Heading ink for the "info" role on light surfaces — a deeper cyan than
+  /// [info] so it passes AA against the near-white light background.
+  static const Color infoHeadingLight = Color(0xFF0369A1);
+
+  /// Heading ink for the "info" role on dark surfaces — a lighter cyan that
+  /// passes AA against the dark background.
+  static const Color infoHeadingDark = Color(0xFF38BDF8);
   static const Color warningContainerLight = Color(0xFF78350F);
   static const Color warningContainerDark = Color(0xFF451A03);
   static const Color infoContainerLight = Color(0xFF0C4A6E);
@@ -80,4 +96,20 @@ class AppColors {
   static const Color textTertiaryDark = Color(0xFF94A3B8);
   static const Color textDisabledDark = Color(0xFF64748B);
   static const Color textOnPrimaryDark = Color(0xFF2E1065);
+
+  /// Luminance above which a fill gets dark ink instead of light ink.
+  /// Single source of truth for the "readable foreground on a fill" rule.
+  static const double inkLuminanceThreshold = 0.4;
+
+  /// Readable foreground for [fill]: near-black on light fills, near-white on
+  /// dark fills. Brightness-independent on purpose — a light fill always wants
+  /// dark ink, even in dark mode.
+  static Color inkFor(Color fill) =>
+      fill.computeLuminance() > inkLuminanceThreshold
+      ? textPrimary
+      : textOnPrimary;
+
+  /// Low-alpha wash of [c], used for tinted/soft backgrounds.
+  static Color tint(Color c, [double alpha = 0.10]) =>
+      c.withValues(alpha: alpha);
 }

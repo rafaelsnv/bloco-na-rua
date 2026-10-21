@@ -1,7 +1,8 @@
 import "package:bloco_na_rua/routing/routes.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_fab.dart";
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
@@ -50,12 +51,14 @@ class _AddBlockFabState extends State<AddBlockFab>
   void initState() {
     super.initState();
     _rotationController = AnimationController(
-      duration: widget.shouldAnimate ? AppDurations.slower : AppDurations.instant,
+      duration: widget.shouldAnimate
+          ? AppDurations.slower
+          : AppDurations.instant,
       vsync: this,
       value: widget.isExpanded ? 1.0 : 0.0,
     );
     _rotation = Tween<double>(begin: 0, end: 0.125).animate(
-      CurvedAnimation(parent: _rotationController, curve: Curves.easeOutCubic),
+      CurvedAnimation(parent: _rotationController, curve: AppCurves.standard),
     );
   }
 
@@ -89,8 +92,9 @@ class _AddBlockFabState extends State<AddBlockFab>
 
   @override
   Widget build(BuildContext context) {
-    final duration =
-        widget.shouldAnimate ? AppDurations.slower : AppDurations.instant;
+    final duration = widget.shouldAnimate
+        ? AppDurations.slower
+        : AppDurations.instant;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -114,18 +118,15 @@ class _AddBlockFabState extends State<AddBlockFab>
           onTap: () => _navigate(Routes.createBlock),
         ),
         if (widget.isExpanded) SizedBox(height: Spacing.space_md),
-        // Main FAB — scale + rotation animation
-        AnimatedScale(
-          scale: widget.isExpanded ? 1.0 : 0.8,
-          duration: duration,
-          curve: Curves.easeOutBack,
+        // Main FAB — only the ICON rotates. Rotating the whole widget turned
+        // the 16px-radius FAB into a visible diamond.
+        AppFAB(
+          icon: Icons.add_rounded,
+          onPressed: widget.onFabPressed,
+          fabColor: AppFabColor.primary,
           child: RotationTransition(
             turns: _rotation,
-            child: AppFAB(
-              icon: Icons.add_rounded,
-              onPressed: widget.onFabPressed,
-              fabColor: AppFabColor.primary,
-            ),
+            child: Icon(Icons.add_rounded, size: AppFabSizeMetrics.md.iconSize),
           ),
         ),
       ],
@@ -150,36 +151,30 @@ class _SpeedDialAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Match bottom nav bar unselected item color.
-    final foregroundColor = Theme.of(context).colorScheme.onSurfaceVariant;
     return AnimatedScale(
       scale: expanded ? 1.0 : 0.5,
       duration: duration,
-      curve: Curves.easeOutBack,
+      curve: AppCurves.overshoot,
       child: AnimatedSlide(
         offset: expanded ? Offset.zero : const Offset(0, 0.5),
         duration: duration,
-        curve: Curves.easeOutCubic,
+        curve: AppCurves.standard,
         child: AnimatedOpacity(
           opacity: expanded ? 1 : 0,
           duration: duration,
-          child: OutlinedButton.icon(
-            onPressed: onTap,
-            icon: Icon(icon, size: 20),
-            label: Text(label),
-            style: OutlinedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.surface,
-              foregroundColor: foregroundColor,
-              side: BorderSide(
-                color: Theme.of(context).colorScheme.outline,
-                width: 1.5,
-              ),
-              shape: RoundedRectangleBorder(borderRadius: Radii.radiusLg),
-              padding: const EdgeInsets.symmetric(
-                horizontal: Spacing.space_md,
-                vertical: Spacing.space_sm,
-              ),
+          // Shared AppButton so the radius, border width and ink match every
+          // other outlined button in the app.
+          child: AppButton(
+            variant: AppButtonVariant.secondary,
+            label: label,
+            // Icon color matches the button ink (AppButton paints its own
+            // label but leaves the icon to the ambient IconTheme).
+            icon: Icon(
+              icon,
+              size: AppIconSizes.md,
+              color: Theme.of(context).colorScheme.primary,
             ),
+            onPressed: onTap,
           ),
         ),
       ),

@@ -30,6 +30,9 @@ TextTheme _buildTextTheme({required Color textColor}) {
 
 /// Light-mode [TextTheme] using [AppColors.textPrimary] as the
 /// onSurface text color.
+///
+/// [TextTheme.headlineMedium] is the canonical app bar title style (Sora
+/// w500, 28px) and is exposed in both brightness modes.
 final TextTheme lightTextTheme = _buildTextTheme(
   textColor: AppColors.textPrimary,
 );

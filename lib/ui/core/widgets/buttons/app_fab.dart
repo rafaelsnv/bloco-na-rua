@@ -1,5 +1,6 @@
 import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:flutter/material.dart";
 
@@ -62,22 +63,22 @@ class AppFAB extends StatelessWidget {
   /// Optional override for the FAB's child widget (e.g. a spinner).
   final Widget? child;
 
-  // Standard FAB elevation.
-  static const double _elevationDefault = 6.0;
-
   // ponytail: FAB primary uses light variant in dark mode for better contrast on dark surface
   Color _backgroundColor(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return switch (fabColor) {
       AppFabColor.primary => colorScheme.primary,
-      AppFabColor.accent => AppColors.accent,
+      // Mirrors AppButton's accent fill: the dark-mode variant is the lighter
+      // gold, which keeps the FAB readable on a dark surface.
+      AppFabColor.accent => isDark ? AppColors.accentLight : AppColors.accent,
       AppFabColor.tertiary => colorScheme.tertiary,
     };
   }
 
-  Color _foregroundColor(BuildContext context) {
-    return Theme.of(context).colorScheme.onPrimary;
-  }
+  /// Ink for the FAB content, derived from the fill it sits on.
+  Color _foregroundColor(BuildContext context) =>
+      AppColors.inkFor(_backgroundColor(context));
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +98,7 @@ class AppFAB extends StatelessWidget {
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         backgroundColor: _backgroundColor(context),
         foregroundColor: _foregroundColor(context),
-        elevation: _elevationDefault,
+        elevation: AppElevation.lg.value,
         shape: RoundedRectangleBorder(borderRadius: Radii.fab),
         heroTag: null,
         child: child ?? Icon(icon, size: size.iconSize),
@@ -111,7 +112,7 @@ class AppFAB extends StatelessWidget {
       onPressed: onPressed,
       backgroundColor: _backgroundColor(context),
       foregroundColor: _foregroundColor(context),
-      elevation: _elevationDefault,
+      elevation: AppElevation.lg.value,
       shape: RoundedRectangleBorder(borderRadius: Radii.fab),
       heroTag: null,
       icon: Icon(icon, size: size.iconSize),

@@ -1,16 +1,16 @@
 import "package:flutter/material.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 
 /// A design-system-compliant app bar widget that implements [PreferredSizeWidget].
 ///
-/// Uses [AppTypography.titleLarge] for the title and respects the design system
-/// color and spacing tokens. Automatically shows a back button when [canPop] is
+/// The title inherits the theme's `appBarTheme.titleTextStyle`
+/// (`TextTheme.headlineMedium`), the canonical app bar title style.
+/// Automatically shows a back button when [canPop] is
 /// true and [showBackButton] is true.
 class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Creates an [AppAppBar].
   ///
-  /// [title] is required and displayed using [AppTypography.titleLarge].
+  /// [title] is required and displayed using the theme's app bar title style.
   ///
   /// [leading] is used as the leading widget. When null and [showBackButton] is
   /// true and [canPop] is true, a default back button is shown.
@@ -98,13 +98,9 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: centerTitle,
       automaticallyImplyLeading: showBackButton && leading == null,
       leading: leading,
-      title: Text(
-        title,
-        style: AppTypography.titleLarge.copyWith(
-          color: effectiveForegroundColor,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
+      // No explicit style: the theme's appBarTheme.titleTextStyle
+      // (headlineMedium) is the canonical app bar title style.
+      title: Text(title),
       actions: effectiveActions,
       bottom: bottom,
     );

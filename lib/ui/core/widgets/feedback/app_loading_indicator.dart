@@ -1,6 +1,5 @@
+import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
 import "package:flutter/material.dart";
-
-import "../../tokens/app_duration.dart";
 
 /// Defines the visual style of the loading indicator.
 enum AppLoadingIndicatorVariant {
@@ -11,12 +10,65 @@ enum AppLoadingIndicatorVariant {
   pulse,
 }
 
+/// The single spinner implementation behind every loading affordance in the
+/// app — [AppLoading] and [AppLoadingIndicator] are thin wrappers over it.
+///
+/// [size] controls the width/height, [strokeWidth] the circular arc thickness
+/// and [color] the tint (defaults to the theme primary color).
+///
+/// Example:
+/// ```dart
+/// const AppSpinner(size: 20, strokeWidth: 2)
+/// ```
+class AppSpinner extends StatelessWidget {
+  /// Creates an [AppSpinner].
+  const AppSpinner({
+    super.key,
+    this.size = 24,
+    this.strokeWidth = 2,
+    this.color,
+    this.variant = AppLoadingIndicatorVariant.circular,
+  });
+
+  /// The size of the indicator (width and height).
+  final double size;
+
+  /// The stroke width used for the circular variant.
+  final double strokeWidth;
+
+  /// The color of the indicator. Defaults to the theme primary color.
+  final Color? color;
+
+  /// The visual variant of the indicator.
+  final AppLoadingIndicatorVariant variant;
+
+  @override
+  Widget build(BuildContext context) {
+    final resolved = color ?? Theme.of(context).colorScheme.primary;
+
+    return SizedBox(
+      width: size,
+      height: size,
+      child: switch (variant) {
+        AppLoadingIndicatorVariant.circular => CircularProgressIndicator(
+          color: resolved,
+          strokeWidth: strokeWidth,
+        ),
+        AppLoadingIndicatorVariant.pulse => _PulseIndicator(
+          size: size,
+          color: resolved,
+        ),
+      },
+    );
+  }
+}
+
 /// A stateless loading indicator widget that displays either a circular
 /// spinner or a pulsing dot based on the [variant] parameter.
 ///
-/// [size] controls the dimensions of the indicator.
-/// [color] sets the indicator color (defaults to the theme primary color).
-/// [strokeWidth] is used for the circular variant (defaults to 3).
+/// Thin wrapper over [AppSpinner]. [size] controls the dimensions of the
+/// indicator, [color] sets the indicator color (defaults to the theme primary
+/// color) and [strokeWidth] is used for the circular variant (defaults to 3).
 ///
 /// Example:
 /// ```dart
@@ -30,14 +82,12 @@ class AppLoadingIndicator extends StatelessWidget {
   final double size;
 
   /// The color of the indicator.
-  /// Defaults to the theme primary color.
   final Color? color;
 
   /// The visual variant of the indicator.
   final AppLoadingIndicatorVariant variant;
 
   /// The stroke width used for the circular variant.
-  /// Only applies when [variant] is [AppLoadingIndicatorVariant.circular].
   final double strokeWidth;
 
   /// Creates an [AppLoadingIndicator] with default values.
@@ -64,22 +114,12 @@ class AppLoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(width: size, height: size, child: _buildIndicator(context));
-  }
-
-  Widget _buildIndicator(BuildContext context) {
-    switch (variant) {
-      case AppLoadingIndicatorVariant.circular:
-        return CircularProgressIndicator(
-          color: color ?? Theme.of(context).colorScheme.primary,
-          strokeWidth: strokeWidth,
-        );
-      case AppLoadingIndicatorVariant.pulse:
-        return _PulseIndicator(
-          size: size,
-          color: color ?? Theme.of(context).colorScheme.primary,
-        );
-    }
+    return AppSpinner(
+      size: size,
+      strokeWidth: strokeWidth,
+      color: color,
+      variant: variant,
+    );
   }
 }
 
@@ -117,35 +157,21 @@ class _PulseIndicatorState extends State<_PulseIndicator>
 
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.of(context).disableAnimations) {
-      return SizedBox(
-        width: widget.size,
-        height: widget.size,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: widget.color,
-            shape: BoxShape.circle,
-          ),
-        ),
-      );
-    }
+    final dot = SizedBox(
+      width: widget.size,
+      height: widget.size,
+      child: DecoratedBox(
+        decoration: BoxDecoration(color: widget.color, shape: BoxShape.circle),
+      ),
+    );
+
+    if (MediaQuery.of(context).disableAnimations) return dot;
 
     return AnimatedBuilder(
       animation: _controller,
-      builder: (context, child) {
-        final scale = 0.6 + 0.4 * _controller.value;
-        return Transform.scale(scale: scale, child: child);
-      },
-      child: SizedBox(
-        width: widget.size,
-        height: widget.size,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: widget.color,
-            shape: BoxShape.circle,
-          ),
-        ),
-      ),
+      builder: (context, child) =>
+          Transform.scale(scale: 0.6 + 0.4 * _controller.value, child: child),
+      child: dot,
     );
   }
 }

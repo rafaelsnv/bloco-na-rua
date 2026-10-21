@@ -119,7 +119,9 @@ class AppListTile extends StatelessWidget {
       leading: leading,
       title: Text(
         title,
-        style: AppTypography.titleMedium,
+        style: AppTypography.titleMedium.copyWith(
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),

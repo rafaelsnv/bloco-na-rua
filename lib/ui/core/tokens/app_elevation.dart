@@ -1,49 +1,88 @@
-import 'package:flutter/material.dart';
+// Design surface: lib/ui/core/tokens/app_elevation.dart
+// Single source of truth for every elevation (and matching shadow) in the app.
 
-/// Elevation and shadow tokens following Material 3 design system.
-class AppElevation {
-  AppElevation._();
+import "package:flutter/material.dart";
 
-  /// Elevation level 0 - Flat surfaces
-  static const double elevation0 = 0.0;
+/// Elevation — design system elevation tokens.
+///
+/// One canonical scale for the whole app: cards, FABs, snackbars and modals all
+/// pick from this enum instead of hardcoded dp values.
+///
+/// Usage:
+/// ```dart
+/// Card(
+///   elevation: AppElevation.sm.value,
+///   child: child,
+/// )
+///
+/// Container(
+///   decoration: BoxDecoration(
+///     boxShadow: AppElevation.lg.shadow(Colors.black),
+///   ),
+/// )
+/// ```
+enum AppElevation {
+  /// No shadow — flat surfaces.
+  none(0),
 
-  /// Elevation level 1 - Cards at rest
-  static const double elevation1 = 1.0;
+  /// Extra small — 1dp. Cards at rest.
+  sm(1),
 
-  /// Elevation level 2 - Raised cards, dropdowns
-  static const double elevation2 = 3.0;
+  /// Medium — 3dp. Raised cards, dropdowns.
+  md(3),
 
-  /// Elevation level 3 - FAB, dialogs, snackbars
-  static const double elevation3 = 6.0;
+  /// Large — 6dp. FABs, dialogs, snackbars.
+  lg(6),
 
-  /// Elevation level 4 - Navigation drawer, sticky CTAs
-  static const double elevation4 = 8.0;
+  /// Extra large — 8dp. Navigation drawer, sticky CTAs.
+  xl(8),
 
-  /// Elevation level 5 - Modal bottom sheets
-  static const double elevation5 = 12.0;
+  /// Extra extra large — 12dp. Modal bottom sheets.
+  xxl(12);
 
-  /// Generates a shadow configuration for the given elevation and brightness.
-  static List<BoxShadow> shadowFor(double dp, Brightness brightness) {
-    final alpha = brightness == Brightness.light ? 0.10 : 0.30;
-    return [
-      BoxShadow(
-        offset: Offset(0, dp / 2),
-        blurRadius: dp * 1.5,
-        spreadRadius: 0,
-        color: Color.fromRGBO(0, 0, 0, alpha),
-      ),
-    ];
-  }
+  const AppElevation(this.value);
 
-  /// Shadow for cards at rest (elevation2)
-  static List<BoxShadow> cardShadow(Brightness brightness) =>
-      shadowFor(elevation2, brightness);
+  /// The elevation in logical pixels.
+  final double value;
 
-  /// Shadow for FABs and dialogs (elevation3)
-  static List<BoxShadow> fabShadow(Brightness brightness) =>
-      shadowFor(elevation3, brightness);
+  /// Shadow opacity used in light mode.
+  double get shadowOpacity => 0.10;
 
-  /// Shadow for modal bottom sheets (elevation5)
-  static List<BoxShadow> modalShadow(Brightness brightness) =>
-      shadowFor(elevation5, brightness);
+  /// Shadow opacity for [brightness] — shadows are deeper on dark surfaces.
+  double shadowOpacityFor(Brightness brightness) =>
+      brightness == Brightness.light ? shadowOpacity : 0.30;
+
+  /// Shadow cast by this elevation, based on [color] as the shadow base.
+  ///
+  /// Pass [brightness] to match the ambient theme (dark surfaces need a
+  /// stronger shadow to stay visible).
+  List<BoxShadow> shadow(
+    Color color, {
+    Brightness brightness = Brightness.light,
+  }) => [
+    BoxShadow(
+      offset: Offset(0, value / 2),
+      blurRadius: value * 1.5,
+      spreadRadius: 0,
+      color: color.withValues(alpha: shadowOpacityFor(brightness)),
+    ),
+  ];
+
+  /// Shadow for cards at rest.
+  static List<BoxShadow> cardShadow(
+    Color color, {
+    Brightness brightness = Brightness.light,
+  }) => md.shadow(color, brightness: brightness);
+
+  /// Shadow for FABs and dialogs.
+  static List<BoxShadow> fabShadow(
+    Color color, {
+    Brightness brightness = Brightness.light,
+  }) => lg.shadow(color, brightness: brightness);
+
+  /// Shadow for modal bottom sheets.
+  static List<BoxShadow> modalShadow(
+    Color color, {
+    Brightness brightness = Brightness.light,
+  }) => xxl.shadow(color, brightness: brightness);
 }

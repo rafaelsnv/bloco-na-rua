@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import "../../tokens/app_colors.dart";
+import "../../tokens/app_elevation.dart";
 import "../../tokens/app_radius.dart";
 import "../../tokens/app_duration.dart";
 import "../../tokens/app_spacing.dart";
@@ -143,7 +144,9 @@ class AppSnackbar {
         // Border radius 12px — same as Radii.radiusMd.
         shape: RoundedRectangleBorder(borderRadius: Radii.radiusMd),
         duration: AppDurations.snackbar,
-        elevation: 4,
+        // Floating snackbars sit just above the content they report on:
+        // AppElevation.md (3) is the canonical raised-surface step.
+        elevation: AppElevation.md.value,
       ),
     );
   }

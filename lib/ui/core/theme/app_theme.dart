@@ -21,13 +21,21 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.backgroundLight,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.textOnPrimary,
+        // D1: unified flat-surface app bar in both brightnesses, separated
+        // from the content by a hairline instead of a filled brand block.
+        backgroundColor: lightColorScheme.surface,
+        foregroundColor: lightColorScheme.onSurface,
         elevation: 0,
-        scrolledUnderElevation: 1,
+        scrolledUnderElevation: 0,
         centerTitle: false,
-        titleTextStyle: lightTextTheme.headlineMedium?.copyWith(
-          color: AppColors.textOnPrimary,
+        surfaceTintColor: Colors.transparent,
+        // D4: the theme's headlineMedium is the canonical app bar title style.
+        titleTextStyle: lightTextTheme.headlineMedium,
+        shape: Border(
+          bottom: BorderSide(
+            color: lightColorScheme.outline,
+            width: Radii.outlineWidth,
+          ),
         ),
       ),
       cardTheme: CardThemeData(
@@ -36,7 +44,10 @@ class AppTheme {
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: Radii.card,
-          side: BorderSide(color: lightColorScheme.outline, width: 1),
+          side: BorderSide(
+            color: lightColorScheme.outline,
+            width: Radii.outlineWidth,
+          ),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
@@ -52,8 +63,12 @@ class AppTheme {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
+          // D5: violet ink + border; magenta is reserved for decorative fills.
           foregroundColor: lightColorScheme.primary,
-          side: BorderSide(color: lightColorScheme.primary, width: 1.5),
+          side: BorderSide(
+            color: lightColorScheme.primary,
+            width: Radii.outlineWidth,
+          ),
           shape: RoundedRectangleBorder(borderRadius: Radii.button),
           padding: const EdgeInsets.symmetric(
             horizontal: Spacing.space_md,
@@ -123,6 +138,8 @@ class AppTheme {
         space: 1,
       ),
       navigationBarTheme: NavigationBarThemeData(
+        // L16: the bottom nav surface is owned by the theme.
+        backgroundColor: lightColorScheme.surface,
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return TextStyle(
@@ -152,12 +169,21 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.backgroundDark,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       appBarTheme: AppBarTheme(
+        // D1: flat surface + hairline, matching the light theme.
         backgroundColor: darkColorScheme.surface,
         foregroundColor: darkColorScheme.onSurface,
         elevation: 0,
-        scrolledUnderElevation: 1,
+        scrolledUnderElevation: 0,
         centerTitle: false,
+        surfaceTintColor: Colors.transparent,
+        // D4: the theme's headlineMedium is the canonical app bar title style.
         titleTextStyle: darkTextTheme.headlineMedium,
+        shape: Border(
+          bottom: BorderSide(
+            color: darkColorScheme.outline,
+            width: Radii.outlineWidth,
+          ),
+        ),
       ),
       cardTheme: CardThemeData(
         color: darkColorScheme.surface,
@@ -165,7 +191,10 @@ class AppTheme {
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: Radii.card,
-          side: BorderSide(color: darkColorScheme.outline, width: 1),
+          side: BorderSide(
+            color: darkColorScheme.outline,
+            width: Radii.outlineWidth,
+          ),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
@@ -173,7 +202,9 @@ class AppTheme {
           backgroundColor: darkColorScheme.primary,
           foregroundColor: darkColorScheme.onPrimary,
           disabledBackgroundColor: darkColorScheme.surfaceContainerHigh,
-          disabledForegroundColor: darkColorScheme.onSurface.withValues(alpha: 0.38),
+          disabledForegroundColor: darkColorScheme.onSurface.withValues(
+            alpha: 0.38,
+          ),
           shape: RoundedRectangleBorder(borderRadius: Radii.button),
           padding: const EdgeInsets.symmetric(
             horizontal: Spacing.space_md,
@@ -183,10 +214,16 @@ class AppTheme {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
+          // D5: violet ink + border; magenta is reserved for decorative fills.
           foregroundColor: darkColorScheme.primary,
-          side: BorderSide(color: darkColorScheme.primary, width: 1.5),
+          side: BorderSide(
+            color: darkColorScheme.primary,
+            width: Radii.outlineWidth,
+          ),
           disabledBackgroundColor: darkColorScheme.surfaceContainerHigh,
-          disabledForegroundColor: darkColorScheme.onSurface.withValues(alpha: 0.38),
+          disabledForegroundColor: darkColorScheme.onSurface.withValues(
+            alpha: 0.38,
+          ),
           shape: RoundedRectangleBorder(borderRadius: Radii.button),
           padding: const EdgeInsets.symmetric(
             horizontal: Spacing.space_md,
@@ -197,7 +234,9 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: darkColorScheme.primary,
-          disabledForegroundColor: darkColorScheme.onSurface.withValues(alpha: 0.38),
+          disabledForegroundColor: darkColorScheme.onSurface.withValues(
+            alpha: 0.38,
+          ),
         ),
       ),
       chipTheme: ChipThemeData(
@@ -259,6 +298,8 @@ class AppTheme {
         space: 1,
       ),
       navigationBarTheme: NavigationBarThemeData(
+        // L16: the bottom nav surface is owned by the theme.
+        backgroundColor: darkColorScheme.surface,
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return TextStyle(

@@ -25,11 +25,11 @@ enum AvatarShape { circle, square, roundedSquare }
 /// AVATAR_PALETTE — colors used for initials background, selected by name hash.
 /// All fills are dark enough for light text in both brightness modes.
 const List<Color> _avatarPalette = [
-  AppColors.primary, // #6D28D9
-  AppColors.accent, // #F97316
+  AppColors.primary, // #7C3AED
+  AppColors.accent, // #D97706
   AppColors.success, // #16A34A
   AppColors.info, // #0EA5E9
-  AppColors.secondary, // #FB7185
+  AppColors.secondary, // #E11D74
 ];
 
 /// Returns the initials text for a given [name].
@@ -84,9 +84,7 @@ String _buildVersionedUrl(String url, Object? versionToken) {
 /// Foreground is brightness-aware relative to the [background] fill: light
 /// fills get dark text, dark fills get white text.
 TextStyle _getInitialsStyle(AvatarSize size, Color background) {
-  final foreground = background.computeLuminance() > 0.4
-      ? AppColors.textPrimary
-      : AppColors.textOnPrimary;
+  final foreground = AppColors.inkFor(background);
   switch (size) {
     case AvatarSize.xs:
     case AvatarSize.sm:
@@ -152,9 +150,7 @@ class AppAvatar extends StatelessWidget {
       final background = _getInitialsBackground(name);
       // Brightness-aware foreground: dark fills get white icon, light fills
       // would get dark text (matches _getInitialsStyle).
-      final iconColor = background.computeLuminance() > 0.4
-          ? AppColors.textPrimary
-          : AppColors.textOnPrimary;
+      final iconColor = AppColors.inkFor(background);
 
       if (initials.isEmpty) {
         // No name — show person icon on the hashed background
@@ -182,7 +178,7 @@ class AppAvatar extends StatelessWidget {
 
       return ClipRRect(
         borderRadius: shape == AvatarShape.square
-            ? Radii.radiusFull
+            ? BorderRadius.zero
             : Radii.radiusMd,
         child: Container(
           width: diameter,
@@ -218,7 +214,7 @@ class AppAvatar extends StatelessWidget {
 
     return ClipRRect(
       borderRadius: shape == AvatarShape.square
-          ? Radii.radiusFull
+          ? BorderRadius.zero
           : Radii.radiusMd,
       child: SafeNetworkImage(
         url: versionedUrl,

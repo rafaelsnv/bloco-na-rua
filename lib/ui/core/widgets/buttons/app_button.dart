@@ -1,8 +1,10 @@
+import "package:bloco_na_rua/ui/core/theme/app_text_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/core/widgets/feedback/app_loading_indicator.dart";
 import "package:flutter/material.dart";
 
 /// Button variant taxonomy.
@@ -78,7 +80,10 @@ class AppButton extends StatelessWidget {
       case AppButtonVariant.primary:
         return colorScheme.onPrimary;
       case AppButtonVariant.secondary:
-        return colorScheme.secondary;
+        // Secondary ink is the brand primary (not the magenta `secondary`) —
+        // the theme's outlinedButtonTheme already resolves it that way and
+        // the widget used to override it back to magenta.
+        return colorScheme.primary;
       case AppButtonVariant.accent:
         // Enabled: white on orange — ~7.5:1 contrast, passes WCAG AA.
         // Disabled: textDisabled (#A8A29E), intentionally muted.
@@ -104,7 +109,10 @@ class AppButton extends StatelessWidget {
       // slate fill in dark). textDisabled is neutral, so ink and fill share a
       // hue family and the control reads inert at a glance.
       // ~3.7:1 dark / ~2.1:1 light — disabled controls are WCAG-exempt.
-      return AppColors.textDisabled;
+      // Resolved from the theme extension so the ink follows the active
+      // brightness instead of being pinned to the light-mode value.
+      return Theme.of(context).extension<AppTextColors>()?.textDisabled ??
+          AppColors.textDisabled;
     }
     return _foregroundColor(context);
   }
@@ -140,13 +148,10 @@ class AppButton extends StatelessWidget {
         if (icon != null && (isLoading || label.isNotEmpty))
           SizedBox(width: size.iconLabelGap),
         if (isLoading)
-          SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(foreground),
-            ),
+          AppLoadingIndicator.circular(
+            size: 20,
+            strokeWidth: 2,
+            color: foreground,
           )
         else if (label.isNotEmpty)
           Text(label, style: _textStyle(context, foreground)),
@@ -228,7 +233,7 @@ class AppButton extends StatelessWidget {
           backgroundColor: WidgetStateProperty.all(Colors.transparent),
           foregroundColor: WidgetStateProperty.all(foreground),
           side: WidgetStateProperty.all(
-            BorderSide(color: foreground, width: 1.5),
+            BorderSide(color: foreground, width: Radii.outlineWidth),
           ),
         ),
         child: content,
@@ -257,26 +262,36 @@ class AppButton extends StatelessWidget {
     if (isFullWidth) {
       return SizedBox(width: double.infinity, child: button);
     }
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 200),
-      child: button,
-    );
+    // No hardcoded max width — the size metrics already own the height and
+    // the padding; a magic 200px cap only clipped wide labels.
+    return button;
   }
 
   TextStyle _textStyle(BuildContext context, Color foreground) {
     final base = switch (variant) {
-      AppButtonVariant.accent => AppTypography.buttonLarge.copyWith(
+      AppButtonVariant.accent => _largeLabel.copyWith(
         fontWeight: FontWeight.w700,
       ),
       _ => switch (size) {
-        AppButtonSizeMetrics.sm => AppTypography.buttonSmall,
-        AppButtonSizeMetrics.md => AppTypography.buttonMedium,
-        AppButtonSizeMetrics.lg => AppTypography.buttonLarge,
-        _ => AppTypography.buttonMedium,
+        AppButtonSizeMetrics.sm => AppTypography.titleSmall,
+        AppButtonSizeMetrics.md => AppTypography.titleMedium,
+        AppButtonSizeMetrics.lg => _largeLabel,
+        _ => AppTypography.titleMedium,
       },
     };
     return base.copyWith(color: foreground);
   }
+
+  /// Label metrics for the large preset: 18px / w600 on a 24px line.
+  ///
+  /// Derived from [AppTypography.labelLarge] so the ladder stays on
+  /// non-deprecated tokens while keeping the previous label size.
+  static TextStyle get _largeLabel => AppTypography.labelLarge.copyWith(
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    letterSpacing: 0.15,
+    height: 24 / 18,
+  );
 }
 
 class _HoverOpacityWrapper extends StatefulWidget {

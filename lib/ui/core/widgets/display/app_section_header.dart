@@ -25,11 +25,10 @@ class AppSectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // No horizontal padding: callers already pad their scroll views, so the
+    // header must stay flush with the cards below it.
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: Spacing.pagePaddingMobile,
-        vertical: Spacing.space_2xs,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: Spacing.space_2xs),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -40,7 +39,9 @@ class AppSectionHeader extends StatelessWidget {
           Expanded(
             child: Text(
               title,
-              style: AppTypography.headlineSmall,
+              style: AppTypography.headlineSmall.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

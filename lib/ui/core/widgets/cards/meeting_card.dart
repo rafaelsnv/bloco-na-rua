@@ -50,11 +50,11 @@ class MeetingCard extends StatelessWidget {
     return DateFormat("dd MMM yyyy • HH:mm", "pt_BR").format(dateTime);
   }
 
-  /// Returns a small 14px icon with the onSurfaceVariant colour.
+  /// Returns a small [AppIconSizes.xs] icon with the onSurfaceVariant colour.
   Widget _icon(BuildContext context, IconData icon) {
     return Icon(
       icon,
-      size: 14,
+      size: AppIconSizes.xs,
       color: Theme.of(context).colorScheme.onSurfaceVariant,
     );
   }
@@ -67,7 +67,6 @@ class MeetingCard extends StatelessWidget {
     return AppCard(
       key: Key('meeting_card_${meeting.id}'),
       onTap: onTap,
-      elevation: AppCardElevation.sm,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -93,7 +92,7 @@ class MeetingCard extends StatelessWidget {
           // Row 2: datetime
           Row(
             children: [
-                _icon(context, Icons.event_rounded),
+              _icon(context, Icons.event_rounded),
               SizedBox(width: Spacing.space_xs),
               Text(
                 _formatDateTime(meeting.meetingDateTime),

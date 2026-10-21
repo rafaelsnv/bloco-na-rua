@@ -61,10 +61,10 @@ class BlockCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Icon container — 40x40px to fit content height
+            // Icon container — AppIconSizes.display to fit content height
             Container(
-              width: 40,
-              height: 40,
+              width: AppIconSizes.display,
+              height: AppIconSizes.display,
               decoration: BoxDecoration(
                 color: surfaceVariant,
                 borderRadius: Radii.radiusSm,
@@ -74,8 +74,8 @@ class BlockCard extends StatelessWidget {
                       borderRadius: Radii.radiusSm,
                       child: CachedNetworkImage(
                         imageUrl: block.carnivalBlockImage,
-                        width: 40,
-                        height: 40,
+                        width: AppIconSizes.display,
+                        height: AppIconSizes.display,
                         fit: BoxFit.cover,
                         cacheManager: CacheManager(
                           Config(
@@ -132,7 +132,9 @@ class BlockCard extends StatelessWidget {
         color: surfaceVariant,
         borderRadius: Radii.radiusSm,
       ),
-      child: Center(child: Text(emoji, style: const TextStyle(fontSize: 20))),
+      child: Center(
+        child: Text(emoji, style: const TextStyle(fontSize: AppIconSizes.md)),
+      ),
     );
   }
 

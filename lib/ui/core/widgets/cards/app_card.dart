@@ -1,27 +1,13 @@
+import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:flutter/material.dart";
 
-/// Card elevation taxonomy.
+/// Deprecated alias for the canonical [AppElevation] scale.
 ///
-/// Elevation values map to logical Material elevation steps:
-///   none=0, xs=1, sm=2, md=4, lg=8
-enum AppCardElevation {
-  /// No shadow — flat card.
-  none,
-
-  /// Extra small shadow — 1dp.
-  xs,
-
-  /// Small shadow — 2dp. Default for interactive cards.
-  sm,
-
-  /// Medium shadow — 4dp.
-  md,
-
-  /// Large shadow — 8dp.
-  lg,
-}
+/// Kept so existing call sites keep compiling after the card elevation
+/// taxonomy was unified. Prefer [AppElevation] in new code.
+typedef AppCardElevation = AppElevation;
 
 /// A design-system-compliant card widget supporting elevation presets,
 /// optional tap interaction, and consistent padding and radius tokens.
@@ -32,7 +18,7 @@ class AppCard extends StatelessWidget {
   const AppCard({
     required this.child,
     this.onTap,
-    this.elevation = AppCardElevation.none,
+    this.elevation = AppElevation.sm,
     this.padding,
     this.radius,
     this.color,
@@ -47,8 +33,8 @@ class AppCard extends StatelessWidget {
   final VoidCallback? onTap;
 
   /// Elevation preset controlling the card shadow depth.
-  /// Defaults to [AppCardElevation.sm].
-  final AppCardElevation elevation;
+  /// Defaults to [AppElevation.sm].
+  final AppElevation elevation;
 
   /// Internal padding around [child].
   /// Defaults to [EdgeInsets.all(Spacing.cardPadding)].
@@ -60,47 +46,30 @@ class AppCard extends StatelessWidget {
   /// Overrides the default surface color from the current theme.
   final Color? color;
 
-  /// Card outline width — 1.5px for clear visual boundary.
-  static const double outlineWidth = 1.5;
-
-  static const Map<AppCardElevation, double> _elevationTokens = {
-    AppCardElevation.none: 0.0,
-    AppCardElevation.xs: 1.0,
-    AppCardElevation.sm: 2.0,
-    AppCardElevation.md: 4.0,
-    AppCardElevation.lg: 8.0,
-  };
-
   @override
   Widget build(BuildContext context) {
     final computedPadding = padding ?? EdgeInsets.all(Spacing.cardPadding);
     final computedRadius = radius ?? Radii.card;
-    final computedElevation = _elevationTokens[elevation]!;
     final defaultColor = Theme.of(context).colorScheme.surface;
 
-    final card = Card(
-      elevation: computedElevation,
+    // The Card is the Material surface, so the InkWell paints its ripple on
+    // it directly — no extra Material wrapper (that would stack shadows).
+    final content = Padding(padding: computedPadding, child: child);
+
+    return Card(
+      elevation: elevation.value,
       shape: RoundedRectangleBorder(
         borderRadius: computedRadius,
         side: BorderSide(
           color: Theme.of(context).colorScheme.outline,
-          width: outlineWidth,
+          width: Radii.outlineWidth,
         ),
       ),
       color: color ?? defaultColor,
       margin: EdgeInsets.zero,
-      child: Padding(padding: computedPadding, child: child),
-    );
-
-    if (onTap == null) {
-      return card;
-    }
-
-    return Material(
-      elevation: computedElevation,
-      borderRadius: computedRadius,
-      color: Colors.transparent,
-      child: InkWell(onTap: onTap, borderRadius: computedRadius, child: card),
+      child: onTap == null
+          ? content
+          : InkWell(onTap: onTap, borderRadius: computedRadius, child: content),
     );
   }
 }

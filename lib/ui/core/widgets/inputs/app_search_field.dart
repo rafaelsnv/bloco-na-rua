@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import "../../tokens/app_duration.dart";
+import "../../tokens/app_spacing.dart";
 
 /// Search field widget with prefix search icon and clear-button suffix.
 class AppSearchField extends StatefulWidget {
@@ -89,7 +90,7 @@ class _AppSearchFieldState extends State<AppSearchField> {
                     Icons.close_rounded,
                     color: colorScheme.onSurfaceVariant,
                   ),
-                  splashRadius: 20,
+                  splashRadius: AppIconSizes.md,
                   onPressed: () {
                     _controller.clear();
                     widget.onChanged?.call("");

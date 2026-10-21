@@ -6,7 +6,7 @@ import "../../tokens/app_typography.dart";
 
 /// A typed dropdown item for use with [AppDropdown].
 ///
-/// Contains the selectable [value], display [label], and optional [icon].
+/// Holds the selectable [value], the display [label] and an optional [icon].
 class AppDropdownItem<T> {
   /// The value this item represents when selected.
   final T value;
@@ -63,19 +63,7 @@ class AppDropdown<T> extends StatelessWidget {
       key: key ?? Key('app_dropdown_$label'),
       initialValue: value,
       items: items.map((item) {
-        return DropdownMenuItem<T>(
-          value: item.value,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (item.icon != null) ...[
-                item.icon!,
-                SizedBox(width: Spacing.space_xs),
-              ],
-              Text(item.label, style: AppTypography.bodyMedium),
-            ],
-          ),
-        );
+        return DropdownMenuItem<T>(value: item.value, child: _itemRow(item));
       }).toList(),
       onChanged: isEnabled ? onChanged : null,
       hint: hint != null
@@ -89,20 +77,22 @@ class AppDropdown<T> extends StatelessWidget {
             )
           : null,
       decoration: InputDecoration(labelText: label, errorText: errorText),
-      selectedItemBuilder: (context) {
-        return items.map((item) {
-          return Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (item.icon != null) ...[
-                item.icon!,
-                SizedBox(width: Spacing.space_xs),
-              ],
-              Text(item.label, style: AppTypography.bodyMedium),
-            ],
-          );
-        }).toList();
-      },
+      selectedItemBuilder: (context) => items.map(_itemRow).toList(),
+    );
+  }
+
+  /// Builds the shared icon+label row used by both the menu items and the
+  /// selected-item builder.
+  static Widget _itemRow<T>(AppDropdownItem<T> item) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (item.icon != null) ...[
+          item.icon!,
+          SizedBox(width: Spacing.space_xs),
+        ],
+        Text(item.label, style: AppTypography.bodyMedium),
+      ],
     );
   }
 }

@@ -124,31 +124,4 @@ class AppTypography {
     letterSpacing: 0.5,
     height: 16 / 11,
   );
-
-  /// @deprecated Use AppTypography.labelLarge instead. Will be removed in next major version.
-  @Deprecated('Use AppTypography.labelLarge instead')
-  static TextStyle get buttonSmall => GoogleFonts.dmSans(
-    fontSize: 14,
-    fontWeight: FontWeight.w600,
-    letterSpacing: 0.1,
-    height: 20 / 14,
-  );
-
-  /// @deprecated Use AppTypography.labelLarge instead. Will be removed in next major version.
-  @Deprecated('Use AppTypography.labelLarge instead')
-  static TextStyle get buttonMedium => GoogleFonts.dmSans(
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-    letterSpacing: 0.15,
-    height: 24 / 16,
-  );
-
-  /// @deprecated Use AppTypography.labelLarge instead. Will be removed in next major version.
-  @Deprecated('Use AppTypography.labelLarge instead')
-  static TextStyle get buttonLarge => GoogleFonts.dmSans(
-    fontSize: 18,
-    fontWeight: FontWeight.w600,
-    letterSpacing: 0.15,
-    height: 24 / 18,
-  );
 }
