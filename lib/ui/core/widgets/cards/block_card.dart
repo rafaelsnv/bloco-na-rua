@@ -1,15 +1,14 @@
-import "package:flutter_cache_manager/flutter_cache_manager.dart";
 import "package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart";
+import "package:bloco_na_rua/ui/core/theme/app_text_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/image_url_validator.dart";
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
-
-import "../../theme/app_text_colors.dart";
-import "../../tokens/app_colors.dart";
-import "../../tokens/app_radius.dart";
-import "../../tokens/app_spacing.dart";
-import "../../tokens/app_typography.dart";
-import "../cards/app_card.dart";
-import "../display/image_url_validator.dart";
+import "package:flutter_cache_manager/flutter_cache_manager.dart";
 
 const _blockEmojis = ["🎭", "🎉", "🎊", "🎷", "🎺", "🪇", "🏟️"];
 

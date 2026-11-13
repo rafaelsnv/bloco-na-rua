@@ -1,12 +1,11 @@
+import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_avatar.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_chip.dart";
 import "package:flutter/material.dart";
-
-import "../../../../domain/entities/members/members_entity.dart";
-import "../../tokens/app_colors.dart";
-import "../../tokens/app_spacing.dart";
-import "../../tokens/app_typography.dart";
-import "../display/app_avatar.dart";
-import "../display/app_chip.dart";
-import "app_card.dart";
 
 /// A compound card widget that displays a member's avatar, name,
 /// optional email subtitle, optional role chip, and optional online indicator.

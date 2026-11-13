@@ -3,12 +3,6 @@ import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:flutter/material.dart";
 
-/// Deprecated alias for the canonical [AppElevation] scale.
-///
-/// Kept so existing call sites keep compiling after the card elevation
-/// taxonomy was unified. Prefer [AppElevation] in new code.
-typedef AppCardElevation = AppElevation;
-
 /// A design-system-compliant card widget supporting elevation presets,
 /// optional tap interaction, and consistent padding and radius tokens.
 class AppCard extends StatelessWidget {

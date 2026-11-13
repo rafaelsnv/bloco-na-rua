@@ -1,13 +1,12 @@
+import "package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_badge.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_chip.dart";
 import "package:flutter/material.dart";
 import "package:intl/intl.dart";
-
-import "../../../../domain/entities/meetings/meetings_entity.dart";
-import "../../tokens/app_colors.dart";
-import "../../tokens/app_spacing.dart";
-import "../../tokens/app_typography.dart";
-import "../cards/app_card.dart";
-import "../display/app_badge.dart";
-import "../display/app_chip.dart";
 
 class MeetingCard extends StatelessWidget {
   const MeetingCard({
