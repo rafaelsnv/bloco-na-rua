@@ -2,6 +2,7 @@ import "package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart";
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
@@ -9,6 +10,7 @@ import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/member_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_chip.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_icon_tile.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_section_header.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_dialog.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_loading_indicator.dart";
@@ -26,6 +28,9 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 import "package:intl/intl.dart";
+
+/// Edge length of the leading icon tile on the meeting header.
+const double _headerIconTileSize = 52;
 
 class MeetingDetailsScreen extends StatefulWidget {
   const MeetingDetailsScreen({super.key, required this.meetingId});
@@ -124,7 +129,7 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-// Meeting Info Card
+                    // Meeting Info Card
                     _MeetingInfoCard(
                       meeting: meeting,
                       meetingDateTime: meetingDateTime,
@@ -137,7 +142,7 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
                       leading: Icon(
                         Icons.people_rounded,
                         color: Theme.of(context).colorScheme.primary,
-                        size: 24,
+                        size: AppIconSizes.lg,
                       ),
                       titleTrailing: AppChip(
                         label:
@@ -152,24 +157,22 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
                     ),
                     const SizedBox(height: Spacing.space_xs),
                     // Prominent confirm-presence button — replaces the FAB.
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: Spacing.pagePaddingMobile,
-                      ),
-                      child: AppButton(
-                        key: const Key("button_confirm_presence"),
-                        label: "Confirmar Presença",
-                        variant: AppButtonVariant.accent,
-                        size: AppButtonSizeMetrics.sm,
-                        isFullWidth: true,
-                        icon: const Icon(Icons.check_rounded),
-                        isLoading: isMarkingPresence,
-                        onPressed: isMarkingPresence
-                            ? null
-                            : () => context
-                                  .read<MeetingDetailsCubit>()
-                                  .markPresence(isPresent: true),
-                      ),
+                    // No extra horizontal padding: the scroll view already
+                    // insets the column, so the button lines up with the
+                    // header and the cards below it.
+                    AppButton(
+                      key: const Key("button_confirm_presence"),
+                      label: "Confirmar Presença",
+                      variant: AppButtonVariant.accent,
+                      size: AppButtonSizeMetrics.sm,
+                      isFullWidth: true,
+                      icon: const Icon(Icons.check_rounded),
+                      isLoading: isMarkingPresence,
+                      onPressed: isMarkingPresence
+                          ? null
+                          : () => context
+                                .read<MeetingDetailsCubit>()
+                                .markPresence(isPresent: true),
                     ),
                     const SizedBox(height: Spacing.sectionGap),
                     _PresencesSection(
@@ -202,10 +205,10 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: Spacing.space_sm),
           child: SizedBox(
-            width: 20,
-            height: 20,
+            width: AppIconSizes.md,
+            height: AppIconSizes.md,
             child: AppLoadingIndicator(
-              size: 20,
+              size: AppIconSizes.md,
               color: Theme.of(context).colorScheme.error,
             ),
           ),
@@ -279,98 +282,86 @@ class _MeetingInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Status chip floats on the card's top edge via a Stack.
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        AppCard(
-          child: Column(
+    final cs = Theme.of(context).colorScheme;
+
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Title row — the status chip is a trailing widget of this row, so
+          // the expanded title always reserves room for it and never overlaps.
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Title row
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(Spacing.space_xs),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primaryContainer,
-                      borderRadius: Radii.radiusMd,
-                    ),
-                    child: Icon(
-                      Icons.event_rounded,
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      size: 28,
-                    ),
-                  ),
-                  const SizedBox(width: Spacing.space_xs),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          meeting.name ?? "",
-                          style: AppTypography.headlineSmall,
-                        ),
-                        if (blockName != null && blockName!.isNotEmpty)
-                          Text(
-                            blockName!,
-                            style: AppTypography.bodyMedium.copyWith(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onSurfaceVariant,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
+              AppIconTile(
+                icon: Icons.event_rounded,
+                backgroundColor: cs.primaryContainer,
+                size: _headerIconTileSize,
+                radius: Radii.md,
+                iconSize: AppIconSizes.xl,
+                foregroundColor: cs.onPrimaryContainer,
               ),
-              if (meeting.description != null &&
-                  meeting.description!.isNotEmpty) ...[
-                const SizedBox(height: Spacing.space_sm),
-                Text(
-                  meeting.description!,
-                  style: Theme.of(context).textTheme.bodyLarge,
+              const SizedBox(width: Spacing.space_xs),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      meeting.name ?? "",
+                      style: AppTypography.headlineSmall,
+                    ),
+                    if (blockName != null && blockName!.isNotEmpty)
+                      Text(
+                        blockName!,
+                        style: AppTypography.bodyMedium.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                  ],
                 ),
-              ],
-              const SizedBox(height: Spacing.space_sm),
-              Divider(color: Theme.of(context).colorScheme.outlineVariant),
-              const SizedBox(height: Spacing.space_sm),
-              // Date + time in a single row
-              if (meetingDateTime != null)
-                _InfoRow(
-                  icon: Icons.calendar_today_rounded,
-                  text: DateFormat(
-                    "EEEE, dd/MM/yyyy • HH:mm",
-                    "pt_BR",
-                  ).format(meetingDateTime!),
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-              // Location last
-              if (meeting.location != null && meeting.location!.isNotEmpty) ...[
-                const SizedBox(height: Spacing.space_xs),
-                _InfoRow(
-                  icon: Icons.location_on_rounded,
-                  text: meeting.location!,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ],
+              ),
+              const SizedBox(width: Spacing.space_xs),
+              AppChip(
+                label: _statusLabel,
+                variant: ChipVariant.filled,
+                color: _statusColor,
+              ),
             ],
           ),
-        ),
-        // Status chip stacked on the card's top edge.
-        Positioned(
-          top: Spacing.space_3xs,
-          right: Spacing.space_xs,
-          child: AppChip(
-            label: _statusLabel,
-            variant: ChipVariant.filled,
-            color: _statusColor,
-          ),
-        ),
-      ],
+          if (meeting.description != null &&
+              meeting.description!.isNotEmpty) ...[
+            const SizedBox(height: Spacing.space_sm),
+            Text(
+              meeting.description!,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ],
+          const SizedBox(height: Spacing.space_sm),
+          Divider(color: cs.outlineVariant),
+          const SizedBox(height: Spacing.space_sm),
+          // Date + time in a single row
+          if (meetingDateTime != null)
+            _InfoRow(
+              icon: Icons.calendar_today_rounded,
+              text: DateFormat(
+                "EEEE, dd/MM/yyyy • HH:mm",
+                "pt_BR",
+              ).format(meetingDateTime!),
+              color: cs.primary,
+            ),
+          // Location last
+          if (meeting.location != null && meeting.location!.isNotEmpty) ...[
+            const SizedBox(height: Spacing.space_xs),
+            _InfoRow(
+              icon: Icons.location_on_rounded,
+              text: meeting.location!,
+              color: cs.primary,
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -389,10 +380,10 @@ class _InfoRow extends StatelessWidget {
         Container(
           padding: EdgeInsets.all(Spacing.space_2xs),
           decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
+            color: AppColors.tint(color),
             borderRadius: Radii.radiusSm,
           ),
-          child: Icon(icon, size: 20, color: color),
+          child: Icon(icon, size: AppIconSizes.md, color: color),
         ),
         const SizedBox(width: Spacing.space_xs),
         Expanded(
@@ -416,15 +407,15 @@ class _PresenceBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 28,
-      height: 28,
+      width: AppIconSizes.xl,
+      height: AppIconSizes.xl,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: isPresent ? AppColors.success : AppColors.error,
       ),
       child: Icon(
         isPresent ? Icons.check_rounded : Icons.close_rounded,
-        size: 16,
+        size: AppIconSizes.sm,
         color: AppColors.textOnPrimary,
       ),
     );
@@ -518,7 +509,7 @@ class _PresencesSectionState extends State<_PresencesSection> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Center(child: AppLoadingIndicator(size: 32)),
+              Center(child: AppLoadingIndicator(size: AppIconSizes.xxl)),
               const SizedBox(height: Spacing.space_sm),
               Text(
                 "Carregando presenças...",
@@ -550,7 +541,7 @@ class _PresencesSectionState extends State<_PresencesSection> {
     final isBusy = state.markingPresenceStatus == MarkingPresenceStatus.loading;
 
     return AppCard(
-      elevation: AppCardElevation.none,
+      elevation: AppElevation.none,
       padding: EdgeInsets.zero,
       child: Column(
         children: [
@@ -706,16 +697,16 @@ class _PresencesSectionState extends State<_PresencesSection> {
       child: Row(
         children: [
           SizedBox(
-            width: 24,
+            width: AppIconSizes.lg,
             child: checked
                 ? Icon(
                     Icons.check_rounded,
-                    size: 18,
+                    size: AppIconSizes.sm,
                     color: Theme.of(context).colorScheme.primary,
                   )
                 : null,
           ),
-          Text(label),
+          Text(label, style: AppTypography.titleMedium),
         ],
       ),
     );

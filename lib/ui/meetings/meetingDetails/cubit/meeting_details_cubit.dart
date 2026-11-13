@@ -98,7 +98,9 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
   /// admin/moderator role).
   Future<void> _loadBlockMembers(int? carnivalBlockId) async {
     final currentState = state;
-    if (currentState is! MeetingDetailsLoaded || carnivalBlockId == null) return;
+    if (currentState is! MeetingDetailsLoaded || carnivalBlockId == null) {
+      return;
+    }
 
     final membersResult = await _carnivalBlockMembersRepository
         .getByBlockIdAsync(carnivalBlockId);
@@ -116,7 +118,8 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
     final byId = {for (final e in fetched) e.id: e};
     final memberEntities = <int, MembersEntity>{
       for (final member in blockMembers)
-        member.memberId: byId[member.memberId] ??
+        member.memberId:
+            byId[member.memberId] ??
             // Member row exists but entity missing (deleted?) — placeholder.
             MembersEntity(id: member.memberId, name: "Membro"),
     };
@@ -140,7 +143,8 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
       );
     }
     final hasManagerRole =
-        myMembership != null && (myMembership.role == 1 || myMembership.role == 2);
+        myMembership != null &&
+        (myMembership.role == 1 || myMembership.role == 2);
 
     emit(
       currentState.copyWith(
@@ -200,13 +204,10 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
     if (cached != null) return cached;
 
     final result = await _getCurrentUserData();
-    return result.fold(
-      (member) => member,
-      (exception) {
-        _log.warning('Resolve current member failed', exception);
-        return null;
-      },
-    );
+    return result.fold((member) => member, (exception) {
+      _log.warning('Resolve current member failed', exception);
+      return null;
+    });
   }
 
   Future<void> markPresence({required bool isPresent}) async {
@@ -261,21 +262,17 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
 
       final ResultDart<MeetingPresencesEntity, Exception> result;
       if (existingRow != null) {
-        result = await _meetingPresencesRepository.updateAsync(
-          existingRow.id,
-          {'isPresent': isPresent},
-        );
+        result = await _meetingPresencesRepository.updateAsync(existingRow.id, {
+          'isPresent': isPresent,
+        });
       } else {
         // ponytail: idempotency key prevents duplicates on rapid calls
-        result = await _meetingPresencesRepository.createAsync(
-          {
-            'meetingId': currentState.meeting.id,
-            'memberId': memberId,
-            'carnivalBlockId': currentState.meeting.carnivalBlockId,
-            'isPresent': isPresent,
-          },
-          idempotencyKey: idempotencyKey,
-        );
+        result = await _meetingPresencesRepository.createAsync({
+          'meetingId': currentState.meeting.id,
+          'memberId': memberId,
+          'carnivalBlockId': currentState.meeting.carnivalBlockId,
+          'isPresent': isPresent,
+        }, idempotencyKey: idempotencyKey);
       }
 
       result.fold(

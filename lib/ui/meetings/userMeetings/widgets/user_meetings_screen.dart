@@ -75,8 +75,9 @@ class _UserMeetingsScreenState extends State<UserMeetingsScreen> {
                                 state.meetings.isEmpty) {
                               return AppError(
                                 message: state.errorMessage,
-                                onRetry: () =>
-                                    context.read<UserMeetingsCubit>().loadMeetings(),
+                                onRetry: () => context
+                                    .read<UserMeetingsCubit>()
+                                    .loadMeetings(),
                               );
                             }
 
@@ -84,7 +85,8 @@ class _UserMeetingsScreenState extends State<UserMeetingsScreen> {
                             final filteredMeetings = _searchQuery.isEmpty
                                 ? allMeetings
                                 : allMeetings.where((meeting) {
-                                    final name = meeting.name?.toLowerCase() ?? "";
+                                    final name =
+                                        meeting.name?.toLowerCase() ?? "";
                                     final location =
                                         meeting.location?.toLowerCase() ?? "";
                                     return name.contains(_searchQuery) ||
@@ -95,7 +97,8 @@ class _UserMeetingsScreenState extends State<UserMeetingsScreen> {
                               if (allMeetings.isEmpty) {
                                 return AppEmpty(
                                   title: "Nenhum encontro",
-                                  message: "Você ainda não tem encontros agendados",
+                                  message:
+                                      "Você ainda não tem encontros agendados",
                                   icon: Icons.event_busy_rounded,
                                 );
                               }
@@ -108,7 +111,9 @@ class _UserMeetingsScreenState extends State<UserMeetingsScreen> {
 
                             return RefreshIndicator(
                               onRefresh: () async {
-                                await context.read<UserMeetingsCubit>().loadMeetings();
+                                await context
+                                    .read<UserMeetingsCubit>()
+                                    .loadMeetings();
                               },
                               child: ListView.builder(
                                 padding: EdgeInsets.symmetric(
@@ -118,11 +123,15 @@ class _UserMeetingsScreenState extends State<UserMeetingsScreen> {
                                 itemBuilder: (context, index) {
                                   final meeting = filteredMeetings[index];
                                   return Padding(
-                                    padding: EdgeInsets.only(bottom: Spacing.space_xs),
+                                    padding: EdgeInsets.only(
+                                      bottom: Spacing.space_xs,
+                                    ),
                                     child: MeetingCard(
                                       meeting: meeting,
                                       onTap: () {
-                                        context.push("${Routes.meeting}/${meeting.id}");
+                                        context.push(
+                                          "${Routes.meeting}/${meeting.id}",
+                                        );
                                       },
                                     ),
                                   );

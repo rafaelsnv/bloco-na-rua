@@ -177,11 +177,15 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
           if (state.status == CreateMeetingStatus.success) {
             context.read<UserMeetingsCubit>().loadMeetings();
             context.read<HomeCubit>().loadHomeData();
-            AppSnackbar.success(context, message: "Encontro criado com sucesso");
+            AppSnackbar.success(
+              context,
+              message: "Encontro criado com sucesso",
+            );
             context.pop();
           } else if (state.status == CreateMeetingStatus.failure) {
             final message =
-                state.errorMessage ?? "Erro ao criar encontro. Tente novamente.";
+                state.errorMessage ??
+                "Erro ao criar encontro. Tente novamente.";
             AppSnackbar.error(context, message: message);
           }
         },

@@ -121,10 +121,7 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
 
     final title = _titleController.text.trim();
     if (title.isEmpty) {
-      AppSnackbar.error(
-        context,
-        message: "O título do encontro é obrigatório",
-      );
+      AppSnackbar.error(context, message: "O título do encontro é obrigatório");
       return;
     }
 
@@ -139,10 +136,7 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
       "meetingDateTime": formattedDateTime,
     };
 
-    context.read<EditMeetingCubit>().updateMeeting(
-      meetingId,
-      data,
-    );
+    context.read<EditMeetingCubit>().updateMeeting(meetingId, data);
   }
 
   @override
@@ -171,14 +165,14 @@ class _EditMeetingScreenState extends State<EditMeetingScreen> {
           final meetingId = int.tryParse(widget.meetingId);
           if (meetingId == null) {
             return Scaffold(
-appBar: const AppAppBar(title: "Editar encontro"),
+              appBar: const AppAppBar(title: "Editar encontro"),
               body: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.error_outline_rounded,
-                      size: 48,
+                      size: AppIconSizes.displayXLarge,
                       color: Theme.of(context).colorScheme.error,
                     ),
                     const SizedBox(height: Spacing.space_sm),
@@ -215,7 +209,7 @@ appBar: const AppAppBar(title: "Editar encontro"),
                 children: [
                   Icon(
                     Icons.error_outline_rounded,
-                    size: 48,
+                    size: AppIconSizes.displayXLarge,
                     color: Theme.of(context).colorScheme.error,
                   ),
                   const SizedBox(height: Spacing.space_sm),
