@@ -4,6 +4,9 @@ import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
 import "package:flutter/material.dart";
 
+/// Edge length of the error illustration icon.
+const double _errorIllustrationSize = 80;
+
 class ErrorScreen extends StatelessWidget {
   final String? errorMessage;
 
@@ -23,7 +26,7 @@ class ErrorScreen extends StatelessWidget {
                 const Icon(
                   Icons.error_outline_rounded,
                   color: AppColors.error,
-                  size: 80,
+                  size: _errorIllustrationSize,
                 ),
                 const SizedBox(height: Spacing.sectionGap),
                 Text(

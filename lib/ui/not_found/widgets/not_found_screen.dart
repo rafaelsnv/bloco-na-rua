@@ -4,6 +4,9 @@ import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
 import "package:flutter/material.dart";
 
+/// Edge length of the "page not found" illustration icon.
+const double _notFoundIllustrationSize = 80;
+
 class NotFoundScreen extends StatelessWidget {
   const NotFoundScreen({super.key});
 
@@ -21,7 +24,7 @@ class NotFoundScreen extends StatelessWidget {
                 const Icon(
                   Icons.search_off_rounded,
                   color: AppColors.error,
-                  size: 80,
+                  size: _notFoundIllustrationSize,
                 ),
                 const SizedBox(height: Spacing.sectionGap),
                 Text("404", style: Theme.of(context).textTheme.headlineLarge),

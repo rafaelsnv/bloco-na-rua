@@ -10,6 +10,7 @@ import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_list_tile.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_avatar.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_section_header.dart";
+import "package:bloco_na_rua/ui/core/widgets/feedback/app_dialog.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
@@ -56,9 +57,13 @@ class ProfileScreen extends StatelessWidget {
     final phone = member.phone ?? "";
     final createdAt = member.createdAt;
     final profileImage = member.profileImage;
+    final pagePadding = Spacing.pagePaddingFor(context);
 
     return ListView(
-      padding: const EdgeInsets.all(Spacing.pagePaddingMobile),
+      padding: EdgeInsets.symmetric(
+        horizontal: pagePadding,
+        vertical: Spacing.pagePaddingMobile,
+      ),
       children: [
         // Hero section with edit button
         Padding(
@@ -89,7 +94,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       child: Icon(
                         Icons.edit_rounded,
-                        size: 16,
+                        size: AppIconSizes.sm,
                         color: Theme.of(context).colorScheme.onPrimaryContainer,
                       ),
                     ),
@@ -149,7 +154,7 @@ class ProfileScreen extends StatelessWidget {
         AppButton(
           variant: AppButtonVariant.secondary,
           label: "Sair da conta",
-          icon: const Icon(Icons.logout_rounded, size: 20),
+          icon: const Icon(Icons.logout_rounded, size: AppIconSizes.md),
           isFullWidth: true,
           onPressed: () => _showLogoutDialog(context),
         ),
@@ -164,7 +169,7 @@ class ProfileScreen extends StatelessWidget {
           padding: EdgeInsets.zero,
           child: SwitchListTile(
             secondary: const Icon(Icons.dark_mode_rounded),
-            title: const Text("Modo escuro"),
+            title: Text("Modo escuro", style: AppTypography.titleMedium),
             value: context.watch<ThemeCubit>().isDarkModeEnabled(context),
             onChanged: (v) => context.read<ThemeCubit>().setDarkMode(v),
           ),
@@ -173,31 +178,17 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  void _showLogoutDialog(BuildContext context) {
-    showDialog<void>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text("Sair"),
-        content: const Text("Tem certeza que deseja sair da sua conta?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text("Cancelar"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              context.read<AuthCubit>().logout();
-            },
-            child: Text(
-              "Sair",
-              style: TextStyle(
-                color: Theme.of(dialogContext).colorScheme.error,
-              ),
-            ),
-          ),
-        ],
-      ),
+  Future<void> _showLogoutDialog(BuildContext context) async {
+    final confirmed = await AppDialog.confirm(
+      context,
+      title: "Sair",
+      message: "Tem certeza que deseja sair da sua conta?",
+      confirmLabel: "Sair",
+      cancelLabel: "Cancelar",
+      isDestructive: true,
     );
+    if (confirmed != true) return;
+    if (!context.mounted) return;
+    context.read<AuthCubit>().logout();
   }
 }

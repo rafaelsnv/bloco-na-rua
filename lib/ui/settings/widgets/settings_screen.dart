@@ -49,8 +49,8 @@ class SettingsScreen extends StatelessWidget {
                   title: "Sair",
                   trailing: state is AuthLoading
                       ? const SizedBox(
-                          width: 20,
-                          height: 20,
+                          width: AppIconSizes.md,
+                          height: AppIconSizes.md,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : null,
