@@ -13,6 +13,9 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 import "package:supabase_flutter/supabase_flutter.dart" hide AuthState;
 
+/// Edge length of the mail illustration icon.
+const double _mailIllustrationSize = 100;
+
 class VerifyEmailScreen extends StatefulWidget {
   const VerifyEmailScreen({super.key, required this.email});
 
@@ -38,18 +41,19 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
   }
 
   void _startListeningForVerification() {
-    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen(
-      (response) {
-        if (response.event == AuthChangeEvent.signedIn && response.session != null) {
-          // Verify the session has a recent email confirmation timestamp
-          // to ensure this is from email verification, not just any sign-in
-          final session = response.session!;
-          if (session.user.emailConfirmedAt != null) {
-            _navigateAfterVerification();
-          }
+    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((
+      response,
+    ) {
+      if (response.event == AuthChangeEvent.signedIn &&
+          response.session != null) {
+        // Verify the session has a recent email confirmation timestamp
+        // to ensure this is from email verification, not just any sign-in
+        final session = response.session!;
+        if (session.user.emailConfirmedAt != null) {
+          _navigateAfterVerification();
         }
-      },
-    );
+      }
+    });
   }
 
   void _resendVerification() {
@@ -62,10 +66,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
-          AppSnackbar.error(
-            context,
-            message: state.message,
-          );
+          AppSnackbar.error(context, message: state.message);
         } else if (state is AuthSuccess) {
           AppSnackbar.success(context, message: state.message ?? "Sucesso!");
         } else if (state is AuthAuthenticated) {
@@ -74,20 +75,13 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+          centerTitle: false,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_rounded),
             onPressed: () => context.pop(),
           ),
-          title: Text(
-            "Bloco na Rua",
-            style: AppTypography.displaySmall.copyWith(
-              color: colors.primary,
-            ),
-          ),
+          title: const Text("Bloco na Rua"),
         ),
         body: SafeArea(
           child: Padding(
@@ -99,7 +93,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 const Spacer(),
                 Icon(
                   Icons.mark_email_unread_rounded,
-                  size: 100,
+                  size: _mailIllustrationSize,
                   color: colors.primary,
                 ),
                 const SizedBox(height: Spacing.space_lg),

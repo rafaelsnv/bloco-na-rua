@@ -36,10 +36,7 @@ class LogoutButton extends StatelessWidget {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
-          AppSnackbar.error(
-            context,
-            message: state.message,
-          );
+          AppSnackbar.error(context, message: state.message);
         }
       },
       builder: (context, state) {
