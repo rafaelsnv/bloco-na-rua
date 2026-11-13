@@ -45,26 +45,29 @@ class HomeCubit extends ResumableCubit<HomeState> {
       final now = DateTime.now();
       final today = DateTime(now.year, now.month, now.day);
       final meetings =
-          meetingsResult.getOrNull()
-              ?.where((m) {
-                final meetingDate = m.meetingDateTime;
-                if (meetingDate == null) return false;
-                final meetingDay = DateTime(
-                  meetingDate.year,
-                  meetingDate.month,
-                  meetingDate.day,
-                );
-                return !meetingDay.isBefore(today);
-              }).toList() ??
-              const <MeetingsEntity>[];
+          meetingsResult.getOrNull()?.where((m) {
+            final meetingDate = m.meetingDateTime;
+            if (meetingDate == null) return false;
+            final meetingDay = DateTime(
+              meetingDate.year,
+              meetingDate.month,
+              meetingDate.day,
+            );
+            return !meetingDay.isBefore(today);
+          }).toList() ??
+          const <MeetingsEntity>[];
 
       if (blocksResult.isError()) {
-        _log.warning('Failed to load blocks, showing meetings only',
-            blocksResult.exceptionOrNull());
+        _log.warning(
+          'Failed to load blocks, showing meetings only',
+          blocksResult.exceptionOrNull(),
+        );
       }
       if (meetingsResult.isError()) {
-        _log.warning('Failed to load meetings, showing blocks only',
-            meetingsResult.exceptionOrNull());
+        _log.warning(
+          'Failed to load meetings, showing blocks only',
+          meetingsResult.exceptionOrNull(),
+        );
       }
 
       emit(

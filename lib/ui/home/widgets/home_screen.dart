@@ -7,6 +7,7 @@ import "package:bloco_na_rua/ui/core/widgets/buttons/add_block_fab.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/block_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/meeting_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_section_header.dart";
+import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_empty.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
@@ -25,6 +26,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  /// Fixed height of the horizontal blocks carousel.
+  static const double _blocksCarouselHeight = 90;
+
+  /// Fraction of the viewport width taken by a single card in the carousel.
+  static const double _blockCardWidthFactor = 0.775;
+
   final _fabKey = GlobalKey();
 
   @override
@@ -43,22 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
               previous.status != HomeStatus.failure,
           listener: (context, state) {
             if (state.errorMessage != null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Row(
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        color: Theme.of(context).colorScheme.onError,
-                      ),
-                      const SizedBox(width: Spacing.space_2xs),
-                      Expanded(child: Text(state.errorMessage!)),
-                    ],
-                  ),
-                  backgroundColor: Theme.of(context).colorScheme.error,
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
+              AppSnackbar.error(context, message: state.errorMessage!);
             }
           },
           child: Stack(
@@ -124,6 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildContent(BuildContext context, HomeState state) {
     final blocks = state.blocks;
     final meetings = state.meetings.take(3).toList();
+    final pagePadding = Spacing.pagePaddingFor(context);
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -133,7 +126,10 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           // Hero greeting section
           Padding(
-            padding: const EdgeInsets.all(Spacing.pagePaddingMobile),
+            padding: EdgeInsets.symmetric(
+              horizontal: pagePadding,
+              vertical: Spacing.pagePaddingMobile,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -155,17 +151,20 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
           // Meus blocos section
-          AppSectionHeader(
-            title: "Meus blocos",
-            action: TextButton(
-              onPressed: () {
-                final shell = StatefulNavigationShell.of(context);
-                shell.goBranch(1, initialLocation: true);
-              },
-              child: Text(
-                "Ver todos",
-                style: AppTypography.labelLarge.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: pagePadding),
+            child: AppSectionHeader(
+              title: "Meus blocos",
+              action: TextButton(
+                onPressed: () {
+                  final shell = StatefulNavigationShell.of(context);
+                  shell.goBranch(1, initialLocation: true);
+                },
+                child: Text(
+                  "Ver todos",
+                  style: AppTypography.labelLarge.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
               ),
             ),
@@ -174,9 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
           // Blocks horizontal list
           if (blocks.isEmpty)
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Spacing.pagePaddingMobile,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: pagePadding),
               child: AppEmpty(
                 message: "Nenhum bloco ainda",
                 actionLabel: "Criar bloco",
@@ -187,19 +184,19 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           else
             SizedBox(
-              height: 90,
+              height: _blocksCarouselHeight,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Spacing.pagePaddingMobile,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: pagePadding),
                 itemCount: blocks.length,
                 separatorBuilder: (context, index) =>
                     Container(width: Spacing.space_2xs),
                 itemBuilder: (context, i) {
                   final block = blocks[i];
                   return SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.775,
+                    width:
+                        MediaQuery.of(context).size.width *
+                        _blockCardWidthFactor,
                     child: BlockCard(
                       block: block,
                       onTap: () =>
@@ -213,17 +210,20 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: Spacing.sectionGap),
 
           // Próximos encontros section
-          AppSectionHeader(
-            title: "Próximos encontros",
-            action: TextButton(
-              onPressed: () {
-                final shell = StatefulNavigationShell.of(context);
-                shell.goBranch(2, initialLocation: true);
-              },
-              child: Text(
-                "Ver todos",
-                style: AppTypography.labelLarge.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: pagePadding),
+            child: AppSectionHeader(
+              title: "Próximos encontros",
+              action: TextButton(
+                onPressed: () {
+                  final shell = StatefulNavigationShell.of(context);
+                  shell.goBranch(2, initialLocation: true);
+                },
+                child: Text(
+                  "Ver todos",
+                  style: AppTypography.labelLarge.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
               ),
             ),
@@ -232,16 +232,12 @@ class _HomeScreenState extends State<HomeScreen> {
           // Meetings list
           if (meetings.isEmpty)
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Spacing.pagePaddingMobile,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: pagePadding),
               child: AppEmpty(message: "Nenhum encontro esta semana"),
             )
           else
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Spacing.pagePaddingMobile,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: pagePadding),
               child: Column(
                 children: meetings.map((meeting) {
                   return Padding(
