@@ -20,7 +20,7 @@ import "package:flutter/material.dart";
 /// AppIconTile(
 ///   icon: Icons.event_rounded,
 ///   backgroundColor: colorScheme.primaryContainer,
-///   size: 44,
+///   size: AppIconSizes.displayLarge,
 ///   radius: 22, // circle
 ///   iconSize: AppIconSizes.xl,
 /// )
@@ -31,7 +31,7 @@ class AppIconTile extends StatelessWidget {
     super.key,
     required this.icon,
     required this.backgroundColor,
-    this.size = 40,
+    this.size = AppIconSizes.display,
     this.radius,
     this.iconSize = AppIconSizes.lg,
     this.foregroundColor,

@@ -1,9 +1,8 @@
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:flutter/material.dart";
-
-import "../../tokens/app_colors.dart";
-import "../../tokens/app_radius.dart";
-import "../../tokens/app_spacing.dart";
-import "../../tokens/app_typography.dart";
 
 enum ChipVariant { filled, outlined, soft }
 
@@ -146,7 +145,10 @@ class AppChip extends StatelessWidget {
         // Outlined: transparent background, colored border and text
         final foreground = effectiveColor;
         final background = Colors.transparent;
-        final side = BorderSide(color: effectiveColor, width: 1.5);
+        final side = BorderSide(
+          color: effectiveColor,
+          width: Radii.outlineWidth,
+        );
         return (foreground, background, side);
 
       case ChipVariant.soft:

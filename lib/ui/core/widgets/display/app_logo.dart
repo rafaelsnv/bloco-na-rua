@@ -1,3 +1,4 @@
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:flutter/material.dart";
 
 /// The Bloco na Rua brand mark — a fanfare horn inside a gold sunburst,
@@ -11,7 +12,7 @@ class AppLogo extends StatelessWidget {
   /// Creates an [AppLogo].
   ///
   /// [size] is the edge length of the square mark in logical pixels.
-  const AppLogo({this.size = 32, super.key});
+  const AppLogo({this.size = AppIconSizes.xxl, super.key});
 
   /// Edge length of the square mark in logical pixels.
   final double size;

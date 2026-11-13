@@ -1,8 +1,7 @@
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:flutter/material.dart";
-
-import "../../tokens/app_radius.dart";
-import "../../tokens/app_spacing.dart";
-import "../../tokens/app_typography.dart";
 
 /// Badge size variants.
 ///

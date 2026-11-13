@@ -1,11 +1,10 @@
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/image_url_validator.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/safe_network_image.dart";
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
-
-import "../../tokens/app_colors.dart";
-import "../../tokens/app_radius.dart";
-import "../../tokens/app_typography.dart";
-import "image_url_validator.dart";
-import "safe_network_image.dart";
 
 /// Avatar size variants with their pixel values.
 enum AvatarSize {
@@ -22,14 +21,18 @@ enum AvatarSize {
 /// Avatar shape variants that control border radius.
 enum AvatarShape { circle, square, roundedSquare }
 
-/// AVATAR_PALETTE — colors used for initials background, selected by name hash.
-/// All fills are dark enough for light text in both brightness modes.
-const List<Color> _avatarPalette = [
-  AppColors.primary, // #7C3AED
-  AppColors.accent, // #D97706
-  AppColors.success, // #16A34A
-  AppColors.info, // #0EA5E9
-  AppColors.secondary, // #E11D74
+/// AVATAR_PALETTE — fill/ink pairs used for the initials background, selected
+/// by name hash.
+///
+/// Every fill is paired with an ink that clears WCAG AA (4.5:1) on it: white
+/// on the deep violet and magenta, near-black on the brighter gold, green
+/// and cyan.
+const List<(Color, Color)> _avatarPalette = [
+  (AppColors.primary, AppColors.textOnPrimary), // #7C3AED
+  (AppColors.accent, AppColors.textPrimary), // #D97706
+  (AppColors.success, AppColors.textPrimary), // #16A34A
+  (AppColors.info, AppColors.textPrimary), // #0EA5E9
+  (AppColors.secondary, AppColors.textOnPrimary), // #E11D74
 ];
 
 /// Returns the initials text for a given [name].
@@ -58,9 +61,13 @@ String _getInitials(String? name) {
   }
 }
 
-/// Returns the background color for initials by hashing [name] into the avatar palette.
-Color _getInitialsBackground(String? name) {
-  if (name == null || name.isEmpty) return AppColors.primary;
+/// Returns the (fill, ink) pair for the initials by hashing [name] into the
+/// avatar palette.
+///
+/// The ink is chosen per fill so the initials always clear WCAG AA (4.5:1).
+/// An empty or null [name] falls back to the primary pair.
+(Color, Color) _getInitialsPaletteEntry(String? name) {
+  if (name == null || name.isEmpty) return _avatarPalette.first;
   final hash = name.hashCode.abs();
   return _avatarPalette[hash % _avatarPalette.length];
 }
@@ -81,20 +88,19 @@ String _buildVersionedUrl(String url, Object? versionToken) {
 
 /// Returns the appropriate text style for initials based on [size].
 ///
-/// Foreground is brightness-aware relative to the [background] fill: light
-/// fills get dark text, dark fills get white text.
-TextStyle _getInitialsStyle(AvatarSize size, Color background) {
-  final foreground = AppColors.inkFor(background);
+/// The foreground is the palette ink paired with the initials fill, so it
+/// always clears WCAG AA (4.5:1).
+TextStyle _getInitialsStyle(AvatarSize size, Color ink) {
   switch (size) {
     case AvatarSize.xs:
     case AvatarSize.sm:
-      return AppTypography.labelSmall.copyWith(color: foreground);
+      return AppTypography.labelSmall.copyWith(color: ink);
     case AvatarSize.md:
-      return AppTypography.labelMedium.copyWith(color: foreground);
+      return AppTypography.labelMedium.copyWith(color: ink);
     case AvatarSize.lg:
-      return AppTypography.titleSmall.copyWith(color: foreground);
+      return AppTypography.titleSmall.copyWith(color: ink);
     case AvatarSize.xl:
-      return AppTypography.titleMedium.copyWith(color: foreground);
+      return AppTypography.titleMedium.copyWith(color: ink);
   }
 }
 
@@ -145,34 +151,28 @@ class AppAvatar extends StatelessWidget {
     final isCircle = shape == AvatarShape.circle;
 
     // Show initials widget as a fallback or primary content
-    Widget initialsOrIcon() {
+    Widget initialsOrIcon((Color, Color) palette) {
       final initials = _getInitials(name);
-      final background = _getInitialsBackground(name);
-      // Brightness-aware foreground: dark fills get white icon, light fills
-      // would get dark text (matches _getInitialsStyle).
-      final iconColor = AppColors.inkFor(background);
+      final ink = palette.$2;
 
       if (initials.isEmpty) {
         // No name — show person icon on the hashed background
-        return Icon(
-          Icons.person_rounded,
-          size: diameter * 0.5,
-          color: iconColor,
-        );
+        return Icon(Icons.person_rounded, size: diameter * 0.5, color: ink);
       }
 
-      return Text(initials, style: _getInitialsStyle(size, background));
+      return Text(initials, style: _getInitialsStyle(size, ink));
     }
 
     // If no usable imageUrl, show initials or icon immediately. The validator
     // also rejects backend placeholder strings (e.g. "img") that would
     // otherwise crash CachedNetworkImageProvider.
     if (!isValidImageUrl(imageUrl)) {
+      final palette = _getInitialsPaletteEntry(name);
       if (isCircle) {
         return CircleAvatar(
           radius: radius,
-          backgroundColor: _getInitialsBackground(name),
-          child: initialsOrIcon(),
+          backgroundColor: palette.$1,
+          child: initialsOrIcon(palette),
         );
       }
 
@@ -183,8 +183,8 @@ class AppAvatar extends StatelessWidget {
         child: Container(
           width: diameter,
           height: diameter,
-          color: _getInitialsBackground(name),
-          child: Center(child: initialsOrIcon()),
+          color: palette.$1,
+          child: Center(child: initialsOrIcon(palette)),
         ),
       );
     }
@@ -204,7 +204,7 @@ class AppAvatar extends StatelessWidget {
     if (isCircle) {
       return CircleAvatar(
         radius: radius,
-        backgroundColor: _getInitialsBackground(name),
+        backgroundColor: _getInitialsPaletteEntry(name).$1,
         backgroundImage: imageProvider,
         onBackgroundImageError: (_, _) {
           // CircleAvatar.backgroundImage handles error by showing backgroundColor
