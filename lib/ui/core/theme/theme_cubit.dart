@@ -12,7 +12,9 @@ class ThemeCubit extends Cubit<ThemeMode> {
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
     final storedIndex = prefs.getInt(_key);
-    if (storedIndex != null && storedIndex >= 0 && storedIndex < ThemeMode.values.length) {
+    if (storedIndex != null &&
+        storedIndex >= 0 &&
+        storedIndex < ThemeMode.values.length) {
       emit(ThemeMode.values[storedIndex]);
     }
     // If no stored value — first launch — system brightness is used.

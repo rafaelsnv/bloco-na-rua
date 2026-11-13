@@ -64,6 +64,13 @@ class AppColors {
   static const Color successContainerLight = Color(0xFF14532D);
   static const Color successContainerDark = Color(0xFF052E16);
 
+  /// Shadow base color for the color scheme — opaque black; the elevation
+  /// tokens apply the alpha on top of it.
+  static const Color shadow = Color(0xFF000000);
+
+  /// Scrim color for modal barriers — opaque black.
+  static const Color scrim = Color(0xFF000000);
+
   // Group 6 — Surface Light (Stone anchor + Violet tonal ladder)
   static const Color backgroundLight = Color(0xFFFAFAF9);
   static const Color surfaceLight = Color(0xFFFFFFFF);

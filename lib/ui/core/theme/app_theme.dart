@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
 import "package:bloco_na_rua/ui/core/theme/app_color_schemes.dart";
 import "package:bloco_na_rua/ui/core/theme/app_text_colors.dart";
 import "package:bloco_na_rua/ui/core/theme/app_text_themes.dart";
@@ -25,8 +26,8 @@ class AppTheme {
         // from the content by a hairline instead of a filled brand block.
         backgroundColor: lightColorScheme.surface,
         foregroundColor: lightColorScheme.onSurface,
-        elevation: 0,
-        scrolledUnderElevation: 0,
+        elevation: AppElevation.none.value,
+        scrolledUnderElevation: AppElevation.none.value,
         centerTitle: false,
         surfaceTintColor: Colors.transparent,
         // D4: the theme's headlineMedium is the canonical app bar title style.
@@ -40,7 +41,7 @@ class AppTheme {
       ),
       cardTheme: CardThemeData(
         color: lightColorScheme.surface,
-        elevation: 1,
+        elevation: AppElevation.sm.value,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: Radii.card,
@@ -172,8 +173,8 @@ class AppTheme {
         // D1: flat surface + hairline, matching the light theme.
         backgroundColor: darkColorScheme.surface,
         foregroundColor: darkColorScheme.onSurface,
-        elevation: 0,
-        scrolledUnderElevation: 0,
+        elevation: AppElevation.none.value,
+        scrolledUnderElevation: AppElevation.none.value,
         centerTitle: false,
         surfaceTintColor: Colors.transparent,
         // D4: the theme's headlineMedium is the canonical app bar title style.
@@ -187,7 +188,7 @@ class AppTheme {
       ),
       cardTheme: CardThemeData(
         color: darkColorScheme.surface,
-        elevation: 1,
+        elevation: AppElevation.sm.value,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: Radii.card,

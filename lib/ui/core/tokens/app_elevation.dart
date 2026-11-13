@@ -28,10 +28,10 @@ enum AppElevation {
   /// Extra small — 1dp. Cards at rest.
   sm(1),
 
-  /// Medium — 3dp. Raised cards, dropdowns.
+  /// Medium — 3dp. Raised cards, dropdowns, snackbars.
   md(3),
 
-  /// Large — 6dp. FABs, dialogs, snackbars.
+  /// Large — 6dp. FABs, dialogs.
   lg(6),
 
   /// Extra large — 8dp. Navigation drawer, sticky CTAs.
