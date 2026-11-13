@@ -2,6 +2,7 @@ import "package:bloco_na_rua/ui/core/theme/app_text_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_loading_indicator.dart";
@@ -85,10 +86,14 @@ class AppButton extends StatelessWidget {
         // the widget used to override it back to magenta.
         return colorScheme.primary;
       case AppButtonVariant.accent:
-        // Enabled: white on orange — ~7.5:1 contrast, passes WCAG AA.
-        // Disabled: textDisabled (#A8A29E), intentionally muted.
-        final isDark = Theme.of(context).brightness == Brightness.dark;
-        return isDark ? AppColors.textOnPrimaryDark : Colors.white;
+        // Enabled: near-black ink on the orange fill, in BOTH modes.
+        // Light: #1C1917 on #D97706 = 5.44:1. Dark: #1C1917 on #FBBF24 =
+        // 9.53:1. Both pass WCAG AA (4.5:1) for the 16–18px label. The old
+        // white ink (#FFFFFF on #D97706) was only 3.19:1 — a AA failure on
+        // the app's primary CTA.
+        // The disabled ink is resolved from the disabled fill instead, see
+        // [_contentColor].
+        return AppColors.textPrimary;
       case AppButtonVariant.tertiary:
         return colorScheme.onSurface;
       case AppButtonVariant.ghost:
@@ -96,23 +101,50 @@ class AppButton extends StatelessWidget {
     }
   }
 
+  /// The fill this variant actually paints when disabled.
+  ///
+  /// Every filled variant drops to the neutral `surfaceContainerHigh` ramp,
+  /// so a disabled control never keeps the brand colour and reads as
+  /// enabled. Ghost paints no fill of its own — it has no disabled fill at
+  /// all, so its ink does not come from one (see [_disabledInk]).
+  Color _disabledFill(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return colorScheme.surfaceContainerHigh;
+  }
+
+  /// The ink a disabled control paints.
+  ///
+  /// Filled variants derive it FROM their disabled fill with
+  /// `AppColors.inkFor`, so it can never drift from the fill it is painted
+  /// on: near-black on the light fill (#1C1917 on #EDE9FE, ~14.7:1) and
+  /// near-white on the dark fill (#FFFFFF on #3F4657, ~9.4:1). A pinned
+  /// neutral token (textDisabled) could not do that — #64748B on the dark
+  /// fill was only ~2.0:1.
+  ///
+  /// Ghost paints no fill, so a fill-derived ink would come from the page
+  /// surface instead: near-black in light mode (#1C1917 on #FFFFFF, ~17.5:1)
+  /// and near-white in dark (#FAFAF9 on #1F2937, ~14.1:1) — a DISABLED ghost
+  /// would read as MORE prominent than an enabled one (the enabled brand ink
+  /// is #7C3AED on #FFFFFF, ~5.7:1, in light and #A78BFA on #1F2937, ~5.4:1,
+  /// in dark). Ghost therefore uses the theme's muted disabled ink: #A8A29E
+  /// on #FFFFFF (~2.5:1) in light and #64748B on #1F2937 (~3.1:1) in dark.
+  /// Disabled controls are WCAG-exempt.
+  Color _disabledInk(BuildContext context) {
+    if (variant == AppButtonVariant.ghost) {
+      return Theme.of(context).extension<AppTextColors>()?.textDisabled ??
+          AppColors.textDisabled;
+    }
+    return AppColors.inkFor(_disabledFill(context));
+  }
+
   /// Color actually painted by the label/spinner, which overrides
   /// [ButtonStyle.foregroundColor] because [Text] merges its own color over
   /// the ambient default style. Resolving disabled here (not only in the style)
-  /// is what makes the disabled label match the disabled fill.
-  Color _contentColor(BuildContext context) {
-    if (isDisabled) {
-      // Disabled fill is surfaceContainerHigh — pale violet in light, neutral
-      // slate in dark. Disabled ink is deliberately NOT brand violet: a
-      // saturated primaryLight/primaryDark on that fill becomes the most
-      // chromatic thing in the box and reads as enabled (and clashes with the
-      // slate fill in dark). textDisabled is neutral, so ink and fill share a
-      // hue family and the control reads inert at a glance.
-      // ~3.7:1 dark / ~2.1:1 light — disabled controls are WCAG-exempt.
-      // Resolved from the theme extension so the ink follows the active
-      // brightness instead of being pinned to the light-mode value.
-      return Theme.of(context).extension<AppTextColors>()?.textDisabled ??
-          AppColors.textDisabled;
+  /// is what makes the disabled label match the disabled fill (or, for ghost,
+  /// the muted disabled ink).
+  Color _contentColor(BuildContext context, bool disabled) {
+    if (disabled) {
+      return _disabledInk(context);
     }
     return _foregroundColor(context);
   }
@@ -121,8 +153,12 @@ class AppButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final effectiveOnPressed = isDisabled ? null : onPressed;
     final animationsDisabled = MediaQuery.disableAnimationsOf(context);
+    // A null callback disables the button even when [isDisabled] is false
+    // (the loading state of the logout button does exactly that), so the
+    // disabled look is driven by the effective callback.
+    final isDisabledState = effectiveOnPressed == null;
 
-    final content = _buildContent(context);
+    final content = _buildContent(context, isDisabledState);
     final buttonChild = _buildButtonChild(
       context,
       content,
@@ -138,8 +174,8 @@ class AppButton extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(BuildContext context) {
-    final foreground = _contentColor(context);
+  Widget _buildContent(BuildContext context, bool isDisabledState) {
+    final foreground = _contentColor(context, isDisabledState);
     return Row(
       mainAxisSize: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -179,6 +215,14 @@ class AppButton extends StatelessWidget {
     );
     final textStyle = _textStyle(context, foreground);
 
+    // Disabled fill and the ink derived from it. Every filled variant
+    // resolves the same pair, so the label can never drift from the fill it
+    // sits on and a disabled control never keeps the brand colour. Ghost
+    // paints no fill, so its ink comes from the theme's disabled ink
+    // instead (see [_disabledInk]).
+    final disabledFill = _disabledFill(context);
+    final disabledInk = _disabledInk(context);
+
     final buttonStyle = ButtonStyle(
       minimumSize: WidgetStateProperty.all(minimumSize),
       padding: WidgetStateProperty.all(padding),
@@ -193,8 +237,18 @@ class AppButton extends StatelessWidget {
         key: effectiveKey,
         onPressed: effectiveOnPressed,
         style: buttonStyle.copyWith(
-          backgroundColor: WidgetStateProperty.all(colorScheme.primary),
-          foregroundColor: WidgetStateProperty.all(colorScheme.onPrimary),
+          backgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return disabledFill;
+            }
+            return colorScheme.primary;
+          }),
+          foregroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return disabledInk;
+            }
+            return foreground;
+          }),
         ),
         child: content,
       ),
@@ -204,21 +258,21 @@ class AppButton extends StatelessWidget {
         style: buttonStyle.copyWith(
           backgroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.disabled)) {
-              return colorScheme.surfaceContainerHigh;
+              return disabledFill;
             }
             return isDark ? AppColors.accentLight : AppColors.accent;
           }),
           foregroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.disabled)) {
-              return _contentColor(context);
+              return disabledInk;
             }
             return foreground;
           }),
           elevation: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.disabled)) {
-              return 0.0;
+              return AppElevation.none.value;
             }
-            return isDark ? 0.0 : 6.0;
+            return isDark ? AppElevation.none.value : AppElevation.lg.value;
           }),
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(borderRadius: Radii.buttonAccent),
@@ -230,11 +284,29 @@ class AppButton extends StatelessWidget {
         key: effectiveKey,
         onPressed: effectiveOnPressed,
         style: buttonStyle.copyWith(
-          backgroundColor: WidgetStateProperty.all(Colors.transparent),
-          foregroundColor: WidgetStateProperty.all(foreground),
-          side: WidgetStateProperty.all(
-            BorderSide(color: foreground, width: Radii.outlineWidth),
-          ),
+          backgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return disabledFill;
+            }
+            return Colors.transparent;
+          }),
+          foregroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return disabledInk;
+            }
+            return foreground;
+          }),
+          side: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) {
+              // The brand border is what made the disabled button look
+              // clickable — it drops to the neutral outline token.
+              return BorderSide(
+                color: colorScheme.outline,
+                width: Radii.outlineWidth,
+              );
+            }
+            return BorderSide(color: foreground, width: Radii.outlineWidth);
+          }),
         ),
         child: content,
       ),
@@ -242,9 +314,18 @@ class AppButton extends StatelessWidget {
         key: effectiveKey,
         onPressed: effectiveOnPressed,
         style: buttonStyle.copyWith(
-          foregroundColor: WidgetStateProperty.all(
-            colorScheme.onSecondaryContainer,
-          ),
+          backgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return disabledFill;
+            }
+            return colorScheme.secondaryContainer;
+          }),
+          foregroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return disabledInk;
+            }
+            return colorScheme.onSecondaryContainer;
+          }),
         ),
         child: content,
       ),
@@ -253,7 +334,12 @@ class AppButton extends StatelessWidget {
         onPressed: effectiveOnPressed,
         style: buttonStyle.copyWith(
           backgroundColor: WidgetStateProperty.all(Colors.transparent),
-          foregroundColor: WidgetStateProperty.all(foreground),
+          foregroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return disabledInk;
+            }
+            return foreground;
+          }),
         ),
         child: content,
       ),

@@ -123,7 +123,6 @@ class _AddBlockFabState extends State<AddBlockFab>
         AppFAB(
           icon: Icons.add_rounded,
           onPressed: widget.onFabPressed,
-          fabColor: AppFabColor.primary,
           child: RotationTransition(
             turns: _rotation,
             child: Icon(Icons.add_rounded, size: AppFabSizeMetrics.md.iconSize),
@@ -151,30 +150,36 @@ class _SpeedDialAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedScale(
-      scale: expanded ? 1.0 : 0.5,
-      duration: duration,
-      curve: AppCurves.overshoot,
-      child: AnimatedSlide(
-        offset: expanded ? Offset.zero : const Offset(0, 0.5),
+    return IgnorePointer(
+      // While collapsed the actions are scaled down and fully transparent,
+      // but they are still laid out — without this they would swallow the
+      // taps that land right above the FAB.
+      ignoring: !expanded,
+      child: AnimatedScale(
+        scale: expanded ? 1.0 : 0.5,
         duration: duration,
-        curve: AppCurves.standard,
-        child: AnimatedOpacity(
-          opacity: expanded ? 1 : 0,
+        curve: AppCurves.overshoot,
+        child: AnimatedSlide(
+          offset: expanded ? Offset.zero : const Offset(0, 0.5),
           duration: duration,
-          // Shared AppButton so the radius, border width and ink match every
-          // other outlined button in the app.
-          child: AppButton(
-            variant: AppButtonVariant.secondary,
-            label: label,
-            // Icon color matches the button ink (AppButton paints its own
-            // label but leaves the icon to the ambient IconTheme).
-            icon: Icon(
-              icon,
-              size: AppIconSizes.md,
-              color: Theme.of(context).colorScheme.primary,
+          curve: AppCurves.standard,
+          child: AnimatedOpacity(
+            opacity: expanded ? 1 : 0,
+            duration: duration,
+            // Shared AppButton so the radius, border width and ink match every
+            // other outlined button in the app.
+            child: AppButton(
+              variant: AppButtonVariant.secondary,
+              label: label,
+              // Icon color matches the button ink (AppButton paints its own
+              // label but leaves the icon to the ambient IconTheme).
+              icon: Icon(
+                icon,
+                size: AppIconSizes.md,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              onPressed: onTap,
             ),
-            onPressed: onTap,
           ),
         ),
       ),

@@ -1,20 +1,7 @@
 import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:flutter/material.dart";
-
-/// Color variants for [AppFAB].
-enum AppFabColor {
-  /// Primary violet — brand primary.
-  primary,
-
-  /// Accent orange — call-to-action.
-  accent,
-
-  /// Tertiary teal — presence/online indicators.
-  tertiary,
-}
 
 /// A design-system-compliant FAB widget supporting basic and extended variants,
 /// using [FloatingActionButton] which provides native press feedback.
@@ -30,8 +17,6 @@ class AppFAB extends StatelessWidget {
   ///
   /// [size] defaults to [AppFabSizeMetrics.md] (48px diameter).
   ///
-  /// [fabColor] defaults to [AppFabColor.accent] (orange).
-  ///
   /// [child] overrides [icon] when non-null — useful for inline loading
   /// indicators. Pair with `onPressed: null` to disable interaction.
   const AppFAB({
@@ -40,7 +25,6 @@ class AppFAB extends StatelessWidget {
     this.label,
     this.child,
     this.size = AppFabSizeMetrics.md,
-    this.fabColor = AppFabColor.accent,
     super.key,
   });
 
@@ -57,28 +41,17 @@ class AppFAB extends StatelessWidget {
   /// Size preset pulling all metrics from [AppFabSizeMetrics].
   final AppFabSizeMetrics size;
 
-  /// Color variant controlling the FAB background color.
-  final AppFabColor fabColor;
-
   /// Optional override for the FAB's child widget (e.g. a spinner).
   final Widget? child;
 
-  // ponytail: FAB primary uses light variant in dark mode for better contrast on dark surface
-  Color _backgroundColor(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return switch (fabColor) {
-      AppFabColor.primary => colorScheme.primary,
-      // Mirrors AppButton's accent fill: the dark-mode variant is the lighter
-      // gold, which keeps the FAB readable on a dark surface.
-      AppFabColor.accent => isDark ? AppColors.accentLight : AppColors.accent,
-      AppFabColor.tertiary => colorScheme.tertiary,
-    };
-  }
+  /// Fill for the FAB — the theme's primary colour.
+  Color _backgroundColor(BuildContext context) =>
+      Theme.of(context).colorScheme.primary;
 
-  /// Ink for the FAB content, derived from the fill it sits on.
+  /// Ink for the FAB content: the scheme's [ColorScheme.onPrimary], the token
+  /// designed for exactly this pairing.
   Color _foregroundColor(BuildContext context) =>
-      AppColors.inkFor(_backgroundColor(context));
+      Theme.of(context).colorScheme.onPrimary;
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,5 @@
 import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:flutter/material.dart";
 
 /// A design-system-compliant icon button widget supporting three size presets,
@@ -61,7 +62,7 @@ class AppIconButton extends StatelessWidget {
         splashRadius: animationsDisabled ? 0 : null,
         hoverColor: animationsDisabled
             ? Colors.transparent
-            : colorScheme.primary.withValues(alpha: 0.1),
+            : AppColors.tint(colorScheme.primary, 0.10),
       ),
     );
 
