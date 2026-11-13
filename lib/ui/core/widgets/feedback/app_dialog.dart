@@ -1,8 +1,8 @@
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:flutter/material.dart";
-
-import "../../tokens/app_colors.dart";
-import "../../tokens/app_radius.dart";
-import "../buttons/app_button.dart";
 
 /// Static helper class for themed confirm and alert dialogs.
 ///
@@ -124,7 +124,11 @@ class _AlertDialogContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       icon: icon != null
-          ? Icon(icon, size: 48, color: AppColors.primary)
+          ? Icon(
+              icon,
+              size: AppIconSizes.displayXLarge,
+              color: AppColors.primary,
+            )
           : null,
       title: Text(title),
       content: Text(message),

@@ -8,9 +8,12 @@ import "package:bloco_na_rua/ui/core/cubit/fab_state.dart";
 class FabStateCubit extends Cubit<FabState> {
   FabStateCubit() : super(const FabState());
 
-  void toggle() => emit(state.copyWith(expanded: !state.expanded, shouldAnimate: true));
+  void toggle() =>
+      emit(state.copyWith(expanded: !state.expanded, shouldAnimate: true));
 
   void dismiss({bool animate = true}) {
-    if (state.expanded) emit(state.copyWith(expanded: false, shouldAnimate: animate));
+    if (state.expanded) {
+      emit(state.copyWith(expanded: false, shouldAnimate: animate));
+    }
   }
 }

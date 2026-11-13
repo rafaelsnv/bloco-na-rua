@@ -1,5 +1,6 @@
-import "package:flutter/material.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:flutter/material.dart";
 
 /// A design-system-compliant app bar widget that implements [PreferredSizeWidget].
 ///
@@ -54,7 +55,7 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Defaults to [ColorScheme.onSurface].
   final Color? foregroundColor;
 
-  /// Elevation for the app bar. Defaults to 0.
+  /// Elevation for the app bar. Defaults to [AppElevation.none] (0).
   final double? elevation;
 
   /// When false, no back button is shown even if the navigator can pop.
@@ -93,8 +94,8 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: effectiveBackgroundColor,
       foregroundColor: effectiveForegroundColor,
-      elevation: elevation ?? 0,
-      scrolledUnderElevation: 1,
+      elevation: elevation ?? AppElevation.none.value,
+      scrolledUnderElevation: AppElevation.sm.value,
       centerTitle: centerTitle,
       automaticallyImplyLeading: showBackButton && leading == null,
       leading: leading,

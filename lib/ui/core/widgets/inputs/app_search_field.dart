@@ -1,7 +1,6 @@
+import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:flutter/material.dart";
-
-import "../../tokens/app_duration.dart";
-import "../../tokens/app_spacing.dart";
 
 /// Search field widget with prefix search icon and clear-button suffix.
 class AppSearchField extends StatefulWidget {

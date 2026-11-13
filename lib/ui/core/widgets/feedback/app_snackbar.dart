@@ -1,11 +1,10 @@
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:flutter/material.dart";
-
-import "../../tokens/app_colors.dart";
-import "../../tokens/app_elevation.dart";
-import "../../tokens/app_radius.dart";
-import "../../tokens/app_duration.dart";
-import "../../tokens/app_spacing.dart";
-import "../../tokens/app_typography.dart";
 
 /// Static helper class for showing themed SnackBars.
 ///
@@ -26,6 +25,7 @@ class AppSnackbar {
     required String message,
     String? actionLabel,
     VoidCallback? onAction,
+    bool showCloseIcon = false,
   }) {
     _show(
       context,
@@ -35,6 +35,7 @@ class AppSnackbar {
       message,
       actionLabel,
       onAction,
+      showCloseIcon,
     );
   }
 
@@ -44,6 +45,7 @@ class AppSnackbar {
     required String message,
     String? actionLabel,
     VoidCallback? onAction,
+    bool showCloseIcon = false,
   }) {
     _show(
       context,
@@ -53,6 +55,7 @@ class AppSnackbar {
       message,
       actionLabel,
       onAction,
+      showCloseIcon,
     );
   }
 
@@ -62,6 +65,7 @@ class AppSnackbar {
     required String message,
     String? actionLabel,
     VoidCallback? onAction,
+    bool showCloseIcon = false,
   }) {
     _show(
       context,
@@ -71,6 +75,7 @@ class AppSnackbar {
       message,
       actionLabel,
       onAction,
+      showCloseIcon,
     );
   }
 
@@ -80,6 +85,7 @@ class AppSnackbar {
     required String message,
     String? actionLabel,
     VoidCallback? onAction,
+    bool showCloseIcon = false,
   }) {
     _show(
       context,
@@ -89,6 +95,7 @@ class AppSnackbar {
       message,
       actionLabel,
       onAction,
+      showCloseIcon,
     );
   }
 
@@ -96,8 +103,8 @@ class AppSnackbar {
   ///
   /// [containerLight]/[containerDark] select the container token per brightness
   /// (Material ColorScheme has no warning/info/successContainer slots). The
-  /// content color is picked by container luminance so dark containers always
-  /// get light text and light containers get dark text.
+  /// content color comes from the canonical `AppColors.inkFor` rule, so dark
+  /// containers always get light text and light containers get dark text.
   static void _show(
     BuildContext context,
     Color containerLight,
@@ -106,20 +113,19 @@ class AppSnackbar {
     String message,
     String? actionLabel,
     VoidCallback? onAction,
+    bool showCloseIcon,
   ) {
     if (!context.mounted) return;
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final container = isDark ? containerDark : containerLight;
-    final contentColor = container.computeLuminance() > 0.5
-        ? AppColors.textPrimary
-        : AppColors.textPrimaryDark;
+    final contentColor = AppColors.inkFor(container);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
           children: [
-            Icon(icon, color: contentColor, size: 24),
+            Icon(icon, color: contentColor, size: AppIconSizes.lg),
             SizedBox(width: Spacing.space_sm),
             Expanded(
               child: Text(
@@ -141,6 +147,11 @@ class AppSnackbar {
         backgroundColor: container,
         behavior: SnackBarBehavior.floating,
         margin: EdgeInsets.all(Spacing.pagePaddingMobile),
+        // Opt-in close affordance for long messages that the user wants to
+        // dismiss before the timeout. Off by default so the short snackbars
+        // keep their current look.
+        showCloseIcon: showCloseIcon,
+        closeIconColor: contentColor,
         // Border radius 12px — same as Radii.radiusMd.
         shape: RoundedRectangleBorder(borderRadius: Radii.radiusMd),
         duration: AppDurations.snackbar,
