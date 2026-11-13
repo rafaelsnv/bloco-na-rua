@@ -1,5 +1,7 @@
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:bloco_na_rua/ui/onboarding/screens/onboarding_1_screen.dart";
@@ -34,8 +36,8 @@ class _OnboardingWrapperState extends State<OnboardingWrapper> {
   void _nextPage() {
     if (_currentPage < _pages.length - 1) {
       _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOutCubic,
+        duration: AppDurations.slow,
+        curve: AppCurves.standard,
       );
     } else {
       _completeOnboarding();
@@ -122,12 +124,12 @@ class _OnboardingWrapperState extends State<OnboardingWrapper> {
         ? Theme.of(context).colorScheme.outlineVariant
         : Theme.of(context).colorScheme.outline;
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
+      duration: AppDurations.normal,
       margin: const EdgeInsets.symmetric(horizontal: Spacing.space_2xs),
-      width: isActive ? 24 : 8,
-      height: 8,
+      width: isActive ? Spacing.space_md : Spacing.space_2xs,
+      height: Spacing.space_2xs,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: Radii.radiusXs,
         color: isActive ? Theme.of(context).colorScheme.primary : inactiveColor,
       ),
     );

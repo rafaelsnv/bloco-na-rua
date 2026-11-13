@@ -3,6 +3,9 @@ import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_logo.dart";
 import "package:flutter/material.dart";
 
+/// Edge length of the onboarding hero artwork.
+const double _heroArtSize = 120;
+
 class Onboarding1Screen extends StatelessWidget {
   const Onboarding1Screen({super.key});
 
@@ -15,13 +18,11 @@ class Onboarding1Screen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Spacer(),
-          const AppLogo(size: 120),
+          const AppLogo(size: _heroArtSize),
           const SizedBox(height: Spacing.space_xl),
           Text(
             "O que é um bloco?",
-            style: AppTypography.headlineLarge.copyWith(
-              color: colors.primary,
-            ),
+            style: AppTypography.headlineLarge.copyWith(color: colors.primary),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: Spacing.space_md),

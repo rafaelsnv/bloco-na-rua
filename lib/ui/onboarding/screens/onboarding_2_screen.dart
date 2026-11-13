@@ -2,6 +2,9 @@ import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:flutter/material.dart";
 
+/// Edge length of the onboarding hero artwork.
+const double _heroArtSize = 120;
+
 class Onboarding2Screen extends StatelessWidget {
   const Onboarding2Screen({super.key});
 
@@ -14,13 +17,15 @@ class Onboarding2Screen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Spacer(),
-          Icon(Icons.group_add_rounded, size: 120, color: colors.primary),
+          Icon(
+            Icons.group_add_rounded,
+            size: _heroArtSize,
+            color: colors.primary,
+          ),
           const SizedBox(height: Spacing.space_xl),
           Text(
             "Crie ou entre em um bloco",
-            style: AppTypography.headlineLarge.copyWith(
-              color: colors.primary,
-            ),
+            style: AppTypography.headlineLarge.copyWith(color: colors.primary),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: Spacing.space_md),
