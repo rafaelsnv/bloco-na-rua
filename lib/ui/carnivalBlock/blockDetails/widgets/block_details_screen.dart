@@ -8,7 +8,8 @@ import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_state.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/theme/app_text_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
@@ -18,6 +19,7 @@ import "package:bloco_na_rua/ui/core/widgets/buttons/app_icon_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_list_tile.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_avatar.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_icon_tile.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_section_header.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/image_url_validator.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_dialog.dart";
@@ -32,6 +34,12 @@ import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 import "package:intl/intl.dart";
+
+/// Glyph size of the small leading icon on an info row.
+const double _rowIconSize = 18;
+
+/// Edge length of the leading icon tile on list rows.
+const double _listIconTileSize = 36;
 
 class BlockDetailsScreen extends StatefulWidget {
   const BlockDetailsScreen({super.key, required this.carnivalBlockId});
@@ -252,7 +260,8 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
       case 1:
         return Theme.of(context).colorScheme.primary;
       case 2:
-        return AppColors.info;
+        // Semantic "info" role: deeper cyan in light mode, lighter in dark.
+        return Theme.of(context).extension<AppTextColors>()!.info;
       default:
         return Theme.of(context).colorScheme.primary;
     }
@@ -342,7 +351,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
                       leading: Icon(
                         Icons.event_rounded,
                         color: Theme.of(context).colorScheme.primary,
-                        size: 24,
+                        size: AppIconSizes.lg,
                       ),
                       action: canManageMembers
                           ? TextButton(
@@ -367,7 +376,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
                       leading: Icon(
                         Icons.people_rounded,
                         color: Theme.of(context).colorScheme.primary,
-                        size: 24,
+                        size: AppIconSizes.lg,
                       ),
                       action: canManageMembers
                           ? TextButton(
@@ -431,7 +440,7 @@ class _BlockInfoCardState extends State<_BlockInfoCard> {
     final carnivalBlock = widget.carnivalBlock;
     final canManageMembers = widget.canManageMembers;
     return AppCard(
-      elevation: AppCardElevation.sm,
+      elevation: AppElevation.sm,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -440,23 +449,23 @@ class _BlockInfoCardState extends State<_BlockInfoCard> {
             children: [
               if (isValidImageUrl(carnivalBlock.carnivalBlockImage))
                 CircleAvatar(
-                  radius: 22,
+                  radius: AppIconSizes.displayLarge / 2,
                   backgroundImage: CachedNetworkImageProvider(
                     carnivalBlock.carnivalBlockImage,
                   ),
                 )
               else
-                Container(
-                  padding: const EdgeInsets.all(Spacing.space_sm),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.celebration_rounded,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    size: 28,
-                  ),
+                AppIconTile(
+                  icon: Icons.celebration_rounded,
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.primaryContainer,
+                  size: AppIconSizes.displayLarge,
+                  radius: AppIconSizes.displayLarge / 2,
+                  iconSize: AppIconSizes.xl,
+                  foregroundColor: Theme.of(
+                    context,
+                  ).colorScheme.onPrimaryContainer,
                 ),
               const SizedBox(width: Spacing.space_sm),
               Expanded(
@@ -540,19 +549,27 @@ class _CodeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    // The invite-code containers sit so close to the card surface in dark
+    // mode (#3B1220 / #0E3540 on #1F2937) that the card needs an edge of
+    // its own — `outline` gives it one. In light mode `outlineVariant` keeps
+    // the edge invisible, so the cards do not get louder than before.
+    final borderColor = Theme.of(context).brightness == Brightness.dark
+        ? colorScheme.outline
+        : colorScheme.outlineVariant;
+
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: Spacing.space_sm,
-      ),
+      padding: const EdgeInsets.all(Spacing.space_sm),
       decoration: BoxDecoration(
         color: containerColor,
         borderRadius: Radii.radiusSm,
+        border: Border.all(color: borderColor, width: 1),
       ),
       child: Column(
         children: [
           Row(
             children: [
-              Icon(icon, size: 18, color: onContainerColor),
+              Icon(icon, size: _rowIconSize, color: onContainerColor),
               const SizedBox(width: Spacing.space_2xs),
               Expanded(
                 child: Text(
@@ -563,36 +580,33 @@ class _CodeCard extends StatelessWidget {
                 ),
               ),
               AppIconButton(
-                  icon: obscured
-                      ? Icons.visibility_off_rounded
-                      : Icons.visibility_rounded,
-                  size: AppIconButtonSizeMetrics.between,
-                  color: onContainerColor,
-                  onPressed: onToggleObscure,
-                ),
+                icon: obscured
+                    ? Icons.visibility_off_rounded
+                    : Icons.visibility_rounded,
+                size: AppIconButtonSizeMetrics.between,
+                color: onContainerColor,
+                onPressed: onToggleObscure,
+              ),
             ],
           ),
-          Transform.translate(
-            offset: const Offset(0, -5),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    obscured ? "••••••••••••" : code,
-                    style: AppTypography.titleLarge.copyWith(
-                      color: onContainerColor,
-                      fontWeight: FontWeight.bold,
-                    ),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  obscured ? "••••••••••••" : code,
+                  style: AppTypography.titleLarge.copyWith(
+                    color: onContainerColor,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
+              ),
               AppIconButton(
                 icon: Icons.copy_rounded,
                 size: AppIconButtonSizeMetrics.between,
                 color: onContainerColor,
                 onPressed: onCopy,
               ),
-              ],
-            ),
+            ],
           ),
         ],
       ),
@@ -617,7 +631,7 @@ class _MeetingsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isLoading) {
       return AppCard(
-        elevation: AppCardElevation.sm,
+        elevation: AppElevation.sm,
         child: Padding(
           padding: const EdgeInsets.all(Spacing.space_lg),
           child: Center(
@@ -640,7 +654,7 @@ class _MeetingsSection extends StatelessWidget {
 
     if (error != null) {
       return AppCard(
-        elevation: AppCardElevation.sm,
+        elevation: AppElevation.sm,
         child: Padding(
           padding: const EdgeInsets.all(Spacing.space_lg),
           child: Center(
@@ -648,7 +662,7 @@ class _MeetingsSection extends StatelessWidget {
               children: [
                 Icon(
                   Icons.error_outline_rounded,
-                  size: 32,
+                  size: AppIconSizes.xxl,
                   color: Theme.of(context).colorScheme.error,
                 ),
                 const SizedBox(height: Spacing.space_sm),
@@ -675,7 +689,7 @@ class _MeetingsSection extends StatelessWidget {
 
     if (meetings.isEmpty) {
       return AppCard(
-        elevation: AppCardElevation.sm,
+        elevation: AppElevation.sm,
         child: Padding(
           padding: const EdgeInsets.all(Spacing.space_md),
           child: Row(
@@ -683,7 +697,7 @@ class _MeetingsSection extends StatelessWidget {
               Icon(
                 Icons.event_busy_rounded,
                 color: Theme.of(context).colorScheme.outline,
-                size: 20,
+                size: AppIconSizes.md,
               ),
               const SizedBox(width: Spacing.space_2xs),
               Text(
@@ -699,7 +713,7 @@ class _MeetingsSection extends StatelessWidget {
     }
 
     return AppCard(
-      elevation: AppCardElevation.sm,
+      elevation: AppElevation.sm,
       padding: EdgeInsets.zero,
       child: ListView.separated(
         shrinkWrap: true,
@@ -714,17 +728,13 @@ class _MeetingsSection extends StatelessWidget {
           final meetingDateTime = meeting.meetingDateTime;
 
           return AppListTile(
-            leading: Container(
-              padding: const EdgeInsets.all(Spacing.space_2xs),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                borderRadius: Radii.radiusSm,
-              ),
-              child: Icon(
-                Icons.event_rounded,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-                size: 20,
-              ),
+            leading: AppIconTile(
+              icon: Icons.event_rounded,
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              size: _listIconTileSize,
+              radius: Radii.sm,
+              iconSize: AppIconSizes.md,
+              foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
             ),
             title: meeting.name ?? "Sem título",
             subtitle: meetingDateTime != null
@@ -774,7 +784,7 @@ class _MembersSection extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isLoading) {
       return AppCard(
-        elevation: AppCardElevation.sm,
+        elevation: AppElevation.sm,
         child: Padding(
           padding: const EdgeInsets.all(Spacing.space_lg),
           child: Center(
@@ -797,7 +807,7 @@ class _MembersSection extends StatelessWidget {
 
     if (error != null) {
       return AppCard(
-        elevation: AppCardElevation.sm,
+        elevation: AppElevation.sm,
         child: Padding(
           padding: const EdgeInsets.all(Spacing.space_lg),
           child: Center(
@@ -805,7 +815,7 @@ class _MembersSection extends StatelessWidget {
               children: [
                 Icon(
                   Icons.error_outline_rounded,
-                  size: 32,
+                  size: AppIconSizes.xxl,
                   color: Theme.of(context).colorScheme.error,
                 ),
                 const SizedBox(height: Spacing.space_sm),
@@ -832,7 +842,7 @@ class _MembersSection extends StatelessWidget {
 
     if (members.isEmpty) {
       return AppCard(
-        elevation: AppCardElevation.sm,
+        elevation: AppElevation.sm,
         child: Padding(
           padding: const EdgeInsets.all(Spacing.space_md),
           child: Row(
@@ -840,7 +850,7 @@ class _MembersSection extends StatelessWidget {
               Icon(
                 Icons.people_outline_rounded,
                 color: Theme.of(context).colorScheme.outline,
-                size: 20,
+                size: AppIconSizes.md,
               ),
               const SizedBox(width: Spacing.space_2xs),
               Expanded(
@@ -947,7 +957,7 @@ class _MembersSection extends StatelessWidget {
     }
 
     return AppCard(
-      elevation: AppCardElevation.sm,
+      elevation: AppElevation.sm,
       padding: EdgeInsets.zero,
       child: ListView.separated(
         shrinkWrap: true,
@@ -1049,8 +1059,8 @@ class _MemberRow extends StatelessWidget {
           ),
           if (isDeleting) ...[
             const SizedBox(
-              width: 24,
-              height: 24,
+              width: Spacing.space_md,
+              height: Spacing.space_md,
               child: CircularProgressIndicator(strokeWidth: 2),
             ),
           ] else if (canManageMembers) ...[

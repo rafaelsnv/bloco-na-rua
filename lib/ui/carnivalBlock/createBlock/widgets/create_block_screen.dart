@@ -65,8 +65,8 @@ class _CreateBlockScreenState extends State<CreateBlockScreen> {
                       // Illustration
                       Center(
                         child: Container(
-                          width: 96,
-                          height: 96,
+                          width: Spacing.space_4xl,
+                          height: Spacing.space_4xl,
                           decoration: BoxDecoration(
                             color: Theme.of(
                               context,
@@ -75,7 +75,7 @@ class _CreateBlockScreenState extends State<CreateBlockScreen> {
                           ),
                           child: Icon(
                             Icons.celebration_rounded,
-                            size: 48,
+                            size: AppIconSizes.displayXLarge,
                             color: Theme.of(
                               context,
                             ).colorScheme.onPrimaryContainer,

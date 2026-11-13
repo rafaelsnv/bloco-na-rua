@@ -26,6 +26,12 @@ class EditBlockScreen extends StatefulWidget {
 }
 
 class _EditBlockScreenState extends State<EditBlockScreen> {
+  /// Height of the block image preview box.
+  static const double _imageBoxHeight = 150;
+
+  /// Width of the block image preview box.
+  static const double _imageBoxWidth = 200;
+
   final _nameController = TextEditingController();
   String _currentImage = "";
   String _originalName = "";
@@ -40,7 +46,8 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<EditBlockCubit, EditBlockState>(
-      listenWhen: (prev, curr) => prev is! EditBlockLoaded && curr is EditBlockLoaded && !_initialized,
+      listenWhen: (prev, curr) =>
+          prev is! EditBlockLoaded && curr is EditBlockLoaded && !_initialized,
       listener: (context, state) {
         final loaded = state as EditBlockLoaded;
         _nameController.text = loaded.name;
@@ -53,7 +60,10 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
           if (state is EditBlockSuccess) {
             context.read<BlockListCubit>().loadBlocks();
             context.read<HomeCubit>().loadHomeData();
-            AppSnackbar.success(context, message: "Bloco atualizado com sucesso");
+            AppSnackbar.success(
+              context,
+              message: "Bloco atualizado com sucesso",
+            );
             context.pop();
           } else if (state is EditBlockError) {
             AppSnackbar.error(context, message: state.message);
@@ -174,8 +184,8 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
           child: hasImage
               ? Image.network(
                   state.carnivalBlockImage,
-                  height: 150,
-                  width: 200,
+                  height: _imageBoxHeight,
+                  width: _imageBoxWidth,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) =>
                       _buildImagePlaceholder(context),
@@ -195,12 +205,12 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
 
   Widget _buildImagePlaceholder(BuildContext context) {
     return Container(
-      height: 150,
-      width: 200,
+      height: _imageBoxHeight,
+      width: _imageBoxWidth,
       color: Theme.of(context).colorScheme.surfaceContainerHighest,
       child: Icon(
         Icons.image_not_supported_rounded,
-        size: 48,
+        size: AppIconSizes.displayXLarge,
         color: Theme.of(context).colorScheme.onSurfaceVariant,
       ),
     );

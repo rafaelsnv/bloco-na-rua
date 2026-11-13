@@ -11,6 +11,7 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 
 class JoinBlockModal extends StatefulWidget {
@@ -40,7 +41,7 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<JoinBlockCubit, JoinBlockState>(
-        listener: (context, state) {
+      listener: (context, state) {
         if (state is JoinBlockSuccess) {
           context.read<BlockListCubit>().loadBlocks();
           context.read<HomeCubit>().loadHomeData();
@@ -51,111 +52,107 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
         }
       },
       builder: (context, state) {
-          final isLoading = state is JoinBlockLoading;
+        final isLoading = state is JoinBlockLoading;
 
-          return Scaffold(
-            appBar: const AppAppBar(
-              title: "Entrar em bloco",
-              showBackButton: true,
-            ),
-            body: SafeArea(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(Spacing.space_md),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: Spacing.space_lg),
-                    // Icon illustration
-                    Center(
-                      child: Container(
-                        width: 96,
-                        height: 96,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primaryContainer
-                              .withValues(
-                                alpha: MediaQuery.disableAnimationsOf(context)
-                                    ? 1.0
-                                    : 0.85,
+        return Scaffold(
+          appBar: const AppAppBar(
+            title: "Entrar em bloco",
+            showBackButton: true,
+          ),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(Spacing.space_md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: Spacing.space_lg),
+                  // Icon illustration
+                  Center(
+                    child: Container(
+                      width: Spacing.space_4xl,
+                      height: Spacing.space_4xl,
+                      decoration: BoxDecoration(
+                        color: AppColors.tint(
+                          Theme.of(context).colorScheme.primaryContainer,
+                          MediaQuery.disableAnimationsOf(context) ? 1.0 : 0.85,
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.group_add_rounded,
+                        size: AppIconSizes.displayXLarge,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: Spacing.space_lg),
+                  // Description text
+                  AppCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Entre em um bloco",
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        const SizedBox(height: Spacing.space_xs),
+                        Text(
+                          "Peça o código de convite ao dono do bloco para entrar.",
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
                               ),
-                          shape: BoxShape.circle,
                         ),
-                        child: Icon(
-                          Icons.group_add_rounded,
-                          size: 48,
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onPrimaryContainer,
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: Spacing.space_lg),
+                  // Invite code form
+                  Form(
+                    key: _formKey,
+                    child: AppTextField(
+                      controller: _inviteCodeController,
+                      label: "Código de convite",
+                      hint: "Cole aqui o código",
+                      prefixIcon: Icons.vpn_key_rounded,
+                      autofocus: true,
+                      textInputAction: TextInputAction.done,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r"[A-Za-z0-9]"),
                         ),
-                      ),
+                        _UpperCaseTextFormatter(),
+                      ],
+                      onSubmitted: (_) => _submit(context),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return "Digite o código de convite";
+                        }
+                        if (value.trim().length < 4) {
+                          return "Código muito curto";
+                        }
+                        return null;
+                      },
                     ),
-                    const SizedBox(height: Spacing.space_lg),
-                    // Description text
-                    AppCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Entre em um bloco",
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          const SizedBox(height: Spacing.space_xs),
-                          Text(
-                            "Peça o código de convite ao dono do bloco para entrar.",
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: Spacing.space_lg),
-                    // Invite code form
-                    Form(
-                      key: _formKey,
-                      child: AppTextField(
-                        controller: _inviteCodeController,
-                        label: "Código de convite",
-                        hint: "Cole aqui o código",
-                        prefixIcon: Icons.vpn_key_rounded,
-                        autofocus: true,
-                        textInputAction: TextInputAction.done,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                            RegExp(r"[A-Za-z0-9]"),
-                          ),
-                          _UpperCaseTextFormatter(),
-                        ],
-                        onSubmitted: (_) => _submit(context),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Digite o código de convite";
-                          }
-                          if (value.trim().length < 4) {
-                            return "Código muito curto";
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: Spacing.space_lg),
-                    // Submit button
-                    AppButton(
-                      label: "Entrar",
-                      variant: AppButtonVariant.primary,
-                      isFullWidth: true,
-                      isLoading: isLoading,
-                      onPressed: () => _submit(context),
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: Spacing.space_lg),
+                  // Submit button
+                  AppButton(
+                    label: "Entrar",
+                    variant: AppButtonVariant.primary,
+                    isFullWidth: true,
+                    isLoading: isLoading,
+                    onPressed: () => _submit(context),
+                  ),
+                ],
               ),
             ),
-          );
-        },
-      );
+          ),
+        );
+      },
+    );
   }
 }
 

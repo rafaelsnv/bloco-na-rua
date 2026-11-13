@@ -7,6 +7,7 @@ import "package:bloco_na_rua/ui/core/cubit/fab_state_cubit.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/add_block_fab.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/block_card.dart";
+import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_empty.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
@@ -37,7 +38,8 @@ class _BlockListScreenContent extends StatefulWidget {
   const _BlockListScreenContent();
 
   @override
-  State<_BlockListScreenContent> createState() => _BlockListScreenContentState();
+  State<_BlockListScreenContent> createState() =>
+      _BlockListScreenContentState();
 }
 
 class _BlockListScreenContentState extends State<_BlockListScreenContent> {
@@ -57,13 +59,10 @@ class _BlockListScreenContentState extends State<_BlockListScreenContent> {
           listener: (context, state) {
             if (state.status == BlockListStatus.failure &&
                 state.errorMessage != null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    state.errorMessage!.replaceAll("Exception: ", ""),
-                  ),
-                  showCloseIcon: true,
-                ),
+              AppSnackbar.error(
+                context,
+                message: state.errorMessage!.replaceAll("Exception: ", ""),
+                showCloseIcon: true,
               );
             }
           },
@@ -75,10 +74,11 @@ class _BlockListScreenContentState extends State<_BlockListScreenContent> {
                     onDismiss: () => context.read<FabStateCubit>().dismiss(),
                   ),
                 Scaffold(
-                  appBar: const AppAppBar(title: "Blocos", showBackButton: false),
-                  body: SafeArea(
-                    child: _buildBody(context, state),
+                  appBar: const AppAppBar(
+                    title: "Blocos",
+                    showBackButton: false,
                   ),
+                  body: SafeArea(child: _buildBody(context, state)),
                   floatingActionButton: AddBlockFab(
                     key: _fabKey,
                     isExpanded: fabState.expanded,
@@ -142,7 +142,10 @@ class _BlockListView extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () => context.read<BlockListCubit>().loadBlocks(),
       child: ListView.builder(
-        padding: const EdgeInsets.all(Spacing.space_sm),
+        padding: EdgeInsets.symmetric(
+          horizontal: Spacing.pagePaddingFor(context),
+          vertical: Spacing.space_sm,
+        ),
         itemCount: blocks.length,
         itemBuilder: (context, index) {
           final block = blocks[index];

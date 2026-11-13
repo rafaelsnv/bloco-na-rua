@@ -29,9 +29,7 @@ class EditBlockCubit extends Cubit<EditBlockState> {
       return;
     }
 
-    final result = await _carnivalBlocksRepository.getByIdAsync(
-      blockId,
-    );
+    final result = await _carnivalBlocksRepository.getByIdAsync(blockId);
 
     result.fold(
       (block) => emit(
@@ -104,9 +102,7 @@ class EditBlockCubit extends Cubit<EditBlockState> {
     }
 
     try {
-      final result = await _carnivalBlocksRepository.deleteByIdAsync(
-        blockId,
-      );
+      final result = await _carnivalBlocksRepository.deleteByIdAsync(blockId);
 
       result.fold(
         (_) => emit(EditBlockDeleted()),

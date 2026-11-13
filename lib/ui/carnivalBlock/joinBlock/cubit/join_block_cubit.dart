@@ -24,9 +24,8 @@ class JoinBlockCubit extends Cubit<JoinBlockState> {
     emit(JoinBlockLoading());
 
     try {
-      final joinResult = await _carnivalBlockMembersRepository.joinByInviteCodeAsync(
-        inviteCode,
-      );
+      final joinResult = await _carnivalBlockMembersRepository
+          .joinByInviteCodeAsync(inviteCode);
 
       joinResult.fold(
         (_) => emit(JoinBlockSuccess()),
