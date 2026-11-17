@@ -81,7 +81,9 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
                       child: Icon(
                         Icons.group_add_rounded,
                         size: AppIconSizes.displayXLarge,
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? AppColors.textPrimaryDark
+                            : AppColors.textPrimary,
                       ),
                     ),
                   ),

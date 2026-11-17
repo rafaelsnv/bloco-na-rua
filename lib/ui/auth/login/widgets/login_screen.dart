@@ -167,10 +167,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   // Header section
                   const AppLogo(size: _logoSize),
                   const SizedBox(height: Spacing.space_sm),
-                  Text(
-                    "Bem vindo",
-                    style: AppTypography.displaySmall.copyWith(
-                      color: colors.primary,
+                  SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      "Bem vindo",
+                      textAlign: TextAlign.left,
+                      style: AppTypography.displaySmall.copyWith(
+                        color: colors.primary,
+                      ),
                     ),
                   ),
                   const SizedBox(height: Spacing.space_xs),

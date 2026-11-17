@@ -272,7 +272,7 @@ class _MeetingInfoCard extends StatelessWidget {
     if (meetingDateTime == null) return AppColors.accent;
     final now = DateTime.now();
     if (meetingDateTime!.isBefore(now)) {
-      return AppColors.success;
+      return AppColors.successContainerLight;
     } else if (meetingDateTime!.isBefore(now.add(const Duration(hours: 1)))) {
       return AppColors.warning;
     } else {

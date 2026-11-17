@@ -43,8 +43,6 @@ class _BlockListScreenContent extends StatefulWidget {
 }
 
 class _BlockListScreenContentState extends State<_BlockListScreenContent> {
-  final _fabKey = GlobalKey();
-
   @override
   void initState() {
     super.initState();
@@ -69,26 +67,34 @@ class _BlockListScreenContentState extends State<_BlockListScreenContent> {
           builder: (context, state) {
             return Stack(
               children: [
-                if (fabState.expanded)
-                  ModalBarrier(
-                    onDismiss: () => context.read<FabStateCubit>().dismiss(),
-                  ),
                 Scaffold(
                   appBar: const AppAppBar(
                     title: "Blocos",
                     showBackButton: false,
                   ),
                   body: SafeArea(child: _buildBody(context, state)),
-                  floatingActionButton: AddBlockFab(
-                    key: _fabKey,
-                    isExpanded: fabState.expanded,
-                    shouldAnimate: fabState.shouldAnimate,
-                    onFabPressed: () => context.read<FabStateCubit>().toggle(),
-                    onExpandedChanged: (expanded) {
-                      if (!expanded) {
-                        context.read<FabStateCubit>().dismiss();
-                      }
-                    },
+                ),
+                if (fabState.expanded)
+                  ModalBarrier(
+                    onDismiss: () => context.read<FabStateCubit>().dismiss(),
+                  ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.all(Spacing.space_sm),
+                      child: AddBlockFab(
+                        isExpanded: fabState.expanded,
+                        shouldAnimate: fabState.shouldAnimate,
+                        onFabPressed: () =>
+                            context.read<FabStateCubit>().toggle(),
+                        onExpandedChanged: (expanded) {
+                          if (!expanded) {
+                            context.read<FabStateCubit>().dismiss();
+                          }
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -142,9 +148,11 @@ class _BlockListView extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () => context.read<BlockListCubit>().loadBlocks(),
       child: ListView.builder(
-        padding: EdgeInsets.symmetric(
-          horizontal: Spacing.pagePaddingFor(context),
-          vertical: Spacing.space_sm,
+        padding: EdgeInsets.fromLTRB(
+          Spacing.pagePaddingFor(context),
+          Spacing.space_sm,
+          Spacing.pagePaddingFor(context),
+          Spacing.space_2xl,
         ),
         itemCount: blocks.length,
         itemBuilder: (context, index) {

@@ -32,8 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
   /// Fraction of the viewport width taken by a single card in the carousel.
   static const double _blockCardWidthFactor = 0.775;
 
-  final _fabKey = GlobalKey();
-
   @override
   void initState() {
     super.initState();
@@ -55,10 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: Stack(
             children: [
-              if (fabState.expanded)
-                ModalBarrier(
-                  onDismiss: () => context.read<FabStateCubit>().dismiss(),
-                ),
               Scaffold(
                 appBar: AppAppBar(
                   title: "Bloco na Rua",
@@ -92,19 +86,29 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                floatingActionButton: AddBlockFab(
-                  key: _fabKey,
-                  isExpanded: fabState.expanded,
-                  shouldAnimate: fabState.shouldAnimate,
-                  onFabPressed: () => context.read<FabStateCubit>().toggle(),
-                  onExpandedChanged: (expanded) {
-                    if (!expanded) {
-                      context.read<FabStateCubit>().dismiss();
-                    }
-                  },
+              ),
+              if (fabState.expanded)
+                ModalBarrier(
+                  onDismiss: () => context.read<FabStateCubit>().dismiss(),
                 ),
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.endFloat,
+              Align(
+                alignment: Alignment.bottomRight,
+                child: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.all(Spacing.space_sm),
+                    child: AddBlockFab(
+                      isExpanded: fabState.expanded,
+                      shouldAnimate: fabState.shouldAnimate,
+                      onFabPressed: () =>
+                          context.read<FabStateCubit>().toggle(),
+                      onExpandedChanged: (expanded) {
+                        if (!expanded) {
+                          context.read<FabStateCubit>().dismiss();
+                        }
+                      },
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

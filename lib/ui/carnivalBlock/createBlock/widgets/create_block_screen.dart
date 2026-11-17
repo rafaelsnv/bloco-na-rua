@@ -2,6 +2,7 @@ import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_cubit.d
 import "package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_state.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/home/cubit/home_cubit.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
@@ -76,9 +77,10 @@ class _CreateBlockScreenState extends State<CreateBlockScreen> {
                           child: Icon(
                             Icons.celebration_rounded,
                             size: AppIconSizes.displayXLarge,
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onPrimaryContainer,
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                ? AppColors.textPrimaryDark
+                                : AppColors.textPrimary,
                           ),
                         ),
                       ),

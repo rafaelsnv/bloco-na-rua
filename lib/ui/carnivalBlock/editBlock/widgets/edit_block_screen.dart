@@ -129,12 +129,15 @@ class _EditBlockScreenState extends State<EditBlockScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AppTextField(
-              label: "Nome do bloco",
-              hint: "Ex: Bloco da Vizinhança",
-              controller: _nameController,
-              onChanged: (_) => setState(() {}),
-              isEnabled: !isSaving,
+            Padding(
+              padding: const EdgeInsets.only(top: Spacing.space_xs),
+              child: AppTextField(
+                label: "Nome do bloco",
+                hint: "Ex: Bloco da Vizinhança",
+                controller: _nameController,
+                onChanged: (_) => setState(() {}),
+                isEnabled: !isSaving,
+              ),
             ),
             const SizedBox(height: Spacing.space_lg),
             _buildImageSection(context, state),

@@ -9,6 +9,7 @@ import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_state.dart";
 import "package:bloco_na_rua/ui/core/theme/app_text_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
@@ -311,6 +312,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
           return Scaffold(
             appBar: AppAppBar(
               title: "Detalhes do Bloco",
+              titleStyle: AppTypography.headlineSmall,
               actions: [
                 if (canManageMembers) ...[
                   IconButton(
@@ -463,9 +465,7 @@ class _BlockInfoCardState extends State<_BlockInfoCard> {
                   size: AppIconSizes.displayLarge,
                   radius: AppIconSizes.displayLarge / 2,
                   iconSize: AppIconSizes.xl,
-                  foregroundColor: Theme.of(
-                    context,
-                  ).colorScheme.onPrimaryContainer,
+                  foregroundColor: AppColors.textPrimary,
                 ),
               const SizedBox(width: Spacing.space_sm),
               Expanded(
@@ -734,7 +734,7 @@ class _MeetingsSection extends StatelessWidget {
               size: _listIconTileSize,
               radius: Radii.sm,
               iconSize: AppIconSizes.md,
-              foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+              foregroundColor: AppColors.textPrimary,
             ),
             title: meeting.name ?? "Sem título",
             subtitle: meetingDateTime != null
