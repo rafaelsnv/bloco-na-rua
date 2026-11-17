@@ -21,7 +21,9 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 
 class MainApp extends StatefulWidget {
-  const MainApp({super.key});
+  const MainApp({super.key, this.initialThemeMode = ThemeMode.system});
+
+  final ThemeMode initialThemeMode;
 
   @override
   State<MainApp> createState() => _MainAppState();
@@ -70,7 +72,9 @@ class _MainAppState extends State<MainApp> {
         BlocProvider<BlockListCubit>.value(value: _blockListCubit),
         BlocProvider<UserMeetingsCubit>.value(value: _userMeetingsCubit),
         BlocProvider<HomeCubit>.value(value: _homeCubit),
-        BlocProvider(create: (_) => ThemeCubit()..load()),
+        BlocProvider(
+          create: (_) => ThemeCubit(widget.initialThemeMode)..load(),
+        ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {

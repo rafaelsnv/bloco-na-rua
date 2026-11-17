@@ -113,6 +113,7 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: Radii.button),
       ),
       inputDecorationTheme: InputDecorationTheme(
+        floatingLabelStyle: TextStyle(color: AppColors.primary),
         filled: true,
         fillColor: lightColorScheme.surfaceContainerHighest,
         border: OutlineInputBorder(
@@ -137,6 +138,13 @@ class AppTheme {
         color: lightColorScheme.outline,
         thickness: 1,
         space: 1,
+      ),
+      switchTheme: SwitchThemeData(
+        trackColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? lightColorScheme.primary
+              : lightColorScheme.surfaceContainerHighest,
+        ),
       ),
       navigationBarTheme: NavigationBarThemeData(
         // L16: the bottom nav surface is owned by the theme.
@@ -273,6 +281,7 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: Radii.button),
       ),
       inputDecorationTheme: InputDecorationTheme(
+        floatingLabelStyle: TextStyle(color: AppColors.textPrimaryDark),
         filled: true,
         fillColor: darkColorScheme.surfaceContainerHighest,
         border: OutlineInputBorder(
@@ -297,6 +306,13 @@ class AppTheme {
         color: darkColorScheme.outline,
         thickness: 1,
         space: 1,
+      ),
+      switchTheme: SwitchThemeData(
+        trackColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? darkColorScheme.primary
+              : darkColorScheme.surfaceContainerHighest,
+        ),
       ),
       navigationBarTheme: NavigationBarThemeData(
         // L16: the bottom nav surface is owned by the theme.

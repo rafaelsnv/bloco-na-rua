@@ -3,6 +3,8 @@ import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_cubit.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_state.dart";
 import "package:bloco_na_rua/ui/core/theme/theme_cubit.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
@@ -60,9 +62,11 @@ class ProfileScreen extends StatelessWidget {
     final pagePadding = Spacing.pagePaddingFor(context);
 
     return ListView(
-      padding: EdgeInsets.symmetric(
-        horizontal: pagePadding,
-        vertical: Spacing.pagePaddingMobile,
+      padding: EdgeInsets.fromLTRB(
+        pagePadding,
+        Spacing.pagePaddingMobile,
+        pagePadding,
+        Spacing.space_2xl,
       ),
       children: [
         // Hero section with edit button
@@ -89,13 +93,19 @@ class ProfileScreen extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(Spacing.space_2xs),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primaryContainer,
+                        color: Theme.of(context).colorScheme.surface,
                         shape: BoxShape.circle,
+                        border: Border.all(
+                          color: AppColors.primary,
+                          width: Radii.outlineWidth,
+                        ),
                       ),
                       child: Icon(
                         Icons.edit_rounded,
                         size: AppIconSizes.sm,
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        color: AppColors.inkFor(
+                          Theme.of(context).colorScheme.surface,
+                        ),
                       ),
                     ),
                   ),
@@ -152,7 +162,7 @@ class ProfileScreen extends StatelessWidget {
         const SizedBox(height: Spacing.space_md),
         const AppSectionHeader(title: "Conta"),
         AppButton(
-          variant: AppButtonVariant.secondary,
+          variant: AppButtonVariant.error,
           label: "Sair da conta",
           icon: const Icon(Icons.logout_rounded, size: AppIconSizes.md),
           isFullWidth: true,
