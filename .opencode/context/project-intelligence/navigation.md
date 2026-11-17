@@ -1,9 +1,9 @@
-<!-- Context: project-intelligence/navigation | Priority: critical | Version: 1.2 | Updated: 2026-10-20 -->
+<!-- Context: project-intelligence/navigation | Priority: critical | Version: 1.4 | Updated: 2026-11-17 -->
 
 # Project Intelligence Navigation
 
 **Purpose**: Quick overview of available project intelligence files.
-**Last Updated**: 2026-10-20
+**Last Updated**: 2026-11-17
 
 ## Quick Routes
 
@@ -19,6 +19,17 @@
 | Naming | [technical-naming.md](./technical-naming.md) | File/class/member naming conventions | high |
 | API | [technical-api-pattern.md](./technical-api-pattern.md) | API client patterns | high |
 | Components | [technical-component-pattern.md](./technical-component-pattern.md) | State/Cubit/Screen patterns | high |
+| Design System | [lookup/design-tokens.md](./lookup/design-tokens.md) | "Fireworks on Velvet" token map + invariants | high |
+
+## Examples (project-intelligence/examples/)
+
+| File | Description | Priority |
+|------|------------|----------|
+| [module-pattern.md](./examples/module-pattern.md) | Feature wiring: Provider DI + GoRouter + BlocProvider | high |
+| [state-pattern.md](./examples/state-pattern.md) | Status enum + single Equatable state class | high |
+| [model-pattern.md](./examples/model-pattern.md) | Freezed sealed entity extending EntityBase | high |
+| [widget-pattern.md](./examples/widget-pattern.md) | Token-driven widgets (AppButton, AppColors.inkFor) | high |
+| [resumable-cubit-pattern.md](./examples/resumable-cubit-pattern.md) | Auto-refresh cubit on app resume | high |
 
 ## Quick Reference
 

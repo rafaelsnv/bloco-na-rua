@@ -1,4 +1,4 @@
-<!-- Context: project-intelligence/technical-component | Priority: high | Version: 1.0 | Updated: 2026-05-17 -->
+<!-- Context: project-intelligence/technical-component | Priority: high | Version: 1.1 | Updated: 2026-11-17 -->
 
 # Component Patterns
 
@@ -7,25 +7,36 @@
 
 ## State Pattern
 
+Single Equatable state class + status enum (NOT sealed-class variants):
+
 ```dart
-sealed class CreateEntityState extends Equatable {
-  const CreateEntityState();
-  @override List<Object?> get props => [];
-}
-final class CreateEntityInitial extends CreateEntityState {}
-final class CreateEntityLoading extends CreateEntityState {}
-final class CreateEntitySuccess extends CreateEntityState {}
-final class CreateEntityError extends CreateEntityState {
-  final String message;
-  const CreateEntityError(this.message);
-  @override List<Object?> get props => [message];
-}
-final class EditEntityLoaded extends CreateEntityState {
-  final int id;
-  final String name;
-  const EditEntityLoaded({required this.id, required this.name});
+enum CreateEntityStatus { initial, loading, success, failure }
+
+class CreateEntityState extends Equatable {
+  const CreateEntityState({
+    this.status = CreateEntityStatus.initial,
+    this.entity,
+    this.errorMessage,
+  });
+  final CreateEntityStatus status;
+  final Entity? entity;
+  final String? errorMessage;
+
+  CreateEntityState copyWith({
+    CreateEntityStatus? status,
+    Entity? entity,
+    String? errorMessage,
+  }) => CreateEntityState(
+    status: status ?? this.status,
+    entity: entity ?? this.entity,
+    errorMessage: errorMessage ?? this.errorMessage,
+  );
+
+  @override List<Object?> get props => [status, entity, errorMessage];
 }
 ```
+
+Cubits emit via `state.copyWith(status: CreateEntityStatus.loading)`. UI branches on `state.status`.
 
 ## Cubit Pattern
 
@@ -85,32 +96,34 @@ class _EditEntityScreenState extends State<EditEntityScreen> {
 
 ## Router Pattern
 
+`GoRouter` with async auth redirect calling `validateSession()`:
+
 ```dart
-GoRouter router(IAuthRepository authRepository) => GoRouter(
+GoRouter router(AuthListenable authListenable) => GoRouter(
   initialLocation: Routes.login,
   redirect: _redirect,
-  refreshListenable: authRepository,
-  routes: [
-    GoRoute(
-      path: '${Routes.editEntity}/:id',
-      builder: (ctx, state) => BlocProvider(
-        create: (ctx) => EditEntityCubit(
-          repo: ctx.read<IEntityRepository>(),
-          entityId: state.pathParameters['id']!,
-        ),
-        child: const EditEntityScreen(),
-      ),
-    ),
-  ],
+  refreshListenable: authListenable, // AuthListenable (ChangeNotifier)
+  observers: [Routes.routeObserver],
+  routes: [ /* GoRoute entries; detail routes wrap screen in
+             BlocProvider via pageBuilder + slide transition */ ],
 );
 
 Future<String?> _redirect(BuildContext ctx, GoRouterState state) async {
-  final loggedIn = await ctx.read<IAuthRepository>().isAuthenticated;
-  if (!loggedIn && state.matchedLocation != Routes.register) return Routes.login;
-  if (loggedIn && [Routes.login, Routes.register].contains(state.matchedLocation)) return Routes.home;
+  final sessionValid = await ctx.read<IAuthRepository>().validateSession();
+  if (!sessionValid) {
+    if (state.matchedLocation == Routes.register) return null;
+    return Routes.login;
+  }
+  if ([Routes.login, Routes.register].contains(state.matchedLocation)) {
+    return Routes.home;
+  }
   return null;
 }
 ```
+
+## ResumableCubit Lifecycle
+
+Cubits that need auto-refresh on app resume extend `ResumableCubit<S>` (Cubit + WidgetsBindingObserver) and override `onResumed()`. Used by home, blockList, userMeetings, profile cubits. See `examples/resumable-cubit-pattern.md`.
 
 ## Screen Conventions
 
@@ -120,7 +133,7 @@ Future<String?> _redirect(BuildContext ctx, GoRouterState state) async {
 | DI | `BlocProvider.create` + `context.read<T>()` |
 | Navigation/Errors | `BlocConsumer.listener` + `context.go()` + SnackBar |
 | Auto-load | Call loading method in cubit constructor |
-| Data states | Extended states (`XxxLoaded extends XxxState`) |
+| Data states | Single state class + status enum (`XxxStatus.success`) |
 
 ## Page/View Separation
 
@@ -131,10 +144,10 @@ Future<String?> _redirect(BuildContext ctx, GoRouterState state) async {
 
 ## 📂 Codebase References
 
-**States**: `lib/domain/states/`
-**Cubits**: `lib/domain/cubits/`
-**Screens**: `lib/ui/screens/`
-**Router**: `lib/ui/router/app_router.dart`
+**States/Cubits**: `lib/ui/{feature}/cubit/` (e.g. `lib/ui/meetings/userMeetings/cubit/`)
+**Screens**: `lib/ui/{feature}/widgets/`
+**Router**: `lib/routing/router.dart`, `lib/routing/routes.dart`
+**DI**: `lib/config/dependencies.dart`
 
 ## Related Files
 

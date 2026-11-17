@@ -1,42 +1,25 @@
-<!-- Context: project-intelligence/examples/model-pattern | Priority: high | Version: 1.0 | Updated: 2026-05-04 -->
+<!-- Context: project-intelligence/examples/model-pattern | Priority: high | Version: 2.0 | Updated: 2026-11-17 -->
 
-# Model Pattern Example
+# Entity Pattern Example
 
-**Example**: JSON-serializable model with copyWith for device data.
+**Core Concept**: Domain entities are Freezed sealed classes extending `EntityBase`, with JSON deserialization generated via `_$XFromJson` codegen. Model on `MeetingsEntity`.
 
 ---
 
-## Model Definition
+## Entity Definition
 
 ```dart
-@JsonSerializable()
-class DeviceModel extends Equatable {
-  final String id;
-  final String serialNumber;
-  final String name;
-  final DateTime? lastCalibration;
+@freezed
+sealed class MeetingEntity extends EntityBase with _$MeetingEntity {
+  const factory MeetingEntity({
+    required String id,
+    required String title,
+    required DateTime startsAt,
+    String? location,
+  }) = _MeetingEntity;
 
-  const DeviceModel({
-    required this.id,
-    required this.serialNumber,
-    required this.name,
-    this.lastCalibration,
-  });
-
-  factory DeviceModel.fromJson(Map<String, dynamic> json) =>
-      _$DeviceModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$DeviceModelToJson(this);
-
-  DeviceModel copyWith({
-    String? id,
-    String? serialNumber,
-    String? name,
-    DateTime? lastCalibration,
-  }) => _$DeviceModelUpdate(this);
-
-  @override
-  List<Object?> get props => [id, serialNumber, name, lastCalibration];
+  factory MeetingEntity.fromJson(Map<String, dynamic> json) =>
+      _$MeetingEntityFromJson(json);
 }
 ```
 
@@ -44,14 +27,27 @@ class DeviceModel extends Equatable {
 
 ## Generated Files
 
+Run `dart run build_runner build` after edits:
+
 | File | Purpose |
 |------|---------|
-| `{device}_model.g.dart` | fromJson/toJson |
-| `{device}_model.update.g.dart` | copyWith |
+| `meetings_entity.freezed.dart` | sealed class, copyWith, equality |
+| `meetings_entity.g.dart` | `_$MeetingEntityFromJson` / toJson |
+
+---
+
+## Key Points
+
+1. `@freezed sealed class ... extends EntityBase` — every entity follows this shape
+2. `const factory` constructor defines fields; Freezed generates `copyWith` + equality
+3. `fromJson` factory delegates to generated `_$XFromJson` — never hand-write JSON parsing
+4. Entities live per-domain subfolder, e.g. `lib/domain/entities/meetings/`
+5. Repositories map API responses to these entities (see `technical-api-pattern.md`)
 
 ---
 
 ## Reference
 
-- Full example: `lib/src/modules/{device}/domain/models/`
-- Code generation: `core/standards/guides/code-generation.md`
+- Full example: `lib/domain/entities/meetings/meetings_entity.dart`
+- Codebase entities: `lib/domain/entities/`
+- State layer: `examples/state-pattern.md`

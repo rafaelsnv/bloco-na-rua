@@ -1,4 +1,4 @@
-<!-- Context: project-intelligence/technical-naming | Priority: high | Version: 1.0 | Updated: 2026-05-17 -->
+<!-- Context: project-intelligence/technical-naming | Priority: high | Version: 1.1 | Updated: 2026-11-17 -->
 
 # Naming Conventions
 
@@ -10,7 +10,7 @@
 | Type | Convention | Example |
 |------|------------|---------|
 | Regular files | snake_case | `entity_repository.dart` |
-| Folders | kebab-case | `entity/edit/` |
+| Folders | snake_case | `user_meetings/`, `block_details/` |
 | Test files | `*_test.dart` | `create_entity_cubit_test.dart` |
 | Generated files | `*.freezed.dart`, `*.g.dart` | `user_entity.freezed.dart` |
 
@@ -37,7 +37,7 @@
 | Constants | camelCase + k prefix | `kApiBaseUrl` |
 | Private fields | _camelCase | `_repo`, `_entityId` |
 | Enums | PascalCase | `UserRole.admin` |
-| Enum values | UPPER_SNAKE_CASE | `UserRole.admin` |
+| Enum values | camelCase | `UserMeetingsStatus.initial` |
 
 ## Code Examples
 
@@ -68,10 +68,9 @@ const MAX_SIZE = 100;           // Should be kPrefix
 
 **Entities**: `lib/domain/entities/`
 **Repositories**: `lib/data/repositories/`
-**States**: `lib/domain/states/`
-**Cubits**: `lib/domain/cubits/`
-**Screens**: `lib/ui/screens/`
-**Routes**: `lib/ui/router/routes.dart`
+**States/Cubits**: `lib/ui/{feature}/cubit/` (e.g. `lib/ui/meetings/userMeetings/cubit/`)
+**Screens**: `lib/ui/{feature}/widgets/`
+**Routes**: `lib/routing/routes.dart`
 
 ## Related Files
 

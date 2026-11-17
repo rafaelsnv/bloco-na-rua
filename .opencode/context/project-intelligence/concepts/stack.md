@@ -4,43 +4,59 @@ contaminated: true
 audit_date: 2026-07-01
 ---
 
-<!-- Context: project-intelligence/concepts/stack | Priority: critical | Version: 1.0 | Updated: 2026-05-04 -->
+<!-- Context: project-intelligence/concepts/stack | Priority: critical | Version: 2.0 | Updated: 2026-11-17 -->
 
-# Tech Stack - Flutter Desktop
+# Tech Stack - Flutter Mobile (Bloco na Rua)
 
-**Core Concept**: Flutter Desktop with Cubit/BLoC state management and modular DI.
+**Core Concept**: Flutter mobile application for managing carnival blocks (blocos de rua): authentication, block/member/meeting management, and attendance control, backed by Supabase auth and a REST API.
 
 ---
 
 ## Primary Stack
 
-| Layer | Technology | Version | Notes |
-|-------|------------|---------|-------|
-| Framework | Flutter Desktop | (latest stable) | Windows / macOS / Linux app |
-| Language | Dart | (latest stable, null-safe) | Required for sound null safety |
-| State | flutter_bloc (Cubit) | (latest stable) | BLoC/Cubit pattern |
-| DI | flutter_modular OR get_it | (latest stable) | Service locator |
-| Local Storage | hive + hive_flutter OR shared_preferences | (latest stable) | NoSQL / key-value |
-| Charts | syncfusion_flutter_charts OR fl_chart | (latest stable) | Data viz |
-| PDF | syncfusion_flutter_pdf OR pdf package | (latest stable) | Reports |
-
-> **Note**: This is a generic template. Replace placeholder versions with versions pinned in your project's `pubspec.yaml`.
+| Layer | Technology | Notes |
+|-------|------------|-------|
+| Framework | Flutter 3.x mobile | Android-first (see README prerequisites) |
+| Language | Dart 3.x, null-safe | |
+| Backend/Auth | Supabase | Email/password auth, `.env` config |
+| State | flutter_bloc (Cubit) | AuthCubit + UI state |
+| DI | provider | Repositories, API clients (NOT flutter_modular) |
+| Navigation | go_router | Auth guards, auto-redirect on auth state |
+| Entities | freezed | Immutable data classes + json_serializable |
+| HTTP | dio | REST client for `/api/v1/` endpoints |
+| Errors | result_dart | Success/Failure functional error handling |
 
 ---
 
-## Key Dependencies
+## Minimal Example
 
-| Library | Purpose |
-|---------|---------|
-| `equatable` | Immutable state |
-| `json_annotation` + `json_serializable` | Code generation |
-| `intl` | i18n |
-| `reactive_forms` OR `flutter_form_builder` | Form validation |
-| `bitsdojo_window` OR `window_manager` | Custom window chrome |
+Cubit pattern used across the app:
+
+```dart
+class AuthCubit extends Cubit<AuthState> {
+  AuthCubit(this._authService) : super(AuthInitial());
+  final AuthService _authService;
+
+  Future<Result<Unit>> login(String email, String password) async {
+    emit(AuthLoading());
+    return _authService.login(email, password); // result_dart Result
+  }
+}
+```
+
+---
+
+## Key Points
+
+1. **Mobile only** — no desktop/web targets; Android SDK required for dev
+2. **Supabase** for auth; REST backend for domain data (meetings, blocks, members)
+3. **Code generation** required: `build_runner build` for `.freezed.dart`/`.g.dart`
+4. **Session persistence** via SharedPreferences
 
 ---
 
 ## Reference
 
-- Full dependencies: `pubspec.yaml`
-- Code standards: `core/standards/`
+- Full stack list: `README.md` ("Built Using" section)
+- Environment setup: `README.md` (`.env` variables)
+- Pinned versions: `pubspec.yaml`

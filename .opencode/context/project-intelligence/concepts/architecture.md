@@ -1,97 +1,72 @@
-<!-- Context: project-intelligence/concepts/architecture | Priority: critical | Version: 1.0 | Updated: 2026-05-04 -->
+<!-- Context: project-intelligence/concepts/architecture | Priority: critical | Version: 2.0 | Updated: 2026-11-17 -->
 
-# Architecture - Clean Architecture Pattern
+# Architecture - Clean Architecture (Bloco na Rua)
 
-**Core Concept**: Clean Architecture with unidirectional data flow for Flutter desktop.
+**Core Concept**: Clean Architecture with unidirectional data flow: UI Layer (Screens, Widgets, Cubits) → Domain Layer (Use Cases, Entities) → Data Layer (Repositories, API Clients, Services).
 
 ---
 
 ## Directory Structure
 
 ```
-lib/src/
-├── core/           # Services, helpers, adapters
-├── domain/         # Models, enums, converters
-├── modules/        # Feature modules
-│   ├── app/        # Main app module
-│   ├── features/   # Feature aggregator
-│   └── {feature}/  # Individual feature module
-└── shared/         # Reusable widgets, views, styles
-    ├── widgets/    # buttons/, cards/, charts/, top_bar/, sidebar/
-    ├── views/      # Reusable views
-    └── styles/     # Text styles, PDF styles
+lib/
+├── main.dart                 # Entry point, Supabase init
+├── main_app.dart             # MaterialApp.router with AuthCubit
+├── config/
+│   └── dependencies.dart    # Provider DI setup
+├── core/                     # Base interfaces, utilities
+├── data/
+│   ├── repositories/         # Repository implementations
+│   └── services/
+│       ├── api/             # API clients (base, meetings, blocks, etc.)
+│       └── auth/            # Auth service (Supabase)
+├── domain/
+│   ├── entities/            # freezed entities (Meeting, Block, Member, etc.)
+│   └── use_cases/           # Business logic use cases
+├── routing/
+│   ├── router.dart          # GoRouter with auth redirect
+│   └── routes.dart          # Route constants
+└── ui/
+    ├── auth/                # Login, SignUp screens
+    ├── carnivalBlock/       # Block CRUD screens
+    ├── home/                # Home screen with blocks/meetings
+    ├── meetings/            # Meeting screens (create, edit, details)
+    ├── members/             # Members list screen
+    └── core/tokens/         # Design tokens (AppColors, Spacing, AppElevation)
 ```
-
----
-
-## Application Flow
-
-```mermaid
-graph TD
-    A[main.dart] --> B[MainModule];
-    B --> C[AppWrapPage];
-    C --> D[AppStatusModule];
-    C --> E[AppModule];
-    E --> F[FeatureModule];
-    subgraph "Core"
-        G[Services]
-        H[Helpers]
-        I[Adapters]
-    end
-    D -.-> G;
-    E -.-> G;
-    F -.-> G;
-```
-
-## FeatureModule Route Structure
-
-```mermaid
-graph TD
-    A[FeatureModule] --> B[SidebarWrapView];
-    B --> C[FeatureInfoPage];
-    B --> D[FeatureDataListedPage];
-    B --> E[FeatureDataSavedPage];
-    A --> F[FeatureResultPage];
-    A --> G[FeatureReportPage];
-```
-
-**Route Patterns**:
-- **Layout pages** (`/info`, `/data/listed`, `/data/saved`): Use `SidebarWrapView` with side navigation
-- **Full-screen pages** (result, report): Independent, full-screen routes
 
 ---
 
 ## Key Points
 
-1. **Clean Architecture**: UI → Domain → Data flow
-2. **State**: Cubit + sealed State classes (Equatable)
-3. **Modules**: Each feature area has its own Module
-4. **Models**: JSON-serializable with code generation
-5. **Services**: Business logic services in `core/services/`
+1. **Provider for DI** — NOT flutter_modular; bindings in `config/dependencies.dart`
+2. **GoRouter with auth guards** — redirect based on AuthCubit state; route names in `routing/routes.dart`
+3. **freezed entities** — immutable domain entities in `domain/entities/`; regenerate with build_runner
+4. **result_dart** — repositories/services return `Result<T>` (Success/Failure), never throw across layers
+5. **dio API clients** — grouped under `data/services/api/` against REST backend `/api/v1/`
 
 ---
 
-## Module Pattern
+## Minimal Example
+
+GoRouter auth redirect pattern (`routing/router.dart`):
 
 ```dart
-class FeatureModule extends Module {
-  @override
-  List<Bind> get binds => [
-    Bind.lazySingleton<FeatureCubit>((i) => FeatureCubit(
-      featureService: i<IFeatureService>(),
-    )),
-  ];
-
-  @override
-  List<ModularRoute> get routes => [
-    ModuleRoute("/feature", module: FeatureModule()),
-  ];
-}
+final router = GoRouter(
+  redirect: (context, state) {
+    final authed = context.read<AuthCubit>().state is AuthAuthenticated;
+    final loggingIn = state.matchedLocation == Routes.login;
+    if (!authed && !loggingIn) return Routes.login;
+    if (authed && loggingIn) return Routes.home;
+    return null;
+  },
+);
 ```
 
 ---
 
 ## Reference
 
-- Full structure: `lib/src/` directory
-- Feature module template: `guides/feature-checklist.md`
+- Full structure: `README.md` ("Project Structure" section)
+- State management details: `README.md` ("Architecture" section)
+- Design tokens: `../lookup/design-tokens.md`

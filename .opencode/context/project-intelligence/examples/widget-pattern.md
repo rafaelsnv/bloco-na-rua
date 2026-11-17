@@ -1,71 +1,51 @@
-<!-- Context: project-intelligence/examples/widget-pattern | Priority: high | Version: 1.0 | Updated: 2026-07-01 -->
+<!-- Context: project-intelligence/examples/widget-pattern | Priority: high | Version: 2.0 | Updated: 2026-11-17 -->
 
-# Widget Pattern
+# Widget Pattern Example
 
-**Core Concept**: Stateless widgets with `WidgetStateProperty` for hover/disabled states, using constants for styling.
+**Core Concept**: Widgets are token-driven. All colors, elevation, spacing, and radii come from the design system in `lib/ui/core/tokens/` — never raw `Colors.white` or `withOpacity`.
 
 ---
 
-## Flexible Button Pattern
-
-**Example**: Generic reusable button component.
+## Token-Driven Button (AppButton)
 
 ```dart
-class FlexibleButton extends StatelessWidget {
-  final String title;
-  final String iconPath;
-  final double width;
-  final double height;
-  final double borderWidth;
-  final Color color;
-  final Color borderColor;
-  final Color? hoverColor;
-  final Color? disabledColor;
-  final VoidCallback? onTap;
-  final bool isEnabled;
-  // ... additional optional properties for flexible styling
+import 'package:bloco_na_rua/ui/core/tokens/app_colors.dart';
+import 'package:bloco-na-rua/ui/core/tokens/app_elevation.dart';
 
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
-      height: height,
-      child: OutlinedButton.icon(
-        label: Text(title),
-        icon: iconPath.isNotEmpty ? buildIcon : null,
-        onPressed: isEnabled ? onTap : null,
-        style: ButtonStyle(
-          animationDuration: Duration.zero,
-          backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
-            if (states.contains(WidgetState.disabled)) {
-              return disabledColor ?? color.withOpacity(0.5);
-            }
-            if (states.contains(WidgetState.hovered)) {
-              return hoverColor ?? Colors.grey.shade100;
-            }
-            return color;
-          }),
-          // ... additional WidgetStateProperty handlers for foreground, border, etc.
-        ),
-      ),
-    );
-  }
-}
+ElevatedButton(
+  style: ElevatedButton.styleFrom(
+    backgroundColor: AppColors.primary,
+    foregroundColor: AppColors.inkFor(AppColors.primary), // luminance rule
+    elevation: AppElevation.md,
+    padding: const EdgeInsets.symmetric(
+      horizontal: AppSpacing.lg,
+      vertical: AppSpacing.md,
+    ),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(AppRadius.md),
+    ),
+  ),
+  onPressed: onPressed,
+  child: Text(label),
+)
 ```
+
+Use the shared `AppButton` component (`lib/ui/core/widgets/buttons/app_button.dart`) instead of re-rolling buttons.
 
 ---
 
 ## Key Points
 
-1. **Stateless widget** with many optional properties for flexibility
-2. **WidgetStateProperty** for hover/disabled/pressed states
-3. **Color extensions**: prefer explicit `withOpacity(...)` over shorthand
-4. **Constants**: define app-wide color, typography, and spacing constants in a single module
-5. **OutlinedButton.icon** with label + icon support
+1. **Tokens only**: `AppColors`, `AppElevation`, `AppSpacing`, `AppRadius` from `lib/ui/core/tokens/`
+2. **`AppColors.inkFor(fill)`** picks ink (text/icon) color by background luminance — never hardcode white/black
+3. **Project invariant**: NO raw `Colors.white`, `Colors.black`, or `.withOpacity(...)` — use tokens
+4. Theme files in `lib/ui/core/theme/` wire tokens into `ThemeData`
+5. Reusable widgets live in `lib/ui/core/widgets/` (e.g. `AppButton`)
 
 ---
 
-## Related
+## Reference
 
-- `core/standards/concepts/philosophy.md` — modular design principles
-- `core/standards/examples/widget-pattern.md` — base StatelessWidget pattern
+- Tokens: `lib/ui/core/tokens/` (see `lookup/design-tokens.md` for the full map)
+- Shared button: `lib/ui/core/widgets/buttons/app_button.dart`
+- Theme: `lib/ui/core/theme/`

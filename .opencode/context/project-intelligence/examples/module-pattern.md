@@ -1,47 +1,75 @@
-<!-- Context: project-intelligence/examples/module-pattern | Priority: high | Version: 1.0 | Updated: 2026-05-04 -->
+<!-- Context: project-intelligence/examples/module-pattern | Priority: high | Version: 2.0 | Updated: 2026-11-17 -->
 
-# Module Pattern Example
+# Feature Wiring Pattern
 
-**Example**: flutter_modular Module for feature areas.
+**Core Concept**: This project does NOT use flutter_modular. Features are wired with plain GoRouter routes (`lib/routing/router.dart`) plus Provider-based DI (`lib/config/dependencies.dart`).
 
 ---
 
-## Module Definition
+## 1. DI Registration (Provider chain)
+
+Register API client → repository → use case in `lib/config/dependencies.dart`:
 
 ```dart
-class FeatureModule extends Module {
-  @override
-  List<Bind> get binds => [
-    Bind.lazySingleton<FeatureCubit>((i) => FeatureCubit(
-      featureService: i<IFeatureService>(),
-      dataService: i<IDataService>(),
-      exportService: i<IExportService>(),
-    )),
-  ];
+// API client (thin HTTP wrapper)
+Provider<IMeetingsApiClient>(
+  create: (context) => MeetingsApiClient(context.read<IBaseApiClient>()),
+),
+// Repository (domain-facing interface)
+Provider<IMeetingsRepository>(
+  create: (context) =>
+      MeetingsRepository(meetingsApiClient: context.read()),
+),
+// Use case (consumed by cubits)
+Provider<GetUserMeetingsUseCase>(
+  create: (context) => GetUserMeetingsUseCase(
+    getCurrentUserData: context.read(),
+    membersRepo: context.read(),
+  ),
+),
+```
 
-  @override
-  List<ModularRoute> get routes => [
-    ModuleRoute("/feature", module: FeatureModule(), children: [
-      ModuleRoute("/home", module: FeatureModule()),
-      ModuleRoute("/info", module: FeatureModule()),
-      ModuleRoute("/data", module: FeatureModule()),
-      ModuleRoute("/reports", module: FeatureModule()),
-    ]),
-  ];
-}
+---
+
+## 2. Route + BlocProvider
+
+Register the route in `lib/routing/router.dart`; create the cubit in `pageBuilder`:
+
+```dart
+GoRoute(
+  path: "${Routes.carnivalBlock}/:id",
+  pageBuilder: (context, state) {
+    final carnivalBlockId = state.pathParameters["id"]!;
+    return _buildPageWithSlideTransition(
+      context: context,
+      state: state,
+      child: BlocProvider(
+        create: (context) => BlockDetailsCubit(
+          carnivalBlocksRepository: context.read<ICarnivalBlocksRepository>(),
+          getCurrentUserData: context.read<GetCurrentUserData>(),
+          carnivalBlockId: carnivalBlockId,
+        ),
+        child: BlockDetailsScreen(carnivalBlockId: carnivalBlockId),
+      ),
+    );
+  },
+),
 ```
 
 ---
 
 ## Key Points
 
-1. `Bind.lazySingleton` for Cubit injection
-2. `i<T>()` to get injected dependencies
-3. `ModuleRoute` with child routes for each page
-4. Children routes are relative to parent
+1. `Provider<T>` registered against an **interface** (`IMeetingsRepository`), resolved with `context.read<T>()`
+2. Cubits are created per-route in `pageBuilder` via `BlocProvider(create: ...)`, not registered in DI
+3. Detail routes use `_buildPageWithSlideTransition` for the shared slide animation
+4. Route path constants live in `lib/routing/routes.dart`
+5. There are no Modules, no `Bind`, no `ModularRoute` anywhere in this codebase
 
 ---
 
 ## Reference
 
-- Full example: `lib/src/modules/{feature}/{feature}_module.dart`
+- DI: `lib/config/dependencies.dart`
+- Routing: `lib/routing/router.dart`, `lib/routing/routes.dart`
+- Resumable lifecycle cubits: `examples/resumable-cubit-pattern.md`
