@@ -25,6 +25,9 @@ enum AppButtonVariant {
 
   /// Transparent fill — inline or tertiary actions.
   ghost,
+
+  /// Destructive error fill.
+  error,
 }
 
 /// A design-system-compliant button widget supporting four visual variants,
@@ -98,6 +101,13 @@ class AppButton extends StatelessWidget {
         return colorScheme.onSurface;
       case AppButtonVariant.ghost:
         return colorScheme.primary;
+      case AppButtonVariant.error:
+        // The label sits ON the error fill, so it must be painted in the
+        // ink for that fill — the same value the variant's
+        // `foregroundColor` resolves to. Returning the fill itself painted
+        // the label red on red and made it invisible (the "missing label"
+        // on the logout button). #FFFFFF on #DC2626 ≈ 4.83:1 (AA).
+        return AppColors.inkFor(AppColors.error);
     }
   }
 
@@ -226,6 +236,9 @@ class AppButton extends StatelessWidget {
     final buttonStyle = ButtonStyle(
       minimumSize: WidgetStateProperty.all(minimumSize),
       padding: WidgetStateProperty.all(padding),
+      tapTargetSize: isFullWidth
+          ? MaterialTapTargetSize.padded
+          : MaterialTapTargetSize.shrinkWrap,
       textStyle: WidgetStateProperty.all(textStyle),
       shape: WidgetStateProperty.all(
         RoundedRectangleBorder(borderRadius: Radii.buttonPrimary),
@@ -260,7 +273,7 @@ class AppButton extends StatelessWidget {
             if (states.contains(WidgetState.disabled)) {
               return disabledFill;
             }
-            return isDark ? AppColors.accentLight : AppColors.accent;
+            return AppColors.accent;
           }),
           foregroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.disabled)) {
@@ -326,6 +339,23 @@ class AppButton extends StatelessWidget {
             }
             return colorScheme.onSecondaryContainer;
           }),
+        ),
+        child: content,
+      ),
+      AppButtonVariant.error => FilledButton(
+        key: effectiveKey,
+        onPressed: effectiveOnPressed,
+        style: buttonStyle.copyWith(
+          backgroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.disabled)
+                ? disabledFill
+                : AppColors.error,
+          ),
+          foregroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.disabled)
+                ? disabledInk
+                : AppColors.inkFor(AppColors.error),
+          ),
         ),
         child: content,
       ),

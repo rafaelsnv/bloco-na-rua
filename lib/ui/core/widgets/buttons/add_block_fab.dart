@@ -1,6 +1,8 @@
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_fab.dart";
@@ -96,39 +98,46 @@ class _AddBlockFabState extends State<AddBlockFab>
         ? AppDurations.slower
         : AppDurations.instant;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Entrar em Bloco
-        _SpeedDialAction(
-          label: "Entrar em Bloco",
-          icon: Icons.group_add_rounded,
-          expanded: widget.isExpanded,
-          duration: duration,
-          onTap: () => _navigate(Routes.joinBlock),
-        ),
-        if (widget.isExpanded) SizedBox(height: Spacing.space_sm),
-        // Criar Bloco
-        _SpeedDialAction(
-          label: "Criar Bloco",
-          icon: Icons.add_rounded,
-          expanded: widget.isExpanded,
-          duration: duration,
-          onTap: () => _navigate(Routes.createBlock),
-        ),
-        if (widget.isExpanded) SizedBox(height: Spacing.space_md),
-        // Main FAB — only the ICON rotates. Rotating the whole widget turned
-        // the 16px-radius FAB into a visible diamond.
-        AppFAB(
-          icon: Icons.add_rounded,
-          onPressed: widget.onFabPressed,
-          child: RotationTransition(
-            turns: _rotation,
-            child: Icon(Icons.add_rounded, size: AppFabSizeMetrics.md.iconSize),
+    return Align(
+      alignment: Alignment.bottomRight,
+      widthFactor: 1,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Entrar em Bloco
+          _SpeedDialAction(
+            label: "Entrar em Bloco",
+            icon: Icons.group_add_rounded,
+            expanded: widget.isExpanded,
+            duration: duration,
+            onTap: () => _navigate(Routes.joinBlock),
           ),
-        ),
-      ],
+          if (widget.isExpanded) SizedBox(height: Spacing.space_sm),
+          // Criar Bloco
+          _SpeedDialAction(
+            label: "Criar Bloco",
+            icon: Icons.add_rounded,
+            expanded: widget.isExpanded,
+            duration: duration,
+            onTap: () => _navigate(Routes.createBlock),
+          ),
+          if (widget.isExpanded) SizedBox(height: Spacing.space_md),
+          // Main FAB — only the ICON rotates. Rotating the whole widget turned
+          // the 16px-radius FAB into a visible diamond.
+          AppFAB(
+            icon: Icons.add_rounded,
+            onPressed: widget.onFabPressed,
+            child: RotationTransition(
+              turns: _rotation,
+              child: Icon(
+                Icons.add_rounded,
+                size: AppFabSizeMetrics.md.iconSize,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -150,6 +159,8 @@ class _SpeedDialAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return IgnorePointer(
       // While collapsed the actions are scaled down and fully transparent,
       // but they are still laid out — without this they would swallow the
@@ -166,19 +177,40 @@ class _SpeedDialAction extends StatelessWidget {
           child: AnimatedOpacity(
             opacity: expanded ? 1 : 0,
             duration: duration,
-            // Shared AppButton so the radius, border width and ink match every
-            // other outlined button in the app.
-            child: AppButton(
-              variant: AppButtonVariant.secondary,
-              label: label,
-              // Icon color matches the button ink (AppButton paints its own
-              // label but leaves the icon to the ambient IconTheme).
-              icon: Icon(
-                icon,
-                size: AppIconSizes.md,
-                color: Theme.of(context).colorScheme.primary,
+            // The secondary variant is an OutlinedButton with a transparent
+            // fill, so on its own the pill would float over the page with no
+            // backing. A surface-coloured Material gives the action a solid
+            // body while the outlined variant keeps its transparent stroke —
+            // the variant itself stays untouched for every other button.
+            child: Material(
+              color: colorScheme.surface,
+              borderRadius: Radii.buttonPrimary,
+              clipBehavior: Clip.antiAlias,
+              // Keep the surface flush with the outlined pill. A large
+              // Material shadow was the visible colour halo outside the border.
+              elevation: AppElevation.none.value,
+              // Shared AppButton so the radius, border width and ink match every
+              // other outlined button in the app.
+              child: Align(
+                alignment: Alignment.centerRight,
+                widthFactor: 1,
+                child: IntrinsicWidth(
+                  child: AppButton(
+                    variant: AppButtonVariant.secondary,
+                    size: AppButtonSizeMetrics.sm,
+                    label: label,
+                    // Icon color matches the button ink (AppButton paints its own
+                    // label but leaves the icon to the ambient IconTheme).
+                    icon: Icon(
+                      icon,
+                      size: AppIconSizes.sm,
+                      color: colorScheme.primary,
+                    ),
+                    onPressed: onTap,
+                    isFullWidth: false,
+                  ),
+                ),
               ),
-              onPressed: onTap,
             ),
           ),
         ),

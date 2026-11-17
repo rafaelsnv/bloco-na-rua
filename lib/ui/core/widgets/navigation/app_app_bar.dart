@@ -4,8 +4,7 @@ import "package:flutter/material.dart";
 
 /// A design-system-compliant app bar widget that implements [PreferredSizeWidget].
 ///
-/// The title inherits the theme's `appBarTheme.titleTextStyle`
-/// (`TextTheme.headlineMedium`), the canonical app bar title style.
+/// The title inherits the theme's `appBarTheme.titleTextStyle` by default.
 /// Automatically shows a back button when [canPop] is
 /// true and [showBackButton] is true.
 class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -22,6 +21,7 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.title,
     this.leading,
     this.actions,
+    this.titleStyle,
     this.centerTitle = false,
     this.backgroundColor,
     this.foregroundColor,
@@ -33,6 +33,9 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   /// The title string displayed in the app bar.
   final String title;
+
+  /// Optional title style override. Defaults to the theme's app bar style.
+  final TextStyle? titleStyle;
 
   /// An optional widget to display before the title.
   ///
@@ -99,9 +102,10 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: centerTitle,
       automaticallyImplyLeading: showBackButton && leading == null,
       leading: leading,
-      // No explicit style: the theme's appBarTheme.titleTextStyle
-      // (headlineMedium) is the canonical app bar title style.
-      title: Text(title),
+      title: Text(
+        title,
+        style: titleStyle ?? theme.appBarTheme.titleTextStyle,
+      ),
       actions: effectiveActions,
       bottom: bottom,
     );

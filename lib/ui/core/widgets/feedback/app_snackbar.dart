@@ -119,7 +119,9 @@ class AppSnackbar {
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final container = isDark ? containerDark : containerLight;
-    final contentColor = AppColors.inkFor(container);
+    final contentColor = container == AppColors.primaryLight
+        ? AppColors.textPrimary
+        : AppColors.inkFor(container);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

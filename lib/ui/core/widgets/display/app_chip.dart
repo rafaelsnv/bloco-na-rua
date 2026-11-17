@@ -126,11 +126,7 @@ class AppChip extends StatelessWidget {
         // the mockup (line 373: dark Todos chip). The dark scheme encodes this
         // swap: primary = primaryLight, primaryContainer = primaryDark.
         if (isDark && effectiveColor == AppColors.primary) {
-          return (
-            colorScheme.primaryContainer,
-            colorScheme.primary,
-            BorderSide.none,
-          );
+          return (AppColors.textPrimary, colorScheme.primary, BorderSide.none);
         }
         // Foreground picked by fill luminance so light fills (e.g. warning)
         // get dark text while saturated fills keep white text — readable in

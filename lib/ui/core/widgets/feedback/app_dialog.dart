@@ -1,5 +1,6 @@
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:flutter/material.dart";
@@ -27,6 +28,7 @@ class AppDialog {
   }) {
     return showDialog<bool>(
       context: context,
+      barrierColor: AppColors.scrim.withValues(alpha: 0.54),
       builder: (_) => _ConfirmDialogContent(
         title: title,
         message: message,
@@ -51,6 +53,7 @@ class AppDialog {
   }) {
     return showDialog<void>(
       context: context,
+      barrierColor: AppColors.scrim.withValues(alpha: 0.54),
       builder: (_) => _AlertDialogContent(
         title: title,
         message: message,
@@ -78,12 +81,20 @@ class _ConfirmDialogContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return AlertDialog(
+      elevation: AppElevation.lg.value,
+      backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
       title: Text(title),
       content: Text(message),
       shape: RoundedRectangleBorder(borderRadius: Radii.modal),
       actions: [
         TextButton(
+          style: TextButton.styleFrom(
+            foregroundColor: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.textPrimaryDark
+                : AppColors.textSecondary,
+          ),
           onPressed: () => Navigator.of(context).pop(false),
           child: Text(cancelLabel),
         ),
@@ -122,7 +133,10 @@ class _AlertDialogContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return AlertDialog(
+      elevation: AppElevation.lg.value,
+      backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
       icon: icon != null
           ? Icon(
               icon,
