@@ -23,6 +23,7 @@ import "package:bloco_na_rua/ui/core/theme/app_theme.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/add_block_fab.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_fab.dart";
@@ -136,12 +137,12 @@ double _contrastRatio(Color a, Color b) {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-/// The ink actually painted on the accent button's label.
-Color _accentLabelInk(WidgetTester tester) {
-  final label = tester.widget<Text>(
-    find.descendant(of: find.byType(AppButton), matching: find.text("Entrar")),
+/// The ink actually painted on a button's label.
+Color _labelInk(WidgetTester tester, String label) {
+  final text = tester.widget<Text>(
+    find.descendant(of: find.byType(AppButton), matching: find.text(label)),
   );
-  return label.style?.color ?? Colors.transparent;
+  return text.style?.color ?? Colors.transparent;
 }
 
 void main() {
@@ -656,6 +657,25 @@ void main() {
       expect(ignores.every((ignore) => !ignore.ignoring), isTrue);
       expect(find.widgetWithText(AppButton, "Entrar em Bloco"), findsOneWidget);
       expect(find.widgetWithText(AppButton, "Criar Bloco"), findsOneWidget);
+
+      for (final label in ["Entrar em Bloco", "Criar Bloco"]) {
+        final button = find.descendant(
+          of: find.byType(AddBlockFab),
+          matching: find.byKey(Key("app_button_$label")),
+        );
+        final textWidth = tester.getSize(find.text(label)).width;
+        final expectedWidth =
+            AppButtonSizeMetrics.sm.iconSize +
+            AppButtonSizeMetrics.sm.iconLabelGap +
+            textWidth +
+            2 * AppButtonSizeMetrics.sm.horizontalPadding +
+            2 * Radii.outlineWidth;
+        expect(
+          tester.getSize(button).width,
+          lessThanOrEqualTo(expectedWidth + 1),
+          reason: "speed-dial pill width must match its content and outline",
+        );
+      }
     });
   });
 
@@ -819,7 +839,7 @@ void main() {
         );
 
         // Assert — the ink is the near-black token, not white.
-        final ink = _accentLabelInk(tester);
+        final ink = _labelInk(tester, "Entrar");
         expect(ink, AppColors.textPrimary);
 
         // Assert — the label (16–18px, so AA needs 4.5:1) clears the bar.
@@ -849,7 +869,7 @@ void main() {
 
       // Assert — same near-black ink on the lighter dark-mode fill.
       // #1C1917 on #FBBF24 ≈ 9.53:1.
-      final ink = _accentLabelInk(tester);
+      final ink = _labelInk(tester, "Entrar");
       expect(ink, AppColors.textPrimary);
       expect(
         _contrastRatio(ink, AppColors.accentLight),
@@ -995,6 +1015,76 @@ void main() {
           reason: "ink $ink on fill $fill must clear WCAG AA",
         );
       }
+    });
+  });
+
+  // =========================================================================
+  // H11 — The destructive button's label is visible and announced
+  // =========================================================================
+  group("H11 — the error button's label is visible on the error fill", () {
+    testWidgets(
+      "H11: the enabled error label is not painted in the fill colour",
+      (tester) async {
+        // Arrange / Act
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: AppTheme.light(),
+            home: Scaffold(
+              body: AppButton(
+                label: "Sair da conta",
+                variant: AppButtonVariant.error,
+                icon: const Icon(Icons.logout_rounded),
+                onPressed: () {},
+              ),
+            ),
+          ),
+        );
+
+        // Assert — the label must be painted in the ink for the error fill.
+        // The fill colour itself (red on red) made the label invisible.
+        final ink = _labelInk(tester, "Sair da conta");
+        expect(ink, isNot(AppColors.error));
+        expect(_contrastRatio(ink, AppColors.error), greaterThanOrEqualTo(4.5));
+
+        // Assert — the leading icon inherits the same ink, so the whole
+        // control reads on the error fill.
+        final iconContext = tester.element(find.byIcon(Icons.logout_rounded));
+        expect(
+          IconTheme.of(iconContext).color,
+          AppColors.inkFor(AppColors.error),
+        );
+      },
+    );
+
+    testWidgets("H11: the error label is announced to screen readers", (
+      tester,
+    ) async {
+      // Arrange
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(),
+          home: Scaffold(
+            body: AppButton(
+              label: "Sair da conta",
+              variant: AppButtonVariant.error,
+              icon: const Icon(Icons.logout_rounded),
+              onPressed: () {},
+            ),
+          ),
+        ),
+      );
+
+      // Act — the semantics node of the button itself.
+      final node = tester.getSemantics(find.byType(FilledButton));
+      final data = node.getSemanticsData();
+
+      // Assert — the label reaches the semantics tree exactly once, and
+      // the control is announced as a button.
+      expect(data.label, "Sair da conta");
+      expect(data.flagsCollection.isButton, isTrue);
+
+      handle.dispose();
     });
   });
 }
