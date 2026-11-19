@@ -87,3 +87,9 @@ pids/
 
 # Widget Preview related
 .widget_preview/
+
+# AI agent notes
+/.todo
+
+# Kotlin/Gradle build cache
+android/.kotlin/
