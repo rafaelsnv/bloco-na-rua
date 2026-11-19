@@ -19,7 +19,7 @@
 
 **Bloco na Rua** is a Flutter mobile application for managing carnival blocks (blocos de rua). It allows users to:
 
-- 🔐 **Authentication** - Login/register with email and Supabase auth
+- 🔐 **Authentication** - Login/register with email and backend API auth
 - 📦 **Manage Carnival Blocks** - Create, view, and manage bloco information
 - 👥 **Member Management** - View and manage block members
 - 📅 **Meeting Management** - Create, edit, delete meetings
@@ -51,15 +51,13 @@ Data Layer (Repositories, API Clients, Services)
 - Flutter 3.x SDK
 - Dart 3.x
 - Android SDK (for Android development)
-- Supabase account (backend auth)
+- Backend API access
 
 ### Environment Setup
 
 Create a `.env` file in the project root:
 
 ```env
-SUPABASE_URL=your_supabase_url
-SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
 API_URL=your_backend_api_url
 ```
 
@@ -92,7 +90,7 @@ flutter test integration_test/app_test.dart -d <device_id>
 
 ```
 lib/
-├── main.dart                 # Entry point, Supabase init
+├── main.dart                 # Entry point
 ├── main_app.dart             # MaterialApp.router with AuthCubit
 ├── config/
 │   └── dependencies.dart    # Provider DI setup
@@ -121,7 +119,7 @@ lib/
 ## Key Features
 
 ### Authentication
-- Email/password login via Supabase
+- Email/password login via the backend API
 - Auto-redirect based on auth state
 - Persistent session via SharedPreferences
 
@@ -190,7 +188,7 @@ Key settings in `android/app/src/main/AndroidManifest.xml`:
 
 - **Flutter** - UI framework
 - **Dart** - Language
-- **Supabase** - Authentication
+- **Backend API** - Authentication
 - **go_router** - Navigation
 - **flutter_bloc** - State management
 - **provider** - Dependency injection
