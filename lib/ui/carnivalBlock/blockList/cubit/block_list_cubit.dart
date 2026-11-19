@@ -1,4 +1,3 @@
-import "package:bloco_na_rua/core/errors/user_message.dart";
 import "package:bloco_na_rua/domain/use_cases/home/get_home_data_use_case.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_state.dart";
 import "package:bloco_na_rua/ui/core/cubit/resumable_cubit_mixin.dart";
@@ -7,7 +6,9 @@ import "package:logging/logging.dart";
 /// Cubit that manages the Block List screen state.
 ///
 /// Loads the list of carnival blocks for the authenticated user and handles
-/// loading, success, and failure states with user-friendly error messages.
+/// loading, success, and failure states. The raw failure is kept in the
+/// state; the screen turns it into a user-facing message with
+/// `extractUserMessage`.
 class BlockListCubit extends ResumableCubit<BlockListState> {
   /// Creates a [BlockListCubit] with the required [GetHomeDataUseCase].
   ///
@@ -26,7 +27,7 @@ class BlockListCubit extends ResumableCubit<BlockListState> {
   ///
   /// Emits [BlockListState.loading] first, then either:
   /// - [BlockListState.success] with the blocks list on success
-  /// - [BlockListState.failure] with a user-friendly error message on failure
+  /// - [BlockListState.failure] with the raw failure on failure
   Future<void> loadBlocks() async {
     emit(BlockListState.loading());
 
@@ -34,7 +35,7 @@ class BlockListCubit extends ResumableCubit<BlockListState> {
 
     result.fold((blocks) => emit(BlockListState.success(blocks)), (error) {
       _log.warning("Failed to load blocks", error);
-      emit(BlockListState.failure(extractUserMessage(error)));
+      emit(BlockListState.failure(error));
     });
   }
 }

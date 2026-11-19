@@ -1,4 +1,6 @@
+import "package:bloco_na_rua/core/errors/user_message.dart";
 import "package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart";
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_state.dart";
@@ -8,6 +10,7 @@ import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/add_block_fab.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/block_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
+import "package:bloco_na_rua/ui/core/widgets/layout/content_width_limiter.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_empty.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
@@ -51,15 +54,16 @@ class _BlockListScreenContentState extends State<_BlockListScreenContent> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocBuilder<FabStateCubit, FabState>(
       builder: (context, fabState) {
         return BlocConsumer<BlockListCubit, BlockListState>(
           listener: (context, state) {
             if (state.status == BlockListStatus.failure &&
-                state.errorMessage != null) {
+                state.error != null) {
               AppSnackbar.error(
                 context,
-                message: state.errorMessage!.replaceAll("Exception: ", ""),
+                message: extractUserMessage(state.error, context),
                 showCloseIcon: true,
               );
             }
@@ -68,8 +72,8 @@ class _BlockListScreenContentState extends State<_BlockListScreenContent> {
             return Stack(
               children: [
                 Scaffold(
-                  appBar: const AppAppBar(
-                    title: "Blocos",
+                  appBar: AppAppBar(
+                    title: l10n.blocksListTitle,
                     showBackButton: false,
                   ),
                   body: SafeArea(child: _buildBody(context, state)),
@@ -106,18 +110,19 @@ class _BlockListScreenContentState extends State<_BlockListScreenContent> {
   }
 
   Widget _buildBody(BuildContext context, BlockListState state) {
+    final l10n = AppLocalizations.of(context)!;
     switch (state.status) {
       case BlockListStatus.initial:
       case BlockListStatus.loading:
         if (state.blocks.isEmpty) {
-          return const AppLoading(message: "Carregando blocos...");
+          return AppLoading(message: l10n.blocksLoadingList);
         }
         return _BlockListView(blocks: state.blocks);
 
       case BlockListStatus.failure:
         if (state.blocks.isEmpty) {
           return AppError(
-            message: state.errorMessage,
+            message: extractUserMessage(state.error, context),
             onRetry: () => context.read<BlockListCubit>().loadBlocks(),
           );
         }
@@ -126,10 +131,10 @@ class _BlockListScreenContentState extends State<_BlockListScreenContent> {
       case BlockListStatus.success:
         if (state.blocks.isEmpty) {
           return AppEmpty(
-            title: "Nenhum bloco ainda",
-            message: "Crie um bloco para comecar a organizar seu carnaval",
+            title: l10n.blocksEmptyTitle,
+            message: l10n.blocksEmptyMessage,
             icon: Icons.celebration_outlined,
-            actionLabel: "Criar bloco",
+            actionLabel: l10n.blocksCreateAction,
             onAction: () => context.push(Routes.createBlock),
           );
         }
@@ -147,24 +152,27 @@ class _BlockListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () => context.read<BlockListCubit>().loadBlocks(),
-      child: ListView.builder(
-        padding: EdgeInsets.fromLTRB(
-          Spacing.pagePaddingFor(context),
-          Spacing.space_sm,
-          Spacing.pagePaddingFor(context),
-          Spacing.space_2xl,
+      child: ContentWidthLimiter(
+        child: ListView.builder(
+          padding: EdgeInsets.fromLTRB(
+            Spacing.pagePaddingFor(context),
+            Spacing.space_sm,
+            Spacing.pagePaddingFor(context),
+            Spacing.space_2xl,
+          ),
+          itemCount: blocks.length,
+          itemBuilder: (context, index) {
+            final block = blocks[index];
+            return Padding(
+              padding: EdgeInsets.only(bottom: Spacing.space_xs),
+              child: BlockCard(
+                block: block,
+                onTap: () =>
+                    context.push("${Routes.carnivalBlock}/${block.id}"),
+              ),
+            );
+          },
         ),
-        itemCount: blocks.length,
-        itemBuilder: (context, index) {
-          final block = blocks[index];
-          return Padding(
-            padding: EdgeInsets.only(bottom: Spacing.space_xs),
-            child: BlockCard(
-              block: block,
-              onTap: () => context.push("${Routes.carnivalBlock}/${block.id}"),
-            ),
-          );
-        },
       ),
     );
   }

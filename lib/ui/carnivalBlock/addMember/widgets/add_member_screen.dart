@@ -1,3 +1,5 @@
+import "package:bloco_na_rua/core/errors/user_message.dart";
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/addMember/cubit/add_member_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/addMember/cubit/add_member_state.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
@@ -5,6 +7,7 @@ import "package:bloco_na_rua/ui/core/widgets/buttons/app_icon_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/member_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
 import "package:bloco_na_rua/ui/core/widgets/inputs/app_search_field.dart";
+import "package:bloco_na_rua/ui/core/widgets/layout/content_width_limiter.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_empty.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
@@ -39,42 +42,49 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocConsumer<AddMemberCubit, AddMemberState>(
       listener: (context, state) {
-        if (state.status == AddMemberStatus.error &&
-            state.errorMessage != null) {
-          AppSnackbar.error(context, message: state.errorMessage!);
-        } else if (state.status == AddMemberStatus.success) {
-          AppSnackbar.success(
+        if (state.status == AddMemberStatus.error && state.error != null) {
+          AppSnackbar.error(
             context,
-            message: "Membro adicionado com sucesso",
+            message: extractUserMessage(state.error, context),
           );
+        } else if (state.status == AddMemberStatus.success) {
+          AppSnackbar.success(context, message: l10n.blocksMemberAddedSuccess);
           if (context.mounted) {
             context.pop();
           }
         }
       },
       builder: (context, state) {
+        final pagePadding = Spacing.pagePaddingFor(context);
+
         return Scaffold(
-          appBar: const AppAppBar(
-            title: "Adicionar membro",
+          appBar: AppAppBar(
+            title: l10n.blocksAddMemberTitle,
             showBackButton: true,
           ),
-          body: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(Spacing.space_sm),
-                child: AppSearchField(
-                  controller: _searchController,
-                  hint: "Buscar por nome ou email",
-                  autofocus: true,
-                  onChanged: (value) {
-                    context.read<AddMemberCubit>().searchMembers(value);
-                  },
+          body: ContentWidthLimiter(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: pagePadding,
+                    vertical: Spacing.space_sm,
+                  ),
+                  child: AppSearchField(
+                    controller: _searchController,
+                    hint: l10n.blocksMemberSearchHint,
+                    autofocus: true,
+                    onChanged: (value) {
+                      context.read<AddMemberCubit>().searchMembers(value);
+                    },
+                  ),
                 ),
-              ),
-              Expanded(child: _buildBody(context, state)),
-            ],
+                Expanded(child: _buildBody(context, state)),
+              ],
+            ),
           ),
         );
       },
@@ -82,36 +92,39 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
   }
 
   Widget _buildBody(BuildContext context, AddMemberState state) {
+    final l10n = AppLocalizations.of(context)!;
     if (state.status == AddMemberStatus.loading) {
       return const AppLoading();
     }
 
     if (state.status == AddMemberStatus.error &&
-        state.errorMessage != null &&
+        state.error != null &&
         state.allMembers.isEmpty) {
       return AppError(
-        message: state.errorMessage,
+        message: extractUserMessage(state.error, context),
         onRetry: () => context.read<AddMemberCubit>().loadMembers(),
       );
     }
 
     if (state.filteredMembers.isEmpty) {
       if (state.searchQuery.isNotEmpty) {
-        return const AppEmpty(
-          title: "Nenhum membro encontrado",
-          message: "Tente buscar por outro nome ou email.",
+        return AppEmpty(
+          title: l10n.blocksMemberNotFoundTitle,
+          message: l10n.blocksMemberNotFoundMessage,
           icon: Icons.search_off_rounded,
         );
       }
-      return const AppEmpty(
-        title: "Nenhum membro disponível",
-        message: "Não há membros para adicionar a este bloco.",
+      return AppEmpty(
+        title: l10n.blocksNoMemberTitle,
+        message: l10n.blocksNoMemberMessage,
         icon: Icons.people_outline_rounded,
       );
     }
 
     return ListView.builder(
-      padding: EdgeInsets.symmetric(horizontal: Spacing.space_sm),
+      padding: EdgeInsets.symmetric(
+        horizontal: Spacing.pagePaddingFor(context),
+      ),
       itemCount: state.filteredMembers.length,
       itemBuilder: (context, index) {
         final member = state.filteredMembers[index];
@@ -135,7 +148,9 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                   context.read<AddMemberCubit>().addMember(member.id, blockId);
                 }
               },
-              tooltip: "Adicionar membro",
+              tooltip: l10n.blocksAddMemberTooltip(
+                member.name ?? l10n.blocksMemberFallback,
+              ),
             ),
           ),
         );

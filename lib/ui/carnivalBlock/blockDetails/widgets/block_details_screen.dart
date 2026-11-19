@@ -1,3 +1,5 @@
+import "package:bloco_na_rua/core/date_format.dart";
+import "package:bloco_na_rua/core/errors/user_message.dart";
 import "package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart";
 import "package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart";
 import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart";
@@ -5,17 +7,17 @@ import "package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entit
 import "package:bloco_na_rua/domain/entities/carnivalBlockMembers/carnival_block_members_entity.dart";
 import "package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart";
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/routing/routes.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/block_error.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_state.dart";
 import "package:bloco_na_rua/ui/core/theme/app_text_colors.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
-import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_icon_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_list_tile.dart";
@@ -24,7 +26,9 @@ import "package:bloco_na_rua/ui/core/widgets/display/app_icon_tile.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_section_header.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/image_url_validator.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_dialog.dart";
+import "package:bloco_na_rua/ui/core/widgets/feedback/app_loading_indicator.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
+import "package:bloco_na_rua/ui/core/widgets/layout/content_width_limiter.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_empty.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
@@ -34,13 +38,6 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
-import "package:intl/intl.dart";
-
-/// Glyph size of the small leading icon on an info row.
-const double _rowIconSize = 18;
-
-/// Edge length of the leading icon tile on list rows.
-const double _listIconTileSize = 36;
 
 class BlockDetailsScreen extends StatefulWidget {
   const BlockDetailsScreen({super.key, required this.carnivalBlockId});
@@ -58,8 +55,8 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
   Map<int, MembersEntity> _memberEntities = {};
   bool _loadingMembers = false;
   bool _loadingMeetings = false;
-  String? _membersError;
-  String? _meetingsError;
+  BlockError? _membersError;
+  BlockError? _meetingsError;
   int? _deletingMemberId;
   bool _subscribedToRoute = false;
 
@@ -105,7 +102,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
     final blockId = int.tryParse(widget.carnivalBlockId);
     if (blockId == null) {
       setState(() {
-        _membersError = 'ID do bloco inválido';
+        _membersError = const BlockError(BlockErrorKind.invalidId);
         _loadingMembers = false;
       });
       return;
@@ -131,10 +128,11 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
                 entities[member.memberId] = entity;
               } else {
                 // Member row exists but entity missing (deleted?) — placeholder.
+                // The name stays null so the row can localize the fallback.
                 failedCount++;
                 entities[member.memberId] = MembersEntity(
                   id: member.memberId,
-                  name: "Membro",
+                  name: null,
                   email: null,
                   profileImage: null,
                 );
@@ -147,7 +145,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
             for (final member in members) {
               entities[member.memberId] = MembersEntity(
                 id: member.memberId,
-                name: "Membro",
+                name: null,
                 email: null,
                 profileImage: null,
               );
@@ -158,7 +156,9 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
         if (failedCount > 0 && mounted) {
           AppSnackbar.error(
             context,
-            message: "Falha ao carregar dados de $failedCount membro(s)",
+            message: AppLocalizations.of(
+              context,
+            )!.blocksMembersLoadFailed(failedCount),
           );
         }
 
@@ -172,7 +172,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
       (failure) {
         if (!mounted) return;
         setState(() {
-          _membersError = failure.toString();
+          _membersError = BlockError(BlockErrorKind.request, failure);
           _loadingMembers = false;
         });
       },
@@ -189,7 +189,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
     final blockId = int.tryParse(widget.carnivalBlockId);
     if (blockId == null) {
       setState(() {
-        _meetingsError = 'ID do bloco inválido';
+        _meetingsError = const BlockError(BlockErrorKind.invalidId);
         _loadingMeetings = false;
       });
       return;
@@ -208,7 +208,7 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
       (failure) {
         if (!mounted) return;
         setState(() {
-          _meetingsError = failure.toString();
+          _meetingsError = BlockError(BlockErrorKind.request, failure);
           _loadingMeetings = false;
         });
       },
@@ -216,12 +216,13 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
   }
 
   Future<void> _deleteMember(CarnivalBlockMembersEntity member) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await AppDialog.confirm(
       context,
-      title: "Remover membro",
-      message: "Remover este membro do bloco?",
-      confirmLabel: "Remover",
-      cancelLabel: "Cancelar",
+      title: l10n.blocksRemoveMemberTitle,
+      message: l10n.blocksRemoveMemberConfirm,
+      confirmLabel: l10n.blocksRemoveMemberAction,
+      cancelLabel: l10n.blocksCancel,
       isDestructive: true,
     );
 
@@ -244,14 +245,22 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
           _members = _members.where((m) => m.id != member.id).toList();
           _deletingMemberId = null;
         });
-        AppSnackbar.success(context, message: "Membro removido com sucesso");
+        AppSnackbar.success(
+          context,
+          message: AppLocalizations.of(context)!.blocksRemoveMemberSuccess,
+        );
       },
       (failure) {
         if (!mounted) return;
         setState(() {
           _deletingMemberId = null;
         });
-        AppSnackbar.error(context, message: "Erro ao remover membro: $failure");
+        AppSnackbar.error(
+          context,
+          message: AppLocalizations.of(
+            context,
+          )!.blocksRemoveMemberError(extractUserMessage(failure, context)),
+        );
       },
     );
   }
@@ -269,37 +278,42 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
   }
 
   String _roleLabel(int role) {
+    final l10n = AppLocalizations.of(context)!;
     switch (role) {
       case 1:
-        return "Admin";
+        return l10n.blocksRoleAdmin;
       case 2:
-        return "Moderador";
+        return l10n.blocksRoleModerator;
       default:
-        return "Membro";
+        return l10n.blocksRoleMember;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocConsumer<BlockDetailsCubit, BlockDetailsState>(
       listener: (context, state) {
         if (state is BlockDetailsError) {
-          AppSnackbar.error(context, message: state.message);
+          AppSnackbar.error(
+            context,
+            message: localizeBlockError(context, state.error),
+          );
         }
       },
       builder: (context, state) {
         if (state is BlockDetailsLoading || state is BlockDetailsInitial) {
           return Scaffold(
-            appBar: const AppAppBar(title: "Detalhes do Bloco"),
+            appBar: AppAppBar(title: l10n.blocksDetailsTitle),
             body: const AppLoading(),
           );
         }
 
         if (state is BlockDetailsError) {
           return Scaffold(
-            appBar: const AppAppBar(title: "Detalhes do Bloco"),
+            appBar: AppAppBar(title: l10n.blocksDetailsTitle),
             body: AppError(
-              message: state.message,
+              message: localizeBlockError(context, state.error),
               onRetry: () => context.read<BlockDetailsCubit>().loadBlock(),
             ),
           );
@@ -311,22 +325,31 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
 
           return Scaffold(
             appBar: AppAppBar(
-              title: "Detalhes do Bloco",
+              title: l10n.blocksDetailsTitle,
               titleStyle: AppTypography.headlineSmall,
               actions: [
                 if (canManageMembers) ...[
-                  IconButton(
-                    icon: const Icon(Icons.add_alert_rounded),
-                    tooltip: "Criar Encontro",
-                    onPressed: () => context.push(
-                      "/create-meeting/${widget.carnivalBlockId}",
+                  Semantics(
+                    label: l10n.blocksCreateMeeting,
+                    button: true,
+                    child: IconButton(
+                      icon: const Icon(Icons.event_available_rounded),
+                      tooltip: l10n.blocksCreateMeeting,
+                      onPressed: () => context.push(
+                        Routes.createMeetingFor(widget.carnivalBlockId),
+                      ),
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.edit_rounded),
-                    tooltip: "Editar Bloco",
-                    onPressed: () =>
-                        context.push("/edit-block/${widget.carnivalBlockId}"),
+                  Semantics(
+                    label: l10n.blocksEditBlock,
+                    button: true,
+                    child: IconButton(
+                      icon: const Icon(Icons.edit_rounded),
+                      tooltip: l10n.blocksEditBlock,
+                      onPressed: () => context.push(
+                        Routes.editBlockFor(widget.carnivalBlockId),
+                      ),
+                    ),
                   ),
                 ],
               ],
@@ -337,71 +360,78 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
                   await _loadMembers();
                   await _loadMeetings();
                 },
-                child: ListView(
-                  padding: const EdgeInsets.all(Spacing.pagePaddingMobile),
-                  children: [
-                    // Block info card
-                    _BlockInfoCard(
-                      carnivalBlock: carnivalBlock,
-                      canManageMembers: canManageMembers,
+                child: ContentWidthLimiter(
+                  child: ListView(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: Spacing.pagePaddingFor(context),
+                      vertical: Spacing.pagePaddingMobile,
                     ),
-                    const SizedBox(height: Spacing.sectionGap),
-
-                    // Meetings section
-                    AppSectionHeader(
-                      title: "Encontros",
-                      leading: Icon(
-                        Icons.event_rounded,
-                        color: Theme.of(context).colorScheme.primary,
-                        size: AppIconSizes.lg,
+                    children: [
+                      // Block info card
+                      _BlockInfoCard(
+                        carnivalBlock: carnivalBlock,
+                        canManageMembers: canManageMembers,
                       ),
-                      action: canManageMembers
-                          ? TextButton(
-                              onPressed: () => context.push(
-                                "/create-meeting/${widget.carnivalBlockId}",
-                              ),
-                              child: const Text("Criar"),
-                            )
-                          : null,
-                    ),
-                    _MeetingsSection(
-                      meetings: _meetings,
-                      isLoading: _loadingMeetings,
-                      error: _meetingsError,
-                      onRetry: _loadMeetings,
-                    ),
-                    const SizedBox(height: Spacing.sectionGap),
+                      const SizedBox(height: Spacing.sectionGap),
 
-                    // Members section
-                    AppSectionHeader(
-                      title: "Membros",
-                      leading: Icon(
-                        Icons.people_rounded,
-                        color: Theme.of(context).colorScheme.primary,
-                        size: AppIconSizes.lg,
+                      // Meetings section
+                      AppSectionHeader(
+                        title: l10n.blocksMeetingsSection,
+                        leading: Icon(
+                          Icons.event_rounded,
+                          color: Theme.of(context).colorScheme.primary,
+                          size: AppIconSizes.lg,
+                        ),
+                        action: canManageMembers
+                            ? TextButton(
+                                onPressed: () => context.push(
+                                  Routes.createMeetingFor(
+                                    widget.carnivalBlockId,
+                                  ),
+                                ),
+                                child: Text(l10n.blocksCreate),
+                              )
+                            : null,
                       ),
-                      action: canManageMembers
-                          ? TextButton(
-                              onPressed: () => context.push(
-                                "/add-member/${widget.carnivalBlockId}",
-                              ),
-                              child: const Text("Adicionar"),
-                            )
-                          : null,
-                    ),
-                    _MembersSection(
-                      members: _members,
-                      memberEntities: _memberEntities,
-                      isLoading: _loadingMembers,
-                      error: _membersError,
-                      canManageMembers: canManageMembers,
-                      deletingMemberId: _deletingMemberId,
-                      onRetry: _loadMembers,
-                      onDeleteMember: _deleteMember,
-                      roleColor: _roleColor,
-                      roleLabel: _roleLabel,
-                    ),
-                  ],
+                      _MeetingsSection(
+                        meetings: _meetings,
+                        isLoading: _loadingMeetings,
+                        error: _meetingsError,
+                        onRetry: _loadMeetings,
+                      ),
+                      const SizedBox(height: Spacing.sectionGap),
+
+                      // Members section
+                      AppSectionHeader(
+                        title: l10n.blocksMembersSection,
+                        leading: Icon(
+                          Icons.people_rounded,
+                          color: Theme.of(context).colorScheme.primary,
+                          size: AppIconSizes.lg,
+                        ),
+                        action: canManageMembers
+                            ? TextButton(
+                                onPressed: () => context.push(
+                                  Routes.addMemberFor(widget.carnivalBlockId),
+                                ),
+                                child: Text(l10n.blocksAdd),
+                              )
+                            : null,
+                      ),
+                      _MembersSection(
+                        members: _members,
+                        memberEntities: _memberEntities,
+                        isLoading: _loadingMembers,
+                        error: _membersError,
+                        canManageMembers: canManageMembers,
+                        deletingMemberId: _deletingMemberId,
+                        onRetry: _loadMembers,
+                        onDeleteMember: _deleteMember,
+                        roleColor: _roleColor,
+                        roleLabel: _roleLabel,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -409,10 +439,10 @@ class _BlockDetailsScreenState extends State<BlockDetailsScreen>
         }
 
         return Scaffold(
-          appBar: const AppAppBar(title: "Detalhes do Bloco"),
-          body: const AppEmpty(
-            title: "Bloco não encontrado",
-            message: "Este bloco não está disponível.",
+          appBar: AppAppBar(title: l10n.blocksDetailsTitle),
+          body: AppEmpty(
+            title: l10n.blocksNotFound,
+            message: l10n.blocksNotFoundMessage,
           ),
         );
       },
@@ -439,6 +469,7 @@ class _BlockInfoCardState extends State<_BlockInfoCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final carnivalBlock = widget.carnivalBlock;
     final canManageMembers = widget.canManageMembers;
     return AppCard(
@@ -465,7 +496,7 @@ class _BlockInfoCardState extends State<_BlockInfoCard> {
                   size: AppIconSizes.displayLarge,
                   radius: AppIconSizes.displayLarge / 2,
                   iconSize: AppIconSizes.xl,
-                  foregroundColor: AppColors.textPrimary,
+                  foregroundColor: Theme.of(context).colorScheme.onSurface,
                 ),
               const SizedBox(width: Spacing.space_sm),
               Expanded(
@@ -483,7 +514,7 @@ class _BlockInfoCardState extends State<_BlockInfoCard> {
           // Invite code — managers/owner only
           if (canManageMembers) ...[
             _CodeCard(
-              title: "Código de convite",
+              title: l10n.blocksInviteCodeTitle,
               code: carnivalBlock.inviteCode,
               icon: Icons.vpn_key_rounded,
               containerColor: Theme.of(context).colorScheme.secondaryContainer,
@@ -497,12 +528,12 @@ class _BlockInfoCardState extends State<_BlockInfoCard> {
                 Clipboard.setData(
                   ClipboardData(text: carnivalBlock.inviteCode),
                 );
-                AppSnackbar.success(context, message: "Código copiado!");
+                AppSnackbar.success(context, message: l10n.blocksCodeCopied);
               },
             ),
             const SizedBox(height: Spacing.space_sm),
             _CodeCard(
-              title: "Código de gestor",
+              title: l10n.blocksManagerCodeTitle,
               code: carnivalBlock.managersInviteCode,
               icon: Icons.admin_panel_settings_rounded,
               containerColor: Theme.of(context).colorScheme.tertiaryContainer,
@@ -516,7 +547,7 @@ class _BlockInfoCardState extends State<_BlockInfoCard> {
                 Clipboard.setData(
                   ClipboardData(text: carnivalBlock.managersInviteCode),
                 );
-                AppSnackbar.success(context, message: "Código copiado!");
+                AppSnackbar.success(context, message: l10n.blocksCodeCopied);
               },
             ),
           ],
@@ -549,6 +580,7 @@ class _CodeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     // The invite-code containers sit so close to the card surface in dark
     // mode (#3B1220 / #0E3540 on #1F2937) that the card needs an edge of
@@ -569,7 +601,7 @@ class _CodeCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, size: _rowIconSize, color: onContainerColor),
+              Icon(icon, size: AppIconSizes.infoRow, color: onContainerColor),
               const SizedBox(width: Spacing.space_2xs),
               Expanded(
                 child: Text(
@@ -586,6 +618,9 @@ class _CodeCard extends StatelessWidget {
                 size: AppIconButtonSizeMetrics.between,
                 color: onContainerColor,
                 onPressed: onToggleObscure,
+                tooltip: obscured
+                    ? l10n.blocksShowCode(title)
+                    : l10n.blocksHideCode(title),
               ),
             ],
           ),
@@ -605,6 +640,7 @@ class _CodeCard extends StatelessWidget {
                 size: AppIconButtonSizeMetrics.between,
                 color: onContainerColor,
                 onPressed: onCopy,
+                tooltip: l10n.blocksCopyCode(title),
               ),
             ],
           ),
@@ -624,11 +660,15 @@ class _MeetingsSection extends StatelessWidget {
 
   final List<MeetingsEntity> meetings;
   final bool isLoading;
-  final String? error;
+
+  /// Raw failure captured from the repository, or null when the load
+  /// succeeded. Converted to a user-facing message at render time.
+  final BlockError? error;
   final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (isLoading) {
       return AppCard(
         elevation: AppElevation.sm,
@@ -637,10 +677,10 @@ class _MeetingsSection extends StatelessWidget {
           child: Center(
             child: Column(
               children: [
-                const CircularProgressIndicator(strokeWidth: 2),
+                const AppSpinner(size: AppIconSizes.lg, strokeWidth: 2),
                 const SizedBox(height: Spacing.space_sm),
                 Text(
-                  "Carregando encontros...",
+                  l10n.blocksLoadingMeetings,
                   style: AppTypography.bodyMedium.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -655,34 +695,10 @@ class _MeetingsSection extends StatelessWidget {
     if (error != null) {
       return AppCard(
         elevation: AppElevation.sm,
-        child: Padding(
-          padding: const EdgeInsets.all(Spacing.space_lg),
-          child: Center(
-            child: Column(
-              children: [
-                Icon(
-                  Icons.error_outline_rounded,
-                  size: AppIconSizes.xxl,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-                const SizedBox(height: Spacing.space_sm),
-                Text(
-                  error!,
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: Spacing.space_sm),
-                AppButton(
-                  label: "Tentar novamente",
-                  variant: AppButtonVariant.secondary,
-                  size: AppButtonSizeMetrics.sm,
-                  onPressed: onRetry,
-                ),
-              ],
-            ),
-          ),
+        child: AppError(
+          compact: true,
+          message: localizeBlockError(context, error!),
+          onRetry: onRetry,
         ),
       );
     }
@@ -701,7 +717,7 @@ class _MeetingsSection extends StatelessWidget {
               ),
               const SizedBox(width: Spacing.space_2xs),
               Text(
-                "Nenhum encontro ainda",
+                l10n.blocksNoMeetingsYet,
                 style: AppTypography.bodyMedium.copyWith(
                   color: Theme.of(context).colorScheme.outline,
                 ),
@@ -731,17 +747,14 @@ class _MeetingsSection extends StatelessWidget {
             leading: AppIconTile(
               icon: Icons.event_rounded,
               backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              size: _listIconTileSize,
+              size: AppIconSizes.listTile,
               radius: Radii.sm,
               iconSize: AppIconSizes.md,
-              foregroundColor: AppColors.textPrimary,
+              foregroundColor: Theme.of(context).colorScheme.onSurface,
             ),
-            title: meeting.name ?? "Sem título",
+            title: meeting.name ?? l10n.blocksNoTitle,
             subtitle: meetingDateTime != null
-                ? DateFormat(
-                    "dd/MM/yyyy - HH:mm",
-                    "pt_BR",
-                  ).format(meetingDateTime)
+                ? formatShortDateTime(meetingDateTime, context)
                 : null,
             trailing: Icon(
               Icons.chevron_right_rounded,
@@ -772,7 +785,10 @@ class _MembersSection extends StatelessWidget {
   final List<CarnivalBlockMembersEntity> members;
   final Map<int, MembersEntity> memberEntities;
   final bool isLoading;
-  final String? error;
+
+  /// Raw failure captured from the repository, or null when the load
+  /// succeeded. Converted to a user-facing message at render time.
+  final BlockError? error;
   final bool canManageMembers;
   final int? deletingMemberId;
   final VoidCallback onRetry;
@@ -782,6 +798,7 @@ class _MembersSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (isLoading) {
       return AppCard(
         elevation: AppElevation.sm,
@@ -790,10 +807,10 @@ class _MembersSection extends StatelessWidget {
           child: Center(
             child: Column(
               children: [
-                const CircularProgressIndicator(strokeWidth: 2),
+                const AppSpinner(size: AppIconSizes.lg, strokeWidth: 2),
                 const SizedBox(height: Spacing.space_sm),
                 Text(
-                  "Carregando membros...",
+                  l10n.blocksLoadingMembers,
                   style: AppTypography.bodyMedium.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -808,34 +825,10 @@ class _MembersSection extends StatelessWidget {
     if (error != null) {
       return AppCard(
         elevation: AppElevation.sm,
-        child: Padding(
-          padding: const EdgeInsets.all(Spacing.space_lg),
-          child: Center(
-            child: Column(
-              children: [
-                Icon(
-                  Icons.error_outline_rounded,
-                  size: AppIconSizes.xxl,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-                const SizedBox(height: Spacing.space_sm),
-                Text(
-                  error!,
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: Spacing.space_sm),
-                AppButton(
-                  label: "Tentar novamente",
-                  variant: AppButtonVariant.secondary,
-                  size: AppButtonSizeMetrics.sm,
-                  onPressed: onRetry,
-                ),
-              ],
-            ),
-          ),
+        child: AppError(
+          compact: true,
+          message: localizeBlockError(context, error!),
+          onRetry: onRetry,
         ),
       );
     }
@@ -855,7 +848,7 @@ class _MembersSection extends StatelessWidget {
               const SizedBox(width: Spacing.space_2xs),
               Expanded(
                 child: Text(
-                  "Nenhum membro ainda",
+                  l10n.blocksNoMembersYet,
                   style: AppTypography.bodyMedium.copyWith(
                     color: Theme.of(context).colorScheme.outline,
                   ),
@@ -880,7 +873,7 @@ class _MembersSection extends StatelessWidget {
     if (admins.isNotEmpty) {
       items.add(
         _MemberGroupHeader(
-          title: "Admins",
+          title: l10n.blocksAdminsGroup,
           count: admins.length,
           color: roleColor(1),
         ),
@@ -909,7 +902,7 @@ class _MembersSection extends StatelessWidget {
     if (moderators.isNotEmpty) {
       items.add(
         _MemberGroupHeader(
-          title: "Moderadores",
+          title: l10n.blocksModeratorsGroup,
           count: moderators.length,
           color: roleColor(2),
         ),
@@ -938,7 +931,7 @@ class _MembersSection extends StatelessWidget {
     if (regularMembers.isNotEmpty) {
       items.add(
         _MemberGroupHeader(
-          title: "Membros",
+          title: l10n.blocksMembersSection,
           count: regularMembers.length,
           color: roleColor(0),
         ),
@@ -983,13 +976,14 @@ class _MemberGroupHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: Spacing.space_sm,
         vertical: Spacing.space_xs,
       ),
       child: Text(
-        "$title ($count)",
+        l10n.blocksGroupCount(title, count),
         style: AppTypography.titleSmall.copyWith(color: color),
       ),
     );
@@ -1013,7 +1007,8 @@ class _MemberRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final name = entity?.name ?? "Membro";
+    final l10n = AppLocalizations.of(context)!;
+    final name = entity?.name ?? l10n.blocksMemberFallback;
     final email = entity?.email;
     final profileImage = entity?.profileImage;
     final updatedAt = entity?.updatedAt;
@@ -1058,17 +1053,14 @@ class _MemberRow extends StatelessWidget {
             ),
           ),
           if (isDeleting) ...[
-            const SizedBox(
-              width: Spacing.space_md,
-              height: Spacing.space_md,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
+            const AppSpinner(size: AppIconSizes.lg, strokeWidth: 2),
           ] else if (canManageMembers) ...[
             AppIconButton(
               icon: Icons.delete_rounded,
               color: Theme.of(context).colorScheme.error,
               size: AppIconButtonSizeMetrics.sm,
               onPressed: onDelete,
+              tooltip: l10n.blocksRemoveMemberTooltip(name),
             ),
           ],
         ],

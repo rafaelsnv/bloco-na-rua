@@ -1,4 +1,3 @@
-import 'package:bloco_na_rua/core/errors/user_message.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart';
 import 'package:bloco_na_rua/data/repositories/members/imembers_repository.dart';
 import 'package:bloco_na_rua/ui/carnivalBlock/addMember/cubit/add_member_state.dart';
@@ -31,12 +30,7 @@ class AddMemberCubit extends Cubit<AddMemberState> {
         );
       },
       (failure) {
-        emit(
-          state.copyWith(
-            status: AddMemberStatus.error,
-            errorMessage: extractUserMessage(failure),
-          ),
-        );
+        emit(state.copyWith(status: AddMemberStatus.error, error: failure));
       },
     );
   }
@@ -70,12 +64,7 @@ class AddMemberCubit extends Cubit<AddMemberState> {
         emit(state.copyWith(status: AddMemberStatus.success));
       },
       (failure) {
-        emit(
-          state.copyWith(
-            status: AddMemberStatus.error,
-            errorMessage: extractUserMessage(failure),
-          ),
-        );
+        emit(state.copyWith(status: AddMemberStatus.error, error: failure));
       },
     );
   }

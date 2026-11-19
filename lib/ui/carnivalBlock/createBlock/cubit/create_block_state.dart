@@ -1,3 +1,4 @@
+import 'package:bloco_na_rua/ui/carnivalBlock/block_error.dart';
 import 'package:equatable/equatable.dart';
 
 sealed class CreateBlockState extends Equatable {
@@ -18,10 +19,10 @@ final class CreateBlockSuccess extends CreateBlockState {
 }
 
 final class CreateBlockError extends CreateBlockState {
-  final String message;
+  final BlockError error;
 
-  const CreateBlockError(this.message);
+  const CreateBlockError(this.error);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [error];
 }

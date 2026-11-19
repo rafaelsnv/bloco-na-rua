@@ -1,3 +1,5 @@
+import "package:bloco_na_rua/l10n/app_localizations.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/block_error.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/joinBlock/cubit/join_block_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/joinBlock/cubit/join_block_state.dart";
@@ -40,25 +42,26 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocConsumer<JoinBlockCubit, JoinBlockState>(
       listener: (context, state) {
         if (state is JoinBlockSuccess) {
           context.read<BlockListCubit>().loadBlocks();
           context.read<HomeCubit>().loadHomeData();
-          AppSnackbar.success(context, message: "Você entrou no bloco!");
+          AppSnackbar.success(context, message: l10n.blocksJoinSuccess);
           context.pop();
         } else if (state is JoinBlockError) {
-          AppSnackbar.error(context, message: state.message);
+          AppSnackbar.error(
+            context,
+            message: localizeBlockError(context, state.error),
+          );
         }
       },
       builder: (context, state) {
         final isLoading = state is JoinBlockLoading;
 
         return Scaffold(
-          appBar: const AppAppBar(
-            title: "Entrar em bloco",
-            showBackButton: true,
-          ),
+          appBar: AppAppBar(title: l10n.blocksJoinTitle, showBackButton: true),
           body: SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(Spacing.space_md),
@@ -81,9 +84,7 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
                       child: Icon(
                         Icons.group_add_rounded,
                         size: AppIconSizes.displayXLarge,
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? AppColors.textPrimaryDark
-                            : AppColors.textPrimary,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -94,12 +95,12 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Entre em um bloco",
+                          l10n.blocksJoinHeadline,
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         const SizedBox(height: Spacing.space_xs),
                         Text(
-                          "Peça o código de convite ao dono do bloco para entrar.",
+                          l10n.blocksJoinSubtitle,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
                                 color: Theme.of(
@@ -116,8 +117,8 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
                     key: _formKey,
                     child: AppTextField(
                       controller: _inviteCodeController,
-                      label: "Código de convite",
-                      hint: "Cole aqui o código",
+                      label: l10n.blocksInviteCodeLabel,
+                      hint: l10n.blocksInviteCodeHint,
                       prefixIcon: Icons.vpn_key_rounded,
                       autofocus: true,
                       textInputAction: TextInputAction.done,
@@ -130,10 +131,10 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
                       onSubmitted: (_) => _submit(context),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
-                          return "Digite o código de convite";
+                          return l10n.blocksInviteCodeRequired;
                         }
                         if (value.trim().length < 4) {
-                          return "Código muito curto";
+                          return l10n.blocksInviteCodeTooShort;
                         }
                         return null;
                       },
@@ -142,7 +143,7 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
                   const SizedBox(height: Spacing.space_lg),
                   // Submit button
                   AppButton(
-                    label: "Entrar",
+                    label: l10n.blocksJoinSubmit,
                     variant: AppButtonVariant.primary,
                     isFullWidth: true,
                     isLoading: isLoading,

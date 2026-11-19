@@ -1,5 +1,5 @@
-import 'package:bloco_na_rua/core/errors/user_message.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
+import 'package:bloco_na_rua/ui/carnivalBlock/block_error.dart';
 import 'package:bloco_na_rua/ui/carnivalBlock/editBlock/cubit/edit_block_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,7 +25,7 @@ class EditBlockCubit extends Cubit<EditBlockState> {
     try {
       blockId = int.parse(_carnivalBlockId);
     } catch (_) {
-      emit(EditBlockError('ID do bloco inválido'));
+      emit(const EditBlockError(BlockError(BlockErrorKind.invalidId)));
       return;
     }
 
@@ -39,7 +39,8 @@ class EditBlockCubit extends Cubit<EditBlockState> {
           carnivalBlockImage: block.carnivalBlockImage,
         ),
       ),
-      (failure) => emit(EditBlockError(extractUserMessage(failure))),
+      (failure) =>
+          emit(EditBlockError(BlockError(BlockErrorKind.request, failure))),
     );
   }
 
@@ -68,7 +69,8 @@ class EditBlockCubit extends Cubit<EditBlockState> {
 
       result.fold(
         (_) => emit(EditBlockSuccess()),
-        (failure) => emit(EditBlockError(extractUserMessage(failure))),
+        (failure) =>
+            emit(EditBlockError(BlockError(BlockErrorKind.request, failure))),
       );
     } finally {
       _isUpdating = false;
@@ -97,7 +99,7 @@ class EditBlockCubit extends Cubit<EditBlockState> {
     try {
       blockId = int.parse(_carnivalBlockId);
     } catch (_) {
-      emit(EditBlockError('ID do bloco inválido'));
+      emit(const EditBlockError(BlockError(BlockErrorKind.invalidId)));
       return;
     }
 
@@ -106,7 +108,8 @@ class EditBlockCubit extends Cubit<EditBlockState> {
 
       result.fold(
         (_) => emit(EditBlockDeleted()),
-        (failure) => emit(EditBlockError(extractUserMessage(failure))),
+        (failure) =>
+            emit(EditBlockError(BlockError(BlockErrorKind.request, failure))),
       );
     } finally {
       _isDeleting = false;
