@@ -1845,6 +1845,53 @@ extension $ProblemDetailsExtension on ProblemDetails {
 }
 
 @JsonSerializable(explicitToJson: true)
+class RefreshRequest {
+  const RefreshRequest({this.refreshToken});
+
+  factory RefreshRequest.fromJson(Map<String, dynamic> json) =>
+      _$RefreshRequestFromJson(json);
+
+  static const toJsonFactory = _$RefreshRequestToJson;
+  Map<String, dynamic> toJson() => _$RefreshRequestToJson(this);
+
+  @JsonKey(name: 'refreshToken', includeIfNull: false)
+  final String? refreshToken;
+  static const fromJsonFactory = _$RefreshRequestFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is RefreshRequest &&
+            (identical(other.refreshToken, refreshToken) ||
+                const DeepCollectionEquality().equals(
+                  other.refreshToken,
+                  refreshToken,
+                )));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(refreshToken) ^ runtimeType.hashCode;
+}
+
+extension $RefreshRequestExtension on RefreshRequest {
+  RefreshRequest copyWith({String? refreshToken}) {
+    return RefreshRequest(refreshToken: refreshToken ?? this.refreshToken);
+  }
+
+  RefreshRequest copyWithWrapped({Wrapped<String?>? refreshToken}) {
+    return RefreshRequest(
+      refreshToken: (refreshToken != null
+          ? refreshToken.value
+          : this.refreshToken),
+    );
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
 class ApiV1AuthLoginPost$RequestBody {
   const ApiV1AuthLoginPost$RequestBody({this.email, this.password});
 
@@ -1899,6 +1946,122 @@ extension $ApiV1AuthLoginPost$RequestBodyExtension
     return ApiV1AuthLoginPost$RequestBody(
       email: (email != null ? email.value : this.email),
       password: (password != null ? password.value : this.password),
+    );
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class ApiV1AuthSignupPost$RequestBody {
+  const ApiV1AuthSignupPost$RequestBody({this.email, this.password, this.name});
+
+  factory ApiV1AuthSignupPost$RequestBody.fromJson(Map<String, dynamic> json) =>
+      _$ApiV1AuthSignupPost$RequestBodyFromJson(json);
+
+  static const toJsonFactory = _$ApiV1AuthSignupPost$RequestBodyToJson;
+  Map<String, dynamic> toJson() =>
+      _$ApiV1AuthSignupPost$RequestBodyToJson(this);
+
+  @JsonKey(name: 'Email', includeIfNull: false)
+  final String? email;
+  @JsonKey(name: 'Password', includeIfNull: false)
+  final String? password;
+  @JsonKey(name: 'Name', includeIfNull: false)
+  final String? name;
+  static const fromJsonFactory = _$ApiV1AuthSignupPost$RequestBodyFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is ApiV1AuthSignupPost$RequestBody &&
+            (identical(other.email, email) ||
+                const DeepCollectionEquality().equals(other.email, email)) &&
+            (identical(other.password, password) ||
+                const DeepCollectionEquality().equals(
+                  other.password,
+                  password,
+                )) &&
+            (identical(other.name, name) ||
+                const DeepCollectionEquality().equals(other.name, name)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(email) ^
+      const DeepCollectionEquality().hash(password) ^
+      const DeepCollectionEquality().hash(name) ^
+      runtimeType.hashCode;
+}
+
+extension $ApiV1AuthSignupPost$RequestBodyExtension
+    on ApiV1AuthSignupPost$RequestBody {
+  ApiV1AuthSignupPost$RequestBody copyWith({
+    String? email,
+    String? password,
+    String? name,
+  }) {
+    return ApiV1AuthSignupPost$RequestBody(
+      email: email ?? this.email,
+      password: password ?? this.password,
+      name: name ?? this.name,
+    );
+  }
+
+  ApiV1AuthSignupPost$RequestBody copyWithWrapped({
+    Wrapped<String?>? email,
+    Wrapped<String?>? password,
+    Wrapped<String?>? name,
+  }) {
+    return ApiV1AuthSignupPost$RequestBody(
+      email: (email != null ? email.value : this.email),
+      password: (password != null ? password.value : this.password),
+      name: (name != null ? name.value : this.name),
+    );
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class ApiV1MediaImagePost$RequestBody {
+  const ApiV1MediaImagePost$RequestBody({this.file});
+
+  factory ApiV1MediaImagePost$RequestBody.fromJson(Map<String, dynamic> json) =>
+      _$ApiV1MediaImagePost$RequestBodyFromJson(json);
+
+  static const toJsonFactory = _$ApiV1MediaImagePost$RequestBodyToJson;
+  Map<String, dynamic> toJson() =>
+      _$ApiV1MediaImagePost$RequestBodyToJson(this);
+
+  @JsonKey(name: 'file', includeIfNull: false)
+  final String? file;
+  static const fromJsonFactory = _$ApiV1MediaImagePost$RequestBodyFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is ApiV1MediaImagePost$RequestBody &&
+            (identical(other.file, file) ||
+                const DeepCollectionEquality().equals(other.file, file)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(file) ^ runtimeType.hashCode;
+}
+
+extension $ApiV1MediaImagePost$RequestBodyExtension
+    on ApiV1MediaImagePost$RequestBody {
+  ApiV1MediaImagePost$RequestBody copyWith({String? file}) {
+    return ApiV1MediaImagePost$RequestBody(file: file ?? this.file);
+  }
+
+  ApiV1MediaImagePost$RequestBody copyWithWrapped({Wrapped<String?>? file}) {
+    return ApiV1MediaImagePost$RequestBody(
+      file: (file != null ? file.value : this.file),
     );
   }
 }
