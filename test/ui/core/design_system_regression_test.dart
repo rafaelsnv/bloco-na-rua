@@ -9,6 +9,7 @@
 // only, mocktail for anything that would touch the network, and Arrange /
 // Act / Assert inside every test body.
 
+import "dart:io";
 import "dart:math" as math;
 
 import "package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart";
@@ -16,9 +17,11 @@ import "package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart";
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
 import "package:bloco_na_rua/data/repositories/auth/auth_listenable.dart";
 import "package:bloco_na_rua/data/repositories/auth/iauth_repository.dart";
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_cubit.dart";
 import "package:bloco_na_rua/ui/auth/login/widgets/login_screen.dart";
 import "package:bloco_na_rua/ui/auth/signUp/widgets/signup_screen.dart";
+import "package:bloco_na_rua/ui/core/theme/app_text_colors.dart";
 import "package:bloco_na_rua/ui/core/theme/app_theme.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
@@ -33,8 +36,10 @@ import "package:bloco_na_rua/ui/core/widgets/cards/meeting_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/member_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_avatar.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_chip.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_icon_tile.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_logo.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_section_header.dart";
-import "package:bloco_na_rua/ui/core/widgets/inputs/app_text_field.dart";
+import "package:bloco_na_rua/ui/core/widgets/inputs/app_dropdown.dart";
 import "package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_cubit.dart";
 import "package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_state.dart";
 import "package:bloco_na_rua/ui/meetings/meetingDetails/widgets/meeting_details_screen.dart";
@@ -145,6 +150,28 @@ Color _labelInk(WidgetTester tester, String label) {
   return text.style?.color ?? Colors.transparent;
 }
 
+/// The Portuguese catalog, read straight from the ARB-generated localizations.
+///
+/// The copy these tests assert on moved into the catalog during the ARB/i18n
+/// migration, so the expectations are built from the same source the widgets
+/// read from.
+final AppLocalizations _pt = lookupAppLocalizations(const Locale("pt"));
+
+/// The app shell used by every harness below.
+///
+/// Since the ARB/i18n migration the core widgets read their copy through
+/// `AppLocalizations.of(context)!`, so a bare `MaterialApp` crashes the build
+/// with a null-check error. The delegates and the explicit `pt` locale keep
+/// the Portuguese copy the assertions below expect.
+Widget _app({required Widget home, ThemeData? theme, Key? key}) => MaterialApp(
+  key: key,
+  theme: theme ?? AppTheme.light(),
+  localizationsDelegates: AppLocalizations.localizationsDelegates,
+  supportedLocales: AppLocalizations.supportedLocales,
+  locale: const Locale("pt"),
+  home: home,
+);
+
 void main() {
   setUpAll(() async {
     // The cards format dates with the pt_BR locale.
@@ -160,8 +187,7 @@ void main() {
     ) async {
       // Arrange
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
+        _app(
           home: Scaffold(
             body: Padding(
               padding: const EdgeInsets.all(16),
@@ -183,8 +209,7 @@ void main() {
       (tester) async {
         // Arrange
         await tester.pumpWidget(
-          MaterialApp(
-            theme: AppTheme.light(),
+          _app(
             home: Scaffold(
               body: Padding(
                 padding: const EdgeInsets.all(16),
@@ -227,13 +252,12 @@ void main() {
       authCubit.close();
     });
 
-    testWidgets("H3: login form shows no error border and a disabled submit", (
+    testWidgets("H3: login form shows no error border and an enabled submit", (
       tester,
     ) async {
       // Arrange / Act
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
+        _app(
           home: BlocProvider<AuthCubit>.value(
             value: authCubit,
             child: const LoginScreen(),
@@ -257,26 +281,26 @@ void main() {
         );
       }
 
-      // The submit button starts disabled.
+      // The submit button starts enabled: an invalid form is reported inline
+      // on submit instead of a CTA that never becomes tappable (H12).
       final submit = tester.widget<AppButton>(
-        find.widgetWithText(AppButton, "Entrar"),
+        find.widgetWithText(AppButton, _pt.loginEnterButton),
       );
-      expect(submit.isDisabled, isTrue);
-      expect(submit.onPressed, isNull);
+      expect(submit.isDisabled, isFalse);
+      expect(submit.onPressed, isNotNull);
 
       final filled = tester.widget<FilledButton>(
-        find.byKey(const Key("app_button_Entrar")),
+        find.byKey(Key("app_button_${_pt.loginEnterButton}")),
       );
-      expect(filled.onPressed, isNull);
+      expect(filled.onPressed, isNotNull);
     });
 
-    testWidgets("H3: signup form shows no error border and a disabled submit", (
+    testWidgets("H3: signup form shows no error border and an enabled submit", (
       tester,
     ) async {
       // Arrange / Act
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
+        _app(
           home: BlocProvider<AuthCubit>.value(
             value: authCubit,
             child: const SignUpScreen(),
@@ -293,10 +317,10 @@ void main() {
       }
 
       final submit = tester.widget<AppButton>(
-        find.widgetWithText(AppButton, "Cadastrar"),
+        find.widgetWithText(AppButton, _pt.signupSubmitButton),
       );
-      expect(submit.isDisabled, isTrue);
-      expect(submit.onPressed, isNull);
+      expect(submit.isDisabled, isFalse);
+      expect(submit.onPressed, isNotNull);
     });
 
     testWidgets("H3: signup errors only the field the user is editing", (
@@ -304,8 +328,7 @@ void main() {
     ) async {
       // Arrange
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
+        _app(
           home: BlocProvider<AuthCubit>.value(
             value: authCubit,
             child: const SignUpScreen(),
@@ -315,23 +338,35 @@ void main() {
 
       // Act
       await tester.enterText(
-        find.byKey(const Key("app_text_field_E-mail")),
+        find.byKey(Key("app_text_field_${_pt.signupEmailLabel}")),
         "not-an-email",
       );
       await tester.pump();
 
       // Assert — the e-mail field shows its error, every other field stays
-      // neutral and the submit button stays disabled.
-      expect(_errorTextOf(tester, "app_text_field_E-mail"), "E-mail inválido");
-      expect(_errorTextOf(tester, "app_text_field_Nome"), isNull);
-      expect(_errorTextOf(tester, "app_text_field_Senha"), isNull);
-      expect(_errorTextOf(tester, "app_text_field_Telefone"), isNull);
+      // neutral and the submit button stays enabled.
+      expect(
+        _errorTextOf(tester, "app_text_field_${_pt.signupEmailLabel}"),
+        _pt.signupEmailInvalid,
+      );
+      expect(
+        _errorTextOf(tester, "app_text_field_${_pt.signupNameLabel}"),
+        isNull,
+      );
+      expect(
+        _errorTextOf(tester, "app_text_field_${_pt.signupPasswordLabel}"),
+        isNull,
+      );
+      expect(
+        _errorTextOf(tester, "app_text_field_${_pt.signupPhoneLabel}"),
+        isNull,
+      );
 
       final submit = tester.widget<AppButton>(
-        find.widgetWithText(AppButton, "Cadastrar"),
+        find.widgetWithText(AppButton, _pt.signupSubmitButton),
       );
-      expect(submit.isDisabled, isTrue);
-      expect(submit.onPressed, isNull);
+      expect(submit.isDisabled, isFalse);
+      expect(submit.onPressed, isNotNull);
     });
 
     testWidgets(
@@ -339,8 +374,7 @@ void main() {
       (tester) async {
         // Arrange
         await tester.pumpWidget(
-          MaterialApp(
-            theme: AppTheme.light(),
+          _app(
             home: BlocProvider<AuthCubit>.value(
               value: authCubit,
               child: const LoginScreen(),
@@ -350,7 +384,7 @@ void main() {
 
         // Act — typing marks the field as edited, so it validates itself.
         await tester.enterText(
-          find.byKey(const Key("app_text_field_E-mail")),
+          find.byKey(Key("app_text_field_${_pt.loginEmailLabel}")),
           "not-an-email",
         );
         await tester.pump();
@@ -370,8 +404,7 @@ void main() {
       (tester) async {
         // Arrange
         await tester.pumpWidget(
-          MaterialApp(
-            theme: AppTheme.light(),
+          _app(
             home: BlocProvider<AuthCubit>.value(
               value: authCubit,
               child: const LoginScreen(),
@@ -381,24 +414,27 @@ void main() {
 
         // Act — one character in the e-mail field.
         await tester.enterText(
-          find.byKey(const Key("app_text_field_E-mail")),
+          find.byKey(Key("app_text_field_${_pt.loginEmailLabel}")),
           "not-an-email",
         );
         await tester.pump();
 
         // Assert — the edited field shows its error, the untouched password
-        // field does not, and the submit button stays disabled.
+        // field does not, and the submit button stays enabled.
         expect(
-          _errorTextOf(tester, "app_text_field_E-mail"),
-          "E-mail inválido",
+          _errorTextOf(tester, "app_text_field_${_pt.loginEmailLabel}"),
+          _pt.loginEmailInvalid,
         );
-        expect(_errorTextOf(tester, "app_text_field_Senha"), isNull);
+        expect(
+          _errorTextOf(tester, "app_text_field_${_pt.loginPasswordLabel}"),
+          isNull,
+        );
 
         final submit = tester.widget<AppButton>(
-          find.widgetWithText(AppButton, "Entrar"),
+          find.widgetWithText(AppButton, _pt.loginEnterButton),
         );
-        expect(submit.isDisabled, isTrue);
-        expect(submit.onPressed, isNull);
+        expect(submit.isDisabled, isFalse);
+        expect(submit.onPressed, isNotNull);
       },
     );
 
@@ -407,8 +443,7 @@ void main() {
     ) async {
       // Arrange
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
+        _app(
           home: BlocProvider<AuthCubit>.value(
             value: authCubit,
             child: const LoginScreen(),
@@ -418,21 +453,27 @@ void main() {
 
       // Act
       await tester.enterText(
-        find.byKey(const Key("app_text_field_E-mail")),
+        find.byKey(Key("app_text_field_${_pt.loginEmailLabel}")),
         "maria@bloconarua.com.br",
       );
       await tester.enterText(
-        find.byKey(const Key("app_text_field_Senha")),
+        find.byKey(Key("app_text_field_${_pt.loginPasswordLabel}")),
         "senha-secreta",
       );
       await tester.pump();
 
       // Assert — no error is painted and the submit button is live.
-      expect(_errorTextOf(tester, "app_text_field_E-mail"), isNull);
-      expect(_errorTextOf(tester, "app_text_field_Senha"), isNull);
+      expect(
+        _errorTextOf(tester, "app_text_field_${_pt.loginEmailLabel}"),
+        isNull,
+      );
+      expect(
+        _errorTextOf(tester, "app_text_field_${_pt.loginPasswordLabel}"),
+        isNull,
+      );
 
       final submit = tester.widget<AppButton>(
-        find.widgetWithText(AppButton, "Entrar"),
+        find.widgetWithText(AppButton, _pt.loginEnterButton),
       );
       expect(submit.isDisabled, isFalse);
       expect(submit.onPressed, isNotNull);
@@ -443,8 +484,7 @@ void main() {
       (tester) async {
         // Arrange
         await tester.pumpWidget(
-          MaterialApp(
-            theme: AppTheme.light(),
+          _app(
             home: BlocProvider<AuthCubit>.value(
               value: authCubit,
               child: const LoginScreen(),
@@ -452,26 +492,20 @@ void main() {
           ),
         );
 
-        // Act — the submit button is disabled while the form is invalid, so
-        // the form is submitted through the keyboard action of the last
-        // field. That is the only submit path that reaches an invalid form.
-        final password = tester.widget<AppTextField>(
-          find.ancestor(
-            of: find.byKey(const Key("app_text_field_Senha")),
-            matching: find.byType(AppTextField),
-          ),
-        );
-        password.onSubmitted?.call("");
+        // Act — the submit button is always enabled (H12): tapping it
+        // validates the whole form and reports every error inline instead
+        // of calling the API.
+        await tester.tap(find.byKey(Key("app_button_${_pt.loginEnterButton}")));
         await tester.pump();
 
         // Assert — every invalid field shows its error.
         expect(
-          _errorTextOf(tester, "app_text_field_E-mail"),
-          "Por favor, insira um e-mail",
+          _errorTextOf(tester, "app_text_field_${_pt.loginEmailLabel}"),
+          _pt.loginEmailRequired,
         );
         expect(
-          _errorTextOf(tester, "app_text_field_Senha"),
-          "Por favor, insira uma senha",
+          _errorTextOf(tester, "app_text_field_${_pt.loginPasswordLabel}"),
+          _pt.loginPasswordRequired,
         );
 
         // Assert — the auth API was not called.
@@ -494,8 +528,7 @@ void main() {
     ) async {
       // Arrange / Act
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
+        _app(
           home: Scaffold(
             body: AddBlockFab(isExpanded: true, onFabPressed: () {}),
           ),
@@ -540,8 +573,7 @@ void main() {
     testWidgets("H4: collapsed FAB carries no rotation either", (tester) async {
       // Arrange / Act
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
+        _app(
           home: Scaffold(
             body: AddBlockFab(isExpanded: false, onFabPressed: () {}),
           ),
@@ -567,8 +599,7 @@ void main() {
     ) async {
       // Arrange / Act
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
+        _app(
           home: Scaffold(
             body: AddBlockFab(isExpanded: false, onFabPressed: () {}),
           ),
@@ -605,8 +636,7 @@ void main() {
       // Arrange
       var fabPressed = false;
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
+        _app(
           home: Scaffold(
             body: AddBlockFab(
               isExpanded: false,
@@ -638,8 +668,7 @@ void main() {
     ) async {
       // Arrange / Act
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
+        _app(
           home: Scaffold(
             body: AddBlockFab(isExpanded: true, onFabPressed: () {}),
           ),
@@ -655,10 +684,17 @@ void main() {
       );
       expect(ignores, hasLength(2));
       expect(ignores.every((ignore) => !ignore.ignoring), isTrue);
-      expect(find.widgetWithText(AppButton, "Entrar em Bloco"), findsOneWidget);
-      expect(find.widgetWithText(AppButton, "Criar Bloco"), findsOneWidget);
+      // The speed-dial labels come from the catalog.
+      expect(
+        find.widgetWithText(AppButton, _pt.coreFabJoinBlock),
+        findsOneWidget,
+      );
+      expect(
+        find.widgetWithText(AppButton, _pt.coreFabCreateBlock),
+        findsOneWidget,
+      );
 
-      for (final label in ["Entrar em Bloco", "Criar Bloco"]) {
+      for (final label in [_pt.coreFabJoinBlock, _pt.coreFabCreateBlock]) {
         final button = find.descendant(
           of: find.byType(AddBlockFab),
           matching: find.byKey(Key("app_button_$label")),
@@ -716,8 +752,7 @@ void main() {
       when(() => cubit.loadMeeting()).thenAnswer((_) async {});
 
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
+        _app(
           home: BlocProvider<MeetingDetailsCubit>.value(
             value: cubit,
             child: const MeetingDetailsScreen(meetingId: "1"),
@@ -734,7 +769,8 @@ void main() {
       );
       expect(title, findsOneWidget);
       final titleRect = tester.getRect(title);
-      final chip = find.widgetWithText(AppChip, "Próxima");
+      // The status chip copy comes from the catalog.
+      final chip = find.widgetWithText(AppChip, _pt.meetingsStatusUpcoming);
       expect(chip, findsOneWidget);
       final chipRect = tester.getRect(chip);
 
@@ -770,13 +806,12 @@ void main() {
         name: "Boi da Torre",
         inviteCode: "ABC123",
         managersInviteCode: "MGR123",
-        // Empty URL -> the emoji placeholder, no network image.
+        // Empty URL -> the celebration AppIconTile placeholder, no network image.
         carnivalBlockImage: "",
       );
 
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
+        _app(
           home: Scaffold(
             body: SingleChildScrollView(
               child: Column(
@@ -826,8 +861,7 @@ void main() {
       (tester) async {
         // Arrange / Act
         await tester.pumpWidget(
-          MaterialApp(
-            theme: AppTheme.light(),
+          _app(
             home: Scaffold(
               body: AppButton(
                 label: "Entrar",
@@ -855,7 +889,7 @@ void main() {
     ) async {
       // Arrange / Act
       await tester.pumpWidget(
-        MaterialApp(
+        _app(
           theme: AppTheme.dark(),
           home: Scaffold(
             body: AppButton(
@@ -913,7 +947,7 @@ void main() {
       ThemeData theme,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
+        _app(
           theme: theme,
           home: Scaffold(
             body: Wrap(
@@ -1027,8 +1061,7 @@ void main() {
       (tester) async {
         // Arrange / Act
         await tester.pumpWidget(
-          MaterialApp(
-            theme: AppTheme.light(),
+          _app(
             home: Scaffold(
               body: AppButton(
                 label: "Sair da conta",
@@ -1062,8 +1095,7 @@ void main() {
       // Arrange
       final handle = tester.ensureSemantics();
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light(),
+        _app(
           home: Scaffold(
             body: AppButton(
               label: "Sair da conta",
@@ -1085,6 +1117,237 @@ void main() {
       expect(data.flagsCollection.isButton, isTrue);
 
       handle.dispose();
+    });
+  });
+
+  // =========================================================================
+  // H7(w0t1) — The dropdown hint meets 4.5:1 text contrast
+  // =========================================================================
+  group("H7 — the dropdown hint uses onSurfaceVariant", () {
+    testWidgets("H7: hint ink is colorScheme.onSurfaceVariant in both modes", (
+      tester,
+    ) async {
+      // Arrange / Act — light mode.
+      await tester.pumpWidget(
+        _app(
+          home: const Scaffold(
+            body: AppDropdown<String>(
+              hint: "Selecione",
+              items: [AppDropdownItem(value: "a", label: "A")],
+            ),
+          ),
+        ),
+      );
+      var hint = tester.widget<Text>(find.text("Selecione"));
+      var scheme = AppTheme.light().colorScheme;
+      // Assert — theme-driven ink, not the old 2.5:1 textDisabled token.
+      expect(hint.style?.color, scheme.onSurfaceVariant);
+      expect(
+        _contrastRatio(hint.style!.color!, scheme.surface),
+        greaterThanOrEqualTo(4.5),
+      );
+
+      // Arrange / Act — dark mode (fresh pump so the whole tree rebuilds).
+      await tester.pumpWidget(
+        _app(
+          key: const ValueKey("dark_app"),
+          theme: AppTheme.dark(),
+          home: const Scaffold(
+            body: AppDropdown<String>(
+              hint: "Selecione",
+              items: [AppDropdownItem(value: "a", label: "A")],
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      hint = tester.widget<Text>(find.text("Selecione"));
+      scheme = AppTheme.dark().colorScheme;
+      expect(hint.style?.color, scheme.onSurfaceVariant);
+      expect(
+        _contrastRatio(hint.style!.color!, scheme.surface),
+        greaterThanOrEqualTo(4.5),
+      );
+    });
+  });
+
+  // =========================================================================
+  // H8(w0t1) — Border tokens meet 3:1 non-text contrast on their surfaces
+  // =========================================================================
+  group("H8 — outline tokens meet 3:1 non-text contrast", () {
+    test("H8: borderLight on white and borderDark on the dark surface", () {
+      // Assert — #8B7FD6 on white ≈ 3.4:1 (was #C4B5FD at 1.6:1).
+      expect(
+        _contrastRatio(AppColors.borderLight, AppColors.surfaceLight),
+        greaterThanOrEqualTo(3.0),
+      );
+      // Assert — #8A94A6 on #1F2937 ≈ 4.8:1 (was #475569 at 1.9:1).
+      expect(
+        _contrastRatio(AppColors.borderDark, AppColors.surfaceDark),
+        greaterThanOrEqualTo(3.0),
+      );
+    });
+  });
+
+  // =========================================================================
+  // M8 — AppTextColors exposes exactly one value per role per preset
+  // =========================================================================
+  group("M8 — AppTextColors has no *Dark twin fields", () {
+    test("M8: light and dark presets each carry a single value per role", () {
+      // Assert — one value per role, resolved by the preset itself.
+      expect(AppTextColors.light.textTertiary, AppColors.textTertiary);
+      expect(AppTextColors.light.textDisabled, AppColors.textDisabled);
+      expect(AppTextColors.dark.textTertiary, AppColors.textTertiaryDark);
+      expect(AppTextColors.dark.textDisabled, AppColors.textDisabledDark);
+    });
+  });
+
+  // =========================================================================
+  // Audit invariants — the patterns the UI/UX audit removed stay removed
+  // =========================================================================
+  group("Audit invariants — the removed patterns stay removed", () {
+    /// Every Dart source file under [dir], relative to the package root.
+    List<File> sourcesIn(String dir) {
+      final directory = Directory(dir);
+      expect(directory.existsSync(), isTrue, reason: "$dir must exist");
+      return directory
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((file) => file.path.endsWith(".dart"))
+          .toList();
+    }
+
+    /// The paths of the files under [dir] whose source contains [pattern].
+    List<String> offendersIn(String dir, String pattern) => [
+      for (final source in sourcesIn(dir))
+        if (source.readAsStringSync().contains(pattern)) source.path,
+    ];
+
+    test(
+      "routing goes through go_router, never through Navigator.pushNamed",
+      () {
+        // Arrange / Act
+        final pushNamed = offendersIn("lib", "pushNamed");
+        final pushReplacementNamed = offendersIn("lib", "pushReplacementNamed");
+
+        // Assert — the imperative named-route API is gone.
+        expect(
+          pushNamed,
+          isEmpty,
+          reason: "use go_router (context.go / context.push) instead",
+        );
+        expect(
+          pushReplacementNamed,
+          isEmpty,
+          reason: "use go_router (context.go / context.push) instead",
+        );
+
+        // Assert — the replacement is really in place, so this test cannot pass
+        // vacuously on an empty tree.
+        final routerCalls = [
+          ...offendersIn("lib", "context.go("),
+          ...offendersIn("lib", "context.push("),
+        ];
+        expect(routerCalls, isNotEmpty);
+      },
+    );
+
+    test("the shared buttons keep the padded tap target", () {
+      // Assert — no shared button shrinks its tap target below the 48dp
+      // minimum.
+      expect(
+        offendersIn(
+          "lib/ui/core/widgets/buttons",
+          "MaterialTapTargetSize.shrinkWrap",
+        ),
+        isEmpty,
+      );
+
+      // Assert — the padded target is really in place.
+      expect(
+        offendersIn(
+          "lib/ui/core/widgets/buttons",
+          "MaterialTapTargetSize.padded",
+        ),
+        isNotEmpty,
+      );
+    });
+
+    test("every date is formatted through the locale-aware helper", () {
+      // Assert — no screen builds its own DateFormat, which is how the
+      // hardcoded "pt_BR" literals got in.
+      expect(offendersIn("lib/ui", "DateFormat"), isEmpty);
+      expect(offendersIn("lib/ui", "pt_BR"), isEmpty);
+
+      // Assert — the single owner of date formatting is still there.
+      expect(offendersIn("lib/core", "DateFormat"), isNotEmpty);
+    });
+
+    test("the error affordance is not the alert glyph", () {
+      // Assert — the removed icon stays out of the app.
+      expect(offendersIn("lib", "Icons.add_alert_rounded"), isEmpty);
+
+      // Assert — the shared error icon is the one in use.
+      expect(offendersIn("lib", "Icons.error_outline_rounded"), isNotEmpty);
+    });
+
+    test("the meeting screens allocate no controller inside build()", () {
+      for (final screen in sourcesIn("lib/ui/meetings")) {
+        final lines = screen.readAsStringSync().split("\n");
+        final buildStart = lines.indexWhere(
+          (line) => line.contains("Widget build("),
+        );
+        // Not a widget file (a cubit, a state class) — nothing to check.
+        if (buildStart == -1) continue;
+
+        for (var i = buildStart; i < lines.length; i++) {
+          expect(
+            lines[i].contains("TextEditingController("),
+            isFalse,
+            reason:
+                "${screen.path}:${i + 1} allocates a controller inside build() — "
+                "own it as a field instead",
+          );
+        }
+      }
+    });
+  });
+
+  // =========================================================================
+  // M9 / M10 — BlockCard uses AppIconTile placeholder and AppLogo uses high
+  // =========================================================================
+  group("M9/M10 — BlockCard placeholder & AppLogo quality", () {
+    testWidgets(
+      "M9: BlockCard renders celebration AppIconTile instead of emoji",
+      (tester) async {
+        final block = CarnivalBlocksEntity(
+          id: 1,
+          ownerId: 1,
+          name: "Bloco Teste",
+          inviteCode: "INV123",
+          managersInviteCode: "MGR123",
+          carnivalBlockImage: "",
+        );
+
+        await tester.pumpWidget(
+          _app(
+            home: Scaffold(body: BlockCard(block: block)),
+          ),
+        );
+
+        expect(find.byType(AppIconTile), findsOneWidget);
+        final tile = tester.widget<AppIconTile>(find.byType(AppIconTile));
+        expect(tile.icon, Icons.celebration_rounded);
+      },
+    );
+
+    testWidgets("M10: AppLogo renders Image.asset with FilterQuality.high", (
+      tester,
+    ) async {
+      await tester.pumpWidget(_app(home: const Scaffold(body: AppLogo())));
+
+      final image = tester.widget<Image>(find.byType(Image));
+      expect(image.filterQuality, FilterQuality.high);
     });
   });
 }
