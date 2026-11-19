@@ -7,6 +7,7 @@ import "package:bloco_na_rua/ui/core/theme/app_text_themes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
 
 class AppTheme {
   AppTheme._();
@@ -21,6 +22,8 @@ class AppTheme {
       textTheme: lightTextTheme,
       scaffoldBackgroundColor: AppColors.backgroundLight,
       visualDensity: VisualDensity.adaptivePlatformDensity,
+      hoverColor: AppColors.tint(lightColorScheme.primary),
+      focusColor: AppColors.tint(lightColorScheme.primary, 0.12),
       appBarTheme: AppBarTheme(
         // D1: unified flat-surface app bar in both brightnesses, separated
         // from the content by a hairline instead of a filled brand block.
@@ -55,6 +58,12 @@ class AppTheme {
         style: FilledButton.styleFrom(
           backgroundColor: lightColorScheme.primary,
           foregroundColor: lightColorScheme.onPrimary,
+          // Mirrored from the dark theme so disabled states match across
+          // brightnesses: ink derived from the disabled fill via inkFor.
+          disabledBackgroundColor: lightColorScheme.surfaceContainerHigh,
+          disabledForegroundColor: AppColors.inkFor(
+            lightColorScheme.surfaceContainerHigh,
+          ).withValues(alpha: 0.38),
           shape: RoundedRectangleBorder(borderRadius: Radii.button),
           padding: const EdgeInsets.symmetric(
             horizontal: Spacing.space_md,
@@ -70,6 +79,10 @@ class AppTheme {
             color: lightColorScheme.primary,
             width: Radii.outlineWidth,
           ),
+          disabledBackgroundColor: lightColorScheme.surfaceContainerHigh,
+          disabledForegroundColor: AppColors.inkFor(
+            lightColorScheme.surfaceContainerHigh,
+          ).withValues(alpha: 0.38),
           shape: RoundedRectangleBorder(borderRadius: Radii.button),
           padding: const EdgeInsets.symmetric(
             horizontal: Spacing.space_md,
@@ -78,7 +91,12 @@ class AppTheme {
         ),
       ),
       textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(foregroundColor: lightColorScheme.primary),
+        style: TextButton.styleFrom(
+          foregroundColor: lightColorScheme.primary,
+          disabledForegroundColor: AppColors.inkFor(
+            lightColorScheme.surfaceContainerHigh,
+          ).withValues(alpha: 0.38),
+        ),
       ),
       chipTheme: ChipThemeData(
         labelStyle: AppTypography.labelMedium.copyWith(
@@ -164,6 +182,92 @@ class AppTheme {
           );
         }),
       ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: lightColorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: AppElevation.lg.value,
+        shape: RoundedRectangleBorder(
+          borderRadius: Radii.modal,
+          side: BorderSide(
+            color: lightColorScheme.outline,
+            width: Radii.outlineWidth,
+          ),
+        ),
+        titleTextStyle: lightTextTheme.titleLarge?.copyWith(
+          color: lightColorScheme.onSurface,
+        ),
+        contentTextStyle: lightTextTheme.bodyMedium?.copyWith(
+          color: lightColorScheme.onSurfaceVariant,
+        ),
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: lightColorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: AppElevation.xxl.value,
+        shape: RoundedRectangleBorder(
+          borderRadius: Radii.bottomSheet,
+          side: BorderSide(
+            color: lightColorScheme.outline,
+            width: Radii.outlineWidth,
+          ),
+        ),
+        showDragHandle: true,
+        dragHandleColor: lightColorScheme.onSurfaceVariant,
+      ),
+      listTileTheme: ListTileThemeData(
+        tileColor: Colors.transparent,
+        iconColor: lightColorScheme.onSurfaceVariant,
+        textColor: lightColorScheme.onSurface,
+        shape: RoundedRectangleBorder(borderRadius: Radii.button),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: Spacing.space_sm,
+        ),
+        minVerticalPadding: Spacing.listItemVerticalPadding,
+      ),
+      tooltipTheme: TooltipThemeData(
+        decoration: BoxDecoration(
+          color: lightColorScheme.inverseSurface,
+          borderRadius: Radii.radiusSm,
+        ),
+        textStyle: AppTypography.bodySmall.copyWith(
+          color: lightColorScheme.onInverseSurface,
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: Spacing.space_2xs,
+          vertical: Spacing.space_3xs,
+        ),
+        waitDuration: AppDurations.normal,
+        showDuration: AppDurations.slower,
+      ),
+      textSelectionTheme: TextSelectionThemeData(
+        selectionColor: AppColors.tint(lightColorScheme.primary, 0.3),
+        cursorColor: lightColorScheme.primary,
+        selectionHandleColor: lightColorScheme.primary,
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: lightColorScheme.surface,
+        selectedItemColor: lightColorScheme.primary,
+        unselectedItemColor: lightColorScheme.onSurfaceVariant,
+        type: BottomNavigationBarType.fixed,
+        elevation: AppElevation.none.value,
+      ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: lightColorScheme.primary,
+        foregroundColor: lightColorScheme.onPrimary,
+        elevation: AppElevation.lg.value,
+        shape: RoundedRectangleBorder(borderRadius: Radii.fab),
+      ),
+      // The router applies its own slide transition via CustomTransitionPage,
+      // so this stays a plain fade to avoid double-animating routes.
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+          TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
+          TargetPlatform.macOS: FadeUpwardsPageTransitionsBuilder(),
+          TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
+          TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
+        },
+      ),
     );
   }
 
@@ -177,6 +281,8 @@ class AppTheme {
       textTheme: darkTextTheme,
       scaffoldBackgroundColor: AppColors.backgroundDark,
       visualDensity: VisualDensity.adaptivePlatformDensity,
+      hoverColor: AppColors.tint(darkColorScheme.primary),
+      focusColor: AppColors.tint(darkColorScheme.primary, 0.12),
       appBarTheme: AppBarTheme(
         // D1: flat surface + hairline, matching the light theme.
         backgroundColor: darkColorScheme.surface,
@@ -211,9 +317,9 @@ class AppTheme {
           backgroundColor: darkColorScheme.primary,
           foregroundColor: darkColorScheme.onPrimary,
           disabledBackgroundColor: darkColorScheme.surfaceContainerHigh,
-          disabledForegroundColor: darkColorScheme.onSurface.withValues(
-            alpha: 0.38,
-          ),
+          disabledForegroundColor: AppColors.inkFor(
+            darkColorScheme.surfaceContainerHigh,
+          ).withValues(alpha: 0.38),
           shape: RoundedRectangleBorder(borderRadius: Radii.button),
           padding: const EdgeInsets.symmetric(
             horizontal: Spacing.space_md,
@@ -230,9 +336,9 @@ class AppTheme {
             width: Radii.outlineWidth,
           ),
           disabledBackgroundColor: darkColorScheme.surfaceContainerHigh,
-          disabledForegroundColor: darkColorScheme.onSurface.withValues(
-            alpha: 0.38,
-          ),
+          disabledForegroundColor: AppColors.inkFor(
+            darkColorScheme.surfaceContainerHigh,
+          ).withValues(alpha: 0.38),
           shape: RoundedRectangleBorder(borderRadius: Radii.button),
           padding: const EdgeInsets.symmetric(
             horizontal: Spacing.space_md,
@@ -243,9 +349,9 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: darkColorScheme.primary,
-          disabledForegroundColor: darkColorScheme.onSurface.withValues(
-            alpha: 0.38,
-          ),
+          disabledForegroundColor: AppColors.inkFor(
+            darkColorScheme.surfaceContainerHigh,
+          ).withValues(alpha: 0.38),
         ),
       ),
       chipTheme: ChipThemeData(
@@ -331,6 +437,92 @@ class AppTheme {
             color: darkColorScheme.onSurfaceVariant,
           );
         }),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: darkColorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: AppElevation.lg.value,
+        shape: RoundedRectangleBorder(
+          borderRadius: Radii.modal,
+          side: BorderSide(
+            color: darkColorScheme.outline,
+            width: Radii.outlineWidth,
+          ),
+        ),
+        titleTextStyle: darkTextTheme.titleLarge?.copyWith(
+          color: darkColorScheme.onSurface,
+        ),
+        contentTextStyle: darkTextTheme.bodyMedium?.copyWith(
+          color: darkColorScheme.onSurfaceVariant,
+        ),
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: darkColorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: AppElevation.xxl.value,
+        shape: RoundedRectangleBorder(
+          borderRadius: Radii.bottomSheet,
+          side: BorderSide(
+            color: darkColorScheme.outline,
+            width: Radii.outlineWidth,
+          ),
+        ),
+        showDragHandle: true,
+        dragHandleColor: darkColorScheme.onSurfaceVariant,
+      ),
+      listTileTheme: ListTileThemeData(
+        tileColor: Colors.transparent,
+        iconColor: darkColorScheme.onSurfaceVariant,
+        textColor: darkColorScheme.onSurface,
+        shape: RoundedRectangleBorder(borderRadius: Radii.button),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: Spacing.space_sm,
+        ),
+        minVerticalPadding: Spacing.listItemVerticalPadding,
+      ),
+      tooltipTheme: TooltipThemeData(
+        decoration: BoxDecoration(
+          color: darkColorScheme.inverseSurface,
+          borderRadius: Radii.radiusSm,
+        ),
+        textStyle: AppTypography.bodySmall.copyWith(
+          color: darkColorScheme.onInverseSurface,
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: Spacing.space_2xs,
+          vertical: Spacing.space_3xs,
+        ),
+        waitDuration: AppDurations.normal,
+        showDuration: AppDurations.slower,
+      ),
+      textSelectionTheme: TextSelectionThemeData(
+        selectionColor: AppColors.tint(darkColorScheme.primary, 0.3),
+        cursorColor: darkColorScheme.primary,
+        selectionHandleColor: darkColorScheme.primary,
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: darkColorScheme.surface,
+        selectedItemColor: darkColorScheme.primary,
+        unselectedItemColor: darkColorScheme.onSurfaceVariant,
+        type: BottomNavigationBarType.fixed,
+        elevation: AppElevation.none.value,
+      ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: darkColorScheme.primary,
+        foregroundColor: darkColorScheme.onPrimary,
+        elevation: AppElevation.lg.value,
+        shape: RoundedRectangleBorder(borderRadius: Radii.fab),
+      ),
+      // The router applies its own slide transition via CustomTransitionPage,
+      // so this stays a plain fade to avoid double-animating routes.
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+          TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
+          TargetPlatform.macOS: FadeUpwardsPageTransitionsBuilder(),
+          TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
+          TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
+        },
       ),
     );
   }

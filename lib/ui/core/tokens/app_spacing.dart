@@ -41,9 +41,25 @@ class Spacing {
   static const double sectionGap = 24.0;
   static const double listItemVerticalPadding = 12.0;
 
+  /// Bottom clearance for a floating snackbar so it never sits under the FAB:
+  /// 56px FAB + 16px scaffold margin + 16px breathing room.
+  static const double snackbarFabClearance = 88.0;
+
   // Viewport breakpoints used to resolve the page padding.
   static const double tabletBreakpoint = 600.0;
   static const double desktopBreakpoint = 1000.0;
+
+  /// Maximum width for main content columns/lists on wide viewports.
+  static const double maxContentWidth = 720.0;
+
+  /// Maximum width for a horizontal block carousel card on wide viewports.
+  static const double carouselCardMaxWidth = 320.0;
+
+  /// Edge length of the square block image preview box in EditBlockScreen.
+  static const double imageBoxWidth = 200.0;
+
+  /// Height of the block image preview box in EditBlockScreen.
+  static const double imageBoxHeight = 150.0;
 
   /// Resolves the horizontal page padding for a viewport of [width] logical px.
   /// Mobile < 600, tablet < 1000, desktop >= 1000.
@@ -71,6 +87,9 @@ class AppIconSizes {
   /// 16px — small button and list icons.
   static const double sm = 16.0;
 
+  /// 18px — compact info-row icons inside dense cards.
+  static const double infoRow = 18.0;
+
   /// 20px — leading icons in rows and list tiles.
   static const double md = 20.0;
 
@@ -83,6 +102,9 @@ class AppIconSizes {
   /// 32px — large feature icons.
   static const double xxl = 32.0;
 
+  /// 36px — compact icon tiles on list rows.
+  static const double listTile = 36.0;
+
   /// 40px — hero icons.
   static const double display = 40.0;
 
@@ -91,4 +113,16 @@ class AppIconSizes {
 
   /// 48px — full-size feature icons.
   static const double displayXLarge = 48.0;
+
+  /// 52px — prominent header icon tiles on detail screens.
+  static const double headerTile = 52.0;
+
+  /// 80px — brand mark on auth screens and empty/error illustrations.
+  static const double illustration = 80.0;
+
+  /// 100px — featured verification illustration icon.
+  static const double illustrationLarge = 100.0;
+
+  /// 120px — onboarding hero artwork and icons.
+  static const double heroArt = 120.0;
 }

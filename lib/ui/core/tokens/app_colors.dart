@@ -64,6 +64,18 @@ class AppColors {
   static const Color successContainerLight = Color(0xFF14532D);
   static const Color successContainerDark = Color(0xFF052E16);
 
+  /// Severity inks for the neutral snackbar surface (H6).
+  ///
+  /// The snackbar surface is `colorScheme.inverseSurface`, which flips
+  /// lightness with the theme — near-black #1C1917 in light mode and
+  /// near-white #FAFAF9 in dark mode. A single severity hue therefore has to
+  /// clear 3:1 against BOTH, which only works in a mid-luminance band
+  /// (0.13 – 0.29). [success] (#16A34A) and [error] (#DC2626) already sit
+  /// there; amber (#F59E0B, 2.06:1 on white) and cyan (#0EA5E9, 2.66:1 on
+  /// white) did not, so they get dedicated inks.
+  static const Color warningInk = Color(0xFFB45309);
+  static const Color infoInk = Color(0xFF0284C7);
+
   /// Shadow base color for the color scheme — opaque black; the elevation
   /// tokens apply the alpha on top of it.
   static const Color shadow = Color(0xFF000000);
@@ -79,7 +91,8 @@ class AppColors {
   static const Color surfaceContainerHighLight = Color(0xFFEDE9FE);
   static const Color surfaceContainerHighestLight = Color(0xFFDDD6FE);
   static const Color surfaceNeutralLight = Color(0xFFF0EFED);
-  static const Color borderLight = Color(0xFFC4B5FD);
+  // H8: darkened to ~3.4:1 non-text contrast on white (was #C4B5FD at 1.6:1).
+  static const Color borderLight = Color(0xFF8B7FD6);
 
   // Group 7 — Surface Dark (Slate-based)
   static const Color backgroundDark = Color(0xFF111827);
@@ -88,7 +101,9 @@ class AppColors {
   static const Color surfaceContainerDark = Color(0xFF374151);
   static const Color surfaceContainerHighDark = Color(0xFF3F4657);
   static const Color surfaceContainerHighestDark = Color(0xFF4B5563);
-  static const Color borderDark = Color(0xFF475569);
+  // H8: lightened to ~4.8:1 non-text contrast on the dark surface #1F2937
+  // (was #475569 at 1.9:1).
+  static const Color borderDark = Color(0xFF8A94A6);
 
   // Group 8 — Text Light
   static const Color textPrimary = Color(0xFF1C1917);
