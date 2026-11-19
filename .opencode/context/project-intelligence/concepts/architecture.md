@@ -1,4 +1,4 @@
-<!-- Context: project-intelligence/concepts/architecture | Priority: critical | Version: 2.0 | Updated: 2026-11-17 -->
+<!-- Context: project-intelligence/concepts/architecture | Priority: critical | Version: 2.0 | Updated: 2026-11-19 -->
 
 # Architecture - Clean Architecture (Bloco na Rua)
 
@@ -10,7 +10,7 @@
 
 ```
 lib/
-├── main.dart                 # Entry point, Supabase init
+├── main.dart                 # Entry point, dotenv API_URL init
 ├── main_app.dart             # MaterialApp.router with AuthCubit
 ├── config/
 │   └── dependencies.dart    # Provider DI setup
@@ -19,7 +19,7 @@ lib/
 │   ├── repositories/         # Repository implementations
 │   └── services/
 │       ├── api/             # API clients (base, meetings, blocks, etc.)
-│       └── auth/            # Auth service (Supabase)
+│       └── auth/            # Auth API client (REST /api/v1/Auth/*) + Google sign-in service
 ├── domain/
 │   ├── entities/            # freezed entities (Meeting, Block, Member, etc.)
 │   └── use_cases/           # Business logic use cases

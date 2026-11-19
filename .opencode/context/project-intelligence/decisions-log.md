@@ -1,4 +1,4 @@
-<!-- Context: project-intelligence/decisions | Priority: high | Version: 1.1 | Updated: 2026-11-19 -->
+<!-- Context: project-intelligence/decisions | Priority: high | Version: 1.2 | Updated: 2026-11-19 -->
 
 # Decisions Log
 
@@ -42,39 +42,6 @@
 ### Related
 - [Links to related decisions, PRs, issues, or documentation]
 ```
-
----
-
-## Decision: [Title]
-
-**Date**: YYYY-MM-DD
-**Status**: [Status]
-**Owner**: [Owner]
-
-### Context
-[What was happening? Why did we need to decide?]
-
-### Decision
-[What we decided]
-
-### Rationale
-[Why this was the right choice]
-
-### Alternatives Considered
-| Alternative | Pros | Cons | Why Rejected? |
-|-------------|------|------|---------------|
-| [Option A] | [Good things] | [Bad things] | [Reason] |
-| [Option B] | [Good things] | [Bad things] | [Reason] |
-
-### Impact
-- **Positive**: [What we gain]
-- **Negative**: [What we trade off]
-- **Risk**: [What to watch for]
-
-### Related
-- [Link to PR #000]
-- [Link to issue #000]
-- [Link to documentation]
 
 ---
 
@@ -164,6 +131,38 @@ Fewer tokens = fewer wrong choices; ≥3:1 is the WCAG 1.4.11 requirement.
 
 ### Related
 - `lookup/design-tokens.md`
+
+---
+
+## Decision: Replace Supabase Auth with Backend REST API Auth
+
+**Date**: 2026-11-19
+**Status**: Decided
+**Owner**: Team
+
+### Context
+Auth moved from Supabase (Backend-as-a-Service) to the project's own REST API (`BlocoNaRua.Restful`), requiring a full client-side auth migration.
+
+### Decision
+Auth now goes through `/api/v1/Auth/*` via a dio-backed `AuthApiClient` with tokens in `flutter_secure_storage`. Verify-email screen removed; password reset stubbed. Google OAuth via external browser + deep link (RFC 8252, `blocnatarua://auth/callback`) with 60s polling fallback. OAuth callback binding confirmed session-bound via the single-use HttpOnly `bnr_google_state` cookie. Supabase fully removed from the app.
+
+### Rationale
+Single backend owns auth and domain data; removes third-party BaaS dependency and its pricing/coupling. RFC 8252 external-browser flow avoids webview security pitfalls.
+
+### Alternatives Considered
+| Alternative | Pros | Cons | Why Rejected? |
+|-------------|------|------|---------------|
+| Keep Supabase auth alongside REST | No migration work | Two auth systems, split identity model | Unnecessary coupling |
+| In-app webview OAuth | No deep-link plumbing | Blocked/fragile with Google, security issues | Violates RFC 8252 |
+
+### Impact
+- **Positive**: Unified backend, secure token storage, standard OAuth flow
+- **Negative**: `/refresh` and `/complete` 200 bodies undocumented in swagger; cookie binds the device browser, not the app instance
+
+### Related
+- `docs/oauth-callback-binding.md`
+- `concepts/auth-oauth.md`
+- `concepts/stack.md`
 
 ---
 

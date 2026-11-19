@@ -1,9 +1,9 @@
-<!-- Context: project-intelligence/technical | Priority: critical | Version: 1.1 | Updated: 2026-10-20 -->
+<!-- Context: project-intelligence/technical | Priority: critical | Version: 1.1 | Updated: 2026-11-19 -->
 
 # Technical Domain
 
 **Purpose**: Tech stack, architecture patterns, and development conventions for Bloco na Rua Flutter app.
-**Last Updated**: 2026-10-20
+**Last Updated**: 2026-11-19
 
 ## Quick Reference
 **Update Triggers**: Tech stack changes | New architectural patterns | API changes
@@ -16,7 +16,8 @@
 | Language | Dart | ^3.8.1 | Null-safe, structured |
 | State Management | flutter_bloc + Cubit | 9.1.1 | Predictable state, testable |
 | HTTP Client | Dio | 5.9.0 | Interceptors, timeouts |
-| Auth | Supabase + GoTrue | 2.10.0 / 2.14.0 | Backend-as-a-service auth |
+| Auth client | REST API (/api/v1/Auth/*) | dio-backed AuthApiClient, tokens in flutter_secure_storage |
+| OAuth browser | url_launcher + app_links | External-browser Google OAuth (RFC 8252), deep link blocnatarua://auth/callback |
 | Routing | GoRouter | 18.0.2 | Declarative, deep linking |
 | Dependency Injection | Provider | 6.1.5+1 | Simple, effective |
 | Code Generation | Freezed, JSON Serializable | 4.0.1 / 6.7.1 | Immutable data classes |
@@ -163,9 +164,7 @@ class UserMeetingsCubit extends ResumableCubit<UserMeetingsState> {
 ## Error Handling
 ```dart
 // ApiError types: network, timeout, server, auth, validation, notFound, unknown
-// From DioException: ApiError.fromDioException(e) → ApiError.type + userMessage
-// From Response: ApiError.fromResponse(response) → statusCode-based mapping
-// User-facing: error.toUserMessage(context) → localized or fallback
+// DioException → ApiError.fromDioException(e); Response → ApiError.fromResponse(response) (statusCode mapping); user-facing: error.toUserMessage(context)
 ```
 
 ## Design System Tokens

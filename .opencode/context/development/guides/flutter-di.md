@@ -12,8 +12,7 @@
 List<SingleChildWidget> get providers {
   return [
     // Core
-    Provider<SupabaseClient>(create: (context) => supabaseClient),
-    Provider(create: (context) => SharedPreferencesService()),
+    Provider(create: (context) => SecureStorageService()),
 
     // API Clients
     Provider<IBaseApiClient>(
