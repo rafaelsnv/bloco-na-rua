@@ -1,4 +1,4 @@
-<!-- Context: project-intelligence/lookup/design-tokens | Priority: high | Version: 1.0 | Updated: 2026-11-17 -->
+<!-- Context: project-intelligence/lookup/design-tokens | Priority: high | Version: 1.1 | Updated: 2026-11-19 -->
 
 # Design Tokens Lookup - "Fireworks on Velvet"
 
@@ -34,10 +34,14 @@
 - `Color(0x` literals only in `app_colors.dart`
 - No relative imports (`import '..`) anywhere in `lib/ui/`
 - No raw `AlertDialog(`/`showDialog(`/`SnackBar(` outside core widgets
+- `AppDateTimeField` (`lib/ui/core/widgets/inputs/app_date_time_field.dart`) is the only date/time input widget
+- `ContentWidthLimiter` caps content at `Spacing.maxContentWidth` (720)
+- Snackbar surface is `colorScheme.inverseSurface`; severity carried by the icon (fab clearance `Spacing.snackbarFabClearance` = 88)
+- `AppError`/`AppEmpty` share the `AppStateView` compact variant
 
 ---
 
 ## Reference
 
-- Verified facts and pending findings: `CONTINUE.md` sections 5-6
+- Current open items: `../living-notes.md`
 - Architecture context: `../concepts/architecture.md`
