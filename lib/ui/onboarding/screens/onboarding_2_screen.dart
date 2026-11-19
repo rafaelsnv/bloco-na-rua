@@ -1,9 +1,7 @@
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:flutter/material.dart";
-
-/// Edge length of the onboarding hero artwork.
-const double _heroArtSize = 120;
 
 class Onboarding2Screen extends StatelessWidget {
   const Onboarding2Screen({super.key});
@@ -11,6 +9,7 @@ class Onboarding2Screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(Spacing.pagePaddingMobile),
       child: Column(
@@ -19,18 +18,18 @@ class Onboarding2Screen extends StatelessWidget {
           const Spacer(),
           Icon(
             Icons.group_add_rounded,
-            size: _heroArtSize,
+            size: AppIconSizes.heroArt,
             color: colors.primary,
           ),
           const SizedBox(height: Spacing.space_xl),
           Text(
-            "Crie ou entre em um bloco",
+            l10n.onboarding2Title,
             style: AppTypography.headlineLarge.copyWith(color: colors.primary),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: Spacing.space_md),
           Text(
-            "Junte-se a um bloco existente ou crie o seu próprio. Convide amigos e familiares para fazer parte da folia!",
+            l10n.onboarding2Body,
             style: AppTypography.bodyLarge.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),

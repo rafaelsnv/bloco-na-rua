@@ -1,9 +1,7 @@
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:flutter/material.dart";
-
-/// Edge length of the onboarding hero artwork.
-const double _heroArtSize = 120;
 
 class Onboarding3Screen extends StatelessWidget {
   const Onboarding3Screen({super.key});
@@ -11,6 +9,7 @@ class Onboarding3Screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(Spacing.pagePaddingMobile),
       child: Column(
@@ -19,18 +18,18 @@ class Onboarding3Screen extends StatelessWidget {
           const Spacer(),
           Icon(
             Icons.event_available_rounded,
-            size: _heroArtSize,
+            size: AppIconSizes.heroArt,
             color: colors.primary,
           ),
           const SizedBox(height: Spacing.space_xl),
           Text(
-            "Confirme presença nos encontros",
+            l10n.onboarding3Title,
             style: AppTypography.headlineLarge.copyWith(color: colors.primary),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: Spacing.space_md),
           Text(
-            "Veja os encontros do seu bloco e confirme sua presença. Nunca mais perca um encontro!",
+            l10n.onboarding3Body,
             style: AppTypography.bodyLarge.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
