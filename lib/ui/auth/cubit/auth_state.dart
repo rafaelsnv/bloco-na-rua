@@ -15,8 +15,8 @@ final class AuthLoading extends AuthState {}
 
 /// What the user just completed successfully.
 enum AuthSuccessKind {
-  /// The verification e-mail was sent again.
-  verificationEmailSent,
+  /// The account was created; the user must log in.
+  accountCreated,
 
   /// The password recovery e-mail was sent.
   recoveryEmailSent,
@@ -33,7 +33,7 @@ final class AuthSuccess extends AuthState {
 /// The localized confirmation for a successful auth action.
 extension AuthSuccessL10n on AuthSuccess {
   String localizedMessage(AppLocalizations l10n) => switch (kind) {
-    AuthSuccessKind.verificationEmailSent => l10n.authVerifyEmailSent,
+    AuthSuccessKind.accountCreated => l10n.authAccountCreated,
     AuthSuccessKind.recoveryEmailSent => l10n.authRecoveryEmailSent,
   };
 }
@@ -45,16 +45,9 @@ final class AuthUnauthenticated extends AuthState {}
 /// A failed auth operation carrying the raw failure for render-time localization.
 final class AuthFailure extends AuthState {
   final Object? error;
-  const AuthFailure(this.error);
+  final bool isSignup;
+  const AuthFailure(this.error, {this.isSignup = false});
 
   @override
-  List<Object?> get props => [error];
-}
-
-final class AuthEmailVerificationSent extends AuthState {
-  final String email;
-  const AuthEmailVerificationSent({required this.email});
-
-  @override
-  List<Object?> get props => [email];
+  List<Object?> get props => [error, isSignup];
 }

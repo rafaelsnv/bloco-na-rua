@@ -32,7 +32,23 @@ class AuthCubit extends Cubit<AuthState> {
       },
       (error) {
         _log.warning("Login failed: $error");
-        emit(AuthFailure(error));
+        emit(AuthFailure(error, isSignup: false));
+      },
+    );
+  }
+
+  Future<void> googleSignIn() async {
+    emit(AuthLoading());
+    final result = await _authRepository.signInWithGoogleAsync();
+    result.fold(
+      (success) {
+        _log.info("Google sign-in successful");
+        emit(AuthAuthenticated());
+        _authListenable.notify();
+      },
+      (error) {
+        _log.warning("Google sign-in failed: $error");
+        emit(AuthFailure(error, isSignup: false));
       },
     );
   }
@@ -44,28 +60,11 @@ class AuthCubit extends Cubit<AuthState> {
     result.fold(
       (success) {
         _log.info("Sign up successful");
-        emit(AuthEmailVerificationSent(email: signUpRequest.email));
-        _authListenable.notify();
+        emit(const AuthSuccess(AuthSuccessKind.accountCreated));
       },
       (error) {
         _log.warning("Sign up failed: $error");
-        emit(AuthFailure(error));
-      },
-    );
-  }
-
-  Future<void> resendVerification(String email) async {
-    emit(AuthLoading());
-    final result = await _authRepository.resendVerification(email);
-
-    result.fold(
-      (success) {
-        _log.info("Verification email resent");
-        emit(const AuthSuccess(AuthSuccessKind.verificationEmailSent));
-      },
-      (error) {
-        _log.warning("Failed to resend verification: $error");
-        emit(AuthFailure(error));
+        emit(AuthFailure(error, isSignup: true));
       },
     );
   }

@@ -10,7 +10,6 @@ import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/auth/login/widgets/login_screen.dart";
 import "package:bloco_na_rua/ui/auth/signUp/widgets/signup_screen.dart";
-import "package:bloco_na_rua/ui/auth/verifyEmail/widgets/verify_email_screen.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/addMember/cubit/add_member_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/addMember/widgets/add_member_screen.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_cubit.dart";
@@ -126,13 +125,6 @@ GoRouter router(
     GoRoute(
       path: Routes.register,
       builder: (context, state) => const SignUpScreen(),
-    ),
-    GoRoute(
-      path: Routes.verifyEmail,
-      builder: (context, state) {
-        final email = state.uri.queryParameters["email"] ?? "";
-        return VerifyEmailScreen(email: email);
-      },
     ),
     GoRoute(
       path: Routes.onboarding,
