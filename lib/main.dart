@@ -9,7 +9,6 @@ import 'package:logging/logging.dart';
 import 'package:marionette_flutter/marionette_flutter.dart';
 import 'package:marionette_logging/marionette_logging.dart';
 import 'package:provider/provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
   if (kDebugMode) {
@@ -24,14 +23,6 @@ Future<void> main() async {
   }
 
   await dotenv.load(fileName: ".env");
-
-  await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
-    publishableKey: dotenv.env['SUPABASE_PUBLISHABLE_KEY']!,
-    realtimeClientOptions: RealtimeClientOptions(
-      logLevel: RealtimeLogLevel.warn,
-    ),
-  );
 
   // Initialize date symbols and Intl.defaultLocale from the app locale source of truth.
   await initAppLocale();

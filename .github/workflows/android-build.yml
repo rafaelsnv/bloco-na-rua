@@ -29,12 +29,7 @@ jobs:
       - name: Create .env file
         env:
           API_URL: ${{ secrets.API_URL }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
-        run: |
-          echo "API_URL=$API_URL" > .env
-          echo "SUPABASE_URL=$SUPABASE_URL" >> .env
-          echo "SUPABASE_PUBLISHABLE_KEY=$SUPABASE_PUBLISHABLE_KEY" >> .env
+        run: echo "API_URL=$API_URL" > .env
 
       - name: Generate code
         run: dart run build_runner build
