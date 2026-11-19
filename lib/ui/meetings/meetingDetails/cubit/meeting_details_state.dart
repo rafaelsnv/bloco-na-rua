@@ -2,6 +2,7 @@ import 'package:bloco_na_rua/domain/entities/carnivalBlockMembers/carnival_block
 import 'package:bloco_na_rua/domain/entities/meetingPresences/meeting_presences_entity.dart';
 import 'package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart';
 import 'package:bloco_na_rua/domain/entities/members/members_entity.dart';
+import 'package:bloco_na_rua/ui/meetings/meeting_error.dart';
 import 'package:equatable/equatable.dart';
 
 sealed class MeetingDetailsState extends Equatable {
@@ -23,9 +24,13 @@ class MeetingDetailsLoaded extends MeetingDetailsState {
   final MeetingsEntity meeting;
   final List<MeetingPresencesEntity> presences;
   final PresencesStatus presencesStatus;
-  final String? presencesError;
+
+  /// The failure, when the presence list could not be loaded.
+  final MeetingError? presencesError;
   final MarkingPresenceStatus markingPresenceStatus;
-  final String? markingPresenceError;
+
+  /// The failure, when a presence could not be marked.
+  final MeetingError? markingPresenceError;
   final DeleteStatus deleteStatus;
   final bool canDeleteMeeting;
   final List<CarnivalBlockMembersEntity> blockMembers;
@@ -52,9 +57,9 @@ class MeetingDetailsLoaded extends MeetingDetailsState {
     MeetingsEntity? meeting,
     List<MeetingPresencesEntity>? presences,
     PresencesStatus? presencesStatus,
-    String? presencesError,
+    MeetingError? presencesError,
     MarkingPresenceStatus? markingPresenceStatus,
-    String? markingPresenceError,
+    MeetingError? markingPresenceError,
     DeleteStatus? deleteStatus,
     bool? canDeleteMeeting,
     List<CarnivalBlockMembersEntity>? blockMembers,
@@ -97,12 +102,13 @@ class MeetingDetailsLoaded extends MeetingDetailsState {
 }
 
 class MeetingDetailsError extends MeetingDetailsState {
-  final String message;
+  /// The failure. Localized by the screen.
+  final MeetingError error;
 
-  const MeetingDetailsError(this.message);
+  const MeetingDetailsError(this.error);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [error];
 }
 
 enum PresencesStatus { initial, loading, loaded, error }

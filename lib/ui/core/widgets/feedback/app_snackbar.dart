@@ -1,10 +1,31 @@
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:flutter/material.dart";
 
-import "../../tokens/app_colors.dart";
-import "../../tokens/app_radius.dart";
-import "../../tokens/app_duration.dart";
-import "../../tokens/app_spacing.dart";
-import "../../tokens/app_typography.dart";
+/// Severity of a snackbar — the icon that carries it.
+///
+/// H6: the severity is no longer encoded by a tinted container (the old
+/// per-severity fills encoded it by inverting lightness, which broke the
+/// theme's `snackBarTheme`). One neutral surface is used for every
+/// severity and the leading icon carries the meaning.
+enum _SnackSeverity {
+  success(Icons.check_circle_rounded, AppColors.success),
+  error(Icons.error_rounded, AppColors.error),
+  warning(Icons.warning_rounded, AppColors.warningInk),
+  info(Icons.info_rounded, AppColors.infoInk);
+
+  const _SnackSeverity(this.icon, this.ink);
+
+  /// The leading glyph that identifies the severity.
+  final IconData icon;
+
+  /// The ink of [icon] — always clears 3:1 on the neutral inverse surface.
+  final Color ink;
+}
 
 /// Static helper class for showing themed SnackBars.
 ///
@@ -19,131 +40,141 @@ import "../../tokens/app_typography.dart";
 class AppSnackbar {
   AppSnackbar._();
 
-  /// Shows a success-themed SnackBar with a success container background.
+  /// Shows a success SnackBar — the severity is carried by the check icon.
   static void success(
     BuildContext context, {
     required String message,
     String? actionLabel,
     VoidCallback? onAction,
+    bool showCloseIcon = false,
   }) {
     _show(
       context,
-      AppColors.successContainerLight,
-      AppColors.successContainerDark,
-      Icons.check_circle_rounded,
+      _SnackSeverity.success,
       message,
       actionLabel,
       onAction,
+      showCloseIcon,
     );
   }
 
-  /// Shows an error-themed SnackBar with an error container background.
+  /// Shows an error SnackBar — the severity is carried by the error icon.
   static void error(
     BuildContext context, {
     required String message,
     String? actionLabel,
     VoidCallback? onAction,
+    bool showCloseIcon = false,
   }) {
     _show(
       context,
-      AppColors.errorContainerLight,
-      AppColors.errorContainerDark,
-      Icons.error_rounded,
+      _SnackSeverity.error,
       message,
       actionLabel,
       onAction,
+      showCloseIcon,
     );
   }
 
-  /// Shows a warning-themed SnackBar with a warning container background.
+  /// Shows a warning SnackBar — the severity is carried by the warning icon.
   static void warning(
     BuildContext context, {
     required String message,
     String? actionLabel,
     VoidCallback? onAction,
+    bool showCloseIcon = false,
   }) {
     _show(
       context,
-      AppColors.warningContainerLight,
-      AppColors.warningContainerDark,
-      Icons.warning_rounded,
+      _SnackSeverity.warning,
       message,
       actionLabel,
       onAction,
+      showCloseIcon,
     );
   }
 
-  /// Shows an info-themed SnackBar with an info container background.
+  /// Shows an info SnackBar — the severity is carried by the info icon.
   static void info(
     BuildContext context, {
     required String message,
     String? actionLabel,
     VoidCallback? onAction,
+    bool showCloseIcon = false,
   }) {
     _show(
       context,
-      AppColors.infoContainerLight,
-      AppColors.infoContainerDark,
-      Icons.info_rounded,
+      _SnackSeverity.info,
       message,
       actionLabel,
       onAction,
+      showCloseIcon,
     );
   }
 
   /// Internal helper that builds and shows the SnackBar.
   ///
-  /// [containerLight]/[containerDark] select the container token per brightness
-  /// (Material ColorScheme has no warning/info/successContainer slots). The
-  /// content color is picked by container luminance so dark containers always
-  /// get light text and light containers get dark text.
+  /// H6: one neutral surface for every severity — `colorScheme.inverseSurface`
+  /// with `colorScheme.onInverseSurface` as the content ink, which is what the
+  /// theme's `snackBarTheme` already declares. The severity lives in the
+  /// leading icon, so no per-severity container colour is hardcoded here.
   static void _show(
     BuildContext context,
-    Color containerLight,
-    Color containerDark,
-    IconData icon,
+    _SnackSeverity severity,
     String message,
     String? actionLabel,
     VoidCallback? onAction,
+    bool showCloseIcon,
   ) {
     if (!context.mounted) return;
 
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final container = isDark ? containerDark : containerLight;
-    final contentColor = container.computeLuminance() > 0.5
-        ? AppColors.textPrimary
-        : AppColors.textPrimaryDark;
+    final colorScheme = Theme.of(context).colorScheme;
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
           children: [
-            Icon(icon, color: contentColor, size: 24),
+            Icon(severity.icon, color: severity.ink, size: AppIconSizes.lg),
             SizedBox(width: Spacing.space_sm),
             Expanded(
               child: Text(
                 message,
-                style: AppTypography.bodyMedium.copyWith(color: contentColor),
+                style: AppTypography.bodyMedium.copyWith(
+                  color: colorScheme.onInverseSurface,
+                ),
               ),
             ),
             if (actionLabel != null)
               TextButton(
                 onPressed: onAction,
                 style: TextButton.styleFrom(
-                  foregroundColor: contentColor,
+                  foregroundColor: colorScheme.inversePrimary,
                   padding: EdgeInsets.symmetric(horizontal: Spacing.space_sm),
                 ),
                 child: Text(actionLabel),
               ),
           ],
         ),
-        backgroundColor: container,
+        backgroundColor: colorScheme.inverseSurface,
         behavior: SnackBarBehavior.floating,
-        margin: EdgeInsets.all(Spacing.pagePaddingMobile),
+        // L5: the bottom clearance keeps the toast above the FAB instead of
+        // sliding under it.
+        margin: const EdgeInsets.only(
+          left: Spacing.pagePaddingMobile,
+          right: Spacing.pagePaddingMobile,
+          bottom: Spacing.snackbarFabClearance,
+        ),
+        // Opt-in close affordance for long messages that the user wants to
+        // dismiss before the timeout. Off by default so the short snackbars
+        // keep their current look.
+        showCloseIcon: showCloseIcon,
+        closeIconColor: colorScheme.onInverseSurface,
         // Border radius 12px — same as Radii.radiusMd.
         shape: RoundedRectangleBorder(borderRadius: Radii.radiusMd),
         duration: AppDurations.snackbar,
-        elevation: 4,
+        // Floating snackbars sit just above the content they report on:
+        // AppElevation.md (3) is the canonical raised-surface step.
+        elevation: AppElevation.md.value,
       ),
     );
   }

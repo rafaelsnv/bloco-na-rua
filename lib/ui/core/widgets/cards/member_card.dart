@@ -1,12 +1,12 @@
+import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
+import "package:bloco_na_rua/l10n/app_localizations.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_avatar.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_chip.dart";
 import "package:flutter/material.dart";
-
-import "../../../../domain/entities/members/members_entity.dart";
-import "../../tokens/app_colors.dart";
-import "../../tokens/app_spacing.dart";
-import "../../tokens/app_typography.dart";
-import "../display/app_avatar.dart";
-import "../display/app_chip.dart";
-import "app_card.dart";
 
 /// A compound card widget that displays a member's avatar, name,
 /// optional email subtitle, optional role chip, and optional online indicator.
@@ -63,7 +63,6 @@ class MemberCard extends StatelessWidget {
     return AppCard(
       key: Key('member_card_${member.id}'),
       onTap: onTap,
-      elevation: AppCardElevation.sm,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -91,7 +90,7 @@ class MemberCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  member.name ?? "Sem nome",
+                  member.name ?? AppLocalizations.of(context)!.coreNoName,
                   style: AppTypography.titleMedium,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -110,16 +109,20 @@ class MemberCard extends StatelessWidget {
               ],
             ),
           ),
-          // Optional role chip
+          // Optional role chip — flexible so a long label shrinks instead of
+          // pushing the row past the card width.
           if (roleLabel != null) ...[
             SizedBox(width: Spacing.space_sm),
-            AppChip(
-              label: roleLabel!,
-              variant: ChipVariant.filled,
-              color: roleColor ?? AppColors.primary,
+            Flexible(
+              child: AppChip(
+                label: roleLabel!,
+                variant: ChipVariant.filled,
+                color: roleColor ?? AppColors.primary,
+              ),
             ),
           ],
-          // Optional trailing widget (e.g. action icon)
+          // Optional trailing widget (e.g. action icon) — fixed size, so it
+          // keeps its slot and only the variable-width chip shrinks.
           if (trailing != null) ...[
             SizedBox(width: Spacing.space_sm),
             trailing!,
@@ -132,15 +135,15 @@ class MemberCard extends StatelessWidget {
 
 /// Green circle indicator representing online status.
 ///
-/// 12px diameter, [AppColors.success] fill, 2px border matching the card
-/// surface color per brightness.
+/// [AppIconSizes.xs] diameter, [AppColors.success] fill, 2px border matching
+/// the card surface color per brightness.
 class _OnlineDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      width: 12,
-      height: 12,
+      width: AppIconSizes.xs,
+      height: AppIconSizes.xs,
       decoration: BoxDecoration(
         color: AppColors.success,
         shape: BoxShape.circle,

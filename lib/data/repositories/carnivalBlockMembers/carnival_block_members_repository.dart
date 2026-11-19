@@ -21,7 +21,9 @@ class CarnivalBlockMembersRepository
   AsyncResult<CarnivalBlockMemberJoinResponse> joinByInviteCodeAsync(
     String inviteCode,
   ) async {
-    return await carnivalBlockMembersApiClient.joinByInviteCodeAsync(inviteCode);
+    return await carnivalBlockMembersApiClient.joinByInviteCodeAsync(
+      inviteCode,
+    );
   }
 
   @override

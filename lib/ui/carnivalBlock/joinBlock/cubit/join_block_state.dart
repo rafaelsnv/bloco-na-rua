@@ -1,3 +1,4 @@
+import 'package:bloco_na_rua/ui/carnivalBlock/block_error.dart';
 import 'package:equatable/equatable.dart';
 
 sealed class JoinBlockState extends Equatable {
@@ -14,10 +15,10 @@ final class JoinBlockLoading extends JoinBlockState {}
 final class JoinBlockSuccess extends JoinBlockState {}
 
 final class JoinBlockError extends JoinBlockState {
-  final String message;
+  final BlockError error;
 
-  const JoinBlockError(this.message);
+  const JoinBlockError(this.error);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [error];
 }

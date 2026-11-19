@@ -1,4 +1,5 @@
 import 'package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart';
+import 'package:bloco_na_rua/ui/carnivalBlock/block_error.dart';
 import 'package:equatable/equatable.dart';
 
 sealed class BlockDetailsState extends Equatable {
@@ -49,10 +50,10 @@ final class BlockDetailsLoaded extends BlockDetailsState {
 }
 
 final class BlockDetailsError extends BlockDetailsState {
-  final String message;
+  final BlockError error;
 
-  const BlockDetailsError(this.message);
+  const BlockDetailsError(this.error);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [error];
 }

@@ -28,11 +28,13 @@ class MeetingsApiClient implements IMeetingsApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -64,11 +66,13 @@ class MeetingsApiClient implements IMeetingsApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -83,11 +87,13 @@ class MeetingsApiClient implements IMeetingsApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -108,11 +114,13 @@ class MeetingsApiClient implements IMeetingsApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -127,11 +135,13 @@ class MeetingsApiClient implements IMeetingsApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -148,11 +158,13 @@ class MeetingsApiClient implements IMeetingsApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 }

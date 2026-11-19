@@ -1,3 +1,5 @@
+import "package:bloco_na_rua/l10n/app_localizations.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/block_error.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/joinBlock/cubit/join_block_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/joinBlock/cubit/join_block_state.dart";
@@ -11,6 +13,7 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 
 class JoinBlockModal extends StatefulWidget {
@@ -39,123 +42,120 @@ class _JoinBlockModalState extends State<JoinBlockModal> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocConsumer<JoinBlockCubit, JoinBlockState>(
-        listener: (context, state) {
+      listener: (context, state) {
         if (state is JoinBlockSuccess) {
           context.read<BlockListCubit>().loadBlocks();
           context.read<HomeCubit>().loadHomeData();
-          AppSnackbar.success(context, message: "Você entrou no bloco!");
+          AppSnackbar.success(context, message: l10n.blocksJoinSuccess);
           context.pop();
         } else if (state is JoinBlockError) {
-          AppSnackbar.error(context, message: state.message);
+          AppSnackbar.error(
+            context,
+            message: localizeBlockError(context, state.error),
+          );
         }
       },
       builder: (context, state) {
-          final isLoading = state is JoinBlockLoading;
+        final isLoading = state is JoinBlockLoading;
 
-          return Scaffold(
-            appBar: const AppAppBar(
-              title: "Entrar em bloco",
-              showBackButton: true,
-            ),
-            body: SafeArea(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(Spacing.space_md),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: Spacing.space_lg),
-                    // Icon illustration
-                    Center(
-                      child: Container(
-                        width: 96,
-                        height: 96,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primaryContainer
-                              .withValues(
-                                alpha: MediaQuery.disableAnimationsOf(context)
-                                    ? 1.0
-                                    : 0.85,
+        return Scaffold(
+          appBar: AppAppBar(title: l10n.blocksJoinTitle, showBackButton: true),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(Spacing.space_md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: Spacing.space_lg),
+                  // Icon illustration
+                  Center(
+                    child: Container(
+                      width: Spacing.space_4xl,
+                      height: Spacing.space_4xl,
+                      decoration: BoxDecoration(
+                        color: AppColors.tint(
+                          Theme.of(context).colorScheme.primaryContainer,
+                          MediaQuery.disableAnimationsOf(context) ? 1.0 : 0.85,
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.group_add_rounded,
+                        size: AppIconSizes.displayXLarge,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: Spacing.space_lg),
+                  // Description text
+                  AppCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.blocksJoinHeadline,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        const SizedBox(height: Spacing.space_xs),
+                        Text(
+                          l10n.blocksJoinSubtitle,
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
                               ),
-                          shape: BoxShape.circle,
                         ),
-                        child: Icon(
-                          Icons.group_add_rounded,
-                          size: 48,
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onPrimaryContainer,
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: Spacing.space_lg),
+                  // Invite code form
+                  Form(
+                    key: _formKey,
+                    child: AppTextField(
+                      controller: _inviteCodeController,
+                      label: l10n.blocksInviteCodeLabel,
+                      hint: l10n.blocksInviteCodeHint,
+                      prefixIcon: Icons.vpn_key_rounded,
+                      autofocus: true,
+                      textInputAction: TextInputAction.done,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r"[A-Za-z0-9]"),
                         ),
-                      ),
+                        _UpperCaseTextFormatter(),
+                      ],
+                      onSubmitted: (_) => _submit(context),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return l10n.blocksInviteCodeRequired;
+                        }
+                        if (value.trim().length < 4) {
+                          return l10n.blocksInviteCodeTooShort;
+                        }
+                        return null;
+                      },
                     ),
-                    const SizedBox(height: Spacing.space_lg),
-                    // Description text
-                    AppCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Entre em um bloco",
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          const SizedBox(height: Spacing.space_xs),
-                          Text(
-                            "Peça o código de convite ao dono do bloco para entrar.",
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: Spacing.space_lg),
-                    // Invite code form
-                    Form(
-                      key: _formKey,
-                      child: AppTextField(
-                        controller: _inviteCodeController,
-                        label: "Código de convite",
-                        hint: "Cole aqui o código",
-                        prefixIcon: Icons.vpn_key_rounded,
-                        autofocus: true,
-                        textInputAction: TextInputAction.done,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                            RegExp(r"[A-Za-z0-9]"),
-                          ),
-                          _UpperCaseTextFormatter(),
-                        ],
-                        onSubmitted: (_) => _submit(context),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Digite o código de convite";
-                          }
-                          if (value.trim().length < 4) {
-                            return "Código muito curto";
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: Spacing.space_lg),
-                    // Submit button
-                    AppButton(
-                      label: "Entrar",
-                      variant: AppButtonVariant.primary,
-                      isFullWidth: true,
-                      isLoading: isLoading,
-                      onPressed: () => _submit(context),
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: Spacing.space_lg),
+                  // Submit button
+                  AppButton(
+                    label: l10n.blocksJoinSubmit,
+                    variant: AppButtonVariant.primary,
+                    isFullWidth: true,
+                    isLoading: isLoading,
+                    onPressed: () => _submit(context),
+                  ),
+                ],
               ),
             ),
-          );
-        },
-      );
+          ),
+        );
+      },
+    );
   }
 }
 

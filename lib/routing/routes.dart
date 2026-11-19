@@ -26,6 +26,9 @@ class Routes {
   static const String editMeeting = '/edit-meeting';
   static const String createMeeting = '/create-meeting';
 
+  // Rotas dinâmicas de membros
+  static const String addMember = '/add-member';
+
   // Rotas de perfil
   static const String profile = '/profile';
   static const String settings = '/settings';
@@ -34,7 +37,13 @@ class Routes {
   static const String verifyEmail = '/verify-email';
   static const String onboarding = '/onboarding';
 
-  // Rotas de erro
-  static const String notFound = '/404';
-  static const String error = '/error';
+  // Padrões de rotas dinâmicas (com :param) usados no router
+  static String get createMeetingPath => '$createMeeting/:blockId';
+  static String get addMemberPath => '$addMember/:blockId';
+  static String get editBlockPath => '$editBlock/:id';
+
+  // Helpers para construir caminhos com parâmetros
+  static String createMeetingFor(String blockId) => '$createMeeting/$blockId';
+  static String addMemberFor(String blockId) => '$addMember/$blockId';
+  static String editBlockFor(String id) => '$editBlock/$id';
 }

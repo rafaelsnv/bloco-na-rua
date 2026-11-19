@@ -1,6 +1,6 @@
-import 'package:bloco_na_rua/core/errors/user_message.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
 import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart';
+import 'package:bloco_na_rua/ui/carnivalBlock/block_error.dart';
 import 'package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,7 +28,7 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
       if (userResult.isError()) {
         emit(
           CreateBlockError(
-            'Erro ao obter dados do usuário: ${extractUserMessage(userResult.exceptionOrNull())}',
+            BlockError(BlockErrorKind.userData, userResult.exceptionOrNull()),
           ),
         );
         return;
@@ -45,10 +45,11 @@ class CreateBlockCubit extends Cubit<CreateBlockState> {
       // Handle result
       result.fold(
         (block) => emit(CreateBlockSuccess(block.id)),
-        (failure) => emit(CreateBlockError(extractUserMessage(failure))),
+        (failure) =>
+            emit(CreateBlockError(BlockError(BlockErrorKind.request, failure))),
       );
     } catch (e) {
-      emit(CreateBlockError('Erro inesperado: ${extractUserMessage(e)}'));
+      emit(CreateBlockError(BlockError(BlockErrorKind.unexpected, e)));
     } finally {
       _isLoading = false;
     }

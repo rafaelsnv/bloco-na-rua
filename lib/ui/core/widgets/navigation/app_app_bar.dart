@@ -1,16 +1,16 @@
-import "package:flutter/material.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:flutter/material.dart";
 
 /// A design-system-compliant app bar widget that implements [PreferredSizeWidget].
 ///
-/// Uses [AppTypography.titleLarge] for the title and respects the design system
-/// color and spacing tokens. Automatically shows a back button when [canPop] is
+/// The title inherits the theme's `appBarTheme.titleTextStyle` by default.
+/// Automatically shows a back button when [canPop] is
 /// true and [showBackButton] is true.
 class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Creates an [AppAppBar].
   ///
-  /// [title] is required and displayed using [AppTypography.titleLarge].
+  /// [title] is required and displayed using the theme's app bar title style.
   ///
   /// [leading] is used as the leading widget. When null and [showBackButton] is
   /// true and [canPop] is true, a default back button is shown.
@@ -21,6 +21,7 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.title,
     this.leading,
     this.actions,
+    this.titleStyle,
     this.centerTitle = false,
     this.backgroundColor,
     this.foregroundColor,
@@ -32,6 +33,9 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   /// The title string displayed in the app bar.
   final String title;
+
+  /// Optional title style override. Defaults to the theme's app bar style.
+  final TextStyle? titleStyle;
 
   /// An optional widget to display before the title.
   ///
@@ -54,7 +58,7 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Defaults to [ColorScheme.onSurface].
   final Color? foregroundColor;
 
-  /// Elevation for the app bar. Defaults to 0.
+  /// Elevation for the app bar. Defaults to [AppElevation.none] (0).
   final double? elevation;
 
   /// When false, no back button is shown even if the navigator can pop.
@@ -93,18 +97,12 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: effectiveBackgroundColor,
       foregroundColor: effectiveForegroundColor,
-      elevation: elevation ?? 0,
-      scrolledUnderElevation: 1,
+      elevation: elevation ?? AppElevation.none.value,
+      scrolledUnderElevation: AppElevation.sm.value,
       centerTitle: centerTitle,
       automaticallyImplyLeading: showBackButton && leading == null,
       leading: leading,
-      title: Text(
-        title,
-        style: AppTypography.titleLarge.copyWith(
-          color: effectiveForegroundColor,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
+      title: Text(title, style: titleStyle ?? theme.appBarTheme.titleTextStyle),
       actions: effectiveActions,
       bottom: bottom,
     );

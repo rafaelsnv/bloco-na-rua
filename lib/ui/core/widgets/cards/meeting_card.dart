@@ -1,13 +1,13 @@
+import "package:bloco_na_rua/core/date_format.dart";
+import "package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart";
+import "package:bloco_na_rua/l10n/app_localizations.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_badge.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_chip.dart";
 import "package:flutter/material.dart";
-import "package:intl/intl.dart";
-
-import "../../../../domain/entities/meetings/meetings_entity.dart";
-import "../../tokens/app_colors.dart";
-import "../../tokens/app_spacing.dart";
-import "../../tokens/app_typography.dart";
-import "../cards/app_card.dart";
-import "../display/app_badge.dart";
-import "../display/app_chip.dart";
 
 class MeetingCard extends StatelessWidget {
   const MeetingCard({
@@ -41,20 +41,20 @@ class MeetingCard extends StatelessWidget {
   /// When true, renders the meeting code badge.
   final bool showMeetingCode;
 
-  /// Formats a DateTime to "dd MMM yyyy • HH:mm" in pt-BR.
-  /// Returns "Data não definida" when [dateTime] is null.
-  String _formatDateTime(DateTime? dateTime) {
+  /// Formats a DateTime to "dd MMM yyyy • HH:mm" using [context]'s locale.
+  /// Returns the localized "date not set" message when [dateTime] is null.
+  String _formatDateTime(BuildContext context, DateTime? dateTime) {
     if (dateTime == null) {
-      return "Data não definida";
+      return AppLocalizations.of(context)!.coreDateNotSet;
     }
-    return DateFormat("dd MMM yyyy • HH:mm", "pt_BR").format(dateTime);
+    return formatDateTime(dateTime, context);
   }
 
-  /// Returns a small 14px icon with the onSurfaceVariant colour.
+  /// Returns a small [AppIconSizes.xs] icon with the onSurfaceVariant colour.
   Widget _icon(BuildContext context, IconData icon) {
     return Icon(
       icon,
-      size: 14,
+      size: AppIconSizes.xs,
       color: Theme.of(context).colorScheme.onSurfaceVariant,
     );
   }
@@ -64,10 +64,10 @@ class MeetingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AppCard(
       key: Key('meeting_card_${meeting.id}'),
       onTap: onTap,
-      elevation: AppCardElevation.sm,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -77,7 +77,7 @@ class MeetingCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  meeting.name ?? "Encontro",
+                  meeting.name ?? l10n.coreMeetingFallback,
                   style: AppTypography.titleMedium,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -93,12 +93,16 @@ class MeetingCard extends StatelessWidget {
           // Row 2: datetime
           Row(
             children: [
-                _icon(context, Icons.event_rounded),
+              _icon(context, Icons.event_rounded),
               SizedBox(width: Spacing.space_xs),
-              Text(
-                _formatDateTime(meeting.meetingDateTime),
-                style: AppTypography.bodySmall.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+              // Flexible: the date wraps to a second line instead of
+              // overflowing the row at a large text scale.
+              Flexible(
+                child: Text(
+                  _formatDateTime(context, meeting.meetingDateTime),
+                  style: AppTypography.bodySmall.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ),
             ],
@@ -139,21 +143,28 @@ class MeetingCard extends StatelessWidget {
           // Optional presence chips row
           if (totalPresences != null && confirmedPresences != null) ...[
             _gap,
-            Row(
+            // Wrap (not Row): the chips drop to the next line when they no
+            // longer fit side by side on a narrow screen or at a large text
+            // scale.
+            Wrap(
+              spacing: Spacing.space_xs,
+              runSpacing: Spacing.space_4xs,
               children: [
                 AppChip(
-                  label: "$confirmedPresences/$totalPresences presenças",
+                  label: l10n.corePresencesCount(
+                    confirmedPresences!,
+                    totalPresences!,
+                  ),
                   variant: ChipVariant.soft,
                   color: AppColors.primary,
                 ),
-                SizedBox(width: Spacing.space_xs),
                 if (confirmedPresences == totalPresences)
-                  AppChip.meetingStatus("Confirmada")
+                  AppChip.meetingStatus(l10n.corePresenceConfirmed)
                 else if (confirmedPresences == 0)
-                  AppChip.presenceAbsent("Pendente")
+                  AppChip.presenceAbsent(l10n.corePresencePending)
                 else
                   AppChip(
-                    label: "Parcial",
+                    label: l10n.corePresencePartial,
                     variant: ChipVariant.soft,
                     color: AppColors.warning,
                   ),

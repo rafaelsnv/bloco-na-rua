@@ -1,5 +1,7 @@
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_logo.dart";
 import "package:flutter/material.dart";
 
 class Onboarding1Screen extends StatelessWidget {
@@ -8,24 +10,23 @@ class Onboarding1Screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(Spacing.pagePaddingMobile),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Spacer(),
-          Icon(Icons.celebration_rounded, size: 120, color: colors.primary),
+          const AppLogo(size: AppIconSizes.heroArt),
           const SizedBox(height: Spacing.space_xl),
           Text(
-            "O que é um bloco?",
-            style: AppTypography.headlineLarge.copyWith(
-              color: colors.primary,
-            ),
+            l10n.onboarding1Title,
+            style: AppTypography.headlineLarge.copyWith(color: colors.primary),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: Spacing.space_md),
           Text(
-            "Um bloco de carnaval é um grupo de pessoas que se unen para celebrar juntos durante o período carnavalesco. Cada bloco tem sua própria identidade, música e tradição.",
+            l10n.onboarding1Body,
             style: AppTypography.bodyLarge.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),

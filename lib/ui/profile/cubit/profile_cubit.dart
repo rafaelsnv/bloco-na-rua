@@ -8,6 +8,12 @@ import 'package:bloco_na_rua/ui/core/cubit/resumable_cubit_mixin.dart';
 part 'profile_cubit.freezed.dart';
 part 'profile_state.dart';
 
+/// Marker for the "no authenticated user" failure.
+///
+/// The cubit has no [BuildContext], so it cannot localize the message
+/// itself — the profile screen maps this marker to the localized text.
+const String kProfileNotAuthenticated = 'profile.notAuthenticated';
+
 class ProfileCubit extends ResumableCubit<ProfileState> {
   ProfileCubit({
     required IAuthRepository authRepository,
@@ -27,7 +33,7 @@ class ProfileCubit extends ResumableCubit<ProfileState> {
 
     final uuidResult = await _authRepository.currentUuid;
     if (uuidResult == null) {
-      emit(const ProfileState.error('Usuário não autenticado'));
+      emit(const ProfileState.error(kProfileNotAuthenticated));
       return;
     }
 

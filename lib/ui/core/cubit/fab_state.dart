@@ -11,9 +11,9 @@ class FabState extends Equatable {
   final bool shouldAnimate;
 
   FabState copyWith({bool? expanded, bool? shouldAnimate}) => FabState(
-        expanded: expanded ?? this.expanded,
-        shouldAnimate: shouldAnimate ?? this.shouldAnimate,
-      );
+    expanded: expanded ?? this.expanded,
+    shouldAnimate: shouldAnimate ?? this.shouldAnimate,
+  );
 
   @override
   List<Object?> get props => [expanded, shouldAnimate];

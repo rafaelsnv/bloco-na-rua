@@ -32,6 +32,9 @@ class AppTextField extends StatelessWidget {
     this.maxLines,
     this.autofocus = false,
     this.inputFormatters,
+    this.autofillHints,
+    this.autocorrect = true,
+    this.enableSuggestions = true,
   });
 
   /// The floating label text, passed to [InputDecoration.labelText].
@@ -99,6 +102,21 @@ class AppTextField extends StatelessWidget {
   /// Useful for phone masks, currency, digits-only, etc.
   final List<TextInputFormatter>? inputFormatters;
 
+  /// Hints that tell the platform which credential this field holds, so
+  /// autofill and password managers can fill it in.
+  ///
+  /// Typical values are [AutofillHints.email], [AutofillHints.password] and
+  /// [AutofillHints.newPassword].
+  final List<String>? autofillHints;
+
+  /// Whether the platform may autocorrect what the user types.
+  /// Should be `false` for passwords.
+  final bool autocorrect;
+
+  /// Whether the platform may suggest completions.
+  /// Should be `false` for passwords.
+  final bool enableSuggestions;
+
   @override
   Widget build(BuildContext context) {
     final effectiveKeyboardType = isMultiline && keyboardType == null
@@ -121,6 +139,9 @@ class AppTextField extends StatelessWidget {
       minLines: isMultiline ? 3 : null,
       autofocus: autofocus,
       inputFormatters: inputFormatters,
+      autofillHints: autofillHints,
+      autocorrect: autocorrect,
+      enableSuggestions: enableSuggestions,
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,

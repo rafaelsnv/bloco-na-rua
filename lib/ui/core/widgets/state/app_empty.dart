@@ -1,14 +1,17 @@
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
+import "package:bloco_na_rua/ui/core/widgets/state/app_state_view.dart";
 import "package:flutter/material.dart";
-
-import "../../tokens/app_spacing.dart";
-import "../../tokens/app_typography.dart";
-import "../buttons/app_button.dart";
 
 /// Full-screen centered empty state widget.
 ///
 /// Displays an icon, a title, an optional message, and an optional CTA button.
 /// Intended for use as a full-screen placeholder when a list or content area
-/// is empty.
+/// is empty. Thin wrapper over [AppStateView].
+///
+/// [compact] renders the same content as an inline block (small icon, no
+/// vertical centering, tight padding) so it can live inside a section — a
+/// card or a page column — instead of taking over the whole screen.
 ///
 /// Example:
 /// ```dart
@@ -24,15 +27,10 @@ import "../buttons/app_button.dart";
 class AppEmpty extends StatelessWidget {
   /// Creates an [AppEmpty] widget.
   ///
-  /// [title] is optional and defaults to "Nada por aqui".
-  /// [message] is optional and displayed below the title when provided.
-  /// [icon] defaults to [Icons.inbox_outlined].
-  /// [actionLabel] is optional; when provided alongside [onAction], a CTA
-  ///   button is rendered.
-  /// [onAction] is optional; when provided alongside [actionLabel], a CTA
-  ///   button is rendered. Both must be non-null for the button to appear.
-  /// [secondaryActionLabel]/[onSecondaryAction] render an outlined secondary
-  ///   CTA below the primary one, same pairing rule.
+  /// [title], [message] and [icon] are optional; each is rendered only when
+  /// provided. [actionLabel]/[onAction] render a primary CTA and
+  /// [secondaryActionLabel]/[onSecondaryAction] an outlined secondary one —
+  /// both pairs must be non-null for the button to appear.
   const AppEmpty({
     super.key,
     this.title,
@@ -42,103 +40,76 @@ class AppEmpty extends StatelessWidget {
     this.onAction,
     this.secondaryActionLabel,
     this.onSecondaryAction,
+    this.compact = false,
   });
 
-  /// Optional custom title. Defaults to "Nada por aqui".
+  /// Optional custom title.
   final String? title;
 
   /// Optional detailed message displayed below the title.
   final String? message;
 
-  /// Icon displayed above the title. Defaults to [Icons.inbox_outlined].
+  /// Optional icon displayed above the title.
   final IconData? icon;
 
-  /// Optional CTA button label. When provided alongside [onAction], a CTA
-  /// button is rendered.
+  /// Optional CTA button label.
   final String? actionLabel;
 
-  /// Optional CTA button press handler. When provided alongside [actionLabel],
-  /// a CTA button is rendered.
+  /// Optional CTA button press handler.
   final VoidCallback? onAction;
 
-  /// Optional secondary CTA button label. When provided alongside
-  /// [onSecondaryAction], an outlined secondary button is rendered.
+  /// Optional secondary CTA button label.
   final String? secondaryActionLabel;
 
-  /// Optional secondary CTA button press handler. When provided alongside
-  /// [secondaryActionLabel], an outlined secondary button is rendered.
+  /// Optional secondary CTA button press handler.
   final VoidCallback? onSecondaryAction;
+
+  /// When true the empty state renders as an inline block (small icon, no
+  /// vertical centering, tight padding) instead of a full-screen placeholder.
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
-    final showCtaButton = actionLabel != null && onAction != null;
-    final showSecondaryCtaButton =
+    final showCta = actionLabel != null && onAction != null;
+    final showSecondary =
         secondaryActionLabel != null && onSecondaryAction != null;
-    final colorScheme = Theme.of(context).colorScheme;
 
-    return Padding(
-      padding: const EdgeInsets.all(Spacing.pagePaddingMobile),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Icon (only shown when provided)
-            if (icon != null) ...[
-              Icon(icon, size: 96, color: colorScheme.primary),
-              // Gap: icon -> title
-              const SizedBox(height: Spacing.space_md),
-            ],
+    return AppStateView(
+      icon: icon,
+      iconColor: Theme.of(context).colorScheme.primary,
+      // The compact variant keeps the icon small so it does not dominate the
+      // section it is embedded in; the full-screen one keeps its hero icon.
+      iconSize: compact ? AppIconSizes.xxl : 96,
+      title: title,
+      message: message,
+      action: _buildActions(showCta: showCta, showSecondary: showSecondary),
+      compact: compact,
+    );
+  }
 
-            // Title (only shown when provided)
-            if (title != null)
-              Text(
-                title!,
-                style: AppTypography.headlineSmall.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-                textAlign: TextAlign.center,
-              ),
+  /// The CTA area below the message.
+  ///
+  /// A single CTA keeps the full-width look of the full-screen state; two
+  /// CTAs sit side by side in a [Wrap] so they drop to the next line instead
+  /// of overflowing the row on a narrow screen or at a large text scale.
+  Widget? _buildActions({required bool showCta, required bool showSecondary}) {
+    if (!showCta && !showSecondary) return null;
 
-            // Gap: title -> message
-            if (message != null) ...[
-              const SizedBox(height: Spacing.space_xs),
-              Text(
-                message!,
-                style: AppTypography.bodyMedium.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+    final actions = <Widget>[
+      if (showCta) AppButton(label: actionLabel!, onPressed: onAction),
+      if (showSecondary)
+        AppButton(label: secondaryActionLabel!, onPressed: onSecondaryAction),
+    ];
 
-            // CTA buttons — side by side when both are provided
-            if (showCtaButton || showSecondaryCtaButton) ...[
-              const SizedBox(height: Spacing.space_lg),
-              Row(
-                children: [
-                  if (showCtaButton)
-                    Expanded(
-                      child: AppButton(
-                        label: actionLabel!,
-                        onPressed: onAction,
-                      ),
-                    ),
-                  if (showCtaButton && showSecondaryCtaButton)
-                    const SizedBox(width: Spacing.space_sm),
-                  if (showSecondaryCtaButton)
-                    Expanded(
-                      child: AppButton(
-                        label: secondaryActionLabel!,
-                        onPressed: onSecondaryAction,
-                      ),
-                    ),
-                ],
-              ),
-            ],
-          ],
-        ),
-      ),
+    if (actions.length == 1) {
+      return Row(children: [Expanded(child: actions.first)]);
+    }
+
+    return Wrap(
+      spacing: Spacing.space_sm,
+      runSpacing: Spacing.space_xs,
+      alignment: WrapAlignment.center,
+      children: actions,
     );
   }
 }

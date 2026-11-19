@@ -1,4 +1,3 @@
-import 'package:bloco_na_rua/core/errors/user_message.dart';
 import 'package:bloco_na_rua/data/repositories/auth/iauth_repository.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
@@ -10,6 +9,7 @@ import 'package:bloco_na_rua/domain/entities/meetingPresences/meeting_presences_
 import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart';
 import 'package:result_dart/result_dart.dart';
 import 'package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_state.dart';
+import 'package:bloco_na_rua/ui/meetings/meeting_error.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 
@@ -51,7 +51,7 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
 
     final meetingIdInt = int.tryParse(meetingId);
     if (meetingIdInt == null) {
-      emit(const MeetingDetailsError('ID da reunião inválido'));
+      emit(const MeetingDetailsError(MeetingError(MeetingErrorKind.invalidId)));
       return;
     }
 
@@ -88,7 +88,11 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
       },
       (exception) {
         _log.warning('Load meeting failed', exception);
-        emit(MeetingDetailsError(extractUserMessage(exception)));
+        emit(
+          MeetingDetailsError(
+            MeetingError(MeetingErrorKind.request, exception),
+          ),
+        );
       },
     );
   }
@@ -98,7 +102,9 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
   /// admin/moderator role).
   Future<void> _loadBlockMembers(int? carnivalBlockId) async {
     final currentState = state;
-    if (currentState is! MeetingDetailsLoaded || carnivalBlockId == null) return;
+    if (currentState is! MeetingDetailsLoaded || carnivalBlockId == null) {
+      return;
+    }
 
     final membersResult = await _carnivalBlockMembersRepository
         .getByBlockIdAsync(carnivalBlockId);
@@ -115,10 +121,11 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
     final fetched = entitiesResult.getOrNull() ?? [];
     final byId = {for (final e in fetched) e.id: e};
     final memberEntities = <int, MembersEntity>{
+      // Only the fetched entities: a missing one (deleted member) is left
+      // out so the screen can render its own localized fallback.
       for (final member in blockMembers)
-        member.memberId: byId[member.memberId] ??
-            // Member row exists but entity missing (deleted?) — placeholder.
-            MembersEntity(id: member.memberId, name: "Membro"),
+        if (byId[member.memberId] != null)
+          member.memberId: byId[member.memberId]!,
     };
 
     // Owner or admin/moderator (role 1/2) can manage presences.
@@ -140,7 +147,8 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
       );
     }
     final hasManagerRole =
-        myMembership != null && (myMembership.role == 1 || myMembership.role == 2);
+        myMembership != null &&
+        (myMembership.role == 1 || myMembership.role == 2);
 
     emit(
       currentState.copyWith(
@@ -161,7 +169,7 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
         currentState.copyWith(
           presences: [],
           presencesStatus: PresencesStatus.error,
-          presencesError: 'ID da reunião inválido',
+          presencesError: const MeetingError(MeetingErrorKind.invalidId),
         ),
       );
       return;
@@ -200,13 +208,10 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
     if (cached != null) return cached;
 
     final result = await _getCurrentUserData();
-    return result.fold(
-      (member) => member,
-      (exception) {
-        _log.warning('Resolve current member failed', exception);
-        return null;
-      },
-    );
+    return result.fold((member) => member, (exception) {
+      _log.warning('Resolve current member failed', exception);
+      return null;
+    });
   }
 
   Future<void> markPresence({required bool isPresent}) async {
@@ -217,7 +222,9 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
       emit(
         currentState.copyWith(
           markingPresenceStatus: MarkingPresenceStatus.error,
-          markingPresenceError: 'Usuário não autenticado',
+          markingPresenceError: const MeetingError(
+            MeetingErrorKind.notAuthenticated,
+          ),
         ),
       );
       return;
@@ -261,21 +268,17 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
 
       final ResultDart<MeetingPresencesEntity, Exception> result;
       if (existingRow != null) {
-        result = await _meetingPresencesRepository.updateAsync(
-          existingRow.id,
-          {'isPresent': isPresent},
-        );
+        result = await _meetingPresencesRepository.updateAsync(existingRow.id, {
+          'isPresent': isPresent,
+        });
       } else {
         // ponytail: idempotency key prevents duplicates on rapid calls
-        result = await _meetingPresencesRepository.createAsync(
-          {
-            'meetingId': currentState.meeting.id,
-            'memberId': memberId,
-            'carnivalBlockId': currentState.meeting.carnivalBlockId,
-            'isPresent': isPresent,
-          },
-          idempotencyKey: idempotencyKey,
-        );
+        result = await _meetingPresencesRepository.createAsync({
+          'meetingId': currentState.meeting.id,
+          'memberId': memberId,
+          'carnivalBlockId': currentState.meeting.carnivalBlockId,
+          'isPresent': isPresent,
+        }, idempotencyKey: idempotencyKey);
       }
 
       result.fold(
@@ -292,7 +295,10 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
           emit(
             currentState.copyWith(
               markingPresenceStatus: MarkingPresenceStatus.error,
-              markingPresenceError: extractUserMessage(exception),
+              markingPresenceError: MeetingError(
+                MeetingErrorKind.request,
+                exception,
+              ),
             ),
           );
         },
@@ -302,7 +308,7 @@ class MeetingDetailsCubit extends Cubit<MeetingDetailsState> {
       emit(
         currentState.copyWith(
           markingPresenceStatus: MarkingPresenceStatus.error,
-          markingPresenceError: extractUserMessage(e),
+          markingPresenceError: MeetingError(MeetingErrorKind.request, e),
         ),
       );
     } finally {

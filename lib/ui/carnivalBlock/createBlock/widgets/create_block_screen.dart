@@ -1,3 +1,5 @@
+import "package:bloco_na_rua/l10n/app_localizations.dart";
+import "package:bloco_na_rua/ui/carnivalBlock/block_error.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/blockList/cubit/block_list_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_cubit.dart";
 import "package:bloco_na_rua/ui/carnivalBlock/createBlock/cubit/create_block_state.dart";
@@ -26,6 +28,55 @@ class _CreateBlockScreenState extends State<CreateBlockScreen> {
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  /// Fields the user has already edited.
+  ///
+  /// Only these may paint an error before the first submit attempt — a
+  /// pristine field the user never touched stays neutral.
+  bool _nameTouched = false;
+
+  /// True once the user tried to submit.
+  ///
+  /// From then on every invalid field shows its error, and the form is
+  /// re-validated on every edit so the errors stay in sync.
+  bool _submitAttempted = false;
+
+  /// Error message for the name field, or null when the value is valid.
+  String? _nameValidator(AppLocalizations l10n, String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return l10n.blockNameRequired;
+    }
+    if (value.trim().length < 3) {
+      return l10n.blockNameTooShort;
+    }
+    if (value.trim().length > 50) {
+      return l10n.blockNameTooLong;
+    }
+    return null;
+  }
+
+  /// Keeps the painted error states in sync after an edit.
+  void _syncForm() {
+    if (_submitAttempted) {
+      // After a submit attempt every invalid field shows its error, so the
+      // whole form has to be re-validated on every edit.
+      _formKey.currentState?.validate();
+    }
+  }
+
+  void _onNameChanged(String _) {
+    setState(() => _nameTouched = true);
+    _syncForm();
+  }
+
+  void _submitForm() {
+    setState(() => _submitAttempted = true);
+    // Field errors are reported inline, below the field that owns them.
+    if (!(_formKey.currentState?.validate() ?? false)) {
+      return;
+    }
+    context.read<CreateBlockCubit>().createBlock(_nameController.text.trim());
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -34,24 +85,26 @@ class _CreateBlockScreenState extends State<CreateBlockScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocConsumer<CreateBlockCubit, CreateBlockState>(
       listener: (context, state) {
         if (state is CreateBlockSuccess) {
           context.read<BlockListCubit>().loadBlocks();
           context.read<HomeCubit>().loadHomeData();
-          AppSnackbar.success(context, message: "Bloco criado com sucesso!");
+          AppSnackbar.success(context, message: l10n.blocksCreateSuccess);
           context.pushReplacement("${Routes.carnivalBlock}/${state.blockId}");
         } else if (state is CreateBlockError) {
-          AppSnackbar.error(context, message: state.message);
+          AppSnackbar.error(
+            context,
+            message: localizeBlockError(context, state.error),
+          );
         }
       },
       builder: (context, state) {
         final isLoading = state is CreateBlockLoading;
-        final name = _nameController.text.trim();
-        final isDisabled = name.isEmpty || isLoading;
 
         return Scaffold(
-          appBar: const AppAppBar(title: "Criar bloco"),
+          appBar: AppAppBar(title: l10n.blocksCreateTitle),
           body: SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(Spacing.space_md),
@@ -65,8 +118,8 @@ class _CreateBlockScreenState extends State<CreateBlockScreen> {
                       // Illustration
                       Center(
                         child: Container(
-                          width: 96,
-                          height: 96,
+                          width: Spacing.space_4xl,
+                          height: Spacing.space_4xl,
                           decoration: BoxDecoration(
                             color: Theme.of(
                               context,
@@ -75,23 +128,21 @@ class _CreateBlockScreenState extends State<CreateBlockScreen> {
                           ),
                           child: Icon(
                             Icons.celebration_rounded,
-                            size: 48,
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onPrimaryContainer,
+                            size: AppIconSizes.displayXLarge,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       ),
                       const SizedBox(height: Spacing.space_lg),
                       // Heading
                       Text(
-                        "Crie seu bloco",
+                        l10n.blocksCreateHeadline,
                         style: AppTypography.headlineSmall,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: Spacing.space_2xs),
                       Text(
-                        "Dê um nome ao seu bloco de rua e comece a organizar!",
+                        l10n.blocksCreateSubtitle,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -101,40 +152,30 @@ class _CreateBlockScreenState extends State<CreateBlockScreen> {
                       // Name field
                       AppTextField(
                         controller: _nameController,
-                        label: "Nome do bloco",
-                        hint: "Ex.: Bloco da Saudade",
+                        label: l10n.blockNameLabel,
+                        hint: l10n.blockNameHint,
                         prefixIcon: Icons.celebration_rounded,
                         textInputAction: TextInputAction.done,
                         autofocus: true,
-                        onChanged: (_) => setState(() {}),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return "Digite um nome para o bloco";
-                          }
-                          if (value.trim().length < 3) {
-                            return "Nome muito curto";
-                          }
-                          if (value.trim().length > 50) {
-                            return "Nome muito longo";
-                          }
-                          return null;
-                        },
+                        validator: (value) => _nameValidator(l10n, value),
+                        errorText: _nameTouched
+                            ? _nameValidator(l10n, _nameController.text)
+                            : null,
+                        onChanged: _onNameChanged,
                       ),
                       const SizedBox(height: Spacing.space_lg),
                       // Submit button
                       AppButton(
-                        label: "Criar",
+                        label: l10n.blocksCreate,
                         variant: AppButtonVariant.primary,
                         size: AppButtonSizeMetrics.lg,
                         isFullWidth: true,
                         isLoading: isLoading,
-                        isDisabled: isDisabled,
-                        onPressed: () {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            final name = _nameController.text.trim();
-                            context.read<CreateBlockCubit>().createBlock(name);
-                          }
-                        },
+                        // The CTA is never a dead end: an invalid form is
+                        // reported inline when the user submits, instead of
+                        // a button that never becomes tappable.
+                        isDisabled: isLoading,
+                        onPressed: _submitForm,
                       ),
                       const SizedBox(height: Spacing.space_lg),
                     ],

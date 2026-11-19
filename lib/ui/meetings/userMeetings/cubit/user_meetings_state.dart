@@ -1,4 +1,5 @@
 import 'package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart';
+import 'package:bloco_na_rua/ui/meetings/meeting_error.dart';
 import 'package:equatable/equatable.dart';
 
 enum UserMeetingsStatus { initial, loading, success, failure }
@@ -7,25 +8,27 @@ class UserMeetingsState extends Equatable {
   const UserMeetingsState({
     this.status = UserMeetingsStatus.initial,
     this.meetings = const [],
-    this.errorMessage,
+    this.error,
   });
 
   final UserMeetingsStatus status;
   final List<MeetingsEntity> meetings;
-  final String? errorMessage;
+
+  /// The failure, when the operation failed. Localized by the screen.
+  final MeetingError? error;
 
   UserMeetingsState copyWith({
     UserMeetingsStatus? status,
     List<MeetingsEntity>? meetings,
-    String? errorMessage,
+    MeetingError? error,
   }) {
     return UserMeetingsState(
       status: status ?? this.status,
       meetings: meetings ?? this.meetings,
-      errorMessage: errorMessage ?? this.errorMessage,
+      error: error ?? this.error,
     );
   }
 
   @override
-  List<Object?> get props => [status, meetings, errorMessage];
+  List<Object?> get props => [status, meetings, error];
 }

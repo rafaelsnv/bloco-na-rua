@@ -1,5 +1,5 @@
-import 'package:bloco_na_rua/core/errors/user_message.dart';
 import 'package:bloco_na_rua/domain/use_cases/meetings/get_user_meetings_use_case.dart';
+import 'package:bloco_na_rua/ui/meetings/meeting_error.dart';
 import 'package:bloco_na_rua/ui/meetings/userMeetings/cubit/user_meetings_state.dart';
 import 'package:bloco_na_rua/ui/core/cubit/resumable_cubit_mixin.dart';
 import 'package:logging/logging.dart';
@@ -27,7 +27,7 @@ class UserMeetingsCubit extends ResumableCubit<UserMeetingsState> {
         emit(
           state.copyWith(
             status: UserMeetingsStatus.failure,
-            errorMessage: extractUserMessage(error),
+            error: MeetingError(MeetingErrorKind.request, error),
           ),
         );
         return;
@@ -43,7 +43,7 @@ class UserMeetingsCubit extends ResumableCubit<UserMeetingsState> {
       emit(
         state.copyWith(
           status: UserMeetingsStatus.failure,
-          errorMessage: extractUserMessage(e),
+          error: MeetingError(MeetingErrorKind.request, e),
         ),
       );
     }

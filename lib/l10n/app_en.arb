@@ -35,5 +35,1128 @@
   "unknown": "Something unexpected happened. Try again.",
   "@unknown": {
     "description": "Unknown or unexpected error"
+  },
+  "authAppTitle": "Bloco na Rua",
+  "@authAppTitle": {
+    "description": "App name shown in the app bar of the auth screens"
+  },
+  "authBackButton": "Back",
+  "@authBackButton": {
+    "description": "Back button tooltip and semantics label of the auth screens"
+  },
+  "authVerifyEmailSent": "Verification email resent!",
+  "@authVerifyEmailSent": {
+    "description": "Confirmation shown after resending the verification e-mail"
+  },
+  "authRecoveryEmailSent": "Recovery email sent!",
+  "@authRecoveryEmailSent": {
+    "description": "Confirmation shown after requesting a password recovery e-mail"
+  },
+  "loginTitle": "Welcome",
+  "@loginTitle": {
+    "description": "Login screen headline"
+  },
+  "loginSubtitle": "Log in to organize your block",
+  "@loginSubtitle": {
+    "description": "Login screen subtitle under the headline"
+  },
+  "loginEmailLabel": "Email",
+  "@loginEmailLabel": {
+    "description": "Login e-mail field label"
+  },
+  "loginEmailRequired": "Please enter an email",
+  "@loginEmailRequired": {
+    "description": "Validation error when the login e-mail field is empty"
+  },
+  "loginEmailInvalid": "Invalid email",
+  "@loginEmailInvalid": {
+    "description": "Validation error when the login e-mail is malformed"
+  },
+  "loginPasswordLabel": "Password",
+  "@loginPasswordLabel": {
+    "description": "Login password field label"
+  },
+  "loginPasswordRequired": "Please enter a password",
+  "@loginPasswordRequired": {
+    "description": "Validation error when the login password field is empty"
+  },
+  "loginShowPassword": "Show password",
+  "@loginShowPassword": {
+    "description": "Tooltip and semantics label that reveal the password"
+  },
+  "loginHidePassword": "Hide password",
+  "@loginHidePassword": {
+    "description": "Tooltip and semantics label that hide the password"
+  },
+  "loginEnterButton": "Log in",
+  "@loginEnterButton": {
+    "description": "Login submit button label"
+  },
+  "loginForgotPassword": "Forgot your password?",
+  "@loginForgotPassword": {
+    "description": "Forgot password link and dialog title"
+  },
+  "loginRecoveryMessage": "We'll send a recovery link to {email}",
+  "@loginRecoveryMessage": {
+    "description": "Password recovery dialog message naming the e-mail",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "loginSendButton": "Send",
+  "@loginSendButton": {
+    "description": "Confirm button of the password recovery dialog"
+  },
+  "loginCancel": "Cancel",
+  "@loginCancel": {
+    "description": "Cancel button of the password recovery dialog"
+  },
+  "loginRegisterLink": "Don't have an account? Sign up",
+  "@loginRegisterLink": {
+    "description": "Link from the login screen to the sign-up screen"
+  },
+  "signupTitle": "Create your account",
+  "@signupTitle": {
+    "description": "Sign-up screen headline"
+  },
+  "signupSubtitle": "Join the party",
+  "@signupSubtitle": {
+    "description": "Sign-up screen subtitle under the headline"
+  },
+  "signupNameLabel": "Name",
+  "@signupNameLabel": {
+    "description": "Sign-up name field label"
+  },
+  "signupNameRequired": "Please enter your name",
+  "@signupNameRequired": {
+    "description": "Validation error when the sign-up name field is empty"
+  },
+  "signupEmailLabel": "Email",
+  "@signupEmailLabel": {
+    "description": "Sign-up e-mail field label"
+  },
+  "signupEmailRequired": "Please enter an email",
+  "@signupEmailRequired": {
+    "description": "Validation error when the sign-up e-mail field is empty"
+  },
+  "signupEmailInvalid": "Invalid email",
+  "@signupEmailInvalid": {
+    "description": "Validation error when the sign-up e-mail is malformed"
+  },
+  "signupPasswordLabel": "Password",
+  "@signupPasswordLabel": {
+    "description": "Sign-up password field label"
+  },
+  "signupPasswordRequired": "Please enter a password",
+  "@signupPasswordRequired": {
+    "description": "Validation error when the sign-up password field is empty"
+  },
+  "signupPasswordMinLength": "The password must be at least 8 characters long",
+  "@signupPasswordMinLength": {
+    "description": "Validation error when the sign-up password is too short"
+  },
+  "signupPasswordHelper": "At least 8 characters",
+  "@signupPasswordHelper": {
+    "description": "Helper text under the sign-up password field"
+  },
+  "signupPhoneLabel": "Phone",
+  "@signupPhoneLabel": {
+    "description": "Sign-up phone field label"
+  },
+  "signupPhoneRequired": "Please enter a phone number",
+  "@signupPhoneRequired": {
+    "description": "Validation error when the sign-up phone field is empty"
+  },
+  "signupPhoneInvalid": "Invalid phone number",
+  "@signupPhoneInvalid": {
+    "description": "Validation error when the sign-up phone is too short"
+  },
+  "signupSubmitButton": "Sign up",
+  "@signupSubmitButton": {
+    "description": "Sign-up submit button label"
+  },
+  "signupLoginLink": "Already have an account? Log in",
+  "@signupLoginLink": {
+    "description": "Link from the sign-up screen to the login screen"
+  },
+  "verifyEmailTitle": "Verify your email",
+  "@verifyEmailTitle": {
+    "description": "E-mail verification screen headline"
+  },
+  "verifyEmailMessage": "We sent a confirmation link to your email",
+  "@verifyEmailMessage": {
+    "description": "E-mail verification screen message"
+  },
+  "verifyEmailNotReceived": "Didn't get the email?",
+  "@verifyEmailNotReceived": {
+    "description": "Question above the resend button"
+  },
+  "verifyEmailResendButton": "Resend email",
+  "@verifyEmailResendButton": {
+    "description": "Resend verification e-mail button label"
+  },
+  "verifyEmailFooter": "Once confirmed, you'll be taken to the app",
+  "@verifyEmailFooter": {
+    "description": "Footer note at the bottom of the verification screen"
+  },
+  "logoutTitle": "Log out",
+  "@logoutTitle": {
+    "description": "Logout button label and logout dialog title"
+  },
+  "logoutMessage": "You'll need to log in again to access the app.",
+  "@logoutMessage": {
+    "description": "Logout confirmation dialog message"
+  },
+  "logoutConfirm": "Log out",
+  "@logoutConfirm": {
+    "description": "Logout confirmation dialog confirm button label"
+  },
+  "logoutCancel": "Cancel",
+  "@logoutCancel": {
+    "description": "Logout confirmation dialog cancel button label"
+  },
+  "profileTitle": "Profile",
+  "@profileTitle": {
+    "description": "Profile screen app bar title"
+  },
+  "profileAppearanceSection": "Appearance",
+  "@profileAppearanceSection": {
+    "description": "Profile screen appearance section header"
+  },
+  "profileInformationSection": "Information",
+  "@profileInformationSection": {
+    "description": "Profile screen information section header"
+  },
+  "profileAccountSection": "Account",
+  "@profileAccountSection": {
+    "description": "Profile screen account section header"
+  },
+  "profilePhoneLabel": "Phone",
+  "@profilePhoneLabel": {
+    "description": "Profile information row title for the phone number"
+  },
+  "profileNotAuthenticated": "User not authenticated",
+  "@profileNotAuthenticated": {
+    "description": "Profile error shown when there is no authenticated user"
+  },
+  "profileNotInformed": "Not provided",
+  "@profileNotInformed": {
+    "description": "Profile information row value when the member did not inform it"
+  },
+  "profileMemberSince": "Member since",
+  "@profileMemberSince": {
+    "description": "Profile information row title for the membership date"
+  },
+  "profileNotAvailable": "Not available",
+  "@profileNotAvailable": {
+    "description": "Profile information row value when the date is unknown"
+  },
+  "profileDarkMode": "Dark mode",
+  "@profileDarkMode": {
+    "description": "Dark mode switch title"
+  },
+  "profileChangePhotoLabel": "Change profile picture",
+  "@profileChangePhotoLabel": {
+    "description": "Semantics label of the profile picture edit button"
+  },
+  "profileEditSoon": "Profile editing coming soon",
+  "@profileEditSoon": {
+    "description": "Snackbar shown when the profile edit button is tapped"
+  },
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "Settings screen app bar title"
+  },
+  "settingsAccountSection": "Account",
+  "@settingsAccountSection": {
+    "description": "Settings screen account section header"
+  },
+  "blocksListTitle": "Blocks",
+  "@blocksListTitle": {
+    "description": "App bar title of the blocks list screen"
+  },
+  "blocksLoadingList": "Loading blocks...",
+  "@blocksLoadingList": {
+    "description": "Loading message of the blocks list screen"
+  },
+  "blocksEmptyTitle": "No blocks yet",
+  "@blocksEmptyTitle": {
+    "description": "Title of the empty state of the blocks list"
+  },
+  "blocksEmptyMessage": "Create a block to start organizing your carnival",
+  "@blocksEmptyMessage": {
+    "description": "Message of the empty state of the blocks list"
+  },
+  "blocksCreateAction": "Create block",
+  "@blocksCreateAction": {
+    "description": "Call to action of the empty state of the blocks list"
+  },
+  "blocksCreateTitle": "Create block",
+  "@blocksCreateTitle": {
+    "description": "App bar title of the create block screen"
+  },
+  "blocksCreateHeadline": "Create your block",
+  "@blocksCreateHeadline": {
+    "description": "Headline of the create block screen"
+  },
+  "blocksCreateSubtitle": "Name your street block and start organizing!",
+  "@blocksCreateSubtitle": {
+    "description": "Subtitle of the create block screen"
+  },
+  "blocksCreate": "Create",
+  "@blocksCreate": {
+    "description": "Generic create button label"
+  },
+  "blocksCreateSuccess": "Block created successfully!",
+  "@blocksCreateSuccess": {
+    "description": "Snackbar shown after a block is created"
+  },
+  "blocksEditTitle": "Edit block",
+  "@blocksEditTitle": {
+    "description": "App bar title of the edit block screen"
+  },
+  "blocksUpdateSuccess": "Block updated successfully",
+  "@blocksUpdateSuccess": {
+    "description": "Snackbar shown after a block is updated"
+  },
+  "blocksDeleteSuccess": "Block deleted successfully",
+  "@blocksDeleteSuccess": {
+    "description": "Snackbar shown after a block is deleted"
+  },
+  "blocksDeleteTitle": "Delete block",
+  "@blocksDeleteTitle": {
+    "description": "Title of the delete block dialog and label of the delete button"
+  },
+  "blocksDeleteConfirmMessage": "Are you sure you want to delete this block? This action cannot be undone.",
+  "@blocksDeleteConfirmMessage": {
+    "description": "Message of the delete block confirmation dialog"
+  },
+  "blocksDeleteConfirm": "Delete",
+  "@blocksDeleteConfirm": {
+    "description": "Confirm button label of the delete block dialog"
+  },
+  "blocksCancel": "Cancel",
+  "@blocksCancel": {
+    "description": "Cancel button label of the block dialogs"
+  },
+  "blocksLoadingBlock": "Loading block...",
+  "@blocksLoadingBlock": {
+    "description": "Loading message of the edit block screen"
+  },
+  "blocksSaveChanges": "Save changes",
+  "@blocksSaveChanges": {
+    "description": "Save button label of the edit block screen"
+  },
+  "blocksImageLabel": "Block image",
+  "@blocksImageLabel": {
+    "description": "Caption under the block image in the edit block screen"
+  },
+  "blocksNoImage": "No image",
+  "@blocksNoImage": {
+    "description": "Caption under the block image placeholder in the edit block screen"
+  },
+  "blockNameLabel": "Block name",
+  "@blockNameLabel": {
+    "description": "Label of the block name field"
+  },
+  "blockNameHint": "e.g.: Saudade Block",
+  "@blockNameHint": {
+    "description": "Hint of the block name field in the create block screen"
+  },
+  "blockNameRequired": "Enter a name for the block",
+  "@blockNameRequired": {
+    "description": "Validation error when the block name is empty"
+  },
+  "blockNameTooShort": "Name is too short",
+  "@blockNameTooShort": {
+    "description": "Validation error when the block name is too short"
+  },
+  "blockNameTooLong": "Name is too long",
+  "@blockNameTooLong": {
+    "description": "Validation error when the block name is too long"
+  },
+  "blockEditNameHint": "e.g: Neighborhood Block",
+  "@blockEditNameHint": {
+    "description": "Hint of the block name field in the edit block screen"
+  },
+  "blocksJoinTitle": "Join a block",
+  "@blocksJoinTitle": {
+    "description": "App bar title of the join block screen"
+  },
+  "blocksJoinHeadline": "Join a block",
+  "@blocksJoinHeadline": {
+    "description": "Headline of the join block screen"
+  },
+  "blocksJoinSubtitle": "Ask the block owner for the invite code to join.",
+  "@blocksJoinSubtitle": {
+    "description": "Subtitle of the join block screen"
+  },
+  "blocksInviteCodeLabel": "Invite code",
+  "@blocksInviteCodeLabel": {
+    "description": "Label of the invite code field"
+  },
+  "blocksInviteCodeHint": "Paste the code here",
+  "@blocksInviteCodeHint": {
+    "description": "Hint of the invite code field"
+  },
+  "blocksInviteCodeRequired": "Enter the invite code",
+  "@blocksInviteCodeRequired": {
+    "description": "Validation error when the invite code is empty"
+  },
+  "blocksInviteCodeTooShort": "Code is too short",
+  "@blocksInviteCodeTooShort": {
+    "description": "Validation error when the invite code is too short"
+  },
+  "blocksJoinSubmit": "Join",
+  "@blocksJoinSubmit": {
+    "description": "Submit button label of the join block screen"
+  },
+  "blocksJoinSuccess": "You joined the block!",
+  "@blocksJoinSuccess": {
+    "description": "Snackbar shown after joining a block"
+  },
+  "blocksEmptyInviteCode": "The invite code cannot be empty.",
+  "@blocksEmptyInviteCode": {
+    "description": "Error shown when the invite code is empty"
+  },
+  "blocksInvalidId": "Invalid block ID",
+  "@blocksInvalidId": {
+    "description": "Error shown when the block id cannot be parsed"
+  },
+  "blocksNotFound": "Block not found",
+  "@blocksNotFound": {
+    "description": "Error shown when the block does not exist"
+  },
+  "blocksNotFoundMessage": "This block is not available.",
+  "@blocksNotFoundMessage": {
+    "description": "Message of the empty state of the block details screen"
+  },
+  "blocksUserDataError": "Could not load the user data: {message}",
+  "@blocksUserDataError": {
+    "description": "Error shown when the current user cannot be loaded",
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "blocksUnexpectedError": "Unexpected error: {message}",
+  "@blocksUnexpectedError": {
+    "description": "Error shown when an unexpected failure happens",
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "blocksJoinFailed": "Could not join the block: {message}",
+  "@blocksJoinFailed": {
+    "description": "Error shown when joining a block fails",
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "blocksAddMemberTitle": "Add member",
+  "@blocksAddMemberTitle": {
+    "description": "App bar title of the add member screen"
+  },
+  "blocksMemberSearchHint": "Search by name or email",
+  "@blocksMemberSearchHint": {
+    "description": "Hint of the member search field"
+  },
+  "blocksMemberNotFoundTitle": "No member found",
+  "@blocksMemberNotFoundTitle": {
+    "description": "Title of the empty state of the member search"
+  },
+  "blocksMemberNotFoundMessage": "Try searching for another name or email.",
+  "@blocksMemberNotFoundMessage": {
+    "description": "Message of the empty state of the member search"
+  },
+  "blocksNoMemberTitle": "No members available",
+  "@blocksNoMemberTitle": {
+    "description": "Title of the empty state of the add member screen"
+  },
+  "blocksNoMemberMessage": "There are no members to add to this block.",
+  "@blocksNoMemberMessage": {
+    "description": "Message of the empty state of the add member screen"
+  },
+  "blocksAddMemberTooltip": "Add {name} to the block",
+  "@blocksAddMemberTooltip": {
+    "description": "Tooltip of the button that adds a member to the block",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "blocksMemberAddedSuccess": "Member added successfully",
+  "@blocksMemberAddedSuccess": {
+    "description": "Snackbar shown after a member is added"
+  },
+  "blocksDetailsTitle": "Block details",
+  "@blocksDetailsTitle": {
+    "description": "App bar title of the block details screen"
+  },
+  "blocksCreateMeeting": "Create meeting",
+  "@blocksCreateMeeting": {
+    "description": "Semantics label and tooltip of the create meeting button"
+  },
+  "blocksEditBlock": "Edit block",
+  "@blocksEditBlock": {
+    "description": "Semantics label and tooltip of the edit block button"
+  },
+  "blocksAdd": "Add",
+  "@blocksAdd": {
+    "description": "Label of the add member section action"
+  },
+  "blocksMeetingsSection": "Meetings",
+  "@blocksMeetingsSection": {
+    "description": "Title of the meetings section of the block details screen"
+  },
+  "blocksMembersSection": "Members",
+  "@blocksMembersSection": {
+    "description": "Title of the members section of the block details screen and of the regular members group"
+  },
+  "blocksInviteCodeTitle": "Invite code",
+  "@blocksInviteCodeTitle": {
+    "description": "Title of the invite code card"
+  },
+  "blocksManagerCodeTitle": "Manager code",
+  "@blocksManagerCodeTitle": {
+    "description": "Title of the manager code card"
+  },
+  "blocksCodeCopied": "Code copied!",
+  "@blocksCodeCopied": {
+    "description": "Snackbar shown after copying a block code"
+  },
+  "blocksShowCode": "Show {title}",
+  "@blocksShowCode": {
+    "description": "Tooltip of the button that reveals a hidden code",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "blocksHideCode": "Hide {title}",
+  "@blocksHideCode": {
+    "description": "Tooltip of the button that hides a visible code",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "blocksCopyCode": "Copy {title}",
+  "@blocksCopyCode": {
+    "description": "Tooltip of the button that copies a code",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "blocksLoadingMeetings": "Loading meetings...",
+  "@blocksLoadingMeetings": {
+    "description": "Loading message of the meetings section"
+  },
+  "blocksNoMeetingsYet": "No meetings yet",
+  "@blocksNoMeetingsYet": {
+    "description": "Empty message of the meetings section"
+  },
+  "blocksNoTitle": "No title",
+  "@blocksNoTitle": {
+    "description": "Fallback title of a meeting without a name"
+  },
+  "blocksLoadingMembers": "Loading members...",
+  "@blocksLoadingMembers": {
+    "description": "Loading message of the members section"
+  },
+  "blocksNoMembersYet": "No members yet",
+  "@blocksNoMembersYet": {
+    "description": "Empty message of the members section"
+  },
+  "blocksAdminsGroup": "Admins",
+  "@blocksAdminsGroup": {
+    "description": "Title of the admins group in the members section"
+  },
+  "blocksModeratorsGroup": "Moderators",
+  "@blocksModeratorsGroup": {
+    "description": "Title of the moderators group in the members section"
+  },
+  "blocksGroupCount": "{title} ({count})",
+  "@blocksGroupCount": {
+    "description": "Title of a member group with the number of members",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "blocksMemberFallback": "Member",
+  "@blocksMemberFallback": {
+    "description": "Fallback name of a member whose data could not be loaded"
+  },
+  "blocksRemoveMemberTooltip": "Remove {name} from the block",
+  "@blocksRemoveMemberTooltip": {
+    "description": "Tooltip of the button that removes a member from the block",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "blocksRemoveMemberTitle": "Remove member",
+  "@blocksRemoveMemberTitle": {
+    "description": "Title of the remove member confirmation dialog"
+  },
+  "blocksRemoveMemberConfirm": "Remove this member from the block?",
+  "@blocksRemoveMemberConfirm": {
+    "description": "Message of the remove member confirmation dialog"
+  },
+  "blocksRemoveMemberAction": "Remove",
+  "@blocksRemoveMemberAction": {
+    "description": "Confirm button label of the remove member dialog"
+  },
+  "blocksRemoveMemberSuccess": "Member removed successfully",
+  "@blocksRemoveMemberSuccess": {
+    "description": "Snackbar shown after a member is removed"
+  },
+  "blocksRemoveMemberError": "Could not remove the member: {message}",
+  "@blocksRemoveMemberError": {
+    "description": "Snackbar shown when a member cannot be removed",
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "blocksMembersLoadFailed": "Failed to load data for {count} member(s)",
+  "@blocksMembersLoadFailed": {
+    "description": "Snackbar shown when some member data could not be loaded",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "blocksRoleAdmin": "Admin",
+  "@blocksRoleAdmin": {
+    "description": "Label of the admin role"
+  },
+  "blocksRoleModerator": "Moderator",
+  "@blocksRoleModerator": {
+    "description": "Label of the moderator role"
+  },
+  "blocksRoleMember": "Member",
+  "@blocksRoleMember": {
+    "description": "Label of the regular member role"
+  },
+  "meetingsListTitle": "Meetings",
+  "@meetingsListTitle": {
+    "description": "App bar title of the meetings list screen"
+  },
+  "meetingsSearchHint": "Search meetings...",
+  "@meetingsSearchHint": {
+    "description": "Hint of the meetings search field"
+  },
+  "meetingsNoMeetingTitle": "No meetings",
+  "@meetingsNoMeetingTitle": {
+    "description": "Empty state title of the meetings list"
+  },
+  "meetingsNoMeetingMessage": "You have no scheduled meetings yet",
+  "@meetingsNoMeetingMessage": {
+    "description": "Empty state message of the meetings list"
+  },
+  "meetingsNoMeetingFoundTitle": "No meeting found",
+  "@meetingsNoMeetingFoundTitle": {
+    "description": "Empty state title when a meeting search returns nothing"
+  },
+  "meetingsNoMeetingFoundMessage": "Try searching with other terms",
+  "@meetingsNoMeetingFoundMessage": {
+    "description": "Empty state message when a meeting search returns nothing"
+  },
+  "meetingsCreateTitle": "New meeting",
+  "@meetingsCreateTitle": {
+    "description": "App bar title of the create meeting screen"
+  },
+  "meetingsEditTitle": "Edit meeting",
+  "@meetingsEditTitle": {
+    "description": "App bar title of the edit meeting screen"
+  },
+  "meetingsDetailsTitle": "Meeting details",
+  "@meetingsDetailsTitle": {
+    "description": "App bar title of the meeting details screen"
+  },
+  "meetingsTitleLabel": "Meeting title",
+  "@meetingsTitleLabel": {
+    "description": "Label of the meeting title field"
+  },
+  "meetingsTitleHint": "E.g.: Full rehearsal",
+  "@meetingsTitleHint": {
+    "description": "Hint of the meeting title field"
+  },
+  "meetingsTitleRequired": "Please enter a name for the meeting",
+  "@meetingsTitleRequired": {
+    "description": "Validation error when the meeting title is empty"
+  },
+  "meetingsEditTitleRequired": "The meeting title is required",
+  "@meetingsEditTitleRequired": {
+    "description": "Validation error when the meeting title is empty while editing"
+  },
+  "meetingsDescriptionLabel": "Description",
+  "@meetingsDescriptionLabel": {
+    "description": "Label of the meeting description field"
+  },
+  "meetingsDescriptionHint": "Details about the meeting (optional)",
+  "@meetingsDescriptionHint": {
+    "description": "Hint of the meeting description field"
+  },
+  "meetingsDateLabel": "Date",
+  "@meetingsDateLabel": {
+    "description": "Label of the meeting date field"
+  },
+  "meetingsTimeLabel": "Time",
+  "@meetingsTimeLabel": {
+    "description": "Label of the meeting time field"
+  },
+  "meetingsDateTimeLabel": "Date and time",
+  "@meetingsDateTimeLabel": {
+    "description": "Label of the meeting date and time field"
+  },
+  "meetingsSelectHint": "Select",
+  "@meetingsSelectHint": {
+    "description": "Hint of the date and time pickers"
+  },
+  "meetingsSelectDate": "Select the date",
+  "@meetingsSelectDate": {
+    "description": "Validation error when no meeting date was picked"
+  },
+  "meetingsSelectTime": "Select the time",
+  "@meetingsSelectTime": {
+    "description": "Validation error when no meeting time was picked"
+  },
+  "meetingsSelectDateSemantics": "Select date",
+  "@meetingsSelectDateSemantics": {
+    "description": "Accessibility label of the meeting date picker"
+  },
+  "meetingsSelectTimeSemantics": "Select time",
+  "@meetingsSelectTimeSemantics": {
+    "description": "Accessibility label of the meeting time picker"
+  },
+  "meetingsSelectDateTimeSemantics": "Select date and time",
+  "@meetingsSelectDateTimeSemantics": {
+    "description": "Accessibility label of the meeting date and time picker"
+  },
+  "meetingsLocationLabel": "Location",
+  "@meetingsLocationLabel": {
+    "description": "Label of the meeting location field"
+  },
+  "meetingsLocationHint": "E.g.: Main square",
+  "@meetingsLocationHint": {
+    "description": "Hint of the meeting location field"
+  },
+  "meetingsLocationRequired": "Please enter a location for the meeting",
+  "@meetingsLocationRequired": {
+    "description": "Validation error when the meeting location is empty"
+  },
+  "meetingsCreateButton": "Create meeting",
+  "@meetingsCreateButton": {
+    "description": "Submit button of the create meeting screen"
+  },
+  "meetingsSaveButton": "Save changes",
+  "@meetingsSaveButton": {
+    "description": "Submit button of the edit meeting screen"
+  },
+  "meetingsCreateSuccess": "Meeting created successfully",
+  "@meetingsCreateSuccess": {
+    "description": "Snackbar shown after a meeting is created"
+  },
+  "meetingsCreateError": "Error while creating the meeting. Please try again.",
+  "@meetingsCreateError": {
+    "description": "Snackbar shown when the meeting could not be created"
+  },
+  "meetingsUpdateSuccess": "Meeting updated successfully!",
+  "@meetingsUpdateSuccess": {
+    "description": "Snackbar shown after a meeting is updated"
+  },
+  "meetingsInvalidBlockId": "Invalid block ID",
+  "@meetingsInvalidBlockId": {
+    "description": "Snackbar shown when the block id of the meeting form is invalid"
+  },
+  "meetingsInvalidMeetingId": "Invalid meeting ID",
+  "@meetingsInvalidMeetingId": {
+    "description": "Snackbar shown when the meeting id is invalid"
+  },
+  "meetingsUnknownError": "Unknown error",
+  "@meetingsUnknownError": {
+    "description": "Fallback error message of the meeting screens"
+  },
+  "meetingsPresenceUpdated": "Presence updated successfully!",
+  "@meetingsPresenceUpdated": {
+    "description": "Snackbar shown after a presence was updated"
+  },
+  "meetingsDeleteError": "Error while deleting the meeting",
+  "@meetingsDeleteError": {
+    "description": "Snackbar shown when the meeting could not be deleted"
+  },
+  "meetingsDeleteTitle": "Delete meeting",
+  "@meetingsDeleteTitle": {
+    "description": "Title and tooltip of the delete meeting action"
+  },
+  "meetingsDeleteConfirmMessage": "Are you sure you want to delete this meeting? This action cannot be undone.",
+  "@meetingsDeleteConfirmMessage": {
+    "description": "Message of the delete meeting confirmation dialog"
+  },
+  "meetingsDeleteAction": "Delete",
+  "@meetingsDeleteAction": {
+    "description": "Confirm button of the delete meeting dialog"
+  },
+  "meetingsCancel": "Cancel",
+  "@meetingsCancel": {
+    "description": "Cancel button of the meeting dialogs"
+  },
+  "meetingsConfirm": "Confirm",
+  "@meetingsConfirm": {
+    "description": "Confirm button of the meeting dialogs"
+  },
+  "meetingsPresenceListTitle": "Presence list",
+  "@meetingsPresenceListTitle": {
+    "description": "Title of the presence section of the meeting details screen"
+  },
+  "meetingsConfirmPresence": "Confirm presence",
+  "@meetingsConfirmPresence": {
+    "description": "Button that confirms the presence of the current user"
+  },
+  "meetingsStatusUpcoming": "Upcoming",
+  "@meetingsStatusUpcoming": {
+    "description": "Status chip of an upcoming meeting"
+  },
+  "meetingsStatusDone": "Finished",
+  "@meetingsStatusDone": {
+    "description": "Status chip of a meeting that already happened"
+  },
+  "meetingsStatusSoon": "Starting soon",
+  "@meetingsStatusSoon": {
+    "description": "Status chip of a meeting that starts within the hour"
+  },
+  "meetingsPresent": "Present",
+  "@meetingsPresent": {
+    "description": "Accessibility label of the present badge of a member"
+  },
+  "meetingsAbsent": "Absent",
+  "@meetingsAbsent": {
+    "description": "Accessibility label of the absent badge of a member"
+  },
+  "meetingsMemberFallback": "Member",
+  "@meetingsMemberFallback": {
+    "description": "Fallback name of a member without a known name"
+  },
+  "meetingsMemberNumber": "Member #{id}",
+  "@meetingsMemberNumber": {
+    "description": "Fallback name of a member identified only by its id",
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "meetingsLoadingPresences": "Loading presences...",
+  "@meetingsLoadingPresences": {
+    "description": "Loading message of the presence list"
+  },
+  "meetingsNoPresenceYet": "Nobody confirmed presence yet",
+  "@meetingsNoPresenceYet": {
+    "description": "Empty state message of the presence list"
+  },
+  "meetingsNoMemberFound": "No member found",
+  "@meetingsNoMemberFound": {
+    "description": "Empty state message when no member matches the search"
+  },
+  "meetingsSearchMemberHint": "Search member...",
+  "@meetingsSearchMemberHint": {
+    "description": "Hint of the member search field of the presence list"
+  },
+  "meetingsMarkPresenceOf": "Mark presence of {name}",
+  "@meetingsMarkPresenceOf": {
+    "description": "Accessibility label of the action that marks the presence of a member",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "meetingsChangePresenceTitle": "Change presence",
+  "@meetingsChangePresenceTitle": {
+    "description": "Title of the dialog that changes the presence of a member"
+  },
+  "meetingsMarkPresent": "Mark {name} as present?",
+  "@meetingsMarkPresent": {
+    "description": "Message of the dialog that marks a member as present",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "meetingsMarkAbsent": "Mark {name} as absent?",
+  "@meetingsMarkAbsent": {
+    "description": "Message of the dialog that marks a member as absent",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "meetingsSortFilterTooltip": "Sort and filter",
+  "@meetingsSortFilterTooltip": {
+    "description": "Tooltip of the presence sort and filter menu"
+  },
+  "meetingsSortHeader": "Sort",
+  "@meetingsSortHeader": {
+    "description": "Header of the sort section of the presence menu"
+  },
+  "meetingsSortByName": "Name (A-Z)",
+  "@meetingsSortByName": {
+    "description": "Sort option that orders the members by name"
+  },
+  "meetingsSortPresentFirst": "Present first",
+  "@meetingsSortPresentFirst": {
+    "description": "Sort option that lists the present members first"
+  },
+  "meetingsSortAbsentFirst": "Absent first",
+  "@meetingsSortAbsentFirst": {
+    "description": "Sort option that lists the absent members first"
+  },
+  "meetingsFilterHeader": "Filter",
+  "@meetingsFilterHeader": {
+    "description": "Header of the filter section of the presence menu"
+  },
+  "meetingsFilterAll": "All",
+  "@meetingsFilterAll": {
+    "description": "Filter option that keeps every member"
+  },
+  "meetingsFilterPresent": "Present",
+  "@meetingsFilterPresent": {
+    "description": "Filter option that keeps only the present members"
+  },
+  "meetingsFilterAbsent": "Absent",
+  "@meetingsFilterAbsent": {
+    "description": "Filter option that keeps only the absent members"
+  },
+  "meetingsNoData": "No data found",
+  "@meetingsNoData": {
+    "description": "Empty state message of the meeting details screen"
+  },
+  "homeAppTitle": "Bloco na Rua",
+  "@homeAppTitle": {
+    "description": "App bar title of the home screen"
+  },
+  "homeGreeting": "Hello!",
+  "@homeGreeting": {
+    "description": "Greeting headline of the home screen"
+  },
+  "homeSubtitle": "See your blocks and meetings",
+  "@homeSubtitle": {
+    "description": "Subtitle of the home screen under the greeting"
+  },
+  "homeMyBlocks": "My blocks",
+  "@homeMyBlocks": {
+    "description": "Title of the blocks section of the home screen"
+  },
+  "homeSeeAll": "See all",
+  "@homeSeeAll": {
+    "description": "Action that opens the full list of a home section"
+  },
+  "homeNoBlocks": "No blocks yet",
+  "@homeNoBlocks": {
+    "description": "Empty state message of the blocks section of the home screen"
+  },
+  "homeCreateBlock": "Create block",
+  "@homeCreateBlock": {
+    "description": "Empty state action that creates a block"
+  },
+  "homeJoinBlock": "Join a block",
+  "@homeJoinBlock": {
+    "description": "Empty state action that joins a block"
+  },
+  "homeUpcomingMeetings": "Upcoming meetings",
+  "@homeUpcomingMeetings": {
+    "description": "Title of the meetings section of the home screen"
+  },
+  "homeNoMeetingsThisWeek": "No meetings this week",
+  "@homeNoMeetingsThisWeek": {
+    "description": "Empty state message of the meetings section of the home screen"
+  },
+  "errorTitle": "Error",
+  "@errorTitle": {
+    "description": "App bar title of the error screen"
+  },
+  "errorUnexpected": "An unexpected error occurred.",
+  "@errorUnexpected": {
+    "description": "Default message of the error screen"
+  },
+  "notFoundTitle": "Page not found",
+  "@notFoundTitle": {
+    "description": "App bar title of the not found screen"
+  },
+  "notFoundMessage": "The page you are looking for does not exist.",
+  "@notFoundMessage": {
+    "description": "Message of the not found screen"
+  },
+  "coreBack": "Back",
+  "@coreBack": {
+    "description": "Back button of the error and not found screens"
+  },
+  "coreErrorTitle": "Something went wrong",
+  "@coreErrorTitle": {
+    "description": "Default title of the error state widget"
+  },
+  "coreRetry": "Try again",
+  "@coreRetry": {
+    "description": "Default label of the retry button of the error state widget"
+  },
+  "coreLoading": "Loading...",
+  "@coreLoading": {
+    "description": "Default loading message of the loading widget"
+  },
+  "coreSearchHint": "Search...",
+  "@coreSearchHint": {
+    "description": "Default hint of the search field"
+  },
+  "coreClearSearch": "Clear search",
+  "@coreClearSearch": {
+    "description": "Accessibility label of the clear button of the search field"
+  },
+  "coreFabCreateOrJoinBlock": "Create or join a block",
+  "@coreFabCreateOrJoinBlock": {
+    "description": "Accessibility label of the block floating action button"
+  },
+  "coreFabCreateBlock": "Create Block",
+  "@coreFabCreateBlock": {
+    "description": "Label of the create block action of the floating action button"
+  },
+  "coreFabJoinBlock": "Join Block",
+  "@coreFabJoinBlock": {
+    "description": "Label of the join block action of the floating action button"
+  },
+  "coreDateNotSet": "Date not set",
+  "@coreDateNotSet": {
+    "description": "Fallback shown by the meeting card when the meeting has no date"
+  },
+  "coreMeetingFallback": "Meeting",
+  "@coreMeetingFallback": {
+    "description": "Fallback name of a meeting without a known name"
+  },
+  "corePresencesCount": "{confirmed}/{total} presences",
+  "@corePresencesCount": {
+    "description": "Chip of the meeting card showing the presence counter",
+    "placeholders": {
+      "confirmed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "corePresenceConfirmed": "Confirmed",
+  "@corePresenceConfirmed": {
+    "description": "Presence chip of a fully confirmed meeting"
+  },
+  "corePresencePending": "Pending",
+  "@corePresencePending": {
+    "description": "Presence chip of a meeting without any confirmed presence"
+  },
+  "corePresencePartial": "Partial",
+  "@corePresencePartial": {
+    "description": "Presence chip of a partially confirmed meeting"
+  },
+  "coreLive": "Live",
+  "@coreLive": {
+    "description": "Live indicator of the block card"
+  },
+  "coreNoName": "No name",
+  "@coreNoName": {
+    "description": "Fallback name of a member without a known name"
+  },
+  "navHome": "Home",
+  "@navHome": {
+    "description": "Label of the home destination of the bottom navigation"
+  },
+  "navHomeTooltip": "Go to home",
+  "@navHomeTooltip": {
+    "description": "Tooltip of the home destination of the bottom navigation"
+  },
+  "navBlocks": "Blocks",
+  "@navBlocks": {
+    "description": "Label of the blocks destination of the bottom navigation"
+  },
+  "navBlocksTooltip": "View the blocks",
+  "@navBlocksTooltip": {
+    "description": "Tooltip of the blocks destination of the bottom navigation"
+  },
+  "navMeetings": "Meetings",
+  "@navMeetings": {
+    "description": "Label of the meetings destination of the bottom navigation"
+  },
+  "navMeetingsTooltip": "View the meetings",
+  "@navMeetingsTooltip": {
+    "description": "Tooltip of the meetings destination of the bottom navigation"
+  },
+  "navProfile": "Profile",
+  "@navProfile": {
+    "description": "Label of the profile destination of the bottom navigation"
+  },
+  "navProfileTooltip": "Open the profile",
+  "@navProfileTooltip": {
+    "description": "Tooltip of the profile destination of the bottom navigation"
+  },
+  "onboarding1Title": "What is a block?",
+  "@onboarding1Title": {
+    "description": "Headline of the first onboarding screen"
+  },
+  "onboarding1Body": "A carnival block is a group of people who come together to celebrate during the carnival season. Each block has its own identity, music and tradition.",
+  "@onboarding1Body": {
+    "description": "Body of the first onboarding screen"
+  },
+  "onboarding2Title": "Create or join a block",
+  "@onboarding2Title": {
+    "description": "Headline of the second onboarding screen"
+  },
+  "onboarding2Body": "Join an existing block or create your own. Invite friends and family to join the fun!",
+  "@onboarding2Body": {
+    "description": "Body of the second onboarding screen"
+  },
+  "onboarding3Title": "Confirm your presence at the meetings",
+  "@onboarding3Title": {
+    "description": "Headline of the third onboarding screen"
+  },
+  "onboarding3Body": "See your block's meetings and confirm your presence. Never miss a meeting again!",
+  "@onboarding3Body": {
+    "description": "Body of the third onboarding screen"
+  },
+  "onboardingSkip": "Skip",
+  "@onboardingSkip": {
+    "description": "Button that skips the onboarding"
+  },
+  "onboardingNext": "Next",
+  "@onboardingNext": {
+    "description": "Button that advances to the next onboarding screen"
+  },
+  "onboardingStart": "Get started",
+  "@onboardingStart": {
+    "description": "Button of the last onboarding screen"
+  },
+  "meetingsNotAuthenticated": "User not authenticated",
+  "@meetingsNotAuthenticated": {
+    "description": "Error shown when the current member could not be resolved"
   }
 }

@@ -13,7 +13,11 @@ class ErrorMessages {
   /// The [type] is the API error type. The [statusCode] is used to distinguish
   /// between semantically different messages that share the same type (e.g.
   /// 401 vs 403 for auth, 503 vs other 5xx for server).
-  static String forType(BuildContext context, ApiErrorType type, int? statusCode) {
+  static String forType(
+    BuildContext context,
+    ApiErrorType type,
+    int? statusCode,
+  ) {
     final l10n = AppLocalizations.of(context)!;
 
     switch (type) {

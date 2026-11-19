@@ -1,4 +1,6 @@
-import "package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart" show ApiV1AuthLoginPost$RequestBody, LoginResponse;
+import "package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart"
+    show ApiV1AuthLoginPost$RequestBody, LoginResponse;
+import "package:bloco_na_rua/data/repositories/auth/auth_listenable.dart";
 import "package:bloco_na_rua/data/repositories/auth/auth_repository.dart";
 import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart";
 import "package:bloco_na_rua/data/services/api/base/ibase_api_client.dart";
@@ -13,8 +15,7 @@ class MockIMembersRepository extends Mock implements IMembersRepository {}
 
 class MockAuthApiClient extends Mock implements AuthApiClient {}
 
-class MockSecureStorageService extends Mock
-    implements SecureStorageService {}
+class MockSecureStorageService extends Mock implements SecureStorageService {}
 
 class MockIBaseApiClient extends Mock implements IBaseApiClient {
   @override
@@ -30,7 +31,10 @@ void main() {
   setUpAll(() {
     // Register fallback value for LoginRequest (sealed freezed class)
     registerFallbackValue(
-      ApiV1AuthLoginPost$RequestBody(email: "fallback@test.com", password: "fallback"),
+      ApiV1AuthLoginPost$RequestBody(
+        email: "fallback@test.com",
+        password: "fallback",
+      ),
     );
   });
 
@@ -45,6 +49,7 @@ void main() {
       authApiClient: mockAuthApiClient,
       baseApiClient: mockBaseApiClient,
       sharedPreferencesService: mockSecureStorageService,
+      authListenable: AuthListenable(),
     );
   });
 

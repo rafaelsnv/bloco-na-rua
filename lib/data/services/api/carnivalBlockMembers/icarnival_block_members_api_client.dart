@@ -6,7 +6,9 @@ import 'package:result_dart/result_dart.dart';
 abstract interface class ICarnivalBlockMembersApiClient {
   IBaseApiClient get client;
   AsyncResult<List<CarnivalBlockMembersEntity>> getByBlockIdAsync(int id);
-  AsyncResult<CarnivalBlockMemberJoinResponse> joinByInviteCodeAsync(String inviteCode);
+  AsyncResult<CarnivalBlockMemberJoinResponse> joinByInviteCodeAsync(
+    String inviteCode,
+  );
   AsyncResult<CarnivalBlockMembersEntity> createAsync(
     int carnivalBlockId,
     int memberId,

@@ -3,7 +3,7 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
 class ThemeCubit extends Cubit<ThemeMode> {
-  ThemeCubit() : super(ThemeMode.system);
+  ThemeCubit([super.initialMode = ThemeMode.system]);
 
   static const String _key = "THEME_MODE";
 
@@ -12,11 +12,14 @@ class ThemeCubit extends Cubit<ThemeMode> {
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
     final storedIndex = prefs.getInt(_key);
-    if (storedIndex != null && storedIndex >= 0 && storedIndex < ThemeMode.values.length) {
-      emit(ThemeMode.values[storedIndex]);
-    }
-    // If no stored value — first launch — system brightness is used.
-    // No extra action needed; isDarkModeEnabled getter handles the rest.
+    final mode =
+        storedIndex != null &&
+            storedIndex >= 0 &&
+            storedIndex < ThemeMode.values.length
+        ? ThemeMode.values[storedIndex]
+        : ThemeMode.system;
+    if (state != mode) emit(mode);
+    await prefs.setInt(_key, mode.index);
   }
 
   /// Returns true if dark mode is enabled:

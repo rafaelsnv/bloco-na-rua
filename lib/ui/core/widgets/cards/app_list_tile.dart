@@ -1,7 +1,6 @@
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:flutter/material.dart";
-
-import "../../tokens/app_spacing.dart";
-import "../../tokens/app_typography.dart";
 
 /// A design-system-compliant list tile widget.
 ///
@@ -119,7 +118,9 @@ class AppListTile extends StatelessWidget {
       leading: leading,
       title: Text(
         title,
-        style: AppTypography.titleMedium,
+        style: AppTypography.titleMedium.copyWith(
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),

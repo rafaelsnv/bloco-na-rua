@@ -47,4 +47,8 @@ class AppCurves {
 
   /// Bouncy elastic curve for playful interactions.
   static const Curve bounce = Curves.elasticOut;
+
+  /// Overshoot curve — settles past the target and eases back.
+  /// Used for entrances that need a bit of life (FAB expand, speed-dial).
+  static const Curve overshoot = Curves.easeOutBack;
 }

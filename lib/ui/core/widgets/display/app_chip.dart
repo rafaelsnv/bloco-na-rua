@@ -1,9 +1,8 @@
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:flutter/material.dart";
-
-import "../../tokens/app_colors.dart";
-import "../../tokens/app_radius.dart";
-import "../../tokens/app_spacing.dart";
-import "../../tokens/app_typography.dart";
 
 enum ChipVariant { filled, outlined, soft }
 
@@ -87,7 +86,7 @@ class AppChip extends StatelessWidget {
       deleteIcon: onDeleted != null
           ? Icon(
               Icons.close_rounded,
-              size: 16,
+              size: AppIconSizes.sm,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             )
           : null,
@@ -127,11 +126,7 @@ class AppChip extends StatelessWidget {
         // the mockup (line 373: dark Todos chip). The dark scheme encodes this
         // swap: primary = primaryLight, primaryContainer = primaryDark.
         if (isDark && effectiveColor == AppColors.primary) {
-          return (
-            colorScheme.primaryContainer,
-            colorScheme.primary,
-            BorderSide.none,
-          );
+          return (AppColors.textPrimary, colorScheme.primary, BorderSide.none);
         }
         // Foreground picked by fill luminance so light fills (e.g. warning)
         // get dark text while saturated fills keep white text — readable in
@@ -139,16 +134,17 @@ class AppChip extends StatelessWidget {
         // (a light fill always wants dark ink, even in dark mode), so they
         // have no colorScheme equivalent — onSurface/onPrimary flip with
         // brightness and would break contrast here.
-        final foreground = effectiveColor.computeLuminance() > 0.4
-            ? AppColors.textPrimary
-            : AppColors.textOnPrimary;
+        final foreground = AppColors.inkFor(effectiveColor);
         return (foreground, effectiveColor, BorderSide.none);
 
       case ChipVariant.outlined:
         // Outlined: transparent background, colored border and text
         final foreground = effectiveColor;
         final background = Colors.transparent;
-        final side = BorderSide(color: effectiveColor, width: 1.5);
+        final side = BorderSide(
+          color: effectiveColor,
+          width: Radii.outlineWidth,
+        );
         return (foreground, background, side);
 
       case ChipVariant.soft:
@@ -161,7 +157,7 @@ class AppChip extends StatelessWidget {
         // Background always uses the effective (input) color at 20% opacity,
         // not the swapped foreground — this matches the mockup's
         // `bg-secondary/20` (mockup line 254).
-        final background = effectiveColor.withValues(alpha: 0.20);
+        final background = AppColors.tint(effectiveColor, 0.20);
         final side = BorderSide.none;
         return (foreground, background, side);
     }
@@ -178,11 +174,7 @@ class AppChip extends StatelessWidget {
   ///          error=error
   /// Accent and tertiary light/dark variants are not represented in the
   /// colorScheme, so they keep their AppColors tokens.
-  Color _softForeground(
-    Color color,
-    bool isDark,
-    ColorScheme colorScheme,
-  ) {
+  Color _softForeground(Color color, bool isDark, ColorScheme colorScheme) {
     if (color == AppColors.primary) {
       return isDark ? colorScheme.primary : colorScheme.onPrimaryContainer;
     }
