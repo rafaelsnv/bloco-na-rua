@@ -17,7 +17,16 @@ class BaseApiClient implements IBaseApiClient {
   final String basePath = '/api/v1/';
 
   @override
+  void Function(ApiError error)? onSessionRevoked;
+
+  @override
   ApiError formatError(Response response) {
-    return ApiError.fromResponse(response);
+    final error = ApiError.fromResponse(response);
+    // Every non-success response of every API client goes through here, so
+    // this is the single place where a revoked session can be detected.
+    if (error.isAuthFailure) {
+      onSessionRevoked?.call(error);
+    }
+    return error;
   }
 }

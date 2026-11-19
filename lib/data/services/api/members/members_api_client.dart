@@ -31,17 +31,23 @@ class MembersApiClient implements IMembersApiClient {
       }
       final data = response.data;
       if (data == null) {
-        return Failure(ApiError(
-          type: ApiErrorType.unknown,
-          userMessage: 'Unexpected empty response from server',
-          technicalMessage: 'API returned 201 with null body',
-        ));
+        return Failure(
+          ApiError(
+            type: ApiErrorType.unknown,
+            userMessage: 'Unexpected empty response from server',
+            technicalMessage: 'API returned 201 with null body',
+          ),
+        );
       }
       // Use swagger-generated MemberResponse model
-      final memberResponse = MemberResponse.fromJson(data as Map<String, dynamic>);
+      final memberResponse = MemberResponse.fromJson(
+        data as Map<String, dynamic>,
+      );
       // Convert to domain entity
       final result = MembersEntity(
-        id: memberResponse.id ?? (throw Exception('Missing id in MemberResponse')),
+        id:
+            memberResponse.id ??
+            (throw Exception('Missing id in MemberResponse')),
         name: memberResponse.name,
         email: memberResponse.email,
         phone: memberResponse.phone,
@@ -54,11 +60,13 @@ class MembersApiClient implements IMembersApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -72,17 +80,23 @@ class MembersApiClient implements IMembersApiClient {
       final data = response.data;
       // Handle null/empty response (soft 404 from backend)
       if (data == null) {
-        return Failure(ApiError(
-          type: ApiErrorType.notFound,
-          userMessage: 'Member not found',
-          technicalMessage: 'API returned 200 with null body for uuid: $uuid',
-        ));
+        return Failure(
+          ApiError(
+            type: ApiErrorType.notFound,
+            userMessage: 'Member not found',
+            technicalMessage: 'API returned 200 with null body for uuid: $uuid',
+          ),
+        );
       }
       // Use swagger-generated MemberResponse model
-      final memberResponse = MemberResponse.fromJson(data as Map<String, dynamic>);
+      final memberResponse = MemberResponse.fromJson(
+        data as Map<String, dynamic>,
+      );
       // Convert to domain entity
       final result = MembersEntity(
-        id: memberResponse.id ?? (throw Exception('Missing id in MemberResponse')),
+        id:
+            memberResponse.id ??
+            (throw Exception('Missing id in MemberResponse')),
         name: memberResponse.name,
         email: memberResponse.email,
         phone: memberResponse.phone,
@@ -95,11 +109,13 @@ class MembersApiClient implements IMembersApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -126,11 +142,13 @@ class MembersApiClient implements IMembersApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -155,11 +173,13 @@ class MembersApiClient implements IMembersApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -176,11 +196,13 @@ class MembersApiClient implements IMembersApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -200,11 +222,13 @@ class MembersApiClient implements IMembersApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -221,11 +245,13 @@ class MembersApiClient implements IMembersApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -250,11 +276,13 @@ class MembersApiClient implements IMembersApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -269,11 +297,13 @@ class MembersApiClient implements IMembersApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 }

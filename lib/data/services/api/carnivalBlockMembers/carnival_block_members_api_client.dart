@@ -42,11 +42,13 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -70,7 +72,8 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
             if (list.isNotEmpty) {
               return Success(
                 CarnivalBlockMemberJoinResponse.fromJson(
-                    list.first as Map<String, dynamic>),
+                  list.first as Map<String, dynamic>,
+                ),
               );
             }
             return Failure(baseApiClient.formatError(response));
@@ -94,11 +97,13 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -116,10 +121,7 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
         // to a regular member.
         'role': ?role,
       };
-      final response = await baseApiClient.client.post(
-        _basePath,
-        data: data,
-      );
+      final response = await baseApiClient.client.post(_basePath, data: data);
       if (response.statusCode != 201 && response.statusCode != 200) {
         return Failure(baseApiClient.formatError(response));
       }
@@ -127,11 +129,13 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -159,20 +163,20 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 
   @override
   AsyncResult deleteAsync(int id, int memberId) async {
     try {
-      final response = await baseApiClient.client.delete(
-        '$_basePath/$id',
-      );
+      final response = await baseApiClient.client.delete('$_basePath/$id');
       if (response.statusCode != 200 && response.statusCode != 204) {
         return Failure(baseApiClient.formatError(response));
       }
@@ -180,11 +184,13 @@ class CarnivalBlockMembersApiClient implements ICarnivalBlockMembersApiClient {
     } on DioException catch (e) {
       return Failure(ApiError.fromDioException(e));
     } catch (e) {
-      return Failure(ApiError(
-        type: ApiErrorType.unknown,
-        userMessage: 'Something unexpected happened. Try again.',
-        technicalMessage: e.toString(),
-      ));
+      return Failure(
+        ApiError(
+          type: ApiErrorType.unknown,
+          userMessage: 'Something unexpected happened. Try again.',
+          technicalMessage: e.toString(),
+        ),
+      );
     }
   }
 }
