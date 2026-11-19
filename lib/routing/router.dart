@@ -6,6 +6,7 @@ import "package:bloco_na_rua/data/repositories/meetingPresences/imeeting_presenc
 import "package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart";
 import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart";
 import "package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart";
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/auth/login/widgets/login_screen.dart";
 import "package:bloco_na_rua/ui/auth/signUp/widgets/signup_screen.dart";
@@ -45,11 +46,31 @@ import "package:logging/logging.dart";
 
 final _logger = Logger("GoRouter");
 
-const _shellNavItems = <AppBottomNavItem>[
-  AppBottomNavItem(icon: Icons.home_rounded, label: "Início"),
-  AppBottomNavItem(icon: Icons.celebration_rounded, label: "Blocos"),
-  AppBottomNavItem(icon: Icons.event_rounded, label: "Encontros"),
-  AppBottomNavItem(icon: Icons.person_rounded, label: "Perfil"),
+/// The bottom navigation destinations of the app shell.
+///
+/// Built from the localizations so the labels and tooltips follow the
+/// device locale.
+List<AppBottomNavItem> _shellNavItems(AppLocalizations l10n) => [
+  AppBottomNavItem(
+    icon: Icons.home_rounded,
+    label: l10n.navHome,
+    tooltip: l10n.navHomeTooltip,
+  ),
+  AppBottomNavItem(
+    icon: Icons.celebration_rounded,
+    label: l10n.navBlocks,
+    tooltip: l10n.navBlocksTooltip,
+  ),
+  AppBottomNavItem(
+    icon: Icons.event_rounded,
+    label: l10n.navMeetings,
+    tooltip: l10n.navMeetingsTooltip,
+  ),
+  AppBottomNavItem(
+    icon: Icons.person_rounded,
+    label: l10n.navProfile,
+    tooltip: l10n.navProfileTooltip,
+  ),
 ];
 
 // Custom page transition
@@ -59,10 +80,19 @@ CustomTransitionPage<void> _buildPageWithSlideTransition({
   required Widget child,
 }) {
   _logger.info('Navigating to: ${state.matchedLocation}');
+  // Reduced motion: the page swaps instantly, without sliding in.
+  final reduceMotion = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
   return CustomTransitionPage<void>(
     key: state.pageKey,
     child: child,
+    transitionDuration: reduceMotion
+        ? Duration.zero
+        : const Duration(milliseconds: 300),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      // Reduced motion: the page appears without sliding.
+      if (MediaQuery.maybeDisableAnimationsOf(context) ?? false) {
+        return child;
+      }
       return SlideTransition(
         position: Tween<Offset>(begin: const Offset(1.0, 0.0), end: Offset.zero)
             .animate(
@@ -74,8 +104,15 @@ CustomTransitionPage<void> _buildPageWithSlideTransition({
   );
 }
 
-GoRouter router(AuthListenable authListenable) => GoRouter(
-  initialLocation: Routes.login,
+/// Builds the app router.
+///
+/// [initialLocation] is overridable so tests can start on a route that does
+/// not pull the whole shell (and its cubits) into the tree.
+GoRouter router(
+  AuthListenable authListenable, {
+  String initialLocation = Routes.login,
+}) => GoRouter(
+  initialLocation: initialLocation,
   redirect: _redirect,
   refreshListenable: authListenable,
   errorBuilder: _errorBuilder,
@@ -108,7 +145,7 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
         create: (context) => FabStateCubit(),
         child: AppShell(
           navigationShell: navigationShell,
-          items: _shellNavItems,
+          items: _shellNavItems(AppLocalizations.of(context)!),
           showAppBar: false,
         ),
       ),
@@ -206,7 +243,7 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
                   .read<IMeetingPresencesRepository>(),
               authRepository: context.read<IAuthRepository>(),
               carnivalBlocksRepository: context
-                   .read<ICarnivalBlocksRepository>(),
+                  .read<ICarnivalBlocksRepository>(),
               carnivalBlockMembersRepository: context
                   .read<ICarnivalBlockMembersRepository>(),
               membersRepository: context.read<IMembersRepository>(),
@@ -235,7 +272,7 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
       },
     ),
     GoRoute(
-      path: "${Routes.editBlock}/:id",
+      path: Routes.editBlockPath,
       pageBuilder: (context, state) {
         final blockId = state.pathParameters["id"]!;
         return _buildPageWithSlideTransition(
@@ -259,8 +296,8 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
         state: state,
         child: BlocProvider(
           create: (context) => JoinBlockCubit(
-            carnivalBlockMembersRepository:
-                context.read<ICarnivalBlockMembersRepository>(),
+            carnivalBlockMembersRepository: context
+                .read<ICarnivalBlockMembersRepository>(),
           ),
           child: const JoinBlockModal(),
         ),
@@ -281,7 +318,7 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
       ),
     ),
     GoRoute(
-      path: "/create-meeting/:blockId",
+      path: Routes.createMeetingPath,
       pageBuilder: (context, state) {
         final blockId = state.pathParameters["blockId"]!;
         return _buildPageWithSlideTransition(
@@ -297,7 +334,7 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
       },
     ),
     GoRoute(
-      path: "/add-member/:blockId",
+      path: Routes.addMemberPath,
       pageBuilder: (context, state) {
         final blockId = state.pathParameters["blockId"]!;
         return _buildPageWithSlideTransition(
@@ -322,17 +359,15 @@ GoRouter router(AuthListenable authListenable) => GoRouter(
         child: const SettingsScreen(),
       ),
     ),
-    GoRoute(
-      path: Routes.notFound,
-      builder: (context, state) => const NotFoundScreen(),
-    ),
-    GoRoute(
-      path: Routes.error,
-      builder: (context, state) => const ErrorScreen(),
-    ),
   ],
 );
 
+/// Guards the routes by the session state.
+///
+/// [IAuthRepository.validateSession] caches its answer, so this resolves
+/// without a network round trip once the session has been validated once —
+/// the redirect must stay cheap because it runs on every navigation and on
+/// every auth notification.
 Future<String?> _redirect(BuildContext context, GoRouterState state) async {
   final sessionValid = await context.read<IAuthRepository>().validateSession();
   final location = state.matchedLocation;
@@ -346,10 +381,6 @@ Future<String?> _redirect(BuildContext context, GoRouterState state) async {
 
   if ([Routes.login, Routes.register].contains(location)) {
     return Routes.home;
-  }
-
-  if (location.startsWith("/add-member/")) {
-    return null;
   }
 
   return null;

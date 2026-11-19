@@ -1,10 +1,9 @@
 import 'package:bloco_na_rua/config/dependencies.dart';
+import 'package:bloco_na_rua/core/date_format.dart';
 import 'package:bloco_na_rua/main_app.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:logging/logging.dart';
 import 'package:marionette_flutter/marionette_flutter.dart';
@@ -34,10 +33,8 @@ Future<void> main() async {
     ),
   );
 
-  // Load pt_BR date symbols so DateFormat("EEEE ...", "pt_BR") renders
-  // Portuguese weekday/month names instead of silently falling back to en.
-  await initializeDateFormatting('pt_BR', null);
-  Intl.defaultLocale = 'pt_BR';
+  // Initialize date symbols and Intl.defaultLocale from the app locale source of truth.
+  await initAppLocale();
 
   Logger.root.level = kDebugMode ? Level.INFO : Level.WARNING;
 

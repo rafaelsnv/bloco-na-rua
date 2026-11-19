@@ -7,6 +7,7 @@
 // (CreateBlock, EditBlock, CreateMeeting, EditMeeting, etc.) can call
 // `context.read<...>().loadX()` before popping — see option-1 lift pattern.
 
+import "package:bloco_na_rua/core/date_format.dart";
 import "package:bloco_na_rua/data/repositories/auth/auth_listenable.dart";
 import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/routing/router.dart";
@@ -85,7 +86,9 @@ class _MainAppState extends State<MainApp> {
             darkTheme: AppTheme.dark(),
             routerConfig: _router,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
+            supportedLocales: kSupportedLocales,
+            // No forced locale: Flutter resolves the device locale against
+            // [kSupportedLocales] and falls back to the first entry — "pt".
           );
         },
       ),
