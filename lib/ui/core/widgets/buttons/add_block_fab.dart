@@ -1,3 +1,4 @@
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
@@ -49,6 +50,21 @@ class _AddBlockFabState extends State<AddBlockFab>
   late final AnimationController _rotationController;
   late final Animation<double> _rotation;
 
+  /// True when the platform asks for reduced motion.
+  ///
+  /// The flag is kept in a field because the rotation controller needs its
+  /// duration updated outside of [build].
+  bool _animationsDisabled = false;
+
+  /// How long the speed-dial animations run.
+  ///
+  /// Instant when the caller asks for no animation or when the platform
+  /// requests reduced motion.
+  Duration get _animationDuration =>
+      (widget.shouldAnimate && !_animationsDisabled)
+      ? AppDurations.slower
+      : AppDurations.instant;
+
   @override
   void initState() {
     super.initState();
@@ -65,19 +81,30 @@ class _AddBlockFabState extends State<AddBlockFab>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final disabled = MediaQuery.disableAnimationsOf(context);
+    if (disabled != _animationsDisabled) {
+      _animationsDisabled = disabled;
+      _rotationController.duration = _animationDuration;
+    }
+  }
+
+  @override
   void didUpdateWidget(covariant AddBlockFab oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.isExpanded != widget.isExpanded) {
-      if (widget.isExpanded) {
+      if (_animationsDisabled) {
+        // Reduced motion: the icon jumps straight to its final angle.
+        _rotationController.value = widget.isExpanded ? 1.0 : 0.0;
+      } else if (widget.isExpanded) {
         _rotationController.forward();
       } else {
         _rotationController.reverse();
       }
     }
     if (oldWidget.shouldAnimate != widget.shouldAnimate) {
-      _rotationController.duration = widget.shouldAnimate
-          ? AppDurations.slower
-          : AppDurations.instant;
+      _rotationController.duration = _animationDuration;
     }
   }
 
@@ -94,9 +121,12 @@ class _AddBlockFabState extends State<AddBlockFab>
 
   @override
   Widget build(BuildContext context) {
-    final duration = widget.shouldAnimate
-        ? AppDurations.slower
-        : AppDurations.instant;
+    // Reduced motion: the speed-dial jumps between states instead of
+    // scaling and sliding.
+    final duration = _animationsDisabled
+        ? AppDurations.instant
+        : (widget.shouldAnimate ? AppDurations.slower : AppDurations.instant);
+    final l10n = AppLocalizations.of(context)!;
 
     return Align(
       alignment: Alignment.bottomRight,
@@ -107,7 +137,7 @@ class _AddBlockFabState extends State<AddBlockFab>
         children: [
           // Entrar em Bloco
           _SpeedDialAction(
-            label: "Entrar em Bloco",
+            label: l10n.coreFabJoinBlock,
             icon: Icons.group_add_rounded,
             expanded: widget.isExpanded,
             duration: duration,
@@ -116,7 +146,7 @@ class _AddBlockFabState extends State<AddBlockFab>
           if (widget.isExpanded) SizedBox(height: Spacing.space_sm),
           // Criar Bloco
           _SpeedDialAction(
-            label: "Criar Bloco",
+            label: l10n.coreFabCreateBlock,
             icon: Icons.add_rounded,
             expanded: widget.isExpanded,
             duration: duration,

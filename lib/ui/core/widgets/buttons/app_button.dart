@@ -68,7 +68,7 @@ class AppButton extends StatelessWidget {
   /// [isDisabled] is true.
   final VoidCallback? onPressed;
 
-  /// When true the label is replaced by a 20px CircularProgressIndicator.
+  /// When true the label is replaced by a 20px spinner (AppSpinner).
   final bool isLoading;
 
   /// When true sets [onPressed] to null. Visual disabled state is handled
@@ -178,10 +178,9 @@ class AppButton extends StatelessWidget {
     );
 
     if (animationsDisabled || isDisabled) return buttonChild;
-    return _HoverOpacityWrapper(
-      opacity: 1.0,
-      child: _PressScaleWrapper(child: buttonChild),
-    );
+    // Hover-only feedback on desktop; the Material ink ripple is the press
+    // feedback (L4 — the extra press-scale GestureDetector was removed).
+    return _HoverOpacityWrapper(opacity: 1.0, child: buttonChild);
   }
 
   Widget _buildContent(BuildContext context, bool isDisabledState) {
@@ -200,7 +199,16 @@ class AppButton extends StatelessWidget {
             color: foreground,
           )
         else if (label.isNotEmpty)
-          Text(label, style: _textStyle(context, foreground)),
+          // Flexible: the label shrinks (and ellipsizes on one line) instead of
+          // overflowing the button on a narrow screen or a large text scale.
+          Flexible(
+            child: Text(
+              label,
+              style: _textStyle(context, foreground),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         if (trailingIcon != null && (isLoading || label.isNotEmpty))
           SizedBox(width: size.iconLabelGap),
         ?trailingIcon,
@@ -236,9 +244,8 @@ class AppButton extends StatelessWidget {
     final buttonStyle = ButtonStyle(
       minimumSize: WidgetStateProperty.all(minimumSize),
       padding: WidgetStateProperty.all(padding),
-      tapTargetSize: isFullWidth
-          ? MaterialTapTargetSize.padded
-          : MaterialTapTargetSize.shrinkWrap,
+      // Always padded: every button keeps a 48dp touch target (C2/a11y).
+      tapTargetSize: MaterialTapTargetSize.padded,
       textStyle: WidgetStateProperty.all(textStyle),
       shape: WidgetStateProperty.all(
         RoundedRectangleBorder(borderRadius: Radii.buttonPrimary),
@@ -432,34 +439,6 @@ class _HoverOpacityWrapperState extends State<_HoverOpacityWrapper> {
         duration: AppDurations.fast,
         curve: AppCurves.standard,
         opacity: _isHovered ? widget.opacity * 0.9 : widget.opacity,
-        child: widget.child,
-      ),
-    );
-  }
-}
-
-class _PressScaleWrapper extends StatefulWidget {
-  const _PressScaleWrapper({required this.child});
-
-  final Widget child;
-
-  @override
-  State<_PressScaleWrapper> createState() => _PressScaleWrapperState();
-}
-
-class _PressScaleWrapperState extends State<_PressScaleWrapper> {
-  bool _isPressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) => setState(() => _isPressed = false),
-      onTapCancel: () => setState(() => _isPressed = false),
-      child: AnimatedScale(
-        scale: _isPressed ? 0.97 : 1.0,
-        duration: AppDurations.fast,
-        curve: AppCurves.standard,
         child: widget.child,
       ),
     );

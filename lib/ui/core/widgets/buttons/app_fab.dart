@@ -1,3 +1,4 @@
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
@@ -65,16 +66,20 @@ class AppFAB extends StatelessWidget {
     return SizedBox(
       width: size.diameter,
       height: size.diameter,
-      child: FloatingActionButton(
-        key: effectiveKey,
-        onPressed: onPressed,
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        backgroundColor: _backgroundColor(context),
-        foregroundColor: _foregroundColor(context),
-        elevation: AppElevation.lg.value,
-        shape: RoundedRectangleBorder(borderRadius: Radii.fab),
-        heroTag: null,
-        child: child ?? Icon(icon, size: size.iconSize),
+      child: Semantics(
+        // The FAB is icon-only — announce what it opens.
+        label: AppLocalizations.of(context)!.coreFabCreateOrJoinBlock,
+        button: true,
+        child: FloatingActionButton(
+          key: effectiveKey,
+          onPressed: onPressed,
+          backgroundColor: _backgroundColor(context),
+          foregroundColor: _foregroundColor(context),
+          elevation: AppElevation.lg.value,
+          shape: RoundedRectangleBorder(borderRadius: Radii.fab),
+          heroTag: null,
+          child: child ?? Icon(icon, size: size.iconSize),
+        ),
       ),
     );
   }
