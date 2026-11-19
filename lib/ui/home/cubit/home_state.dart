@@ -9,28 +9,30 @@ class HomeState extends Equatable {
     this.status = HomeStatus.initial,
     this.blocks = const [],
     this.meetings = const [],
-    this.errorMessage,
+    this.failure,
   });
 
   final HomeStatus status;
   final List<CarnivalBlocksEntity> blocks;
   final List<MeetingsEntity> meetings;
-  final String? errorMessage;
+
+  /// The raw failure, when the load failed. Localized by the screen.
+  final Object? failure;
 
   HomeState copyWith({
     HomeStatus? status,
     List<CarnivalBlocksEntity>? blocks,
     List<MeetingsEntity>? meetings,
-    String? errorMessage,
+    Object? failure,
   }) {
     return HomeState(
       status: status ?? this.status,
       blocks: blocks ?? this.blocks,
       meetings: meetings ?? this.meetings,
-      errorMessage: errorMessage ?? this.errorMessage,
+      failure: failure ?? this.failure,
     );
   }
 
   @override
-  List<Object?> get props => [status, blocks, meetings, errorMessage];
+  List<Object?> get props => [status, blocks, meetings, failure];
 }

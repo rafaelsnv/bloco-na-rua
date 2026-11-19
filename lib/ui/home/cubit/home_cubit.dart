@@ -1,4 +1,3 @@
-import 'package:bloco_na_rua/core/errors/user_message.dart';
 import 'package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart';
 import 'package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart';
 import 'package:bloco_na_rua/domain/use_cases/home/get_home_data_use_case.dart';
@@ -32,12 +31,7 @@ class HomeCubit extends ResumableCubit<HomeState> {
         final error =
             blocksResult.exceptionOrNull() ?? meetingsResult.exceptionOrNull();
         _log.warning('Failed to load home data', error);
-        emit(
-          state.copyWith(
-            status: HomeStatus.failure,
-            errorMessage: extractUserMessage(error),
-          ),
-        );
+        emit(state.copyWith(status: HomeStatus.failure, failure: error));
         return;
       }
 
@@ -79,12 +73,7 @@ class HomeCubit extends ResumableCubit<HomeState> {
       );
     } catch (e) {
       _log.severe('Unexpected error during loadHomeData', e);
-      emit(
-        state.copyWith(
-          status: HomeStatus.failure,
-          errorMessage: extractUserMessage(e),
-        ),
-      );
+      emit(state.copyWith(status: HomeStatus.failure, failure: e));
     }
   }
 }
