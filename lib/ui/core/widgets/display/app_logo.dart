@@ -24,7 +24,7 @@ class AppLogo extends StatelessWidget {
       isDark ? "assets/logo/logo_mark_dark.png" : "assets/logo/logo_mark.png",
       width: size,
       height: size,
-      filterQuality: FilterQuality.medium,
+      filterQuality: FilterQuality.high,
     );
   }
 }
