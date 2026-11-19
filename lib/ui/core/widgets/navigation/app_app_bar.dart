@@ -102,10 +102,7 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: centerTitle,
       automaticallyImplyLeading: showBackButton && leading == null,
       leading: leading,
-      title: Text(
-        title,
-        style: titleStyle ?? theme.appBarTheme.titleTextStyle,
-      ),
+      title: Text(title, style: titleStyle ?? theme.appBarTheme.titleTextStyle),
       actions: effectiveActions,
       bottom: bottom,
     );

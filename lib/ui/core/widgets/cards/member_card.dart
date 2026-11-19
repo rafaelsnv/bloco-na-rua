@@ -1,4 +1,5 @@
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
@@ -89,7 +90,7 @@ class MemberCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  member.name ?? "Sem nome",
+                  member.name ?? AppLocalizations.of(context)!.coreNoName,
                   style: AppTypography.titleMedium,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -108,16 +109,20 @@ class MemberCard extends StatelessWidget {
               ],
             ),
           ),
-          // Optional role chip
+          // Optional role chip — flexible so a long label shrinks instead of
+          // pushing the row past the card width.
           if (roleLabel != null) ...[
             SizedBox(width: Spacing.space_sm),
-            AppChip(
-              label: roleLabel!,
-              variant: ChipVariant.filled,
-              color: roleColor ?? AppColors.primary,
+            Flexible(
+              child: AppChip(
+                label: roleLabel!,
+                variant: ChipVariant.filled,
+                color: roleColor ?? AppColors.primary,
+              ),
             ),
           ],
-          // Optional trailing widget (e.g. action icon)
+          // Optional trailing widget (e.g. action icon) — fixed size, so it
+          // keeps its slot and only the variable-width chip shrinks.
           if (trailing != null) ...[
             SizedBox(width: Spacing.space_sm),
             trailing!,

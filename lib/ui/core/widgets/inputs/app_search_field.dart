@@ -1,10 +1,12 @@
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:flutter/material.dart";
 
 /// Search field widget with prefix search icon and clear-button suffix.
 class AppSearchField extends StatefulWidget {
-  /// Hint text shown when the field is empty. Defaults to "Pesquisar...".
+  /// Hint text shown when the field is empty. Defaults to the localized
+  /// "search" hint.
   final String? hint;
 
   /// Callback fired whenever the text changes.
@@ -22,7 +24,7 @@ class AppSearchField extends StatefulWidget {
 
   /// Creates a search field.
   ///
-  /// The [hint] defaults to "Pesquisar..." if not provided.
+  /// The [hint] defaults to the localized "search" hint when not provided.
   /// When [controller] is null, the widget creates and manages its own
   /// TextEditingController and disposes it in [dispose].
   const AppSearchField({
@@ -66,6 +68,7 @@ class _AppSearchFieldState extends State<AppSearchField> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return TextFormField(
       key: widget.key ?? Key('app_search_field_${widget.hint}'),
@@ -74,7 +77,7 @@ class _AppSearchFieldState extends State<AppSearchField> {
       onChanged: widget.onChanged,
       onFieldSubmitted: widget.onSubmitted,
       decoration: InputDecoration(
-        hintText: widget.hint ?? "Pesquisar...",
+        hintText: widget.hint ?? l10n.coreSearchHint,
         prefixIcon: Icon(
           Icons.search_rounded,
           color: colorScheme.onSurfaceVariant,
@@ -83,18 +86,22 @@ class _AppSearchFieldState extends State<AppSearchField> {
           duration: AppDurations.fast,
           child: _controller.text.isEmpty
               ? const SizedBox.shrink(key: ValueKey("empty"))
-              : IconButton(
-                  key: const ValueKey("clear"),
-                  icon: Icon(
-                    Icons.close_rounded,
-                    color: colorScheme.onSurfaceVariant,
+              : Semantics(
+                  label: l10n.coreClearSearch,
+                  button: true,
+                  child: IconButton(
+                    key: const ValueKey("clear"),
+                    icon: Icon(
+                      Icons.close_rounded,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                    splashRadius: AppIconSizes.md,
+                    onPressed: () {
+                      _controller.clear();
+                      widget.onChanged?.call("");
+                      setState(() {});
+                    },
                   ),
-                  splashRadius: AppIconSizes.md,
-                  onPressed: () {
-                    _controller.clear();
-                    widget.onChanged?.call("");
-                    setState(() {});
-                  },
                 ),
         ),
       ),

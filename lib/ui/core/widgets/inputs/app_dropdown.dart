@@ -1,4 +1,3 @@
-import "package:bloco_na_rua/ui/core/theme/app_text_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:flutter/material.dart";
@@ -69,9 +68,9 @@ class AppDropdown<T> extends StatelessWidget {
           ? Text(
               hint!,
               style: AppTypography.bodyMedium.copyWith(
-                color: Theme.of(
-                  context,
-                ).extension<AppTextColors>()!.textDisabled,
+                // H7: onSurfaceVariant keeps the hint at >=4.5:1 text
+                // contrast (the old textDisabled was 2.5:1 on white).
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             )
           : null,
