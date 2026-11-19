@@ -6,6 +6,7 @@ import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart"
 import "package:bloco_na_rua/data/services/api/base/base_api_client.dart";
 import "package:bloco_na_rua/data/services/api/base/ibase_api_client.dart";
 import "package:bloco_na_rua/data/services/auth/auth_api_client.dart";
+import "package:bloco_na_rua/data/services/auth/google_sign_in_service.dart";
 import "package:bloco_na_rua/data/services/secure_storage_service.dart";
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
 import "package:dio/dio.dart";
@@ -16,6 +17,8 @@ import "package:test/test.dart";
 class MockIMembersRepository extends Mock implements IMembersRepository {}
 
 class MockAuthApiClient extends Mock implements AuthApiClient {}
+
+class MockGoogleSignInService extends Mock implements GoogleSignInService {}
 
 class MockSecureStorageService extends Mock implements SecureStorageService {}
 
@@ -28,6 +31,7 @@ void main() {
   late AuthRepository authRepository;
   late MockIMembersRepository membersRepository;
   late MockAuthApiClient authApiClient;
+  late MockGoogleSignInService googleSignInService;
   late MockSecureStorageService secureStorageService;
   late BaseApiClient baseApiClient;
   late AuthListenable authListenable;
@@ -63,7 +67,14 @@ void main() {
 
     membersRepository = MockIMembersRepository();
     authApiClient = MockAuthApiClient();
+    googleSignInService = MockGoogleSignInService();
     secureStorageService = MockSecureStorageService();
+    when(
+      () => secureStorageService.saveRefreshToken(any()),
+    ).thenAnswer((_) async => const Success(true));
+    when(() => authApiClient.logout(any())).thenAnswer(
+      (_) async => Success.unit(),
+    );
     baseApiClient = BaseApiClient();
     authListenable = AuthListenable();
 
@@ -97,6 +108,7 @@ void main() {
     authRepository = AuthRepository(
       membersRepository: membersRepository,
       authApiClient: authApiClient,
+      googleSignInService: googleSignInService,
       baseApiClient: baseApiClient,
       sharedPreferencesService: secureStorageService,
       authListenable: authListenable,
@@ -172,7 +184,7 @@ void main() {
 
       await authRepository.logout();
 
-      when(() => authApiClient.logIn(any())).thenAnswer(
+      when(() => authApiClient.loginAsync(any(), any())).thenAnswer(
         (_) async => Success(
           LoginResponse(accessToken: "new-token", userId: "new-uuid"),
         ),
