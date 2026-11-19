@@ -1,4 +1,4 @@
-<!-- Context: project-intelligence/notes | Priority: high | Version: 1.0 | Updated: 2025-01-12 -->
+<!-- Context: project-intelligence/notes | Priority: high | Version: 1.1 | Updated: 2026-11-19 -->
 
 # Living Notes
 
@@ -14,101 +14,48 @@
 
 | Item | Impact | Priority | Mitigation |
 |------|--------|----------|------------|
-| [Debt item] | [What risk it creates] | [High/Med/Low] | [How to manage] |
-
-### Technical Debt Details
-
-**[Debt Item]**  
-*Priority*: [High/Med/Low]  
-*Impact*: [What happens if not addressed]  
-*Root Cause*: [Why this debt exists]  
-*Proposed Solution*: [How to fix it]  
-*Effort*: [Small/Medium/Large]  
-*Status*: [Acknowledged | Scheduled | In Progress | Deferred]
-
-## Open Questions
-
-| Question | Stakeholders | Status | Next Action |
-|----------|--------------|--------|-------------|
-| [Question] | [Who needs to decide] | [Open/In Progress] | [What needs to happen] |
-
-### Open Question Details
-
-**[Question]**  
-*Context*: [Why this question matters]  
-*Stakeholders*: [Who needs to be involved]  
-*Options*: [What are the possibilities]  
-*Timeline*: [When does this need resolution]  
-*Status*: [Open/In Progress/Blocked]
+| M11 skeleton loaders | Layout jump when spinners resolve to content | Medium | Add skeleton loading widgets for card/list screens |
+| Tablet NavigationRail / two-pane layouts | Phone layout stretched on tablets (H9 shipped gutters + max width only) | Low | NavigationRail + two-pane when tablet use is real |
+| Per-user onboarding keying | Onboarding flag is device-scoped (marked with `ponytail:` comment); new device for same user re-shows onboarding | Low | Key flag by user id when multi-device users appear |
+| shrinkWrap card lists | Render cost grows linearly; fine below ~500 members | Low | Revisit with lazy slivers past ~500 members |
 
 ## Known Issues
 
 | Issue | Severity | Workaround | Status |
 |-------|----------|------------|--------|
-| [Issue] | [Critical/High/Med/Low] | [Temporary fix] | [Known/In Progress/Fixed] |
+| Widget tests without `localizationsDelegates` hang the suite | High | Use local `_app()` helper with delegates + `lookupAppLocalizations(const Locale('pt'))` assertions | Known |
+| task-management `router.sh` broken in this environment | Low | Use `npx tsx "C:/Users/rafae/.config/opencode/skills/task-management/scripts/task-cli.ts" <cmd> <feature> <seq> "summary"` | Known |
 
 ### Issue Details
 
-**[Issue Title]**  
-*Severity*: [Critical/High/Med/Low]  
-*Impact*: [Who/what is affected]  
-*Reproduction*: [Steps to reproduce if applicable]  
-*Workaround*: [Temporary solution if exists]  
-*Root Cause*: [If known]  
-*Fix Plan*: [How to properly fix]  
-*Status*: [Known/In Progress/Fixed in vX.X]
+**Test harness localization hang**
+*Severity*: High
+*Impact*: Any widget test pumping a screen without delegates; a null-check crash in build leaves a pending exception and the suite hangs
+*Root Cause*: Missing `AppLocalizations` delegates → `.of(context)` null
+*Fix Plan*: Always pump via the local `_app()` helper (see `concepts/localization.md`)
 
-## Insights & Lessons Learned
+## Patterns Worth Preserving
 
-### What Works Well
-- [Positive pattern 1] - [Why it works]
-- [Positive pattern 2] - [Why it works]
+- `AppColors.inkFor` luminance rule (threshold 0.4) — single ink decision for any fill
+- Marker pattern for cubit/state errors (`BlockError`, `MeetingError`, `AuthSuccessKind`) — localizes at render time via `extractUserMessage(error, context)`
+- Compact `AppStateView` variants for `AppError`/`AppEmpty`
+- `_app()` test harness helper with `lookupAppLocalizations` assertions
 
-### What Could Be Better
-- [Area for improvement 1] - [Why it's a problem]
-- [Area for improvement 2] - [Why it's a problem]
+## Gotchas for Maintainers
 
-### Lessons Learned
-- [Lesson 1] - [Context and implication]
-- [Lesson 2] - [Context and implication]
-
-## Patterns & Conventions
-
-### Code Patterns Worth Preserving
-- [Pattern 1] - [Where it lives, why it's good]
-- [Pattern 2] - [Where it lives, why it's good]
-
-### Gotchas for Maintainers
-- [Gotcha 1] - [What to watch out for]
-- [Gotcha 2] - [What to watch out for]
-
-## Active Projects
-
-| Project | Goal | Owner | Timeline |
-|---------|------|-------|----------|
-| [Project] | [What we're doing] | [Who owns it] | [When it matters] |
+- Never hand-edit generated l10n files — run `flutter gen-l10n`
+- `Color(0x` literals only in `app_colors.dart`
+- No relative imports (`import '..`) in `lib/ui`
 
 ## Archive (Resolved Items)
 
-Moved here for historical reference. Current team should refer to current notes above.
-
-### Resolved: [Item]
-- **Resolved**: [Date]
-- **Resolution**: [What was decided/done]
-- **Learnings**: [What we learned from this]
-
-## Onboarding Checklist
-
-- [ ] Review known technical debt and understand impact
-- [ ] Know what open questions exist and who's involved
-- [ ] Understand current issues and workarounds
-- [ ] Be aware of patterns and gotchas
-- [ ] Know active projects and timelines
-- [ ] Understand the team's priorities
+### Resolved: UI/UX audit remediation
+- **Resolved**: 2026-11-19
+- **Resolution**: 29/29 tasks completed — accessibility (semantics, 48dp targets, reduced motion), full ARB/i18n migration (267 keys, pt/en), session-cache redirect, new core widgets (AppDateTimeField, ContentWidthLimiter, AppStateView compact, AppSpinner), token contrast fixes. Analyzer clean, 117/117 tests pass.
+- **Learnings**: Test harnesses must supply delegates; markers beat baked strings for cubit errors.
 
 ## Related Files
 
 - `decisions-log.md` - Past decisions that inform current state
-- `business-domain.md` - Business context for current priorities
-- `technical-domain.md` - Technical context for current state
-- `business-tech-bridge.md` - Context for current trade-offs
+- `concepts/localization.md` - i18n pattern and test harness requirements
+- `lookup/design-tokens.md` - Token invariants

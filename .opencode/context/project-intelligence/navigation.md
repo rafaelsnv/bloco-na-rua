@@ -1,9 +1,9 @@
-<!-- Context: project-intelligence/navigation | Priority: critical | Version: 1.4 | Updated: 2026-11-17 -->
+<!-- Context: project-intelligence/navigation | Priority: critical | Version: 1.5 | Updated: 2026-11-19 -->
 
 # Project Intelligence Navigation
 
 **Purpose**: Quick overview of available project intelligence files.
-**Last Updated**: 2026-11-17
+**Last Updated**: 2026-11-19
 
 ## Quick Routes
 
@@ -20,6 +20,7 @@
 | API | [technical-api-pattern.md](./technical-api-pattern.md) | API client patterns | high |
 | Components | [technical-component-pattern.md](./technical-component-pattern.md) | State/Cubit/Screen patterns | high |
 | Design System | [lookup/design-tokens.md](./lookup/design-tokens.md) | "Fireworks on Velvet" token map + invariants | high |
+| Localization | [concepts/localization.md](./concepts/localization.md) | ARB/i18n pattern, markers, date helpers | high |
 
 ## Examples (project-intelligence/examples/)
 
