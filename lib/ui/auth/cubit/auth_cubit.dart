@@ -1,4 +1,3 @@
-import "package:bloco_na_rua/core/errors/user_message.dart";
 import "package:bloco_na_rua/data/repositories/auth/auth_listenable.dart";
 import "package:bloco_na_rua/data/repositories/auth/iauth_repository.dart";
 import "package:bloco_na_rua/data/services/auth/models/signup_request/signup_request.dart";
@@ -32,9 +31,8 @@ class AuthCubit extends Cubit<AuthState> {
         _authListenable.notify();
       },
       (error) {
-        final message = extractUserMessage(error);
-        _log.warning("Login failed: $message");
-        emit(AuthFailure(message));
+        _log.warning("Login failed: $error");
+        emit(AuthFailure(error));
       },
     );
   }
@@ -50,9 +48,8 @@ class AuthCubit extends Cubit<AuthState> {
         _authListenable.notify();
       },
       (error) {
-        final message = extractUserMessage(error);
-        _log.warning("Sign up failed: $message");
-        emit(AuthFailure(message));
+        _log.warning("Sign up failed: $error");
+        emit(AuthFailure(error));
       },
     );
   }
@@ -64,12 +61,11 @@ class AuthCubit extends Cubit<AuthState> {
     result.fold(
       (success) {
         _log.info("Verification email resent");
-        emit(const AuthSuccess(message: "E-mail de verificação reenviado!"));
+        emit(const AuthSuccess(AuthSuccessKind.verificationEmailSent));
       },
       (error) {
-        final message = extractUserMessage(error);
-        _log.warning("Failed to resend verification: $message");
-        emit(AuthFailure(message));
+        _log.warning("Failed to resend verification: $error");
+        emit(AuthFailure(error));
       },
     );
   }
@@ -85,9 +81,8 @@ class AuthCubit extends Cubit<AuthState> {
         _authListenable.notify();
       },
       (error) {
-        final message = extractUserMessage(error);
-        _log.warning("Logout failed: $message");
-        emit(AuthFailure(message));
+        _log.warning("Logout failed: $error");
+        emit(AuthFailure(error));
       },
     );
   }
@@ -99,13 +94,12 @@ class AuthCubit extends Cubit<AuthState> {
     result.fold(
       (success) {
         _log.info("Password reset email sent");
-        emit(const AuthSuccess(message: "E-mail de recuperação enviado!"));
+        emit(const AuthSuccess(AuthSuccessKind.recoveryEmailSent));
         _authListenable.notify();
       },
       (error) {
-        final message = extractUserMessage(error);
-        _log.warning("Failed to reset password: $message");
-        emit(AuthFailure(message));
+        _log.warning("Failed to reset password: $error");
+        emit(AuthFailure(error));
       },
     );
   }

@@ -2,6 +2,8 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 
+import "package:bloco_na_rua/core/errors/user_message.dart";
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_cubit.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_state.dart";
@@ -14,9 +16,6 @@ import "package:bloco_na_rua/ui/core/widgets/display/app_logo.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 
-/// Edge length of the brand mark on the sign-in screen.
-const double _logoSize = 80;
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -28,7 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
-  final ValueNotifier<bool> _isFormValidNotifier = ValueNotifier<bool>(false);
   bool _obscurePassword = true;
 
   /// Fields the user has already edited.
@@ -50,49 +48,33 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   /// Error message for the e-mail field, or null when the value is valid.
-  String? _emailValidator(String? value) {
+  String? _emailValidator(String? value, AppLocalizations l10n) {
     if (value == null || value.isEmpty) {
-      return "Por favor, insira um e-mail";
+      return l10n.loginEmailRequired;
     }
     if (!_isValidEmail(value)) {
-      return "E-mail inválido";
+      return l10n.loginEmailInvalid;
     }
     return null;
   }
 
   /// Error message for the password field, or null when the value is valid.
-  String? _passwordValidator(String? value) {
+  String? _passwordValidator(String? value, AppLocalizations l10n) {
     if (value == null || value.isEmpty) {
-      return "Por favor, insira uma senha";
+      return l10n.loginPasswordRequired;
     }
     return null;
   }
 
   @override
   void dispose() {
-    _isFormValidNotifier.dispose();
     _email.dispose();
     _password.dispose();
     super.dispose();
   }
 
-  /// Recomputes the submit button state from the current field values.
-  ///
-  /// Deliberately does NOT call `Form.validate()`: validating the whole form
-  /// while the user types would paint the error border on every field they
-  /// have not touched yet.
-  void _updateFormValidity() {
-    final isValid =
-        _emailValidator(_email.text) == null &&
-        _passwordValidator(_password.text) == null;
-    if (_isFormValidNotifier.value != isValid) {
-      _isFormValidNotifier.value = isValid;
-    }
-  }
-
   /// Keeps the painted error states in sync after an edit.
   void _syncForm() {
-    _updateFormValidity();
     if (_submitAttempted) {
       // After a submit attempt every invalid field shows its error, so the
       // whole form has to be re-validated on every edit.
@@ -118,24 +100,25 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _handleForgotPassword(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final email = _email.text.trim();
     if (email.isEmpty) {
-      AppSnackbar.error(context, message: "Por favor, insira um e-mail");
+      AppSnackbar.error(context, message: l10n.loginEmailRequired);
       return;
     }
     if (!_isValidEmail(email)) {
-      AppSnackbar.error(context, message: "E-mail inválido");
+      AppSnackbar.error(context, message: l10n.loginEmailInvalid);
       return;
     }
 
     final confirmed = await AppDialog.confirm(
       context,
-      title: "Esqueceu a senha?",
+      title: l10n.loginForgotPassword,
       // The dialog has no input of its own — the address comes from the
       // e-mail field of the form behind it, so the message names it.
-      message: "Enviaremos um link de recuperação para $email",
-      confirmLabel: "Enviar",
-      cancelLabel: "Cancelar",
+      message: l10n.loginRecoveryMessage(email),
+      confirmLabel: l10n.loginSendButton,
+      cancelLabel: l10n.loginCancel,
     );
     if (confirmed != true) return;
     if (!context.mounted) return;
@@ -144,19 +127,23 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colors = Theme.of(context).colorScheme;
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
-          AppSnackbar.error(context, message: state.message);
+          AppSnackbar.error(
+            context,
+            message: extractUserMessage(state.error, context),
+          );
         } else if (state is AuthAuthenticated) {
           context.go(Routes.home);
         } else if (state is AuthSuccess) {
-          AppSnackbar.success(context, message: state.message ?? "Sucesso!");
+          AppSnackbar.success(context, message: state.localizedMessage(l10n));
         }
       },
       child: Scaffold(
-        appBar: AppBar(centerTitle: false, title: const Text("Bloco na Rua")),
+        appBar: AppBar(centerTitle: false, title: Text(l10n.authAppTitle)),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
@@ -165,12 +152,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Header section
-                  const AppLogo(size: _logoSize),
+                  const AppLogo(size: AppIconSizes.illustration),
                   const SizedBox(height: Spacing.space_sm),
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      "Bem vindo",
+                      l10n.loginTitle,
                       textAlign: TextAlign.left,
                       style: AppTypography.displaySmall.copyWith(
                         color: colors.primary,
@@ -179,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: Spacing.space_xs),
                   Text(
-                    "Entre para organizar seu bloco",
+                    l10n.loginSubtitle,
                     style: AppTypography.bodyLarge.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -196,13 +183,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           // E-mail field
                           AppTextField(
-                            label: "E-mail",
+                            label: l10n.loginEmailLabel,
                             controller: _email,
                             keyboardType: TextInputType.emailAddress,
+                            autofillHints: const [AutofillHints.email],
                             prefixIcon: Icons.email_rounded,
-                            validator: _emailValidator,
+                            validator: (value) => _emailValidator(value, l10n),
                             errorText: _emailTouched
-                                ? _emailValidator(_email.text)
+                                ? _emailValidator(_email.text, l10n)
                                 : null,
                             onChanged: _onEmailChanged,
                           ),
@@ -211,60 +199,68 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           // Password field
                           AppTextField(
-                            label: "Senha",
+                            label: l10n.loginPasswordLabel,
                             controller: _password,
                             keyboardType: TextInputType.visiblePassword,
                             prefixIcon: Icons.lock_rounded,
                             obscureText: _obscurePassword,
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscurePassword
-                                    ? Icons.visibility_off_rounded
-                                    : Icons.visibility_rounded,
+                            autofillHints: const [AutofillHints.password],
+                            // A password is never autocorrected or suggested.
+                            autocorrect: false,
+                            enableSuggestions: false,
+                            suffixIcon: Semantics(
+                              label: _obscurePassword
+                                  ? l10n.loginShowPassword
+                                  : l10n.loginHidePassword,
+                              button: true,
+                              child: IconButton(
+                                icon: Icon(
+                                  _obscurePassword
+                                      ? Icons.visibility_off_rounded
+                                      : Icons.visibility_rounded,
+                                ),
+                                tooltip: _obscurePassword
+                                    ? l10n.loginShowPassword
+                                    : l10n.loginHidePassword,
+                                onPressed: () {
+                                  setState(() {
+                                    _obscurePassword = !_obscurePassword;
+                                  });
+                                },
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  _obscurePassword = !_obscurePassword;
-                                });
-                              },
                             ),
-                            validator: _passwordValidator,
+                            validator: (value) =>
+                                _passwordValidator(value, l10n),
                             errorText: _passwordTouched
-                                ? _passwordValidator(_password.text)
+                                ? _passwordValidator(_password.text, l10n)
                                 : null,
                             onChanged: _onPasswordChanged,
-                            // The submit button is disabled while the form is
-                            // invalid, so the keyboard action is the only way
-                            // to submit an invalid form: it shows every
-                            // error instead of calling the API.
+                            // The keyboard action submits the form too, so the
+                            // last field is not a dead end.
                             onSubmitted: (_) => _submit(),
                           ),
 
                           const SizedBox(height: Spacing.space_lg),
 
-                          // Submit button
+                          // Submit button — always enabled. An invalid form is
+                          // reported inline when the user submits, instead of
+                          // a CTA that never becomes tappable.
                           BlocBuilder<AuthCubit, AuthState>(
                             builder: (context, state) {
                               if (state is AuthLoading) {
-                                return const AppButton(
-                                  label: "Entrar",
+                                return AppButton(
+                                  label: l10n.loginEnterButton,
                                   isLoading: true,
                                   isFullWidth: true,
                                   variant: AppButtonVariant.accent,
                                 );
                               }
 
-                              return ValueListenableBuilder<bool>(
-                                valueListenable: _isFormValidNotifier,
-                                builder: (context, isFormValid, child) {
-                                  return AppButton(
-                                    label: "Entrar",
-                                    onPressed: isFormValid ? _submit : null,
-                                    isDisabled: !isFormValid,
-                                    isFullWidth: true,
-                                    variant: AppButtonVariant.accent,
-                                  );
-                                },
+                              return AppButton(
+                                label: l10n.loginEnterButton,
+                                onPressed: _submit,
+                                isFullWidth: true,
+                                variant: AppButtonVariant.accent,
                               );
                             },
                           ),
@@ -279,7 +275,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextButton(
                     onPressed: () => _handleForgotPassword(context),
                     child: Text(
-                      "Esqueceu a senha?",
+                      l10n.loginForgotPassword,
                       style: AppTypography.bodyLarge.copyWith(
                         color: colors.primary,
                         decoration: TextDecoration.underline,
@@ -293,7 +289,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextButton(
                     onPressed: () => context.go(Routes.register),
                     child: Text(
-                      "Não tem uma conta? Cadastre-se",
+                      l10n.loginRegisterLink,
                       style: AppTypography.bodyLarge.copyWith(
                         color: colors.primary,
                         decoration: TextDecoration.underline,
