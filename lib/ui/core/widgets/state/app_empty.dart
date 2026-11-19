@@ -9,6 +9,10 @@ import "package:flutter/material.dart";
 /// Intended for use as a full-screen placeholder when a list or content area
 /// is empty. Thin wrapper over [AppStateView].
 ///
+/// [compact] renders the same content as an inline block (small icon, no
+/// vertical centering, tight padding) so it can live inside a section — a
+/// card or a page column — instead of taking over the whole screen.
+///
 /// Example:
 /// ```dart
 /// when(
@@ -36,6 +40,7 @@ class AppEmpty extends StatelessWidget {
     this.onAction,
     this.secondaryActionLabel,
     this.onSecondaryAction,
+    this.compact = false,
   });
 
   /// Optional custom title.
@@ -59,6 +64,10 @@ class AppEmpty extends StatelessWidget {
   /// Optional secondary CTA button press handler.
   final VoidCallback? onSecondaryAction;
 
+  /// When true the empty state renders as an inline block (small icon, no
+  /// vertical centering, tight padding) instead of a full-screen placeholder.
+  final bool compact;
+
   @override
   Widget build(BuildContext context) {
     final showCta = actionLabel != null && onAction != null;
@@ -68,28 +77,39 @@ class AppEmpty extends StatelessWidget {
     return AppStateView(
       icon: icon,
       iconColor: Theme.of(context).colorScheme.primary,
-      iconSize: 96,
+      // The compact variant keeps the icon small so it does not dominate the
+      // section it is embedded in; the full-screen one keeps its hero icon.
+      iconSize: compact ? AppIconSizes.xxl : 96,
       title: title,
       message: message,
-      action: (showCta || showSecondary)
-          ? Row(
-              children: [
-                if (showCta)
-                  Expanded(
-                    child: AppButton(label: actionLabel!, onPressed: onAction),
-                  ),
-                if (showCta && showSecondary)
-                  const SizedBox(width: Spacing.space_sm),
-                if (showSecondary)
-                  Expanded(
-                    child: AppButton(
-                      label: secondaryActionLabel!,
-                      onPressed: onSecondaryAction,
-                    ),
-                  ),
-              ],
-            )
-          : null,
+      action: _buildActions(showCta: showCta, showSecondary: showSecondary),
+      compact: compact,
+    );
+  }
+
+  /// The CTA area below the message.
+  ///
+  /// A single CTA keeps the full-width look of the full-screen state; two
+  /// CTAs sit side by side in a [Wrap] so they drop to the next line instead
+  /// of overflowing the row on a narrow screen or at a large text scale.
+  Widget? _buildActions({required bool showCta, required bool showSecondary}) {
+    if (!showCta && !showSecondary) return null;
+
+    final actions = <Widget>[
+      if (showCta) AppButton(label: actionLabel!, onPressed: onAction),
+      if (showSecondary)
+        AppButton(label: secondaryActionLabel!, onPressed: onSecondaryAction),
+    ];
+
+    if (actions.length == 1) {
+      return Row(children: [Expanded(child: actions.first)]);
+    }
+
+    return Wrap(
+      spacing: Spacing.space_sm,
+      runSpacing: Spacing.space_xs,
+      alignment: WrapAlignment.center,
+      children: actions,
     );
   }
 }

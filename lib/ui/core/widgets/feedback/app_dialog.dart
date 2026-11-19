@@ -1,6 +1,3 @@
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:flutter/material.dart";
@@ -17,18 +14,22 @@ class AppDialog {
   /// `false` if the user taps cancel,
   /// or `null` if the dialog is dismissed (back button or tap outside).
   ///
-  /// [isDestructive] applies [AppColors.error] to the confirm button.
+  /// [confirmLabel] and [cancelLabel] are required — the dialog owns no
+  /// wording, the caller does (L8).
+  ///
+  /// [isDestructive] paints the confirm button in the error variant.
   static Future<bool?> confirm(
     BuildContext context, {
     required String title,
     required String message,
-    String confirmLabel = "Confirmar",
-    String cancelLabel = "Cancelar",
+    required String confirmLabel,
+    required String cancelLabel,
     bool isDestructive = false,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return showDialog<bool>(
       context: context,
-      barrierColor: AppColors.scrim.withValues(alpha: 0.54),
+      barrierColor: colorScheme.scrim.withValues(alpha: 0.54),
       builder: (_) => _ConfirmDialogContent(
         title: title,
         message: message,
@@ -43,6 +44,8 @@ class AppDialog {
   ///
   /// Returns `void` after the user dismisses the dialog.
   ///
+  /// [okLabel] defaults to "OK", which reads the same in pt-BR and en.
+  ///
   /// [icon] is optional; when provided it appears above the title.
   static Future<void> alert(
     BuildContext context, {
@@ -51,9 +54,10 @@ class AppDialog {
     String okLabel = "OK",
     IconData? icon,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return showDialog<void>(
       context: context,
-      barrierColor: AppColors.scrim.withValues(alpha: 0.54),
+      barrierColor: colorScheme.scrim.withValues(alpha: 0.54),
       builder: (_) => _AlertDialogContent(
         title: title,
         message: message,
@@ -81,38 +85,33 @@ class _ConfirmDialogContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
     return AlertDialog(
-      elevation: AppElevation.lg.value,
-      backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
-      title: Text(title),
-      content: Text(message),
-      shape: RoundedRectangleBorder(borderRadius: Radii.modal),
+      // Shape, elevation and surface come from the theme's dialogTheme;
+      // only the ink of the text is pinned here, straight from the scheme.
+      backgroundColor: colorScheme.surface,
+      title: Text(title, style: TextStyle(color: colorScheme.onSurface)),
+      content: Text(
+        message,
+        style: TextStyle(color: colorScheme.onSurfaceVariant),
+      ),
       actions: [
+        // No colour override: the cancel button inherits the theme's
+        // textButtonTheme (brand ink), like every other text button.
         TextButton(
-          style: TextButton.styleFrom(
-            foregroundColor: Theme.of(context).brightness == Brightness.dark
-                ? AppColors.textPrimaryDark
-                : AppColors.textSecondary,
-          ),
           onPressed: () => Navigator.of(context).pop(false),
           child: Text(cancelLabel),
         ),
-        isDestructive
-            ? FilledButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.error,
-                  foregroundColor: AppColors.textOnPrimary,
-                  shape: RoundedRectangleBorder(borderRadius: Radii.button),
-                ),
-                child: Text(confirmLabel),
-              )
-            : AppButton(
-                label: confirmLabel,
-                variant: AppButtonVariant.accent,
-                onPressed: () => Navigator.of(context).pop(true),
-              ),
+        // The destructive variant lives in the shared button, so its fill and
+        // its ink stay a matched pair (the scheme's dark-mode error red is
+        // too light for the button's white ink).
+        AppButton(
+          label: confirmLabel,
+          variant: isDestructive
+              ? AppButtonVariant.error
+              : AppButtonVariant.accent,
+          onPressed: () => Navigator.of(context).pop(true),
+        ),
       ],
     );
   }
@@ -133,20 +132,21 @@ class _AlertDialogContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
     return AlertDialog(
-      elevation: AppElevation.lg.value,
-      backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+      backgroundColor: colorScheme.surface,
       icon: icon != null
           ? Icon(
               icon,
               size: AppIconSizes.displayXLarge,
-              color: AppColors.primary,
+              color: colorScheme.primary,
             )
           : null,
-      title: Text(title),
-      content: Text(message),
-      shape: RoundedRectangleBorder(borderRadius: Radii.modal),
+      title: Text(title, style: TextStyle(color: colorScheme.onSurface)),
+      content: Text(
+        message,
+        style: TextStyle(color: colorScheme.onSurfaceVariant),
+      ),
       actions: [
         AppButton(
           label: okLabel,

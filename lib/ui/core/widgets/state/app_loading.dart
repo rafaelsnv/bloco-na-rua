@@ -5,7 +5,7 @@ import "package:flutter/material.dart";
 
 /// Full-screen centered loading indicator.
 ///
-/// Displays a [CircularProgressIndicator] (or a static hourglass icon when
+/// Displays an [AppSpinner] (or a static hourglass icon when
 /// animations are disabled) with an optional [message] below it.
 ///
 /// Example:
