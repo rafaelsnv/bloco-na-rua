@@ -4,25 +4,26 @@ import "package:bloco_na_rua/data/repositories/auth/iauth_repository.dart";
 import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart";
 import "package:bloco_na_rua/data/services/api/base/ibase_api_client.dart";
 import "package:bloco_na_rua/api/bloco_na_rua.models.swagger.dart"
-    show ApiV1AuthLoginPost$RequestBody, LoginResponse, MemberCreate;
+    show LoginResponse;
 import "package:bloco_na_rua/data/services/auth/auth_api_client.dart";
+import "package:bloco_na_rua/data/services/auth/google_sign_in_service.dart";
 import "package:bloco_na_rua/data/services/auth/models/signup_request/signup_request.dart";
 import "package:bloco_na_rua/data/services/secure_storage_service.dart";
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
-import "package:dio/dio.dart";
 import "package:logging/logging.dart";
 import "package:result_dart/result_dart.dart";
-import "package:supabase_flutter/supabase_flutter.dart";
 
 class AuthRepository implements IAuthRepository {
   AuthRepository({
     required IMembersRepository membersRepository,
     required AuthApiClient authApiClient,
+    required GoogleSignInService googleSignInService,
     required IBaseApiClient baseApiClient,
     required SecureStorageService sharedPreferencesService,
     required AuthListenable authListenable,
   }) : _membersRepository = membersRepository,
        _authApiClient = authApiClient,
+       _googleSignInService = googleSignInService,
        _baseApiClient = baseApiClient,
        _secureStorageService = sharedPreferencesService,
        _authListenable = authListenable {
@@ -34,6 +35,7 @@ class AuthRepository implements IAuthRepository {
 
   final IMembersRepository _membersRepository;
   final AuthApiClient _authApiClient;
+  final GoogleSignInService _googleSignInService;
   final IBaseApiClient _baseApiClient;
   final SecureStorageService _secureStorageService;
   final AuthListenable _authListenable;
@@ -191,16 +193,17 @@ class AuthRepository implements IAuthRepository {
 
     final memberResult = await _membersRepository.getByUuidAsync(uuid);
     if (memberResult.isError()) {
-      _log.warning(
-        "Session validation failed: member not found for uuid: $uuid",
-      );
-      // Clear stale data
-      await _secureStorageService.saveUuid(null);
-      await _secureStorageService.saveToken(null);
-      _currentUuidFuture = null;
-      _authToken = null;
-      _currentMember = null;
-      _isAuthenticated = false;
+      final error = memberResult.exceptionOrNull();
+      _log.warning("Session validation failed for uuid: $uuid", error);
+      if (error is ApiError &&
+          (error.statusCode == 401 || error.statusCode == 404)) {
+        await _secureStorageService.saveUuid(null);
+        await _secureStorageService.saveToken(null);
+        _currentUuidFuture = null;
+        _authToken = null;
+        _currentMember = null;
+        _isAuthenticated = false;
+      }
       _sessionValid = false;
       return false;
     }
@@ -223,12 +226,7 @@ class AuthRepository implements IAuthRepository {
     required String password,
     String? phone = "",
   }) async {
-    final loginRequest = ApiV1AuthLoginPost$RequestBody(
-      email: email,
-      password: password,
-    );
-
-    final loginResult = await _authApiClient.logIn(loginRequest);
+    final loginResult = await _authApiClient.loginAsync(email, password);
 
     if (loginResult.isError()) {
       _log.severe("Failed to login", loginResult.exceptionOrNull());
@@ -251,8 +249,27 @@ class AuthRepository implements IAuthRepository {
     );
     if (userIdResult.isError()) {
       _log.severe("Failed to save User UUID", userIdResult.exceptionOrNull());
-      await Supabase.instance.client.auth.signOut();
+      await _secureStorageService.saveToken(null);
+      await _secureStorageService.saveUuid(null);
       return Failure(userIdResult.exceptionOrNull()!);
+    }
+
+    final tokenResult = await _secureStorageService.saveToken(
+      loginResponse.accessToken,
+    );
+    final refreshToken = loginResponse.refreshToken;
+    if (refreshToken != null && refreshToken.isNotEmpty) {
+      final refreshResult = await _secureStorageService.saveRefreshToken(
+        refreshToken,
+      );
+      if (refreshResult.isError()) {
+        return Failure(refreshResult.exceptionOrNull()!);
+      }
+    }
+    if (tokenResult.isError()) {
+      _log.severe("Failed to save auth token", tokenResult.exceptionOrNull());
+      await _secureStorageService.saveUuid(null);
+      return Failure(tokenResult.exceptionOrNull()!);
     }
 
     _isAuthenticated = true;
@@ -274,74 +291,35 @@ class AuthRepository implements IAuthRepository {
   }
 
   @override
-  AsyncResult<LoginResponse> signUp(SignUpRequest signUpRequest) async {
-    final authResult = await _authApiClient.signUp(signUpRequest);
-    if (authResult.isError() || authResult.getOrNull() == null) {
-      _log.severe(
-        "Failed to sign up",
-        authResult.exceptionOrNull() ?? authResult.getOrNull(),
-      );
-
-      return authResult;
+  AsyncResult<void> signUp(SignUpRequest signUpRequest) async {
+    final result = await _authApiClient.signUpAsync(signUpRequest);
+    if (result.isError()) {
+      _log.warning("Failed to sign up", result.exceptionOrNull());
     }
-
-    var userData = authResult.getOrNull();
-    if (userData == null) {
-      return Failure(Exception("User data is null"));
-    }
-
-    final userId = userData.userId;
-    if (userId == null) {
-      return Failure(Exception("User ID is null"));
-    }
-
-    var membersResult = await _registerMember(signUpRequest, userId);
-    if (membersResult.isError()) {
-      // Clean up Supabase auth user via backend endpoint if member creation failed
-      final cleanupError = await _signupCleanup(userId);
-      if (cleanupError.isError()) {
-        // Log but don't crash — fire-and-forget with server-side reconciliation.
-        // Backend TO-DO: scheduled orphan-cleanup cron to catch missed cleanups.
-        _log.severe(
-          'Orphan Supabase user $userId: member registration failed and cleanup also failed',
-          cleanupError.exceptionOrNull(),
-        );
-      }
-      return Failure(membersResult.exceptionOrNull()!);
-    }
-
-    _log.info("Sign up successful");
-    // Only set authenticated AFTER member registration succeeded
-    _isAuthenticated = true;
-    _authToken = userData.accessToken;
-    // Invalidate the in-flight future; next `currentUuid` call re-fetches.
-    _currentUuidFuture = null;
-    // Invalidate cached member; GetCurrentUserData will fetch it.
-    _currentMember = null;
-    // The session changed: drop the cached validity so the next validation
-    // re-checks it against the backend.
-    _sessionValid = null;
-    _validateSessionFuture = null;
-
-    var userIdResult = await _secureStorageService.saveUuid(userData.userId);
-    if (userIdResult.isError()) {
-      _log.severe("Failed to save User ID", userIdResult.exceptionOrNull());
-    }
-
-    return authResult;
+    return result;
   }
+
+  @override
+  AsyncResult<LoginResponse> refresh(String refreshToken) =>
+      refreshAsync(refreshToken);
 
   @override
   AsyncResult<void> logout() async {
     _log.info("Logging out");
 
-    // Clear Supabase session (handles token cleanup and refresh).
-    // A sign-out failure must never block the local cleanup below — the user
-    // has to end up logged out either way.
-    try {
-      await Supabase.instance.client.auth.signOut();
-    } catch (e) {
-      _log.warning("Supabase sign-out failed; continuing local logout", e);
+    final logoutTokenResult = await _secureStorageService.fetchToken();
+    final logoutToken = logoutTokenResult.getOrNull();
+    final Result<void> apiResult;
+    if (logoutToken == null || logoutToken.isEmpty) {
+      apiResult = Success.unit();
+    } else {
+      apiResult = await _authApiClient.logout(logoutToken);
+    }
+    if (apiResult.isError()) {
+      _log.warning(
+        "API logout failed; continuing local logout",
+        apiResult.exceptionOrNull(),
+      );
     }
 
     // Clear local auth state
@@ -352,6 +330,16 @@ class AuthRepository implements IAuthRepository {
     // The session is gone: the cached validity must not survive the logout.
     _sessionValid = false;
     _validateSessionFuture = null;
+
+    final refreshTokenResult = await _secureStorageService.saveRefreshToken(
+      null,
+    );
+    if (refreshTokenResult.isError()) {
+      _log.warning(
+        "Failed to clear stored refresh token",
+        refreshTokenResult.exceptionOrNull(),
+      );
+    }
 
     final userIdResult = await _secureStorageService.saveUuid(null);
     if (userIdResult.isError()) {
@@ -375,70 +363,73 @@ class AuthRepository implements IAuthRepository {
   }
 
   @override
-  AsyncResult<void> resetPassword(String email) async {
-    final result = await _authApiClient.resetPassword(email);
+  AsyncResult<void> resetPassword(String email) =>
+      _authApiClient.resetPassword(email);
+
+  @override
+  String? get googleChallengeUrl => _authApiClient.googleChallengeUrl();
+
+  @override
+  AsyncResult<LoginResponse> signInWithGoogleAsync() async {
+    final result = await _googleSignInService.launchGoogleSignIn();
+    if (result.isError()) return result;
+    final response = result.getOrNull();
+    if (response == null) return Failure(Exception("Google response is null"));
+    return _storeLoginResponse(response);
+  }
+
+  Future<Result<LoginResponse>> refreshAsync(String refreshToken) async {
+    final result = await _authApiClient.refresh(refreshToken);
     if (result.isError()) {
-      _log.severe("Failed to reset password");
       return result;
     }
-
-    _log.info("Password reset email sent");
-    return result;
+    final response = result.getOrNull();
+    if (response == null) {
+      return Failure(Exception("Refresh response is null"));
+    }
+    return _storeLoginResponse(response);
   }
 
   @override
-  AsyncResult<void> resendVerification(String email) async {
-    final result = await _authApiClient.resendVerification(email);
+  AsyncResult<LoginResponse> googleCompleteAsync() async {
+    final result = await _authApiClient.googleComplete();
     if (result.isError()) {
-      _log.severe("Failed to resend verification email");
       return result;
     }
-
-    _log.info("Verification email resent");
-    return result;
+    final response = result.getOrNull();
+    if (response == null) {
+      return Failure(Exception("Google completion response is null"));
+    }
+    return _storeLoginResponse(response);
   }
 
-  AsyncResult<MembersEntity> _registerMember(
-    SignUpRequest signUpData,
-    String uuid,
+  Future<Result<LoginResponse>> _storeLoginResponse(
+    LoginResponse response,
   ) async {
-    final model = MemberCreate(
-      uuid: uuid,
-      name: signUpData.name,
-      email: signUpData.email,
-      phone: signUpData.phone,
-      // Backend requires the field despite swagger marking it nullable (TKT-003).
-      profileImage: '',
+    if (response.accessToken == null || response.accessToken!.isEmpty) {
+      return Failure(Exception("Login response is missing access token"));
+    }
+    if (response.refreshToken == null || response.refreshToken!.isEmpty) {
+      return Failure(Exception("Login response is missing refresh token"));
+    }
+    final uuidResult = await _secureStorageService.saveUuid(response.userId);
+    final tokenResult = await _secureStorageService.saveToken(
+      response.accessToken,
     );
-    _log.info("Registering member");
-    var membersResult = await _membersRepository.createAsync(model);
-    if (membersResult.isError() || membersResult.getOrNull() == null) {
-      _log.severe(
-        "Failed to register member",
-        membersResult.exceptionOrNull() ?? membersResult.getOrNull(),
-      );
-      await _signupCleanup(model.uuid!);
-      await _secureStorageService.saveToken(null);
-      return Failure(membersResult.exceptionOrNull()!);
+    final refreshTokenResult = await _secureStorageService.saveRefreshToken(
+      response.refreshToken,
+    );
+    if (uuidResult.isError()) return Failure(uuidResult.exceptionOrNull()!);
+    if (tokenResult.isError()) return Failure(tokenResult.exceptionOrNull()!);
+    if (refreshTokenResult.isError()) {
+      return Failure(refreshTokenResult.exceptionOrNull()!);
     }
-    _log.info("Member registered successfully");
-    return membersResult;
-  }
-
-  Future<Result<void>> _signupCleanup(String uuid) async {
-    try {
-      final token = Supabase.instance.client.auth.currentSession?.accessToken;
-      if (token == null) {
-        _log.warning("No token available for signup cleanup");
-        return Success.unit();
-      }
-      await _baseApiClient.client.delete(
-        '/api/v1/admin/signup-cleanup/$uuid',
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
-      );
-      return Success.unit();
-    } catch (e) {
-      return Failure(e is Exception ? e : Exception(e.toString()));
-    }
+    _authToken = response.accessToken;
+    _isAuthenticated = true;
+    _currentUuidFuture = null;
+    _currentMember = null;
+    _sessionValid = null;
+    _validateSessionFuture = null;
+    return Success(response);
   }
 }

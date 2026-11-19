@@ -40,9 +40,17 @@ abstract interface class IAuthRepository {
 
   AsyncResult<void> logout();
 
-  AsyncResult<LoginResponse> signUp(SignUpRequest signUpRequest);
+  AsyncResult<LoginResponse> refresh(String refreshToken);
+
+  AsyncResult<void> signUp(SignUpRequest signUpRequest);
 
   AsyncResult<void> resetPassword(String email);
 
-  AsyncResult<void> resendVerification(String email);
+  /// Launches and completes the Google OAuth browser flow.
+  AsyncResult<LoginResponse> signInWithGoogleAsync();
+
+  /// Completes a Google OAuth flow after the callback has been received.
+  AsyncResult<LoginResponse> googleCompleteAsync();
+
+  String? get googleChallengeUrl;
 }
