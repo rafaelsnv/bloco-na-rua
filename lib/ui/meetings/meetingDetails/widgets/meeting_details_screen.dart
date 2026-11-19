@@ -1,5 +1,7 @@
+import "package:bloco_na_rua/core/date_format.dart";
 import "package:bloco_na_rua/domain/entities/meetings/meetings_entity.dart";
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
@@ -16,21 +18,19 @@ import "package:bloco_na_rua/ui/core/widgets/feedback/app_dialog.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_loading_indicator.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
 import "package:bloco_na_rua/ui/core/widgets/inputs/app_search_field.dart";
+import "package:bloco_na_rua/ui/core/widgets/layout/content_width_limiter.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_empty.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_loading.dart";
 import "package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_cubit.dart";
 import "package:bloco_na_rua/ui/meetings/meetingDetails/cubit/meeting_details_state.dart";
+import "package:bloco_na_rua/ui/meetings/meeting_error.dart";
 import "package:bloco_na_rua/ui/meetings/userMeetings/cubit/user_meetings_cubit.dart";
 import "package:bloco_na_rua/ui/home/cubit/home_cubit.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
-import "package:intl/intl.dart";
-
-/// Edge length of the leading icon tile on the meeting header.
-const double _headerIconTileSize = 52;
 
 class MeetingDetailsScreen extends StatefulWidget {
   const MeetingDetailsScreen({super.key, required this.meetingId});
@@ -62,14 +62,15 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
       listener: (context, state) {
         if (state is! MeetingDetailsLoaded) return;
 
+        final l10n = AppLocalizations.of(context)!;
         if (state.markingPresenceStatus == MarkingPresenceStatus.success) {
-          AppSnackbar.success(
-            context,
-            message: "Presença atualizada com sucesso!",
-          );
+          AppSnackbar.success(context, message: l10n.meetingsPresenceUpdated);
         } else if (state.markingPresenceStatus == MarkingPresenceStatus.error &&
             state.markingPresenceError != null) {
-          AppSnackbar.error(context, message: state.markingPresenceError!);
+          AppSnackbar.error(
+            context,
+            message: localizeMeetingError(context, state.markingPresenceError!),
+          );
         } else if (state.deleteStatus == DeleteStatus.success) {
           if (context.mounted) {
             context.read<UserMeetingsCubit>().loadMeetings();
@@ -77,29 +78,30 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
           }
           context.pop();
         } else if (state.deleteStatus == DeleteStatus.failure) {
-          AppSnackbar.error(context, message: "Erro ao excluir encontro");
+          AppSnackbar.error(context, message: l10n.meetingsDeleteError);
         }
       },
       builder: (context, state) {
+        final l10n = AppLocalizations.of(context)!;
         if (state is MeetingDetailsInitial) {
           return Scaffold(
-            appBar: const AppAppBar(title: "Detalhes do Encontro"),
+            appBar: AppAppBar(title: l10n.meetingsDetailsTitle),
             body: const AppLoading(),
           );
         }
 
         if (state is MeetingDetailsLoading) {
           return Scaffold(
-            appBar: const AppAppBar(title: "Detalhes do Encontro"),
+            appBar: AppAppBar(title: l10n.meetingsDetailsTitle),
             body: const AppLoading(),
           );
         }
 
         if (state is MeetingDetailsError) {
           return Scaffold(
-            appBar: const AppAppBar(title: "Erro"),
+            appBar: AppAppBar(title: l10n.errorTitle),
             body: AppError(
-              message: state.message,
+              message: localizeMeetingError(context, state.error),
               onRetry: () => context.read<MeetingDetailsCubit>().loadMeeting(),
             ),
           );
@@ -114,7 +116,7 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
 
           return Scaffold(
             appBar: AppAppBar(
-              title: meeting.name ?? "Detalhes do Encontro",
+              title: meeting.name ?? l10n.meetingsDetailsTitle,
               actions: _buildAppBarActions(context, state),
             ),
             body: RefreshIndicator(
@@ -123,65 +125,70 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
                 await cubit.loadMeeting();
                 await cubit.loadPresences();
               },
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.all(Spacing.pagePaddingMobile),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Meeting Info Card
-                    _MeetingInfoCard(
-                      meeting: meeting,
-                      meetingDateTime: meetingDateTime,
-                      blockName: state.blockName,
-                    ),
-                    const SizedBox(height: Spacing.sectionGap),
-                    // Presences Section — header row + prominent confirm button.
-                    AppSectionHeader(
-                      title: "Lista de Presença",
-                      leading: Icon(
-                        Icons.people_rounded,
-                        color: Theme.of(context).colorScheme.primary,
-                        size: AppIconSizes.lg,
+              child: ContentWidthLimiter(
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Spacing.pagePaddingFor(context),
+                    vertical: Spacing.pagePaddingMobile,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Meeting Info Card
+                      _MeetingInfoCard(
+                        meeting: meeting,
+                        meetingDateTime: meetingDateTime,
+                        blockName: state.blockName,
                       ),
-                      titleTrailing: AppChip(
-                        label:
-                            "${state.presences.where((p) => p.isPresent).length}/${state.blockMembers.isNotEmpty ? state.blockMembers.length : state.presences.length}",
-                        variant: ChipVariant.soft,
-                        color: AppColors.primary,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: Spacing.space_2xs,
-                          vertical: Spacing.space_4xs,
+                      const SizedBox(height: Spacing.sectionGap),
+                      // Presences Section — header row + prominent confirm button.
+                      AppSectionHeader(
+                        title: l10n.meetingsPresenceListTitle,
+                        leading: Icon(
+                          Icons.people_rounded,
+                          color: Theme.of(context).colorScheme.primary,
+                          size: AppIconSizes.lg,
+                        ),
+                        titleTrailing: AppChip(
+                          label:
+                              "${state.presences.where((p) => p.isPresent).length}/${state.blockMembers.isNotEmpty ? state.blockMembers.length : state.presences.length}",
+                          variant: ChipVariant.soft,
+                          color: AppColors.primary,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: Spacing.space_2xs,
+                            vertical: Spacing.space_4xs,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: Spacing.space_xs),
-                    // Prominent confirm-presence button — replaces the FAB.
-                    // No extra horizontal padding: the scroll view already
-                    // insets the column, so the button lines up with the
-                    // header and the cards below it.
-                    AppButton(
-                      key: const Key("button_confirm_presence"),
-                      label: "Confirmar Presença",
-                      variant: AppButtonVariant.accent,
-                      size: AppButtonSizeMetrics.sm,
-                      isFullWidth: true,
-                      icon: const Icon(Icons.check_rounded),
-                      isLoading: isMarkingPresence,
-                      onPressed: isMarkingPresence
-                          ? null
-                          : () => context
-                                .read<MeetingDetailsCubit>()
-                                .markPresence(isPresent: true),
-                    ),
-                    const SizedBox(height: Spacing.sectionGap),
-                    _PresencesSection(
-                      state: state,
-                      onRetry: () =>
-                          context.read<MeetingDetailsCubit>().loadPresences(),
-                    ),
-                    const SizedBox(height: Spacing.sectionGap),
-                  ],
+                      const SizedBox(height: Spacing.space_xs),
+                      // Prominent confirm-presence button — replaces the FAB.
+                      // No extra horizontal padding: the scroll view already
+                      // insets the column, so the button lines up with the
+                      // header and the cards below it.
+                      AppButton(
+                        key: const Key("button_confirm_presence"),
+                        label: l10n.meetingsConfirmPresence,
+                        variant: AppButtonVariant.accent,
+                        size: AppButtonSizeMetrics.sm,
+                        isFullWidth: true,
+                        icon: const Icon(Icons.check_rounded),
+                        isLoading: isMarkingPresence,
+                        onPressed: isMarkingPresence
+                            ? null
+                            : () => context
+                                  .read<MeetingDetailsCubit>()
+                                  .markPresence(isPresent: true),
+                      ),
+                      const SizedBox(height: Spacing.sectionGap),
+                      _PresencesSection(
+                        state: state,
+                        onRetry: () =>
+                            context.read<MeetingDetailsCubit>().loadPresences(),
+                      ),
+                      const SizedBox(height: Spacing.sectionGap),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -189,8 +196,8 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
         }
 
         return Scaffold(
-          appBar: const AppAppBar(title: "Detalhes do Encontro"),
-          body: const AppEmpty(message: "Nenhum dado encontrado"),
+          appBar: AppAppBar(title: l10n.meetingsDetailsTitle),
+          body: AppEmpty(message: l10n.meetingsNoData),
         );
       },
     );
@@ -218,25 +225,31 @@ class _MeetingDetailsScreenState extends State<MeetingDetailsScreen> {
 
     if (!state.canDeleteMeeting) return null;
 
+    final l10n = AppLocalizations.of(context)!;
     return [
-      IconButton(
-        icon: Icon(
-          Icons.delete_outline_rounded,
-          color: Theme.of(context).colorScheme.error,
+      Semantics(
+        label: l10n.meetingsDeleteTitle,
+        button: true,
+        child: IconButton(
+          icon: Icon(
+            Icons.delete_rounded,
+            color: Theme.of(context).colorScheme.error,
+          ),
+          tooltip: l10n.meetingsDeleteTitle,
+          onPressed: () => _showDeleteDialog(context),
         ),
-        tooltip: "Excluir encontro",
-        onPressed: () => _showDeleteDialog(context),
       ),
     ];
   }
 
   void _showDeleteDialog(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await AppDialog.confirm(
       context,
-      title: "Excluir encontro",
-      message:
-          "Tem certeza que deseja excluir este encontro? Esta ação não pode ser desfeita.",
-      confirmLabel: "Excluir",
+      title: l10n.meetingsDeleteTitle,
+      message: l10n.meetingsDeleteConfirmMessage,
+      confirmLabel: l10n.meetingsDeleteAction,
+      cancelLabel: l10n.meetingsCancel,
       isDestructive: true,
     );
     if (confirmed == true && context.mounted) {
@@ -256,15 +269,16 @@ class _MeetingInfoCard extends StatelessWidget {
   final DateTime? meetingDateTime;
   final String? blockName;
 
-  String get _statusLabel {
-    if (meetingDateTime == null) return "Próxima";
+  String _statusLabel(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    if (meetingDateTime == null) return l10n.meetingsStatusUpcoming;
     final now = DateTime.now();
     if (meetingDateTime!.isBefore(now)) {
-      return "Realizada";
+      return l10n.meetingsStatusDone;
     } else if (meetingDateTime!.isBefore(now.add(const Duration(hours: 1)))) {
-      return "Em breve";
+      return l10n.meetingsStatusSoon;
     } else {
-      return "Próxima";
+      return l10n.meetingsStatusUpcoming;
     }
   }
 
@@ -296,7 +310,7 @@ class _MeetingInfoCard extends StatelessWidget {
               AppIconTile(
                 icon: Icons.event_rounded,
                 backgroundColor: cs.primaryContainer,
-                size: _headerIconTileSize,
+                size: AppIconSizes.headerTile,
                 radius: Radii.md,
                 iconSize: AppIconSizes.xl,
                 foregroundColor: cs.onPrimaryContainer,
@@ -324,7 +338,7 @@ class _MeetingInfoCard extends StatelessWidget {
               ),
               const SizedBox(width: Spacing.space_xs),
               AppChip(
-                label: _statusLabel,
+                label: _statusLabel(context),
                 variant: ChipVariant.filled,
                 color: _statusColor,
               ),
@@ -345,10 +359,11 @@ class _MeetingInfoCard extends StatelessWidget {
           if (meetingDateTime != null)
             _InfoRow(
               icon: Icons.calendar_today_rounded,
-              text: DateFormat(
+              text: formatDatePattern(
                 "EEEE, dd/MM/yyyy • HH:mm",
-                "pt_BR",
-              ).format(meetingDateTime!),
+                meetingDateTime!,
+                context,
+              ),
               color: cs.primary,
             ),
           // Location last
@@ -406,17 +421,24 @@ class _PresenceBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: AppIconSizes.xl,
-      height: AppIconSizes.xl,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: isPresent ? AppColors.success : AppColors.error,
-      ),
-      child: Icon(
-        isPresent ? Icons.check_rounded : Icons.close_rounded,
-        size: AppIconSizes.sm,
-        color: AppColors.textOnPrimary,
+    final l10n = AppLocalizations.of(context)!;
+    return Semantics(
+      // The badge is icon-only — announce the presence state. `container`
+      // keeps it a node of its own instead of merging into the member row.
+      container: true,
+      label: isPresent ? l10n.meetingsPresent : l10n.meetingsAbsent,
+      child: Container(
+        width: AppIconSizes.xl,
+        height: AppIconSizes.xl,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: isPresent ? AppColors.success : AppColors.error,
+        ),
+        child: Icon(
+          isPresent ? Icons.check_rounded : Icons.close_rounded,
+          size: AppIconSizes.sm,
+          color: AppColors.textOnPrimary,
+        ),
       ),
     );
   }
@@ -448,7 +470,7 @@ class _PresencesSectionState extends State<_PresencesSection> {
 
   /// All members: the block roster when loaded (real names), otherwise
   /// derived from presence rows as a fallback.
-  List<_MemberEntry> get _allEntries {
+  List<_MemberEntry> _allEntries(AppLocalizations l10n) {
     final state = widget.state;
     final presenceByMember = {for (final p in state.presences) p.memberId: p};
     if (state.blockMembers.isNotEmpty) {
@@ -457,7 +479,10 @@ class _PresencesSectionState extends State<_PresencesSection> {
           _MemberEntry(
             member:
                 state.memberEntities[bm.memberId] ??
-                MembersEntity(id: bm.memberId, name: "Membro"),
+                MembersEntity(
+                  id: bm.memberId,
+                  name: l10n.meetingsMemberFallback,
+                ),
             isPresent: presenceByMember[bm.memberId]?.isPresent,
           ),
       ];
@@ -465,16 +490,19 @@ class _PresencesSectionState extends State<_PresencesSection> {
     return [
       for (final p in state.presences)
         _MemberEntry(
-          member: MembersEntity(id: p.memberId, name: "Membro #${p.memberId}"),
+          member: MembersEntity(
+            id: p.memberId,
+            name: l10n.meetingsMemberNumber(p.memberId),
+          ),
           isPresent: p.isPresent,
         ),
     ];
   }
 
-  List<_MemberEntry> get _visibleEntries {
+  List<_MemberEntry> _visibleEntries(AppLocalizations l10n) {
     final query = _searchQuery.toLowerCase();
     final list =
-        _allEntries.where((entry) {
+        _allEntries(l10n).where((entry) {
           final matchesFilter = switch (_filter) {
             _PresenceFilter.all => true,
             _PresenceFilter.present => entry.isPresent == true,
@@ -500,6 +528,7 @@ class _PresencesSectionState extends State<_PresencesSection> {
   @override
   Widget build(BuildContext context) {
     final state = widget.state;
+    final l10n = AppLocalizations.of(context)!;
     if (state.presencesStatus == PresencesStatus.loading) {
       return AppCard(
         child: Padding(
@@ -512,7 +541,7 @@ class _PresencesSectionState extends State<_PresencesSection> {
               Center(child: AppLoadingIndicator(size: AppIconSizes.xxl)),
               const SizedBox(height: Spacing.space_sm),
               Text(
-                "Carregando presenças...",
+                l10n.meetingsLoadingPresences,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -524,20 +553,20 @@ class _PresencesSectionState extends State<_PresencesSection> {
       );
     }
 
-    final allEntries = _allEntries;
+    final allEntries = _allEntries(l10n);
     if (allEntries.isEmpty) {
       return AppCard(
         child: Padding(
           padding: EdgeInsets.all(Spacing.space_md),
           child: AppEmpty(
-            message: "Ninguém confirmou presença ainda",
+            message: l10n.meetingsNoPresenceYet,
             icon: Icons.people_outline_rounded,
           ),
         ),
       );
     }
 
-    final entries = _visibleEntries;
+    final entries = _visibleEntries(l10n);
     final isBusy = state.markingPresenceStatus == MarkingPresenceStatus.loading;
 
     return AppCard(
@@ -552,12 +581,12 @@ class _PresencesSectionState extends State<_PresencesSection> {
               children: [
                 Expanded(
                   child: AppSearchField(
-                    hint: "Buscar membro...",
+                    hint: l10n.meetingsSearchMemberHint,
                     onChanged: (value) => setState(() => _searchQuery = value),
                   ),
                 ),
                 const SizedBox(width: Spacing.space_xs),
-                _buildSortFilterMenu(),
+                _buildSortFilterMenu(l10n),
               ],
             ),
           ),
@@ -569,7 +598,7 @@ class _PresencesSectionState extends State<_PresencesSection> {
             Padding(
               padding: EdgeInsets.all(Spacing.space_md),
               child: AppEmpty(
-                message: "Nenhum membro encontrado",
+                message: l10n.meetingsNoMemberFound,
                 icon: Icons.search_off_rounded,
               ),
             )
@@ -584,22 +613,32 @@ class _PresencesSectionState extends State<_PresencesSection> {
               ),
               itemBuilder: (context, index) {
                 final entry = entries[index];
+                final canToggle = state.canManagePresence && !isBusy;
+                final card = MemberCard(
+                  member: entry.member,
+                  showEmail: false,
+                  // Owners/managers toggle presence by tapping the card.
+                  onTap: canToggle
+                      ? () => _confirmSetPresence(context, entry)
+                      : null,
+                  trailing: _PresenceBadge(isPresent: entry.isPresent ?? false),
+                );
                 return Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: Spacing.space_2xs,
                     vertical: Spacing.space_3xs,
                   ),
-                  child: MemberCard(
-                    member: entry.member,
-                    showEmail: false,
-                    // Owners/managers toggle presence by tapping the card.
-                    onTap: state.canManagePresence && !isBusy
-                        ? () => _confirmSetPresence(context, entry)
-                        : null,
-                    trailing: _PresenceBadge(
-                      isPresent: entry.isPresent ?? false,
-                    ),
-                  ),
+                  child: canToggle
+                      // Announce the tap action for screen readers.
+                      ? Semantics(
+                          container: true,
+                          label: l10n.meetingsMarkPresenceOf(
+                            entry.member.name ?? l10n.meetingsMemberFallback,
+                          ),
+                          button: true,
+                          child: card,
+                        )
+                      : card,
                 );
               },
             ),
@@ -614,13 +653,16 @@ class _PresencesSectionState extends State<_PresencesSection> {
     _MemberEntry entry,
   ) async {
     final isPresent = !(entry.isPresent ?? false);
+    final l10n = AppLocalizations.of(context)!;
+    final memberName = entry.member.name ?? l10n.meetingsMemberFallback;
     final confirmed = await AppDialog.confirm(
       context,
-      title: "Alterar presença",
-      message:
-          "Marcar ${entry.member.name ?? "este membro"} como ${isPresent ? "presente" : "ausente"}?",
-      confirmLabel: "Confirmar",
-      cancelLabel: "Cancelar",
+      title: l10n.meetingsChangePresenceTitle,
+      message: isPresent
+          ? l10n.meetingsMarkPresent(memberName)
+          : l10n.meetingsMarkAbsent(memberName),
+      confirmLabel: l10n.meetingsConfirm,
+      cancelLabel: l10n.meetingsCancel,
     );
     if (confirmed == true && context.mounted) {
       context.read<MeetingDetailsCubit>().setMemberPresence(
@@ -630,52 +672,56 @@ class _PresencesSectionState extends State<_PresencesSection> {
     }
   }
 
-  Widget _buildSortFilterMenu() {
-    return PopupMenuButton<Object>(
-      icon: const Icon(Icons.sort_rounded),
-      tooltip: "Ordenar e filtrar",
-      onSelected: (value) {
-        if (value is _PresenceSort) {
-          setState(() => _sort = value);
-        } else if (value is _PresenceFilter) {
-          setState(() => _filter = value);
-        }
-      },
-      itemBuilder: (context) => [
-        _menuHeader("Ordenar"),
-        _checkItem(
-          _PresenceSort.name,
-          "Nome (A-Z)",
-          _sort == _PresenceSort.name,
-        ),
-        _checkItem(
-          _PresenceSort.presentFirst,
-          "Presentes primeiro",
-          _sort == _PresenceSort.presentFirst,
-        ),
-        _checkItem(
-          _PresenceSort.absentFirst,
-          "Ausentes primeiro",
-          _sort == _PresenceSort.absentFirst,
-        ),
-        const PopupMenuDivider(),
-        _menuHeader("Filtrar"),
-        _checkItem(
-          _PresenceFilter.all,
-          "Todos",
-          _filter == _PresenceFilter.all,
-        ),
-        _checkItem(
-          _PresenceFilter.present,
-          "Presentes",
-          _filter == _PresenceFilter.present,
-        ),
-        _checkItem(
-          _PresenceFilter.absent,
-          "Ausentes",
-          _filter == _PresenceFilter.absent,
-        ),
-      ],
+  Widget _buildSortFilterMenu(AppLocalizations l10n) {
+    return Semantics(
+      label: l10n.meetingsSortFilterTooltip,
+      button: true,
+      child: PopupMenuButton<Object>(
+        icon: const Icon(Icons.sort_rounded),
+        tooltip: l10n.meetingsSortFilterTooltip,
+        onSelected: (value) {
+          if (value is _PresenceSort) {
+            setState(() => _sort = value);
+          } else if (value is _PresenceFilter) {
+            setState(() => _filter = value);
+          }
+        },
+        itemBuilder: (context) => [
+          _menuHeader(l10n.meetingsSortHeader),
+          _checkItem(
+            _PresenceSort.name,
+            l10n.meetingsSortByName,
+            _sort == _PresenceSort.name,
+          ),
+          _checkItem(
+            _PresenceSort.presentFirst,
+            l10n.meetingsSortPresentFirst,
+            _sort == _PresenceSort.presentFirst,
+          ),
+          _checkItem(
+            _PresenceSort.absentFirst,
+            l10n.meetingsSortAbsentFirst,
+            _sort == _PresenceSort.absentFirst,
+          ),
+          const PopupMenuDivider(),
+          _menuHeader(l10n.meetingsFilterHeader),
+          _checkItem(
+            _PresenceFilter.all,
+            l10n.meetingsFilterAll,
+            _filter == _PresenceFilter.all,
+          ),
+          _checkItem(
+            _PresenceFilter.present,
+            l10n.meetingsFilterPresent,
+            _filter == _PresenceFilter.present,
+          ),
+          _checkItem(
+            _PresenceFilter.absent,
+            l10n.meetingsFilterAbsent,
+            _filter == _PresenceFilter.absent,
+          ),
+        ],
+      ),
     );
   }
 
