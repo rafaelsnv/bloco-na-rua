@@ -1,3 +1,4 @@
+import "package:bloco_na_rua/core/api_error.dart";
 import "package:bloco_na_rua/core/errors/user_message.dart";
 import "package:bloco_na_rua/data/services/auth/models/signup_request/signup_request.dart";
 import "package:bloco_na_rua/l10n/app_localizations.dart";
@@ -150,18 +151,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
-          AppSnackbar.error(
-            context,
-            message: extractUserMessage(state.error, context),
-          );
-        } else if (state is AuthEmailVerificationSent) {
-          context.go(
-            "${Routes.verifyEmail}?email=${Uri.encodeComponent(state.email)}",
-          );
+          final apiError = state.error is ApiError
+              ? state.error! as ApiError
+              : null;
+          final message = apiError?.statusCode == 409
+              ? l10n.signupEmailInUse
+              : extractUserMessage(state.error, context);
+          AppSnackbar.error(context, message: message);
         } else if (state is AuthAuthenticated) {
           context.go(Routes.home);
         } else if (state is AuthSuccess) {
           AppSnackbar.success(context, message: state.localizedMessage(l10n));
+          if (state.kind == AuthSuccessKind.accountCreated) {
+            context.go(Routes.login);
+          }
         }
       },
       child: Scaffold(

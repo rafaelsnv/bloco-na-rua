@@ -7,7 +7,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_driver/driver_extension.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   // Enable Flutter Driver for widget inspection and navigation
@@ -17,14 +16,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: ".env");
-
-  await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
-    publishableKey: dotenv.env['SUPABASE_PUBLISHABLE_KEY']!,
-    realtimeClientOptions: RealtimeClientOptions(
-      logLevel: RealtimeLogLevel.warn,
-    ),
-  );
 
   await initAppLocale();
 

@@ -44,9 +44,9 @@
   "@authBackButton": {
     "description": "Back button tooltip and semantics label of the auth screens"
   },
-  "authVerifyEmailSent": "Verification email resent!",
-  "@authVerifyEmailSent": {
-    "description": "Confirmation shown after resending the verification e-mail"
+  "authAccountCreated": "Account created. Please log in.",
+  "@authAccountCreated": {
+    "description": "Confirmation shown after account creation"
   },
   "authRecoveryEmailSent": "Recovery email sent!",
   "@authRecoveryEmailSent": {
@@ -69,6 +69,8 @@
     "description": "Validation error when the login e-mail field is empty"
   },
   "loginEmailInvalid": "Invalid email",
+  "loginInvalidCredentials": "Invalid email or password.",
+  "signupEmailInUse": "This email is already in use.",
   "@loginEmailInvalid": {
     "description": "Validation error when the login e-mail is malformed"
   },
@@ -89,6 +91,10 @@
     "description": "Tooltip and semantics label that hide the password"
   },
   "loginEnterButton": "Log in",
+  "loginGoogleButton": "Sign in with Google",
+  "@loginGoogleButton": {
+    "description": "Button that starts Google OAuth sign-in"
+  },
   "@loginEnterButton": {
     "description": "Login submit button label"
   },
@@ -180,26 +186,6 @@
   "signupLoginLink": "Already have an account? Log in",
   "@signupLoginLink": {
     "description": "Link from the sign-up screen to the login screen"
-  },
-  "verifyEmailTitle": "Verify your email",
-  "@verifyEmailTitle": {
-    "description": "E-mail verification screen headline"
-  },
-  "verifyEmailMessage": "We sent a confirmation link to your email",
-  "@verifyEmailMessage": {
-    "description": "E-mail verification screen message"
-  },
-  "verifyEmailNotReceived": "Didn't get the email?",
-  "@verifyEmailNotReceived": {
-    "description": "Question above the resend button"
-  },
-  "verifyEmailResendButton": "Resend email",
-  "@verifyEmailResendButton": {
-    "description": "Resend verification e-mail button label"
-  },
-  "verifyEmailFooter": "Once confirmed, you'll be taken to the app",
-  "@verifyEmailFooter": {
-    "description": "Footer note at the bottom of the verification screen"
   },
   "logoutTitle": "Log out",
   "@logoutTitle": {

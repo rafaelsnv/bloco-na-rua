@@ -7,6 +7,7 @@ import 'package:result_dart/result_dart.dart';
 // exceptions, and (b) centralizing the key constants + logging.
 class SecureStorageService {
   static const _tokenKey = 'TOKEN';
+  static const _refreshTokenKey = 'REFRESH_TOKEN';
   static const _uuidKey = 'UUID';
   final _logger = Logger('SecureStorageService');
   final FlutterSecureStorage _storage = const FlutterSecureStorage(
@@ -25,6 +26,20 @@ class SecureStorageService {
       return Success(token);
     } on Exception catch (e) {
       _logger.warning('Failed to get token', e);
+      return Failure(e);
+    }
+  }
+
+  AsyncResult<String> fetchRefreshToken() async {
+    try {
+      final token = await _storage.read(key: _refreshTokenKey);
+      if (token == null) {
+        _logger.info('Refresh token not found');
+        return Failure(Exception('Refresh token not found'));
+      }
+      return Success(token);
+    } on Exception catch (e) {
+      _logger.warning('Failed to get refresh token', e);
       return Failure(e);
     }
   }
@@ -57,6 +72,20 @@ class SecureStorageService {
       return const Success(true);
     } on Exception catch (e) {
       _logger.warning('Failed to set token', e);
+      return Failure(e);
+    }
+  }
+
+  AsyncResult<bool> saveRefreshToken(String? token) async {
+    try {
+      if (token == null || token.isEmpty) {
+        await _storage.delete(key: _refreshTokenKey);
+        return const Success(true);
+      }
+      await _storage.write(key: _refreshTokenKey, value: token);
+      return const Success(true);
+    } on Exception catch (e) {
+      _logger.warning('Failed to set refresh token', e);
       return Failure(e);
     }
   }

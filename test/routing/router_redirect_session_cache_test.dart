@@ -5,6 +5,7 @@ import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart"
 import "package:bloco_na_rua/data/services/api/base/base_api_client.dart";
 import "package:bloco_na_rua/data/services/api/base/ibase_api_client.dart";
 import "package:bloco_na_rua/data/services/auth/auth_api_client.dart";
+import "package:bloco_na_rua/data/services/auth/google_sign_in_service.dart";
 import "package:bloco_na_rua/data/services/secure_storage_service.dart";
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
 import "package:bloco_na_rua/l10n/app_localizations.dart";
@@ -23,6 +24,8 @@ class MockIMembersRepository extends Mock implements IMembersRepository {}
 
 class MockAuthApiClient extends Mock implements AuthApiClient {}
 
+class MockGoogleSignInService extends Mock implements GoogleSignInService {}
+
 class MockSecureStorageService extends Mock implements SecureStorageService {}
 
 class MockIBaseApiClient extends Mock implements IBaseApiClient {
@@ -36,6 +39,7 @@ void main() {
   late AuthRepository authRepository;
   late MockIMembersRepository membersRepository;
   late MockSecureStorageService secureStorageService;
+  late MockGoogleSignInService googleSignInService;
   late BaseApiClient baseApiClient;
   late AuthListenable authListenable;
 
@@ -55,6 +59,7 @@ void main() {
 
     membersRepository = MockIMembersRepository();
     secureStorageService = MockSecureStorageService();
+    googleSignInService = MockGoogleSignInService();
     baseApiClient = BaseApiClient();
     authListenable = AuthListenable();
 
@@ -78,6 +83,7 @@ void main() {
     authRepository = AuthRepository(
       membersRepository: membersRepository,
       authApiClient: MockAuthApiClient(),
+      googleSignInService: googleSignInService,
       baseApiClient: baseApiClient,
       sharedPreferencesService: secureStorageService,
       authListenable: authListenable,

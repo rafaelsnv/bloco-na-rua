@@ -44,9 +44,9 @@
   "@authBackButton": {
     "description": "Back button tooltip and semantics label of the auth screens"
   },
-  "authVerifyEmailSent": "E-mail de verificação reenviado!",
-  "@authVerifyEmailSent": {
-    "description": "Confirmation shown after resending the verification e-mail"
+  "authAccountCreated": "Conta criada. Faça login.",
+  "@authAccountCreated": {
+    "description": "Confirmation shown after account creation"
   },
   "authRecoveryEmailSent": "E-mail de recuperação enviado!",
   "@authRecoveryEmailSent": {
@@ -69,6 +69,8 @@
     "description": "Validation error when the login e-mail field is empty"
   },
   "loginEmailInvalid": "E-mail inválido",
+  "loginInvalidCredentials": "E-mail ou senha inválidos.",
+  "signupEmailInUse": "Este e-mail já está em uso.",
   "@loginEmailInvalid": {
     "description": "Validation error when the login e-mail is malformed"
   },
@@ -89,6 +91,13 @@
     "description": "Tooltip and semantics label that hide the password"
   },
   "loginEnterButton": "Entrar",
+  "@loginEnterButton": {
+    "description": "Login submit button label"
+  },
+  "loginGoogleButton": "Entrar com o Google",
+  "@loginGoogleButton": {
+    "description": "Botão que inicia o login com Google"
+  },
   "@loginEnterButton": {
     "description": "Login submit button label"
   },
@@ -180,26 +189,6 @@
   "signupLoginLink": "Já tem uma conta? Faça login",
   "@signupLoginLink": {
     "description": "Link from the sign-up screen to the login screen"
-  },
-  "verifyEmailTitle": "Verifique seu e-mail",
-  "@verifyEmailTitle": {
-    "description": "E-mail verification screen headline"
-  },
-  "verifyEmailMessage": "Enviamos um link de confirmação para seu e-mail",
-  "@verifyEmailMessage": {
-    "description": "E-mail verification screen message"
-  },
-  "verifyEmailNotReceived": "Não recebeu o e-mail?",
-  "@verifyEmailNotReceived": {
-    "description": "Question above the resend button"
-  },
-  "verifyEmailResendButton": "Reenviar e-mail",
-  "@verifyEmailResendButton": {
-    "description": "Resend verification e-mail button label"
-  },
-  "verifyEmailFooter": "Depois de confirmar, você será direcionado para o app",
-  "@verifyEmailFooter": {
-    "description": "Footer note at the bottom of the verification screen"
   },
   "logoutTitle": "Sair da conta",
   "@logoutTitle": {

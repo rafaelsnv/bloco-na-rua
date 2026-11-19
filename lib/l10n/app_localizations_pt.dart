@@ -44,7 +44,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get authBackButton => 'Voltar';
 
   @override
-  String get authVerifyEmailSent => 'E-mail de verificação reenviado!';
+  String get authAccountCreated => 'Conta criada. Faça login.';
 
   @override
   String get authRecoveryEmailSent => 'E-mail de recuperação enviado!';
@@ -65,6 +65,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get loginEmailInvalid => 'E-mail inválido';
 
   @override
+  String get loginInvalidCredentials => 'E-mail ou senha inválidos.';
+
+  @override
+  String get signupEmailInUse => 'Este e-mail já está em uso.';
+
+  @override
   String get loginPasswordLabel => 'Senha';
 
   @override
@@ -78,6 +84,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get loginEnterButton => 'Entrar';
+
+  @override
+  String get loginGoogleButton => 'Entrar com o Google';
 
   @override
   String get loginForgotPassword => 'Esqueceu a senha?';
@@ -144,23 +153,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get signupLoginLink => 'Já tem uma conta? Faça login';
-
-  @override
-  String get verifyEmailTitle => 'Verifique seu e-mail';
-
-  @override
-  String get verifyEmailMessage =>
-      'Enviamos um link de confirmação para seu e-mail';
-
-  @override
-  String get verifyEmailNotReceived => 'Não recebeu o e-mail?';
-
-  @override
-  String get verifyEmailResendButton => 'Reenviar e-mail';
-
-  @override
-  String get verifyEmailFooter =>
-      'Depois de confirmar, você será direcionado para o app';
 
   @override
   String get logoutTitle => 'Sair da conta';

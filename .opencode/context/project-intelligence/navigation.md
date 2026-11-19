@@ -21,6 +21,7 @@
 | Components | [technical-component-pattern.md](./technical-component-pattern.md) | State/Cubit/Screen patterns | high |
 | Design System | [lookup/design-tokens.md](./lookup/design-tokens.md) | "Fireworks on Velvet" token map + invariants | high |
 | Localization | [concepts/localization.md](./concepts/localization.md) | ARB/i18n pattern, markers, date helpers | high |
+| Auth/OAuth | [concepts/auth-oauth.md](./concepts/auth-oauth.md) | Google OAuth external-browser flow, deep link, cookie binding | high |
 
 ## Examples (project-intelligence/examples/)
 

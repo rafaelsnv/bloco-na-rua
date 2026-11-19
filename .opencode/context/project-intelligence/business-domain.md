@@ -1,4 +1,4 @@
-<!-- Context: project-intelligence/business | Priority: high | Version: 1.0 | Updated: 2026-10-20 -->
+<!-- Context: project-intelligence/business | Priority: high | Version: 1.0 | Updated: 2026-11-19 -->
 
 # Business Domain
 
@@ -32,7 +32,7 @@ Register/Login → Create/Join Block → Manage Members → Schedule Meetings �
 
 | Step | Action | Technical |
 |------|--------|----------|
-| 1 | Auth via Supabase | Email/password auth with JWT |
+| 1 | Auth via REST API | Email/password + Google OAuth, JWT in secure storage |
 | 2 | Create block | CarnivalBlocksEntity + invite codes |
 | 3 | Join block | CarnivalBlockMembersEntity via invite code |
 | 4 | Schedule meeting | MeetingsEntity with dateTime/location |

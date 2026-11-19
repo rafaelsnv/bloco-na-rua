@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 
+import "package:bloco_na_rua/core/api_error.dart";
 import "package:bloco_na_rua/core/errors/user_message.dart";
 import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/routing/routes.dart";
@@ -132,10 +133,11 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
-          AppSnackbar.error(
-            context,
-            message: extractUserMessage(state.error, context),
-          );
+          final message = state.error is ApiError &&
+                  (state.error! as ApiError).statusCode == 401
+              ? l10n.loginInvalidCredentials
+              : extractUserMessage(state.error, context);
+          AppSnackbar.error(context, message: message);
         } else if (state is AuthAuthenticated) {
           context.go(Routes.home);
         } else if (state is AuthSuccess) {
@@ -270,6 +272,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
 
                   const SizedBox(height: Spacing.space_md),
+
+                  BlocBuilder<AuthCubit, AuthState>(
+                    builder: (context, state) => AppButton(
+                      label: l10n.loginGoogleButton,
+                      icon: const Icon(Icons.login_rounded),
+                      onPressed: state is AuthLoading
+                          ? null
+                          : () => context.read<AuthCubit>().googleSignIn(),
+                      isLoading: state is AuthLoading,
+                      isFullWidth: true,
+                      variant: AppButtonVariant.secondary,
+                    ),
+                  ),
 
                   // Forgot password link
                   TextButton(

@@ -5,6 +5,7 @@ import "package:bloco_na_rua/data/repositories/auth/auth_repository.dart";
 import "package:bloco_na_rua/data/repositories/members/imembers_repository.dart";
 import "package:bloco_na_rua/data/services/api/base/ibase_api_client.dart";
 import "package:bloco_na_rua/data/services/auth/auth_api_client.dart";
+import "package:bloco_na_rua/data/services/auth/google_sign_in_service.dart";
 import "package:bloco_na_rua/data/services/secure_storage_service.dart";
 import "package:dio/dio.dart";
 import "package:mocktail/mocktail.dart";
@@ -14,6 +15,8 @@ import "package:test/test.dart";
 class MockIMembersRepository extends Mock implements IMembersRepository {}
 
 class MockAuthApiClient extends Mock implements AuthApiClient {}
+
+class MockGoogleSignInService extends Mock implements GoogleSignInService {}
 
 class MockSecureStorageService extends Mock implements SecureStorageService {}
 
@@ -26,6 +29,7 @@ void main() {
   late AuthRepository authRepository;
   late MockIMembersRepository mockMembersRepository;
   late MockAuthApiClient mockAuthApiClient;
+  late MockGoogleSignInService mockGoogleSignInService;
   late MockSecureStorageService mockSecureStorageService;
 
   setUpAll(() {
@@ -41,12 +45,17 @@ void main() {
   setUp(() {
     mockMembersRepository = MockIMembersRepository();
     mockAuthApiClient = MockAuthApiClient();
+    mockGoogleSignInService = MockGoogleSignInService();
     mockSecureStorageService = MockSecureStorageService();
+    when(
+      () => mockSecureStorageService.saveRefreshToken(any()),
+    ).thenAnswer((_) async => const Success(true));
     final mockBaseApiClient = MockIBaseApiClient();
 
     authRepository = AuthRepository(
       membersRepository: mockMembersRepository,
       authApiClient: mockAuthApiClient,
+      googleSignInService: mockGoogleSignInService,
       baseApiClient: mockBaseApiClient,
       sharedPreferencesService: mockSecureStorageService,
       authListenable: AuthListenable(),
@@ -99,7 +108,7 @@ void main() {
       );
 
       when(
-        () => mockAuthApiClient.logIn(any()),
+        () => mockAuthApiClient.loginAsync(any(), any()),
       ).thenAnswer((_) async => Success(loginResponse));
       when(
         () => mockSecureStorageService.saveUuid(any()),
@@ -112,6 +121,7 @@ void main() {
         email: "test@example.com",
         password: "password123",
       );
+      verify(() => mockSecureStorageService.saveToken("new-token")).called(1);
 
       // Act: Simulate fresh SharedPreferences after login and re-fetch
       when(
@@ -125,6 +135,61 @@ void main() {
 
       // Assert: New UUID is returned
       expect(uuid, equals("new-uuid"));
+    });
+    test("logout clears the persisted token", () async {
+      // Arrange
+      when(
+        () => mockSecureStorageService.fetchToken(),
+      ).thenAnswer((_) async => const Success("access-token"));
+      when(
+        () => mockSecureStorageService.saveUuid(any()),
+      ).thenAnswer((_) async => const Success(true));
+      when(
+        () => mockSecureStorageService.saveToken(any()),
+      ).thenAnswer((_) async => const Success(true));
+      when(
+        () => mockAuthApiClient.logout("access-token"),
+      ).thenAnswer((_) async => Success.unit());
+
+      // Act
+      final result = await authRepository.logout();
+
+      // Assert
+      expect(result.isSuccess(), isTrue);
+      verify(() => mockSecureStorageService.saveToken(null)).called(1);
+      verify(() => mockAuthApiClient.logout("access-token")).called(1);
+    });
+
+    test("refresh persists the new access token", () async {
+      // Arrange
+      final response = LoginResponse(
+        accessToken: "refreshed-access-token",
+        refreshToken: "refreshed-refresh-token",
+        userId: "user-id",
+      );
+      when(
+        () => mockAuthApiClient.refresh("refresh-token"),
+      ).thenAnswer((_) async => Success(response));
+      when(
+        () => mockSecureStorageService.saveUuid("user-id"),
+      ).thenAnswer((_) async => const Success(true));
+      when(
+        () => mockSecureStorageService.saveToken("refreshed-access-token"),
+      ).thenAnswer((_) async => const Success(true));
+
+      // Act
+      final result = await authRepository.refresh("refresh-token");
+
+      // Assert
+      expect(result.getOrNull(), equals(response));
+      verify(
+        () => mockSecureStorageService.saveToken("refreshed-access-token"),
+      ).called(1);
+      verify(
+        () => mockSecureStorageService.saveRefreshToken(
+          "refreshed-refresh-token",
+        ),
+      ).called(1);
     });
   });
 }

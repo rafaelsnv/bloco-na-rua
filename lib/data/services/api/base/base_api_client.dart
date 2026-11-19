@@ -24,7 +24,8 @@ class BaseApiClient implements IBaseApiClient {
     final error = ApiError.fromResponse(response);
     // Every non-success response of every API client goes through here, so
     // this is the single place where a revoked session can be detected.
-    if (error.isAuthFailure) {
+    if (error.isAuthFailure &&
+        response.requestOptions.extra['skipSessionRevocation'] != true) {
       onSessionRevoked?.call(error);
     }
     return error;

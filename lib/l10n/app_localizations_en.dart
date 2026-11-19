@@ -42,7 +42,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authBackButton => 'Back';
 
   @override
-  String get authVerifyEmailSent => 'Verification email resent!';
+  String get authAccountCreated => 'Account created. Please log in.';
 
   @override
   String get authRecoveryEmailSent => 'Recovery email sent!';
@@ -63,6 +63,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginEmailInvalid => 'Invalid email';
 
   @override
+  String get loginInvalidCredentials => 'Invalid email or password.';
+
+  @override
+  String get signupEmailInUse => 'This email is already in use.';
+
+  @override
   String get loginPasswordLabel => 'Password';
 
   @override
@@ -76,6 +82,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loginEnterButton => 'Log in';
+
+  @override
+  String get loginGoogleButton => 'Sign in with Google';
 
   @override
   String get loginForgotPassword => 'Forgot your password?';
@@ -142,21 +151,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signupLoginLink => 'Already have an account? Log in';
-
-  @override
-  String get verifyEmailTitle => 'Verify your email';
-
-  @override
-  String get verifyEmailMessage => 'We sent a confirmation link to your email';
-
-  @override
-  String get verifyEmailNotReceived => 'Didn\'t get the email?';
-
-  @override
-  String get verifyEmailResendButton => 'Resend email';
-
-  @override
-  String get verifyEmailFooter => 'Once confirmed, you\'ll be taken to the app';
 
   @override
   String get logoutTitle => 'Log out';

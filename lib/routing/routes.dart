@@ -34,7 +34,6 @@ class Routes {
   static const String settings = '/settings';
 
   // Rotas de autenticação
-  static const String verifyEmail = '/verify-email';
   static const String onboarding = '/onboarding';
 
   // Padrões de rotas dinâmicas (com :param) usados no router

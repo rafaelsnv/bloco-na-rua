@@ -164,11 +164,11 @@ abstract class AppLocalizations {
   /// **'Back'**
   String get authBackButton;
 
-  /// Confirmation shown after resending the verification e-mail
+  /// Confirmation shown after account creation
   ///
   /// In en, this message translates to:
-  /// **'Verification email resent!'**
-  String get authVerifyEmailSent;
+  /// **'Account created. Please log in.'**
+  String get authAccountCreated;
 
   /// Confirmation shown after requesting a password recovery e-mail
   ///
@@ -206,6 +206,18 @@ abstract class AppLocalizations {
   /// **'Invalid email'**
   String get loginEmailInvalid;
 
+  /// No description provided for @loginInvalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password.'**
+  String get loginInvalidCredentials;
+
+  /// No description provided for @signupEmailInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already in use.'**
+  String get signupEmailInUse;
+
   /// Login password field label
   ///
   /// In en, this message translates to:
@@ -235,6 +247,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Log in'**
   String get loginEnterButton;
+
+  /// Button that starts Google OAuth sign-in
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Google'**
+  String get loginGoogleButton;
 
   /// Forgot password link and dialog title
   ///
@@ -361,36 +379,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Already have an account? Log in'**
   String get signupLoginLink;
-
-  /// E-mail verification screen headline
-  ///
-  /// In en, this message translates to:
-  /// **'Verify your email'**
-  String get verifyEmailTitle;
-
-  /// E-mail verification screen message
-  ///
-  /// In en, this message translates to:
-  /// **'We sent a confirmation link to your email'**
-  String get verifyEmailMessage;
-
-  /// Question above the resend button
-  ///
-  /// In en, this message translates to:
-  /// **'Didn\'t get the email?'**
-  String get verifyEmailNotReceived;
-
-  /// Resend verification e-mail button label
-  ///
-  /// In en, this message translates to:
-  /// **'Resend email'**
-  String get verifyEmailResendButton;
-
-  /// Footer note at the bottom of the verification screen
-  ///
-  /// In en, this message translates to:
-  /// **'Once confirmed, you\'ll be taken to the app'**
-  String get verifyEmailFooter;
 
   /// Logout button label and logout dialog title
   ///
