@@ -1,3 +1,7 @@
+import "dart:math" as math;
+
+import "package:bloco_na_rua/core/errors/user_message.dart";
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/core/cubit/fab_state.dart";
 import "package:bloco_na_rua/ui/core/cubit/fab_state_cubit.dart";
@@ -7,6 +11,8 @@ import "package:bloco_na_rua/ui/core/widgets/buttons/add_block_fab.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/block_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/meeting_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_section_header.dart";
+import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
+import "package:bloco_na_rua/ui/core/widgets/layout/content_width_limiter.dart";
 import "package:bloco_na_rua/ui/core/widgets/navigation/app_app_bar.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_empty.dart";
 import "package:bloco_na_rua/ui/core/widgets/state/app_error.dart";
@@ -25,7 +31,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _fabKey = GlobalKey();
+  /// Fraction of the viewport width taken by a single card in the carousel.
+  static const double _blockCardWidthFactor = 0.775;
 
   @override
   void initState() {
@@ -42,34 +49,18 @@ class _HomeScreenState extends State<HomeScreen> {
               current.status == HomeStatus.failure &&
               previous.status != HomeStatus.failure,
           listener: (context, state) {
-            if (state.errorMessage != null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Row(
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        color: Theme.of(context).colorScheme.onError,
-                      ),
-                      const SizedBox(width: Spacing.space_2xs),
-                      Expanded(child: Text(state.errorMessage!)),
-                    ],
-                  ),
-                  backgroundColor: Theme.of(context).colorScheme.error,
-                  behavior: SnackBarBehavior.floating,
-                ),
+            if (state.failure != null) {
+              AppSnackbar.error(
+                context,
+                message: extractUserMessage(state.failure, context),
               );
             }
           },
           child: Stack(
             children: [
-              if (fabState.expanded)
-                ModalBarrier(
-                  onDismiss: () => context.read<FabStateCubit>().dismiss(),
-                ),
               Scaffold(
                 appBar: AppAppBar(
-                  title: "Bloco na Rua",
+                  title: AppLocalizations.of(context)!.homeAppTitle,
                   centerTitle: false,
                   showBackButton: false,
                 ),
@@ -84,11 +75,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         switch (state.status) {
                           case HomeStatus.initial:
                           case HomeStatus.loading:
-                            return const AppLoading(message: "Carregando...");
+                            return AppLoading(
+                              message: AppLocalizations.of(
+                                context,
+                              )!.coreLoading,
+                            );
 
                           case HomeStatus.failure:
                             return AppError(
-                              message: state.errorMessage,
+                              message: state.failure != null
+                                  ? extractUserMessage(state.failure, context)
+                                  : null,
                               onRetry: () =>
                                   context.read<HomeCubit>().loadHomeData(),
                             );
@@ -100,19 +97,29 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                floatingActionButton: AddBlockFab(
-                  key: _fabKey,
-                  isExpanded: fabState.expanded,
-                  shouldAnimate: fabState.shouldAnimate,
-                  onFabPressed: () => context.read<FabStateCubit>().toggle(),
-                  onExpandedChanged: (expanded) {
-                    if (!expanded) {
-                      context.read<FabStateCubit>().dismiss();
-                    }
-                  },
+              ),
+              if (fabState.expanded)
+                ModalBarrier(
+                  onDismiss: () => context.read<FabStateCubit>().dismiss(),
                 ),
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.endFloat,
+              Align(
+                alignment: Alignment.bottomRight,
+                child: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.all(Spacing.space_sm),
+                    child: AddBlockFab(
+                      isExpanded: fabState.expanded,
+                      shouldAnimate: fabState.shouldAnimate,
+                      onFabPressed: () =>
+                          context.read<FabStateCubit>().toggle(),
+                      onExpandedChanged: (expanded) {
+                        if (!expanded) {
+                          context.read<FabStateCubit>().dismiss();
+                        }
+                      },
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -124,141 +131,146 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildContent(BuildContext context, HomeState state) {
     final blocks = state.blocks;
     final meetings = state.meetings.take(3).toList();
+    final pagePadding = Spacing.pagePaddingFor(context);
+    final l10n = AppLocalizations.of(context)!;
 
-    return SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.only(bottom: Spacing.space_3xl),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Hero greeting section
-          Padding(
-            padding: const EdgeInsets.all(Spacing.pagePaddingMobile),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Olá!",
-                  style: AppTypography.headlineMedium.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                const SizedBox(height: Spacing.space_4xs),
-                Text(
-                  "Veja seus blocos e encontros",
-                  style: AppTypography.bodyMedium.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Meus blocos section
-          AppSectionHeader(
-            title: "Meus blocos",
-            action: TextButton(
-              onPressed: () {
-                final shell = StatefulNavigationShell.of(context);
-                shell.goBranch(1, initialLocation: true);
-              },
-              child: Text(
-                "Ver todos",
-                style: AppTypography.labelLarge.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            ),
-          ),
-
-          // Blocks horizontal list
-          if (blocks.isEmpty)
+    return ContentWidthLimiter(
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.only(bottom: Spacing.space_3xl),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Hero greeting section
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Spacing.pagePaddingMobile,
-              ),
-              child: AppEmpty(
-                message: "Nenhum bloco ainda",
-                actionLabel: "Criar bloco",
-                onAction: () => context.push(Routes.createBlock),
-                secondaryActionLabel: "Entrar em bloco",
-                onSecondaryAction: () => context.push(Routes.joinBlock),
-              ),
-            )
-          else
-            SizedBox(
-              height: 90,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Spacing.pagePaddingMobile,
-                ),
-                itemCount: blocks.length,
-                separatorBuilder: (context, index) =>
-                    Container(width: Spacing.space_2xs),
-                itemBuilder: (context, i) {
-                  final block = blocks[i];
-                  return SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.775,
-                    child: BlockCard(
-                      block: block,
-                      onTap: () =>
-                          context.push("${Routes.carnivalBlock}/${block.id}"),
-                    ),
-                  );
-                },
-              ),
-            ),
-
-          const SizedBox(height: Spacing.sectionGap),
-
-          // Próximos encontros section
-          AppSectionHeader(
-            title: "Próximos encontros",
-            action: TextButton(
-              onPressed: () {
-                final shell = StatefulNavigationShell.of(context);
-                shell.goBranch(2, initialLocation: true);
-              },
-              child: Text(
-                "Ver todos",
-                style: AppTypography.labelLarge.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            ),
-          ),
-
-          // Meetings list
-          if (meetings.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Spacing.pagePaddingMobile,
-              ),
-              child: AppEmpty(message: "Nenhum encontro esta semana"),
-            )
-          else
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Spacing.pagePaddingMobile,
+              padding: EdgeInsets.symmetric(
+                horizontal: pagePadding,
+                vertical: Spacing.pagePaddingMobile,
               ),
               child: Column(
-                children: meetings.map((meeting) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: Spacing.space_sm),
-                    child: MeetingCard(
-                      meeting: meeting,
-                      totalPresences: null,
-                      confirmedPresences: null,
-                      showDescription: false,
-                      onTap: () =>
-                          context.push("${Routes.meeting}/${meeting.id}"),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.homeGreeting,
+                    style: AppTypography.headlineMedium.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
                     ),
-                  );
-                }).toList(),
+                  ),
+                  const SizedBox(height: Spacing.space_4xs),
+                  Text(
+                    l10n.homeSubtitle,
+                    style: AppTypography.bodyMedium.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
               ),
             ),
-        ],
+
+            // Meus blocos section
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: pagePadding),
+              child: AppSectionHeader(
+                title: l10n.homeMyBlocks,
+                action: TextButton(
+                  onPressed: () {
+                    final shell = StatefulNavigationShell.of(context);
+                    shell.goBranch(1, initialLocation: true);
+                  },
+                  child: Text(
+                    l10n.homeSeeAll,
+                    style: AppTypography.labelLarge.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // Blocks horizontal list
+            if (blocks.isEmpty)
+              AppEmpty(
+                compact: true,
+                message: l10n.homeNoBlocks,
+                actionLabel: l10n.homeCreateBlock,
+                onAction: () => context.push(Routes.createBlock),
+                secondaryActionLabel: l10n.homeJoinBlock,
+                onSecondaryAction: () => context.push(Routes.joinBlock),
+              )
+            else
+              // Intrinsic height: the row measures its cards, so the carousel
+              // grows with the text scale instead of clipping the card text.
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.symmetric(horizontal: pagePadding),
+                child: Row(
+                  children: [
+                    for (var i = 0; i < blocks.length; i++) ...[
+                      if (i > 0) const SizedBox(width: Spacing.space_2xs),
+                      SizedBox(
+                        width: math.min(
+                          MediaQuery.sizeOf(context).width *
+                              _blockCardWidthFactor,
+                          Spacing.carouselCardMaxWidth,
+                        ),
+                        child: BlockCard(
+                          block: blocks[i],
+                          onTap: () => context.push(
+                            "${Routes.carnivalBlock}/${blocks[i].id}",
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+
+            const SizedBox(height: Spacing.sectionGap),
+
+            // Próximos encontros section
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: pagePadding),
+              child: AppSectionHeader(
+                title: l10n.homeUpcomingMeetings,
+                action: TextButton(
+                  onPressed: () {
+                    final shell = StatefulNavigationShell.of(context);
+                    shell.goBranch(2, initialLocation: true);
+                  },
+                  child: Text(
+                    l10n.homeSeeAll,
+                    style: AppTypography.labelLarge.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // Meetings list
+            if (meetings.isEmpty)
+              AppEmpty(compact: true, message: l10n.homeNoMeetingsThisWeek)
+            else
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: pagePadding),
+                child: Column(
+                  children: meetings.map((meeting) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: Spacing.space_sm),
+                      child: MeetingCard(
+                        meeting: meeting,
+                        totalPresences: null,
+                        confirmedPresences: null,
+                        showDescription: false,
+                        onTap: () =>
+                            context.push("${Routes.meeting}/${meeting.id}"),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

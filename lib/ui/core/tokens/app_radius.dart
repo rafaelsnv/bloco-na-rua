@@ -38,6 +38,10 @@ class Radii {
   /// Full — circular/pill shape. Avatars, FABs.
   static const double full = 9999.0;
 
+  /// Outline/border stroke width — 1.5px for a clear visual boundary.
+  /// Shared by the theme's card + app bar hairline and the outlined button.
+  static const double outlineWidth = 1.5;
+
   /// BorderRadius.circular(xs) — 4px all corners.
   static final BorderRadius radiusXs = BorderRadius.circular(xs);
 

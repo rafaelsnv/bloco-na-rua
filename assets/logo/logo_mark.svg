@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Bloco na Rua">
+  <title>Bloco na Rua — mark (light surfaces)</title>
+  <desc>Fanfarra horn + sunburst on a violet tile. For light backgrounds.</desc>
+  <rect width="64" height="64" rx="18" fill="#7C3AED"/>
+  <g transform="translate(29.43 36.36) rotate(-35) scale(0.92)">
+    <g fill="#FBBF24">
+      <g transform="translate(6 0)">
+        <g transform="rotate(-50)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+        <g transform="rotate(-25)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+        <path d="M15 -3 L24 -1 L24 1 L15 3 Z"/>
+        <g transform="rotate(25)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+        <g transform="rotate(50)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+      </g>
+      <rect x="-19.1" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+      <rect x="-15.6" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+      <rect x="-12.1" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+    </g>
+    <path fill="#FFFFFF" d="M-25 -2.6 L-20 -5 L-10 -5 C-2 -5.4 2.5 -8.5 6 -11.8 A3.5 11.8 0 0 1 6 11.8 C2.5 8.5 -2 5.4 -10 5 L-20 5 L-25 2.6 Z"/>
+  </g>
+</svg>

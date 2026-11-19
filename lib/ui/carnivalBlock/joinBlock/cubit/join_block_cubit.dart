@@ -1,5 +1,5 @@
-import 'package:bloco_na_rua/core/errors/user_message.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlockMembers/icarnival_block_members_repository.dart';
+import 'package:bloco_na_rua/ui/carnivalBlock/block_error.dart';
 import 'package:bloco_na_rua/ui/carnivalBlock/joinBlock/cubit/join_block_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,27 +17,24 @@ class JoinBlockCubit extends Cubit<JoinBlockState> {
     _isLoading = true;
 
     if (inviteCode.isEmpty) {
-      emit(const JoinBlockError('O código de convite não pode estar vazio.'));
+      emit(const JoinBlockError(BlockError(BlockErrorKind.emptyInviteCode)));
       return;
     }
 
     emit(JoinBlockLoading());
 
     try {
-      final joinResult = await _carnivalBlockMembersRepository.joinByInviteCodeAsync(
-        inviteCode,
-      );
+      final joinResult = await _carnivalBlockMembersRepository
+          .joinByInviteCodeAsync(inviteCode);
 
       joinResult.fold(
         (_) => emit(JoinBlockSuccess()),
         (failure) => emit(
-          JoinBlockError(
-            'Erro ao entrar no bloco: ${extractUserMessage(failure)}',
-          ),
+          JoinBlockError(BlockError(BlockErrorKind.joinFailed, failure)),
         ),
       );
     } catch (e) {
-      emit(JoinBlockError('Erro inesperado: ${extractUserMessage(e)}'));
+      emit(JoinBlockError(BlockError(BlockErrorKind.unexpected, e)));
     } finally {
       _isLoading = false;
     }

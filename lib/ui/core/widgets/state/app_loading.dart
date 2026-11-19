@@ -1,11 +1,11 @@
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/core/widgets/feedback/app_loading_indicator.dart";
 import "package:flutter/material.dart";
-
-import "../../tokens/app_spacing.dart";
-import "../../tokens/app_typography.dart";
 
 /// Full-screen centered loading indicator.
 ///
-/// Displays a [CircularProgressIndicator] (or a static hourglass icon when
+/// Displays an [AppSpinner] (or a static hourglass icon when
 /// animations are disabled) with an optional [message] below it.
 ///
 /// Example:
@@ -19,13 +19,22 @@ class AppLoading extends StatelessWidget {
   ///
   /// [message] is optional; when provided, it is displayed below the spinner.
   /// [size] controls the size of the spinner or static icon, in pixels.
-  const AppLoading({super.key, this.message, this.size = 40});
+  /// [strokeWidth] controls the thickness of the spinner arc.
+  const AppLoading({
+    super.key,
+    this.message,
+    this.size = 40,
+    this.strokeWidth = 3,
+  });
 
   /// Optional loading message displayed below the spinner.
   final String? message;
 
   /// Size of the spinner or static icon, in pixels.
   final double size;
+
+  /// Stroke width of the spinner arc.
+  final double strokeWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +50,10 @@ class AppLoading extends StatelessWidget {
           children: [
             animationsDisabled
                 ? Icon(Icons.hourglass_top_rounded, size: size, color: primary)
-                : SizedBox(
-                    width: size,
-                    height: size,
-                    child: CircularProgressIndicator(
-                      color: primary,
-                      strokeWidth: 3,
-                    ),
+                : AppSpinner(
+                    size: size,
+                    strokeWidth: strokeWidth,
+                    color: primary,
                   ),
             if (message != null) ...[
               const SizedBox(height: Spacing.space_md),

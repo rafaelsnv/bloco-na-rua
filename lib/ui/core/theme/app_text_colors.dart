@@ -11,50 +11,45 @@ class AppTextColors extends ThemeExtension<AppTextColors> {
   const AppTextColors({
     required this.textTertiary,
     required this.textDisabled,
-    required this.textTertiaryDark,
-    required this.textDisabledDark,
+    required this.info,
   });
 
-  /// Tertiary text color for light surfaces.
+  /// Tertiary text color for the active theme.
   final Color textTertiary;
 
   /// Disabled text color for the active theme.
   final Color textDisabled;
 
-  /// Tertiary text color for dark surfaces.
-  final Color textTertiaryDark;
-
-  /// Disabled text color for dark surfaces.
-  final Color textDisabledDark;
+  /// Ink for the "info" role on the active theme's surface.
+  ///
+  /// A deeper cyan in light mode and a lighter cyan in dark mode, so a
+  /// heading painted with it reads in both brightness modes.
+  final Color info;
 
   /// Text colors used by the light theme.
   static const AppTextColors light = AppTextColors(
     textTertiary: AppColors.textTertiary,
     textDisabled: AppColors.textDisabled,
-    textTertiaryDark: AppColors.textTertiaryDark,
-    textDisabledDark: AppColors.textDisabledDark,
+    info: AppColors.infoHeadingLight,
   );
 
   /// Text colors used by the dark theme.
   static const AppTextColors dark = AppTextColors(
     textTertiary: AppColors.textTertiaryDark,
     textDisabled: AppColors.textDisabledDark,
-    textTertiaryDark: AppColors.textTertiaryDark,
-    textDisabledDark: AppColors.textDisabledDark,
+    info: AppColors.infoHeadingDark,
   );
 
   @override
   AppTextColors copyWith({
     Color? textTertiary,
     Color? textDisabled,
-    Color? textTertiaryDark,
-    Color? textDisabledDark,
+    Color? info,
   }) {
     return AppTextColors(
       textTertiary: textTertiary ?? this.textTertiary,
       textDisabled: textDisabled ?? this.textDisabled,
-      textTertiaryDark: textTertiaryDark ?? this.textTertiaryDark,
-      textDisabledDark: textDisabledDark ?? this.textDisabledDark,
+      info: info ?? this.info,
     );
   }
 
@@ -65,16 +60,7 @@ class AppTextColors extends ThemeExtension<AppTextColors> {
     return AppTextColors(
       textTertiary: Color.lerp(textTertiary, other.textTertiary, t)!,
       textDisabled: Color.lerp(textDisabled, other.textDisabled, t)!,
-      textTertiaryDark: Color.lerp(
-        textTertiaryDark,
-        other.textTertiaryDark,
-        t,
-      )!,
-      textDisabledDark: Color.lerp(
-        textDisabledDark,
-        other.textDisabledDark,
-        t,
-      )!,
+      info: Color.lerp(info, other.info, t)!,
     );
   }
 }

@@ -1,6 +1,6 @@
-import 'package:bloco_na_rua/core/errors/user_message.dart';
 import 'package:bloco_na_rua/data/repositories/meetings/imeetings_repository.dart';
 import 'package:bloco_na_rua/ui/meetings/editMeeting/cubit/edit_meeting_state.dart';
+import 'package:bloco_na_rua/ui/meetings/meeting_error.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 
@@ -26,7 +26,7 @@ class EditMeetingCubit extends Cubit<EditMeetingState> {
         emit(
           state.copyWith(
             status: EditMeetingStatus.failure,
-            errorMessage: extractUserMessage(exception),
+            error: MeetingError(MeetingErrorKind.request, exception),
           ),
         );
       },
@@ -47,7 +47,7 @@ class EditMeetingCubit extends Cubit<EditMeetingState> {
         emit(
           state.copyWith(
             status: EditMeetingStatus.failure,
-            errorMessage: extractUserMessage(exception),
+            error: MeetingError(MeetingErrorKind.request, exception),
           ),
         );
       },

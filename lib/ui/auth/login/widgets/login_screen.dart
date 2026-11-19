@@ -1,16 +1,18 @@
-import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 
+import "package:bloco_na_rua/core/errors/user_message.dart";
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_cubit.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_state.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
+import "package:bloco_na_rua/ui/core/widgets/feedback/app_dialog.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
 import "package:bloco_na_rua/ui/core/widgets/inputs/app_text_field.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_logo.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 
@@ -25,72 +27,123 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
-  final ValueNotifier<bool> _isFormValidNotifier = ValueNotifier<bool>(false);
   bool _obscurePassword = true;
+
+  /// Fields the user has already edited.
+  ///
+  /// Only these may paint an error before the first submit attempt — a
+  /// pristine field the user never touched stays neutral.
+  bool _emailTouched = false;
+  bool _passwordTouched = false;
+
+  /// True once the user tried to submit.
+  ///
+  /// From then on every invalid field shows its error, and the form is
+  /// re-validated on every edit so the errors stay in sync.
+  bool _submitAttempted = false;
 
   bool _isValidEmail(String value) {
     final trimmed = value.trim();
     return RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(trimmed);
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _email.addListener(_validateForm);
-    _password.addListener(_validateForm);
-    _validateForm();
+  /// Error message for the e-mail field, or null when the value is valid.
+  String? _emailValidator(String? value, AppLocalizations l10n) {
+    if (value == null || value.isEmpty) {
+      return l10n.loginEmailRequired;
+    }
+    if (!_isValidEmail(value)) {
+      return l10n.loginEmailInvalid;
+    }
+    return null;
+  }
+
+  /// Error message for the password field, or null when the value is valid.
+  String? _passwordValidator(String? value, AppLocalizations l10n) {
+    if (value == null || value.isEmpty) {
+      return l10n.loginPasswordRequired;
+    }
+    return null;
   }
 
   @override
   void dispose() {
-    _email.removeListener(_validateForm);
-    _password.removeListener(_validateForm);
-    _isFormValidNotifier.dispose();
     _email.dispose();
     _password.dispose();
     super.dispose();
   }
 
-  void _validateForm() {
-    _isFormValidNotifier.value = _formKey.currentState?.validate() ?? false;
+  /// Keeps the painted error states in sync after an edit.
+  void _syncForm() {
+    if (_submitAttempted) {
+      // After a submit attempt every invalid field shows its error, so the
+      // whole form has to be re-validated on every edit.
+      _formKey.currentState?.validate();
+    }
+  }
+
+  void _onEmailChanged(String _) {
+    setState(() => _emailTouched = true);
+    _syncForm();
+  }
+
+  void _onPasswordChanged(String _) {
+    setState(() => _passwordTouched = true);
+    _syncForm();
   }
 
   void _submit() {
-    if (_formKey.currentState!.validate()) {
+    setState(() => _submitAttempted = true);
+    if (_formKey.currentState?.validate() ?? false) {
       context.read<AuthCubit>().login(_email.text, _password.text);
     }
   }
 
-  void _showForgotPasswordDialog(BuildContext outerContext) {
-    showDialog<bool>(
-      context: outerContext,
-      builder: (_) => _ForgotPasswordDialog(outerContext: outerContext),
+  Future<void> _handleForgotPassword(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+    final email = _email.text.trim();
+    if (email.isEmpty) {
+      AppSnackbar.error(context, message: l10n.loginEmailRequired);
+      return;
+    }
+    if (!_isValidEmail(email)) {
+      AppSnackbar.error(context, message: l10n.loginEmailInvalid);
+      return;
+    }
+
+    final confirmed = await AppDialog.confirm(
+      context,
+      title: l10n.loginForgotPassword,
+      // The dialog has no input of its own — the address comes from the
+      // e-mail field of the form behind it, so the message names it.
+      message: l10n.loginRecoveryMessage(email),
+      confirmLabel: l10n.loginSendButton,
+      cancelLabel: l10n.loginCancel,
     );
+    if (confirmed != true) return;
+    if (!context.mounted) return;
+    context.read<AuthCubit>().resetPassword(email);
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colors = Theme.of(context).colorScheme;
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
-          AppSnackbar.error(context, message: state.message);
+          AppSnackbar.error(
+            context,
+            message: extractUserMessage(state.error, context),
+          );
         } else if (state is AuthAuthenticated) {
           context.go(Routes.home);
         } else if (state is AuthSuccess) {
-          AppSnackbar.success(context, message: state.message ?? "Sucesso!");
+          AppSnackbar.success(context, message: state.localizedMessage(l10n));
         }
       },
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          title: Text(
-            "Bloco na Rua",
-            style: AppTypography.displaySmall.copyWith(color: colors.primary),
-          ),
-        ),
+        appBar: AppBar(centerTitle: false, title: Text(l10n.authAppTitle)),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
@@ -99,21 +152,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Header section
-                  Icon(
-                    Icons.celebration_rounded,
-                    size: 80,
-                    color: colors.primary,
-                  ),
+                  const AppLogo(size: AppIconSizes.illustration),
                   const SizedBox(height: Spacing.space_sm),
-                  Text(
-                    "Bem vindo",
-                    style: AppTypography.displaySmall.copyWith(
-                      color: colors.primary,
+                  SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      l10n.loginTitle,
+                      textAlign: TextAlign.left,
+                      style: AppTypography.displaySmall.copyWith(
+                        color: colors.primary,
+                      ),
                     ),
                   ),
                   const SizedBox(height: Spacing.space_xs),
                   Text(
-                    "Entre para gerenciar seu bloco",
+                    l10n.loginSubtitle,
                     style: AppTypography.bodyLarge.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -130,77 +183,84 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           // E-mail field
                           AppTextField(
-                            label: "E-mail",
+                            label: l10n.loginEmailLabel,
                             controller: _email,
                             keyboardType: TextInputType.emailAddress,
+                            autofillHints: const [AutofillHints.email],
                             prefixIcon: Icons.email_rounded,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Por favor, insira um e-mail";
-                              }
-                              if (!_isValidEmail(value)) {
-                                return "E-mail inválido";
-                              }
-                              return null;
-                            },
-                            onChanged: (_) => _validateForm(),
+                            validator: (value) => _emailValidator(value, l10n),
+                            errorText: _emailTouched
+                                ? _emailValidator(_email.text, l10n)
+                                : null,
+                            onChanged: _onEmailChanged,
                           ),
 
                           const SizedBox(height: Spacing.space_sm),
 
                           // Password field
                           AppTextField(
-                            label: "Senha",
+                            label: l10n.loginPasswordLabel,
                             controller: _password,
                             keyboardType: TextInputType.visiblePassword,
                             prefixIcon: Icons.lock_rounded,
                             obscureText: _obscurePassword,
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscurePassword
-                                    ? Icons.visibility_off_rounded
-                                    : Icons.visibility_rounded,
+                            autofillHints: const [AutofillHints.password],
+                            // A password is never autocorrected or suggested.
+                            autocorrect: false,
+                            enableSuggestions: false,
+                            suffixIcon: Semantics(
+                              label: _obscurePassword
+                                  ? l10n.loginShowPassword
+                                  : l10n.loginHidePassword,
+                              button: true,
+                              child: IconButton(
+                                icon: Icon(
+                                  _obscurePassword
+                                      ? Icons.visibility_off_rounded
+                                      : Icons.visibility_rounded,
+                                ),
+                                tooltip: _obscurePassword
+                                    ? l10n.loginShowPassword
+                                    : l10n.loginHidePassword,
+                                onPressed: () {
+                                  setState(() {
+                                    _obscurePassword = !_obscurePassword;
+                                  });
+                                },
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  _obscurePassword = !_obscurePassword;
-                                });
-                              },
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Por favor, insira uma senha";
-                              }
-                              return null;
-                            },
-                            onChanged: (_) => _validateForm(),
+                            validator: (value) =>
+                                _passwordValidator(value, l10n),
+                            errorText: _passwordTouched
+                                ? _passwordValidator(_password.text, l10n)
+                                : null,
+                            onChanged: _onPasswordChanged,
+                            // The keyboard action submits the form too, so the
+                            // last field is not a dead end.
+                            onSubmitted: (_) => _submit(),
                           ),
 
                           const SizedBox(height: Spacing.space_lg),
 
-                          // Submit button
+                          // Submit button — always enabled. An invalid form is
+                          // reported inline when the user submits, instead of
+                          // a CTA that never becomes tappable.
                           BlocBuilder<AuthCubit, AuthState>(
                             builder: (context, state) {
                               if (state is AuthLoading) {
-                                return const AppButton(
-                                  label: "Entrar",
+                                return AppButton(
+                                  label: l10n.loginEnterButton,
                                   isLoading: true,
                                   isFullWidth: true,
                                   variant: AppButtonVariant.accent,
                                 );
                               }
 
-                              return ValueListenableBuilder<bool>(
-                                valueListenable: _isFormValidNotifier,
-                                builder: (context, isFormValid, child) {
-                                  return AppButton(
-                                    label: "Entrar",
-                                    onPressed: isFormValid ? _submit : null,
-                                    isDisabled: !isFormValid,
-                                    isFullWidth: true,
-                                    variant: AppButtonVariant.accent,
-                                  );
-                                },
+                              return AppButton(
+                                label: l10n.loginEnterButton,
+                                onPressed: _submit,
+                                isFullWidth: true,
+                                variant: AppButtonVariant.accent,
                               );
                             },
                           ),
@@ -212,12 +272,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: Spacing.space_md),
 
                   // Forgot password link
-                  GestureDetector(
-                    onTap: () => _showForgotPasswordDialog(context),
+                  TextButton(
+                    onPressed: () => _handleForgotPassword(context),
                     child: Text(
-                      "Esqueceu a senha?",
+                      l10n.loginForgotPassword,
                       style: AppTypography.bodyLarge.copyWith(
                         color: colors.primary,
+                        decoration: TextDecoration.underline,
                       ),
                     ),
                   ),
@@ -225,142 +286,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: Spacing.space_sm),
 
                   // Register link
-                  GestureDetector(
-                    onTap: () => context.go(Routes.register),
+                  TextButton(
+                    onPressed: () => context.go(Routes.register),
                     child: Text(
-                      "Não tem uma conta? Cadastre-se",
+                      l10n.loginRegisterLink,
                       style: AppTypography.bodyLarge.copyWith(
                         color: colors.primary,
+                        decoration: TextDecoration.underline,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// -------------------------------------------------------------------------
-// _ForgotPasswordDialog — custom dialog with email field for password reset.
-// -------------------------------------------------------------------------
-
-class _ForgotPasswordDialog extends StatefulWidget {
-  const _ForgotPasswordDialog({required this.outerContext});
-
-  final BuildContext outerContext;
-
-  @override
-  State<_ForgotPasswordDialog> createState() => _ForgotPasswordDialogState();
-}
-
-class _ForgotPasswordDialogState extends State<_ForgotPasswordDialog> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  bool _isFormValid = false;
-
-  bool _isValidEmail(String value) {
-    final trimmed = value.trim();
-    return RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(trimmed);
-  }
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    super.dispose();
-  }
-
-  void _validateForm() {
-    setState(() {
-      _isFormValid = _formKey.currentState?.validate() ?? false;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: Radii.modal,
-        ),
-        padding: const EdgeInsets.all(Spacing.space_lg),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                "Esqueceu a senha?",
-                style: AppTypography.headlineSmall.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: Spacing.space_xs),
-              Text(
-                "Informe seu e-mail para receber o link de recuperacao.",
-                style: AppTypography.bodyMedium.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: Spacing.space_lg),
-              AppTextField(
-                label: "E-mail",
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                prefixIcon: Icons.email_rounded,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Por favor, insira um e-mail";
-                  }
-                  if (!_isValidEmail(value)) {
-                    return "E-mail inválido";
-                  }
-                  return null;
-                },
-                onChanged: (_) => _validateForm(),
-              ),
-              const SizedBox(height: Spacing.space_lg),
-              Row(
-                children: [
-                  Flexible(
-                    fit: FlexFit.tight,
-                    child: AppButton(
-                      label: "Cancelar",
-                      size: AppButtonSizeMetrics.sm,
-                      variant: AppButtonVariant.tertiary,
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                  ),
-                  const SizedBox(width: Spacing.space_xs),
-                  Flexible(
-                    fit: FlexFit.tight,
-                    child: AppButton(
-                      label: "Enviar",
-                      size: AppButtonSizeMetrics.sm,
-                      variant: AppButtonVariant.accent,
-                      isDisabled: !_isFormValid,
-                      onPressed: !_isFormValid
-                          ? null
-                          : () {
-                              if (_formKey.currentState!.validate()) {
-                                widget.outerContext
-                                    .read<AuthCubit>()
-                                    .resetPassword(_emailController.text);
-                                Navigator.of(context).pop();
-                              }
-                            },
-                    ),
-                  ),
-                ],
-              ),
-            ],
           ),
         ),
       ),

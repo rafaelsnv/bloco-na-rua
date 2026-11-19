@@ -1,5 +1,7 @@
 import "dart:async";
 
+import "package:bloco_na_rua/core/errors/user_message.dart";
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_cubit.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_state.dart";
@@ -8,6 +10,7 @@ import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/feedback/app_snackbar.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/onboarding/onboarding_prefs.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
@@ -24,6 +27,7 @@ class VerifyEmailScreen extends StatefulWidget {
 
 class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
   StreamSubscription<dynamic>? _authSubscription;
+  bool _didRoute = false;
 
   @override
   void initState() {
@@ -38,18 +42,19 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
   }
 
   void _startListeningForVerification() {
-    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen(
-      (response) {
-        if (response.event == AuthChangeEvent.signedIn && response.session != null) {
-          // Verify the session has a recent email confirmation timestamp
-          // to ensure this is from email verification, not just any sign-in
-          final session = response.session!;
-          if (session.user.emailConfirmedAt != null) {
-            _navigateAfterVerification();
-          }
+    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((
+      response,
+    ) {
+      if (response.event == AuthChangeEvent.signedIn &&
+          response.session != null) {
+        // Verify the session has a recent email confirmation timestamp
+        // to ensure this is from email verification, not just any sign-in
+        final session = response.session!;
+        if (session.user.emailConfirmedAt != null) {
+          _navigateAfterVerification();
         }
-      },
-    );
+      }
+    });
   }
 
   void _resendVerification() {
@@ -58,36 +63,35 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colors = Theme.of(context).colorScheme;
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
           AppSnackbar.error(
             context,
-            message: state.message,
+            message: extractUserMessage(state.error, context),
           );
         } else if (state is AuthSuccess) {
-          AppSnackbar.success(context, message: state.message ?? "Sucesso!");
+          AppSnackbar.success(context, message: state.localizedMessage(l10n));
         } else if (state is AuthAuthenticated) {
           // User confirmed email and logged in - check onboarding status
           _navigateAfterVerification();
         }
       },
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_rounded),
-            onPressed: () => context.pop(),
-          ),
-          title: Text(
-            "Bloco na Rua",
-            style: AppTypography.displaySmall.copyWith(
-              color: colors.primary,
+          centerTitle: false,
+          leading: Semantics(
+            label: l10n.authBackButton,
+            button: true,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_rounded),
+              tooltip: l10n.authBackButton,
+              onPressed: () => context.pop(),
             ),
           ),
+          title: Text(l10n.authAppTitle),
         ),
         body: SafeArea(
           child: Padding(
@@ -99,12 +103,12 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 const Spacer(),
                 Icon(
                   Icons.mark_email_unread_rounded,
-                  size: 100,
+                  size: AppIconSizes.illustrationLarge,
                   color: colors.primary,
                 ),
                 const SizedBox(height: Spacing.space_lg),
                 Text(
-                  "Verifique seu e-mail",
+                  l10n.verifyEmailTitle,
                   style: AppTypography.headlineMedium.copyWith(
                     color: colors.primary,
                   ),
@@ -112,7 +116,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 ),
                 const SizedBox(height: Spacing.space_md),
                 Text(
-                  "Enviamos um link de confirmação para seu e-mail",
+                  l10n.verifyEmailMessage,
                   style: AppTypography.bodyLarge.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -131,7 +135,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                   child: Column(
                     children: [
                       Text(
-                        "Não recebeu o e-mail?",
+                        l10n.verifyEmailNotReceived,
                         style: AppTypography.bodyMedium.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -140,15 +144,15 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                       BlocBuilder<AuthCubit, AuthState>(
                         builder: (context, state) {
                           if (state is AuthLoading) {
-                            return const AppButton(
-                              label: "Reenviar e-mail",
+                            return AppButton(
+                              label: l10n.verifyEmailResendButton,
                               isLoading: true,
                               isFullWidth: true,
                               variant: AppButtonVariant.secondary,
                             );
                           }
                           return AppButton(
-                            label: "Reenviar e-mail",
+                            label: l10n.verifyEmailResendButton,
                             onPressed: _resendVerification,
                             isFullWidth: true,
                             variant: AppButtonVariant.secondary,
@@ -160,7 +164,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 ),
                 const Spacer(),
                 Text(
-                  "Depois de confirmar, você será direcionado para o app",
+                  l10n.verifyEmailFooter,
                   style: AppTypography.bodySmall.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -175,9 +179,18 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     );
   }
 
-  void _navigateAfterVerification() {
-    // Navigate to onboarding on first login, or home on subsequent logins
-    // For now, always go to home - onboarding check can be added later
-    context.go(Routes.home);
+  /// Sends the user to the onboarding on the first authenticated entry, to
+  /// home on every later one.
+  Future<void> _navigateAfterVerification() async {
+    if (_didRoute) return;
+    _didRoute = true;
+    var hasSeenOnboarding = true;
+    try {
+      hasSeenOnboarding = await OnboardingPrefs.hasSeenOnboarding();
+    } catch (_) {
+      // A storage failure must not block the entry — go home.
+    }
+    if (!mounted) return;
+    context.go(hasSeenOnboarding ? Routes.home : Routes.onboarding);
   }
 }

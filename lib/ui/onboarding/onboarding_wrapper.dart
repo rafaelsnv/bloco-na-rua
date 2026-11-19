@@ -1,7 +1,11 @@
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_duration.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/onboarding/onboarding_prefs.dart";
 import "package:bloco_na_rua/ui/onboarding/screens/onboarding_1_screen.dart";
 import "package:bloco_na_rua/ui/onboarding/screens/onboarding_2_screen.dart";
 import "package:bloco_na_rua/ui/onboarding/screens/onboarding_3_screen.dart";
@@ -33,10 +37,15 @@ class _OnboardingWrapperState extends State<OnboardingWrapper> {
 
   void _nextPage() {
     if (_currentPage < _pages.length - 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOutCubic,
-      );
+      if (MediaQuery.disableAnimationsOf(context)) {
+        // Reduced motion: jump straight to the next page, no slide.
+        _pageController.jumpToPage(_currentPage + 1);
+      } else {
+        _pageController.nextPage(
+          duration: AppDurations.slow,
+          curve: AppCurves.standard,
+        );
+      }
     } else {
       _completeOnboarding();
     }
@@ -47,13 +56,24 @@ class _OnboardingWrapperState extends State<OnboardingWrapper> {
   }
 
   void _completeOnboarding() {
-    // Onboarding completed - navigation to home
+    // Onboarding completed - flag it as seen, then go home.
+    _finishOnboarding();
+  }
+
+  Future<void> _finishOnboarding() async {
+    try {
+      await OnboardingPrefs.markOnboardingAsSeen();
+    } catch (_) {
+      // A storage failure must not trap the user on the onboarding.
+    }
+    if (!mounted) return;
     context.go(Routes.home);
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
@@ -67,7 +87,7 @@ class _OnboardingWrapperState extends State<OnboardingWrapper> {
                 child: TextButton(
                   onPressed: _skipOnboarding,
                   child: Text(
-                    "Pular",
+                    l10n.onboardingSkip,
                     style: AppTypography.labelLarge.copyWith(
                       color: colors.primary,
                     ),
@@ -102,8 +122,8 @@ class _OnboardingWrapperState extends State<OnboardingWrapper> {
               padding: const EdgeInsets.all(Spacing.pagePaddingMobile),
               child: AppButton(
                 label: _currentPage == _pages.length - 1
-                    ? "Começar"
-                    : "Próximo",
+                    ? l10n.onboardingStart
+                    : l10n.onboardingNext,
                 onPressed: _nextPage,
                 isFullWidth: true,
                 variant: AppButtonVariant.accent,
@@ -122,12 +142,14 @@ class _OnboardingWrapperState extends State<OnboardingWrapper> {
         ? Theme.of(context).colorScheme.outlineVariant
         : Theme.of(context).colorScheme.outline;
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
+      duration: MediaQuery.disableAnimationsOf(context)
+          ? AppDurations.instant
+          : AppDurations.normal,
       margin: const EdgeInsets.symmetric(horizontal: Spacing.space_2xs),
-      width: isActive ? 24 : 8,
-      height: 8,
+      width: isActive ? Spacing.space_md : Spacing.space_2xs,
+      height: Spacing.space_2xs,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: Radii.radiusXs,
         color: isActive ? Theme.of(context).colorScheme.primary : inactiveColor,
       ),
     );

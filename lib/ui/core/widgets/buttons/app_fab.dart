@@ -1,19 +1,8 @@
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_button_sizes.dart";
-import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_elevation.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:flutter/material.dart";
-
-/// Color variants for [AppFAB].
-enum AppFabColor {
-  /// Primary violet — brand primary.
-  primary,
-
-  /// Accent orange — call-to-action.
-  accent,
-
-  /// Tertiary teal — presence/online indicators.
-  tertiary,
-}
 
 /// A design-system-compliant FAB widget supporting basic and extended variants,
 /// using [FloatingActionButton] which provides native press feedback.
@@ -29,8 +18,6 @@ class AppFAB extends StatelessWidget {
   ///
   /// [size] defaults to [AppFabSizeMetrics.md] (48px diameter).
   ///
-  /// [fabColor] defaults to [AppFabColor.accent] (orange).
-  ///
   /// [child] overrides [icon] when non-null — useful for inline loading
   /// indicators. Pair with `onPressed: null` to disable interaction.
   const AppFAB({
@@ -39,7 +26,6 @@ class AppFAB extends StatelessWidget {
     this.label,
     this.child,
     this.size = AppFabSizeMetrics.md,
-    this.fabColor = AppFabColor.accent,
     super.key,
   });
 
@@ -56,28 +42,17 @@ class AppFAB extends StatelessWidget {
   /// Size preset pulling all metrics from [AppFabSizeMetrics].
   final AppFabSizeMetrics size;
 
-  /// Color variant controlling the FAB background color.
-  final AppFabColor fabColor;
-
   /// Optional override for the FAB's child widget (e.g. a spinner).
   final Widget? child;
 
-  // Standard FAB elevation.
-  static const double _elevationDefault = 6.0;
+  /// Fill for the FAB — the theme's primary colour.
+  Color _backgroundColor(BuildContext context) =>
+      Theme.of(context).colorScheme.primary;
 
-  // ponytail: FAB primary uses light variant in dark mode for better contrast on dark surface
-  Color _backgroundColor(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return switch (fabColor) {
-      AppFabColor.primary => colorScheme.primary,
-      AppFabColor.accent => AppColors.accent,
-      AppFabColor.tertiary => colorScheme.tertiary,
-    };
-  }
-
-  Color _foregroundColor(BuildContext context) {
-    return Theme.of(context).colorScheme.onPrimary;
-  }
+  /// Ink for the FAB content: the scheme's [ColorScheme.onPrimary], the token
+  /// designed for exactly this pairing.
+  Color _foregroundColor(BuildContext context) =>
+      Theme.of(context).colorScheme.onPrimary;
 
   @override
   Widget build(BuildContext context) {
@@ -91,16 +66,20 @@ class AppFAB extends StatelessWidget {
     return SizedBox(
       width: size.diameter,
       height: size.diameter,
-      child: FloatingActionButton(
-        key: effectiveKey,
-        onPressed: onPressed,
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        backgroundColor: _backgroundColor(context),
-        foregroundColor: _foregroundColor(context),
-        elevation: _elevationDefault,
-        shape: RoundedRectangleBorder(borderRadius: Radii.fab),
-        heroTag: null,
-        child: child ?? Icon(icon, size: size.iconSize),
+      child: Semantics(
+        // The FAB is icon-only — announce what it opens.
+        label: AppLocalizations.of(context)!.coreFabCreateOrJoinBlock,
+        button: true,
+        child: FloatingActionButton(
+          key: effectiveKey,
+          onPressed: onPressed,
+          backgroundColor: _backgroundColor(context),
+          foregroundColor: _foregroundColor(context),
+          elevation: AppElevation.lg.value,
+          shape: RoundedRectangleBorder(borderRadius: Radii.fab),
+          heroTag: null,
+          child: child ?? Icon(icon, size: size.iconSize),
+        ),
       ),
     );
   }
@@ -111,7 +90,7 @@ class AppFAB extends StatelessWidget {
       onPressed: onPressed,
       backgroundColor: _backgroundColor(context),
       foregroundColor: _foregroundColor(context),
-      elevation: _elevationDefault,
+      elevation: AppElevation.lg.value,
       shape: RoundedRectangleBorder(borderRadius: Radii.fab),
       heroTag: null,
       icon: Icon(icon, size: size.iconSize),

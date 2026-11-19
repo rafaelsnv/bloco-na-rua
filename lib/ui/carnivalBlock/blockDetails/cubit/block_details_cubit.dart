@@ -1,6 +1,6 @@
-import 'package:bloco_na_rua/core/errors/user_message.dart';
 import 'package:bloco_na_rua/data/repositories/carnivalBlocks/icarnival_blocks_repository.dart';
 import 'package:bloco_na_rua/domain/use_cases/auth/get_current_user_data.dart';
+import 'package:bloco_na_rua/ui/carnivalBlock/block_error.dart';
 import 'package:bloco_na_rua/ui/carnivalBlock/blockDetails/cubit/block_details_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,7 +25,7 @@ class BlockDetailsCubit extends Cubit<BlockDetailsState> {
 
     final blockId = int.tryParse(_carnivalBlockId);
     if (blockId == null) {
-      emit(const BlockDetailsError('ID do bloco inválido'));
+      emit(const BlockDetailsError(BlockError(BlockErrorKind.invalidId)));
       return;
     }
 
@@ -33,13 +33,13 @@ class BlockDetailsCubit extends Cubit<BlockDetailsState> {
 
     if (result.isError()) {
       final failure = result.exceptionOrNull();
-      emit(BlockDetailsError(extractUserMessage(failure)));
+      emit(BlockDetailsError(BlockError(BlockErrorKind.request, failure)));
       return;
     }
 
     final block = result.getOrNull();
     if (block == null) {
-      emit(BlockDetailsError('Bloco não encontrado'));
+      emit(const BlockDetailsError(BlockError(BlockErrorKind.notFound)));
       return;
     }
 

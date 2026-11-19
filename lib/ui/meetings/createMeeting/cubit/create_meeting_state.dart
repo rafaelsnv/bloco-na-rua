@@ -1,21 +1,25 @@
+import 'package:bloco_na_rua/ui/meetings/meeting_error.dart';
+
 enum CreateMeetingStatus { initial, loading, success, failure }
 
 class CreateMeetingState {
   final CreateMeetingStatus status;
-  final String? errorMessage;
+
+  /// The failure, when the operation failed. Localized by the screen.
+  final MeetingError? error;
 
   const CreateMeetingState({
     this.status = CreateMeetingStatus.initial,
-    this.errorMessage,
+    this.error,
   });
 
   CreateMeetingState copyWith({
     CreateMeetingStatus? status,
-    String? errorMessage,
+    MeetingError? error,
   }) {
     return CreateMeetingState(
       status: status ?? this.status,
-      errorMessage: errorMessage ?? this.errorMessage,
+      error: error ?? this.error,
     );
   }
 }

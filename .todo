@@ -1,0 +1,7 @@
+1. Confirmar presença de outro membro disponível somente para owner/manager
+2. Adicionar página para editar o encontro
+3. Investigar erro ao adicionar membro "Session expired. Please log in again." 
+4. Adicionar tradução para os erros da api
+5. FAB de entrar/criar bloco
+5.1 Remover da tela de encontros
+5.1 Ajustar o tamanho dos botões que aparecem

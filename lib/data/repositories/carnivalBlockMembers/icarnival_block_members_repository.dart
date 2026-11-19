@@ -4,7 +4,9 @@ import 'package:result_dart/result_dart.dart';
 
 abstract interface class ICarnivalBlockMembersRepository {
   AsyncResult<List<CarnivalBlockMembersEntity>> getByBlockIdAsync(int blockId);
-  AsyncResult<CarnivalBlockMemberJoinResponse> joinByInviteCodeAsync(String inviteCode);
+  AsyncResult<CarnivalBlockMemberJoinResponse> joinByInviteCodeAsync(
+    String inviteCode,
+  );
   AsyncResult<CarnivalBlockMembersEntity> createAsync(
     int carnivalBlockId,
     int memberId,

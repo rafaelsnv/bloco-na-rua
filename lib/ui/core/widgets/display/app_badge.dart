@@ -1,12 +1,11 @@
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
 import "package:flutter/material.dart";
-
-import "../../tokens/app_radius.dart";
-import "../../tokens/app_spacing.dart";
-import "../../tokens/app_typography.dart";
 
 /// Badge size variants.
 ///
-/// - [sm]: Smaller padding and font (horizontal: 6, vertical: 2).
+/// - [sm]: Smaller vertical padding and font (horizontal: 8, vertical: 2).
 /// - [md]: Default larger padding and font (horizontal: 8, vertical: 4).
 enum BadgeSize { sm, md }
 
@@ -83,7 +82,7 @@ class AppBadge extends StatelessWidget {
       ),
       backgroundColor: backgroundColor,
       padding: _padding,
-      shape: RoundedRectangleBorder(borderRadius: Radii.radiusXs),
+      shape: RoundedRectangleBorder(borderRadius: Radii.chip),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
   }

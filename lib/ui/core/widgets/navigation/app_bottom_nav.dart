@@ -1,7 +1,5 @@
 import "package:flutter/material.dart";
 
-import "../../tokens/app_colors.dart";
-
 /// Represents a single navigation item in the bottom navigation bar.
 ///
 /// [icon] is shown when the item is not selected.
@@ -85,7 +83,7 @@ class AppBottomNav extends StatelessWidget {
   final Color? indicatorColor;
 
   /// The color of the icon when the item is selected.
-  /// Defaults to [ThemeData.colorScheme.onPrimaryContainer].
+  /// Defaults to [ThemeData.colorScheme.primary].
   final Color? selectedIconColor;
 
   /// The color of the icon when the item is not selected.
@@ -100,15 +98,13 @@ class AppBottomNav extends StatelessWidget {
     );
 
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final effectiveBackgroundColor =
-        backgroundColor ?? (isDark ? AppColors.surfaceDark : AppColors.surfaceNeutralLight);
+        backgroundColor ?? theme.colorScheme.surface;
     // No indicator pill in the mockup (lines 283-288) — active icon is just
     // highlighted with the primary color.
     final effectiveIndicatorColor = indicatorColor ?? Colors.transparent;
     final effectiveSelectedIconColor =
-        selectedIconColor ??
-        (isDark ? AppColors.primaryLight : AppColors.primary);
+        selectedIconColor ?? theme.colorScheme.primary;
     final effectiveUnselectedIconColor =
         unselectedIconColor ?? theme.colorScheme.onSurfaceVariant;
 

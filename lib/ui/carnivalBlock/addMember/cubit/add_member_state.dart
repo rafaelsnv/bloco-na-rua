@@ -9,28 +9,32 @@ class AddMemberState extends Equatable {
     this.allMembers = const [],
     this.filteredMembers = const [],
     this.searchQuery = '',
-    this.errorMessage,
+    this.error,
   });
 
   final AddMemberStatus status;
   final List<MembersEntity> allMembers;
   final List<MembersEntity> filteredMembers;
   final String searchQuery;
-  final String? errorMessage;
+
+  /// Raw failure captured from the repository, or null when the last load
+  /// succeeded. Converted to a user-facing message at render time by
+  /// `extractUserMessage`.
+  final Object? error;
 
   AddMemberState copyWith({
     AddMemberStatus? status,
     List<MembersEntity>? allMembers,
     List<MembersEntity>? filteredMembers,
     String? searchQuery,
-    String? errorMessage,
+    Object? error,
   }) {
     return AddMemberState(
       status: status ?? this.status,
       allMembers: allMembers ?? this.allMembers,
       filteredMembers: filteredMembers ?? this.filteredMembers,
       searchQuery: searchQuery ?? this.searchQuery,
-      errorMessage: errorMessage ?? this.errorMessage,
+      error: error ?? this.error,
     );
   }
 
@@ -40,6 +44,6 @@ class AddMemberState extends Equatable {
     allMembers,
     filteredMembers,
     searchQuery,
-    errorMessage,
+    error,
   ];
 }

@@ -1,21 +1,20 @@
-import "package:flutter_cache_manager/flutter_cache_manager.dart";
 import "package:bloco_na_rua/domain/entities/carnivalBlock/carnival_blocks_entity.dart";
+import "package:bloco_na_rua/l10n/app_localizations.dart";
+import "package:bloco_na_rua/ui/core/theme/app_text_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
+import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/app_icon_tile.dart";
+import "package:bloco_na_rua/ui/core/widgets/display/image_url_validator.dart";
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
-
-import "../../theme/app_text_colors.dart";
-import "../../tokens/app_colors.dart";
-import "../../tokens/app_radius.dart";
-import "../../tokens/app_spacing.dart";
-import "../../tokens/app_typography.dart";
-import "../cards/app_card.dart";
-import "../display/image_url_validator.dart";
-
-const _blockEmojis = ["🎭", "🎉", "🎊", "🎷", "🎺", "🪇", "🏟️"];
+import "package:flutter_cache_manager/flutter_cache_manager.dart";
 
 /// BlockCard compound widget for displaying a carnival block summary.
 ///
-/// Shows: emoji icon + block name + location • date + optional live indicator.
+/// Shows: block image or celebration icon tile + block name + location • date + optional live indicator.
 class BlockCard extends StatelessWidget {
   const BlockCard({
     super.key,
@@ -43,14 +42,11 @@ class BlockCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final surfaceVariant = Theme.of(
+    final colorScheme = Theme.of(context).colorScheme;
+    final textSecondary = colorScheme.onSurfaceVariant;
+    final textTertiary = Theme.of(
       context,
-    ).colorScheme.surfaceContainerHighest;
-    final textSecondary = Theme.of(context).colorScheme.onSurfaceVariant;
-    final textColors = Theme.of(context).extension<AppTextColors>()!;
-    final textTertiary = Theme.of(context).brightness == Brightness.dark
-        ? textColors.textTertiaryDark
-        : textColors.textTertiary;
+    ).extension<AppTextColors>()!.textTertiary;
 
     return AppCard(
       key: Key('block_card_${block.id}'),
@@ -61,37 +57,29 @@ class BlockCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Icon container — 40x40px to fit content height
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: surfaceVariant,
+            // Icon container — AppIconSizes.display to fit content height
+            if (isValidImageUrl(block.carnivalBlockImage))
+              ClipRRect(
                 borderRadius: Radii.radiusSm,
-              ),
-              child: isValidImageUrl(block.carnivalBlockImage)
-                  ? ClipRRect(
-                      borderRadius: Radii.radiusSm,
-                      child: CachedNetworkImage(
-                        imageUrl: block.carnivalBlockImage,
-                        width: 40,
-                        height: 40,
-                        fit: BoxFit.cover,
-                        cacheManager: CacheManager(
-                          Config(
-                            "appImageCache",
-                            stalePeriod: Duration(days: 7),
-                            maxNrOfCacheObjects: 200,
-                          ),
-                        ),
-                        placeholder: (_, shim) =>
-                            _buildEmojiPlaceholder(surfaceVariant),
-                        errorWidget: (_, shim, err) =>
-                            _buildEmojiPlaceholder(surfaceVariant),
-                      ),
-                    )
-                  : _buildEmojiPlaceholder(surfaceVariant),
-            ),
+                child: CachedNetworkImage(
+                  imageUrl: block.carnivalBlockImage,
+                  width: AppIconSizes.display,
+                  height: AppIconSizes.display,
+                  fit: BoxFit.cover,
+                  cacheManager: CacheManager(
+                    Config(
+                      "appImageCache",
+                      stalePeriod: Duration(days: 7),
+                      maxNrOfCacheObjects: 200,
+                    ),
+                  ),
+                  placeholder: (_, shim) => _buildIconPlaceholder(colorScheme),
+                  errorWidget: (_, shim, err) =>
+                      _buildIconPlaceholder(colorScheme),
+                ),
+              )
+            else
+              _buildIconPlaceholder(colorScheme),
             const SizedBox(width: Spacing.space_xs),
             Expanded(
               child: Column(
@@ -115,7 +103,7 @@ class BlockCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  if (isLive) _buildLiveIndicator(textTertiary),
+                  if (isLive) _buildLiveIndicator(context, textTertiary),
                 ],
               ),
             ),
@@ -125,18 +113,17 @@ class BlockCard extends StatelessWidget {
     );
   }
 
-  Widget _buildEmojiPlaceholder(Color surfaceVariant) {
-    final emoji = _blockEmojis[block.id.hashCode % _blockEmojis.length];
-    return Container(
-      decoration: BoxDecoration(
-        color: surfaceVariant,
-        borderRadius: Radii.radiusSm,
-      ),
-      child: Center(child: Text(emoji, style: const TextStyle(fontSize: 20))),
+  Widget _buildIconPlaceholder(ColorScheme colorScheme) {
+    return AppIconTile(
+      icon: Icons.celebration_rounded,
+      backgroundColor: colorScheme.primaryContainer,
+      size: AppIconSizes.display,
+      radius: Radii.sm,
+      iconSize: AppIconSizes.md,
     );
   }
 
-  Widget _buildLiveIndicator(Color textTertiary) {
+  Widget _buildLiveIndicator(BuildContext context, Color textTertiary) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -150,7 +137,7 @@ class BlockCard extends StatelessWidget {
         ),
         const SizedBox(width: Spacing.space_2xs),
         Text(
-          "Ao vivo",
+          AppLocalizations.of(context)!.coreLive,
           style: AppTypography.labelSmall.copyWith(color: textTertiary),
         ),
       ],

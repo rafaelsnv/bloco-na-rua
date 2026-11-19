@@ -83,10 +83,7 @@ pids/
 *.pid.lock
 
 # Other
-# /architecture_summary.md
 *AGENTS.md
-/.ignore
-/.opencode/*
-*opencode.json*
+
 # Widget Preview related
 .widget_preview/

@@ -1,11 +1,15 @@
+import "package:bloco_na_rua/core/date_format.dart";
 import "package:bloco_na_rua/domain/entities/members/members_entity.dart";
+import "package:bloco_na_rua/l10n/app_localizations.dart";
 import "package:bloco_na_rua/routing/routes.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_cubit.dart";
 import "package:bloco_na_rua/ui/auth/cubit/auth_state.dart";
+import "package:bloco_na_rua/ui/auth/logout/widgets/logout_action.dart";
 import "package:bloco_na_rua/ui/core/theme/theme_cubit.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_colors.dart";
+import "package:bloco_na_rua/ui/core/tokens/app_radius.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_spacing.dart";
 import "package:bloco_na_rua/ui/core/tokens/app_typography.dart";
-import "package:bloco_na_rua/ui/core/widgets/buttons/app_button.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_card.dart";
 import "package:bloco_na_rua/ui/core/widgets/cards/app_list_tile.dart";
 import "package:bloco_na_rua/ui/core/widgets/display/app_avatar.dart";
@@ -18,13 +22,13 @@ import "package:bloco_na_rua/ui/profile/cubit/profile_cubit.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
-import "package:intl/intl.dart";
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthUnauthenticated) {
@@ -32,14 +36,16 @@ class ProfileScreen extends StatelessWidget {
         }
       },
       child: Scaffold(
-        appBar: AppAppBar(title: "Perfil"),
+        appBar: AppAppBar(title: l10n.profileTitle),
         body: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
             return state.when(
               initial: () => const SizedBox.shrink(),
               loading: () => const AppLoading(),
               error: (message) => AppError(
-                message: message,
+                message: message == kProfileNotAuthenticated
+                    ? l10n.profileNotAuthenticated
+                    : message,
                 onRetry: () => context.read<ProfileCubit>().loadProfile(),
               ),
               loaded: (member) => _buildContent(context, member),
@@ -51,14 +57,21 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context, MembersEntity member) {
+    final l10n = AppLocalizations.of(context)!;
     final name = member.name ?? "";
     final email = member.email ?? "";
     final phone = member.phone ?? "";
     final createdAt = member.createdAt;
     final profileImage = member.profileImage;
+    final pagePadding = Spacing.pagePaddingFor(context);
 
     return ListView(
-      padding: const EdgeInsets.all(Spacing.pagePaddingMobile),
+      padding: EdgeInsets.fromLTRB(
+        pagePadding,
+        Spacing.pagePaddingMobile,
+        pagePadding,
+        Spacing.space_2xl,
+      ),
       children: [
         // Hero section with edit button
         Padding(
@@ -74,23 +87,33 @@ class ProfileScreen extends StatelessWidget {
                     size: AvatarSize.xl,
                     imageCacheVersion: member.updatedAt,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      AppSnackbar.info(
-                        context,
-                        message: "Editar perfil em breve",
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(Spacing.space_2xs),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primaryContainer,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.edit_rounded,
-                        size: 16,
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  Semantics(
+                    label: l10n.profileChangePhotoLabel,
+                    button: true,
+                    child: GestureDetector(
+                      onTap: () {
+                        AppSnackbar.info(
+                          context,
+                          message: l10n.profileEditSoon,
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(Spacing.space_2xs),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.primary,
+                            width: Radii.outlineWidth,
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.edit_rounded,
+                          size: AppIconSizes.sm,
+                          color: AppColors.inkFor(
+                            Theme.of(context).colorScheme.surface,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -111,12 +134,12 @@ class ProfileScreen extends StatelessWidget {
 
         // Appearance section
         const SizedBox(height: Spacing.space_md),
-        const AppSectionHeader(title: "Aparência"),
+        AppSectionHeader(title: l10n.profileAppearanceSection),
         _buildThemeDropdown(context),
 
         // Information section
         const SizedBox(height: Spacing.space_md),
-        const AppSectionHeader(title: "Informações"),
+        AppSectionHeader(title: l10n.profileInformationSection),
         AppCard(
           padding: EdgeInsets.zero,
           child: ListView.separated(
@@ -128,16 +151,16 @@ class ProfileScreen extends StatelessWidget {
               if (index == 0) {
                 return AppListTile(
                   leading: const Icon(Icons.phone_rounded),
-                  title: "Telefone",
-                  subtitle: phone.isNotEmpty ? phone : "Não informado",
+                  title: l10n.profilePhoneLabel,
+                  subtitle: phone.isNotEmpty ? phone : l10n.profileNotInformed,
                 );
               }
               return AppListTile(
                 leading: const Icon(Icons.calendar_today_rounded),
-                title: "Membro desde",
+                title: l10n.profileMemberSince,
                 subtitle: createdAt != null
-                    ? DateFormat("MMMM/yyyy", "pt_BR").format(createdAt)
-                    : "Não disponível",
+                    ? formatDatePattern("MMMM/yyyy", createdAt, context)
+                    : l10n.profileNotAvailable,
               );
             },
           ),
@@ -145,59 +168,26 @@ class ProfileScreen extends StatelessWidget {
 
         // Account section
         const SizedBox(height: Spacing.space_md),
-        const AppSectionHeader(title: "Conta"),
-        AppButton(
-          variant: AppButtonVariant.secondary,
-          label: "Sair da conta",
-          icon: const Icon(Icons.logout_rounded, size: 20),
-          isFullWidth: true,
-          onPressed: () => _showLogoutDialog(context),
-        ),
+        AppSectionHeader(title: l10n.profileAccountSection),
+        const LogoutAction(),
       ],
     );
   }
 
   Widget _buildThemeDropdown(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocBuilder<ThemeCubit, ThemeMode>(
       builder: (context, themeMode) {
         return AppCard(
           padding: EdgeInsets.zero,
           child: SwitchListTile(
             secondary: const Icon(Icons.dark_mode_rounded),
-            title: const Text("Modo escuro"),
+            title: Text(l10n.profileDarkMode, style: AppTypography.titleMedium),
             value: context.watch<ThemeCubit>().isDarkModeEnabled(context),
             onChanged: (v) => context.read<ThemeCubit>().setDarkMode(v),
           ),
         );
       },
-    );
-  }
-
-  void _showLogoutDialog(BuildContext context) {
-    showDialog<void>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text("Sair"),
-        content: const Text("Tem certeza que deseja sair da sua conta?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text("Cancelar"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              context.read<AuthCubit>().logout();
-            },
-            child: Text(
-              "Sair",
-              style: TextStyle(
-                color: Theme.of(dialogContext).colorScheme.error,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

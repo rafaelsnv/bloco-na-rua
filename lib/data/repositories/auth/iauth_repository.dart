@@ -21,7 +21,16 @@ abstract interface class IAuthRepository {
   /// that the member record exists in the backend.
   /// Returns true only if auth token exists AND member is found.
   /// On success, the member is cached and exposed via [currentMember].
+  ///
+  /// The result is cached: only the first call hits the network, the
+  /// following ones are answered from the cache. The cache is dropped when
+  /// the auth state changes (login, sign-up, logout) or when a validation
+  /// fails, so the router redirect can call this on every navigation
+  /// without a network round trip per navigation.
   Future<bool> validateSession();
+
+  /// Invalidates the cached session validity after backend auth failure.
+  void invalidateSession();
 
   AsyncResult<LoginResponse> login({
     required String email,

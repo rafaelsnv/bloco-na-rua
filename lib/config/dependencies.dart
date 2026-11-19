@@ -133,15 +133,16 @@ List<SingleChildWidget> get providers {
     ),
 
     // Auth
+    ChangeNotifierProvider<AuthListenable>(create: (_) => AuthListenable()),
     Provider<IAuthRepository>(
       create: (context) => AuthRepository(
         membersRepository: context.read(),
         authApiClient: context.read(),
         baseApiClient: context.read<IBaseApiClient>(),
         sharedPreferencesService: context.read(),
+        authListenable: context.read(),
       ),
     ),
-    ChangeNotifierProvider<AuthListenable>(create: (_) => AuthListenable()),
 
     // Use Cases
     Provider<GetCurrentUserData>(

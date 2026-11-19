@@ -1,4 +1,5 @@
 import 'package:bloco_na_rua/config/dependencies.dart';
+import 'package:bloco_na_rua/core/date_format.dart';
 import 'package:bloco_na_rua/main_app.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -24,6 +25,8 @@ void main() async {
       logLevel: RealtimeLogLevel.warn,
     ),
   );
+
+  await initAppLocale();
 
   Logger.root.level = kDebugMode ? Level.INFO : Level.WARNING;
 

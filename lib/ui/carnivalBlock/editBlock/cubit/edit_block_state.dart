@@ -1,3 +1,4 @@
+import 'package:bloco_na_rua/ui/carnivalBlock/block_error.dart';
 import 'package:equatable/equatable.dart';
 
 sealed class EditBlockState extends Equatable {
@@ -49,12 +50,12 @@ final class EditBlockDeleting extends EditBlockState {
 }
 
 final class EditBlockError extends EditBlockState {
-  final String message;
+  final BlockError error;
 
-  const EditBlockError(this.message);
+  const EditBlockError(this.error);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [error];
 }
 
 final class EditBlockDeleted extends EditBlockState {}

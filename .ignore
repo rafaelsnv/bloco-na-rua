@@ -1,0 +1,11 @@
+!.tmp/
+!.tmp/**
+!.marionette/
+!.marionette/**
+!.vscode/
+!.opencode/
+!.opencode/**
+!opencode.jsonc
+!.gitignore
+!.todo
+!.github

@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 236" width="560" height="236" role="img" aria-label="Bloco na Rua logo preview on light and dark surfaces">
+  <title>Bloco na Rua — logo preview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sora:wght@700&family=DM+Sans:wght@400;500&display=swap');
+    .w { font-family: 'Sora', 'Segoe UI', sans-serif; font-weight: 700; font-size: 24px; }
+    .l { font-family: 'DM Sans', 'Segoe UI', sans-serif; font-weight: 500; font-size: 10px; letter-spacing: 0.5px; }
+  </style>
+
+  <!-- ===== Light surface ===== -->
+  <rect x="8" y="8" width="264" height="220" rx="14" fill="#FAFAF9"/>
+  <g transform="translate(24 30)">
+    <rect width="56" height="56" rx="15.75" fill="#7C3AED"/>
+    <g transform="translate(25.75 31.81) rotate(-35) scale(0.805)">
+      <g fill="#FBBF24">
+        <g transform="translate(6 0)">
+          <g transform="rotate(-50)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <g transform="rotate(-25)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <path d="M15 -3 L24 -1 L24 1 L15 3 Z"/>
+          <g transform="rotate(25)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <g transform="rotate(50)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+        </g>
+        <rect x="-19.1" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+        <rect x="-15.6" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+        <rect x="-12.1" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+      </g>
+      <path fill="#FFFFFF" d="M-25 -2.6 L-20 -5 L-10 -5 C-2 -5.4 2.5 -8.5 6 -11.8 A3.5 11.8 0 0 1 6 11.8 C2.5 8.5 -2 5.4 -10 5 L-20 5 L-25 2.6 Z"/>
+    </g>
+  </g>
+  <text class="w" x="92" y="54" fill="#7C3AED">Bloco</text>
+  <text class="w" x="92" y="80" fill="#1C1917">na Rua</text>
+
+  <g transform="translate(44 150)"><g transform="scale(0.625) translate(-32 -32)">
+    <rect width="64" height="64" rx="18" fill="#7C3AED"/>
+    <g transform="translate(29.43 36.36) rotate(-35) scale(0.92)">
+      <g fill="#FBBF24">
+        <g transform="translate(6 0)">
+          <g transform="rotate(-50)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <g transform="rotate(-25)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <path d="M15 -3 L24 -1 L24 1 L15 3 Z"/>
+          <g transform="rotate(25)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <g transform="rotate(50)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+        </g>
+        <rect x="-19.1" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+        <rect x="-15.6" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+        <rect x="-12.1" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+      </g>
+      <path fill="#FFFFFF" d="M-25 -2.6 L-20 -5 L-10 -5 C-2 -5.4 2.5 -8.5 6 -11.8 A3.5 11.8 0 0 1 6 11.8 C2.5 8.5 -2 5.4 -10 5 L-20 5 L-25 2.6 Z"/>
+    </g>
+  </g></g>
+  <g transform="translate(102 158)"><g transform="scale(0.5) translate(-32 -32)">
+    <rect width="64" height="64" rx="18" fill="#7C3AED"/>
+    <g transform="translate(29.43 36.36) rotate(-35) scale(0.92)">
+      <g fill="#FBBF24">
+        <g transform="translate(6 0)">
+          <g transform="rotate(-50)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <g transform="rotate(-25)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <path d="M15 -3 L24 -1 L24 1 L15 3 Z"/>
+          <g transform="rotate(25)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <g transform="rotate(50)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+        </g>
+        <rect x="-19.1" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+        <rect x="-15.6" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+        <rect x="-12.1" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+      </g>
+      <path fill="#FFFFFF" d="M-25 -2.6 L-20 -5 L-10 -5 C-2 -5.4 2.5 -8.5 6 -11.8 A3.5 11.8 0 0 1 6 11.8 C2.5 8.5 -2 5.4 -10 5 L-20 5 L-25 2.6 Z"/>
+    </g>
+  </g></g>
+  <g transform="translate(162 166)"><g transform="scale(0.375) translate(-32 -32)">
+    <rect width="64" height="64" rx="18" fill="#7C3AED"/>
+    <g transform="translate(29.43 36.36) rotate(-35) scale(0.92)">
+      <g fill="#FBBF24">
+        <g transform="translate(6 0)">
+          <g transform="rotate(-50)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <g transform="rotate(-25)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <path d="M15 -3 L24 -1 L24 1 L15 3 Z"/>
+          <g transform="rotate(25)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <g transform="rotate(50)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+        </g>
+        <rect x="-19.1" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+        <rect x="-15.6" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+        <rect x="-12.1" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+      </g>
+      <path fill="#FFFFFF" d="M-25 -2.6 L-20 -5 L-10 -5 C-2 -5.4 2.5 -8.5 6 -11.8 A3.5 11.8 0 0 1 6 11.8 C2.5 8.5 -2 5.4 -10 5 L-20 5 L-25 2.6 Z"/>
+    </g>
+  </g></g>
+  <text class="l" x="44" y="200" fill="#78716C" text-anchor="middle">40</text>
+  <text class="l" x="102" y="200" fill="#78716C" text-anchor="middle">32</text>
+  <text class="l" x="162" y="200" fill="#78716C" text-anchor="middle">24</text>
+  <text class="l" x="24" y="220" fill="#78716C">logo_mark · logo_full</text>
+
+  <!-- ===== Dark surface ===== -->
+  <rect x="288" y="8" width="264" height="220" rx="14" fill="#111827"/>
+  <g transform="translate(304 30)">
+    <rect width="56" height="56" rx="15.75" fill="#A78BFA"/>
+    <g transform="translate(25.75 31.81) rotate(-35) scale(0.805)">
+      <g fill="#D97706">
+        <g transform="translate(6 0)">
+          <g transform="rotate(-50)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <g transform="rotate(-25)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <path d="M15 -3 L24 -1 L24 1 L15 3 Z"/>
+          <g transform="rotate(25)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <g transform="rotate(50)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+        </g>
+        <rect x="-19.1" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+        <rect x="-15.6" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+        <rect x="-12.1" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+      </g>
+      <path fill="#2E1065" d="M-25 -2.6 L-20 -5 L-10 -5 C-2 -5.4 2.5 -8.5 6 -11.8 A3.5 11.8 0 0 1 6 11.8 C2.5 8.5 -2 5.4 -10 5 L-20 5 L-25 2.6 Z"/>
+    </g>
+  </g>
+  <text class="w" x="372" y="54" fill="#A78BFA">Bloco</text>
+  <text class="w" x="372" y="80" fill="#FAFAF9">na Rua</text>
+
+  <g transform="translate(324 150)"><g transform="scale(0.625) translate(-32 -32)">
+    <rect width="64" height="64" rx="18" fill="#A78BFA"/>
+    <g transform="translate(29.43 36.36) rotate(-35) scale(0.92)">
+      <g fill="#D97706">
+        <g transform="translate(6 0)">
+          <g transform="rotate(-50)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <g transform="rotate(-25)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <path d="M15 -3 L24 -1 L24 1 L15 3 Z"/>
+          <g transform="rotate(25)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <g transform="rotate(50)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+        </g>
+        <rect x="-19.1" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+        <rect x="-15.6" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+        <rect x="-12.1" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+      </g>
+      <path fill="#2E1065" d="M-25 -2.6 L-20 -5 L-10 -5 C-2 -5.4 2.5 -8.5 6 -11.8 A3.5 11.8 0 0 1 6 11.8 C2.5 8.5 -2 5.4 -10 5 L-20 5 L-25 2.6 Z"/>
+    </g>
+  </g></g>
+  <g transform="translate(382 158)"><g transform="scale(0.5) translate(-32 -32)">
+    <rect width="64" height="64" rx="18" fill="#A78BFA"/>
+    <g transform="translate(29.43 36.36) rotate(-35) scale(0.92)">
+      <g fill="#D97706">
+        <g transform="translate(6 0)">
+          <g transform="rotate(-50)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <g transform="rotate(-25)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <path d="M15 -3 L24 -1 L24 1 L15 3 Z"/>
+          <g transform="rotate(25)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <g transform="rotate(50)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+        </g>
+        <rect x="-19.1" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+        <rect x="-15.6" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+        <rect x="-12.1" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+      </g>
+      <path fill="#2E1065" d="M-25 -2.6 L-20 -5 L-10 -5 C-2 -5.4 2.5 -8.5 6 -11.8 A3.5 11.8 0 0 1 6 11.8 C2.5 8.5 -2 5.4 -10 5 L-20 5 L-25 2.6 Z"/>
+    </g>
+  </g></g>
+  <g transform="translate(442 166)"><g transform="scale(0.375) translate(-32 -32)">
+    <rect width="64" height="64" rx="18" fill="#A78BFA"/>
+    <g transform="translate(29.43 36.36) rotate(-35) scale(0.92)">
+      <g fill="#D97706">
+        <g transform="translate(6 0)">
+          <g transform="rotate(-50)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <g transform="rotate(-25)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <path d="M15 -3 L24 -1 L24 1 L15 3 Z"/>
+          <g transform="rotate(25)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+          <g transform="rotate(50)"><path d="M15 -2.6 L24 -0.9 L24 0.9 L15 2.6 Z"/></g>
+        </g>
+        <rect x="-19.1" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+        <rect x="-15.6" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+        <rect x="-12.1" y="-7.6" width="2.2" height="2.6" rx="1.1"/>
+      </g>
+      <path fill="#2E1065" d="M-25 -2.6 L-20 -5 L-10 -5 C-2 -5.4 2.5 -8.5 6 -11.8 A3.5 11.8 0 0 1 6 11.8 C2.5 8.5 -2 5.4 -10 5 L-20 5 L-25 2.6 Z"/>
+    </g>
+  </g></g>
+  <text class="l" x="324" y="200" fill="#94A3B8" text-anchor="middle">40</text>
+  <text class="l" x="382" y="200" fill="#94A3B8" text-anchor="middle">32</text>
+  <text class="l" x="442" y="200" fill="#94A3B8" text-anchor="middle">24</text>
+  <text class="l" x="304" y="220" fill="#94A3B8">logo_mark_dark · logo_full_dark</text>
+</svg>
